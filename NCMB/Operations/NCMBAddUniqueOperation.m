@@ -1,0 +1,126 @@
+//
+//  NCMBAddUniqueOperation.m
+//  NIFTY Cloud mobile backend
+//
+//  Created by NIFTY Corporation on 2014/09/05.
+//  Copyright (c) 2014年 NIFTY Corporation. All rights reserved.
+//
+
+#import "NCMBAddUniqueOperation.h"
+#import "NCMBObject.h"
+#import "NCMBDeleteOperation.h"
+#import "NCMBSetOperation.h"
+
+@implementation NCMBAddUniqueOperation
+
+- (NCMBAddUniqueOperation *)initWithClassName:(id)newValue{
+    self = [super init];
+    if( self ) {
+        self.objects =  [NSMutableSet set];
+        if ([newValue isKindOfClass:[NSArray class]]) {
+            NSMutableArray *newArray = (NSMutableArray *)newValue;
+            [self.objects addObjectsFromArray:newArray];
+        }else{
+            [self.objects addObject:newValue];
+        }
+    }
+    return self;
+}
+
+-(NSMutableDictionary *)encode{
+    NSMutableDictionary *json = [[NSMutableDictionary alloc]init];
+    [json setObject:@"AddUnique" forKey:@"__op"];
+    NSArray *objects = [self.objects allObjects];//NSSetの全ての要素をNSArray型で取得する
+    [json setObject:objects forKey:@"objects"];
+    return json;
+}
+
+- (id)apply:(id)oldValue NCMBObject:(id)object forkey:(NSString *)key{
+    if (oldValue == nil) {
+        NSMutableArray *objects = [NSMutableArray arrayWithObjects:self.objects, nil];
+        return objects;
+    }
+    
+    if ([oldValue isKindOfClass:[NSArray class]]) {
+        NSMutableArray *newValue = [NSMutableArray array];
+        //oldValueの要素をすべてnewValueに挿入
+        for(int i=0; i<[oldValue count]; i++){
+            [newValue insertObject:[oldValue objectAtIndex:i] atIndex:i];
+        }
+        
+        /** 以下NCMBObjectの重複処理　ObjectIdが同じものは上書き　違うものは末尾に追加*/
+        
+        //前回のオブジェクトのobjectIDを保管する。key:各objectID　value:NSNumber
+        NSMutableDictionary *existingObjectIds = [NSMutableDictionary dictionary];
+        for(int i=0; i<[newValue count]; i++){
+            //前回のオブジェクトからNCMBObjectがあるか検索
+            if ([[newValue objectAtIndex:i] isKindOfClass:[NCMBObject class]]) {
+                //NCMBObjectがあればkeyにobjectID、valueにNSNumber追加
+                if([((NCMBObject *)[newValue objectAtIndex:i]) objectId]){
+                    [existingObjectIds setObject:[NSNumber numberWithInt:i] forKey:[((NCMBObject *)[newValue objectAtIndex:i]) objectId]];
+                }else{
+                    [existingObjectIds setObject:[NSNumber numberWithInt:i] forKey:[NSNull null]];
+                }
+            }
+        }
+        
+        NSEnumerator* localEnumerator = [self.objects objectEnumerator];
+        id NCMBObj;
+        while (NCMBObj = [localEnumerator nextObject]) {
+            if ([NCMBObj isKindOfClass:[NCMBObject class]]){
+                //objectsのobjectIdと先ほど生成したexistingObjectIdsのobjectIdが一致した場合、existingObjectIdsのvalue:NSNumberを返す。なければnilを返す。
+                NSNumber *index = [existingObjectIds objectForKey:[NCMBObj objectId]];
+                if (index != nil) {
+                    [newValue insertObject:NCMBObj atIndex:[index intValue]];//一致した場所にオブジェクト追加
+                }
+                else{
+                    [newValue addObject:NCMBObj];//一致しなかった場合は末に追加
+                }
+            }
+            else if (![newValue containsObject:NCMBObj]){
+                [newValue addObject:NCMBObj];//NCMBObjectではなかった場合は末に追加
+            }
+        }
+        
+        return newValue;
+    }
+    
+    [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"Operation is invalid after previous operation." userInfo:nil] raise];
+    return nil;
+}
+
+- (id)mergeWithPrevious:(id)previous{
+    
+    if (previous==nil) {
+        return self;
+    }
+    
+    if ([previous isKindOfClass:[NCMBDeleteOperation class]]) {
+        return [[NCMBSetOperation alloc]initWithClassName:self.objects];
+    }
+    
+    if ([previous isKindOfClass:[NCMBSetOperation class]]) {
+        id oldValue = [((NCMBSetOperation *)previous) getValue];
+        
+        if ([oldValue isKindOfClass:[NSArray class]]) {
+            //apply結果を元にインスタンス生成
+            return [[NCMBSetOperation alloc] initWithClassName:[self apply:oldValue NCMBObject:nil forkey:nil]];
+        }
+        
+        [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"You can only add an item to a List." userInfo:nil] raise];
+    }
+    
+    if ([previous isKindOfClass:[NCMBAddUniqueOperation class]]) {
+        //オペレーション要素全てをresultに挿入(初期化)
+        NSArray *oldValue = [((NCMBAddUniqueOperation *)previous).objects allObjects];
+        //オペレーション要素に対してapply実行
+        NSMutableArray * newValue = [self apply:oldValue NCMBObject:nil forkey:nil];
+        //apply結果を元にインスタンスの生成
+        return [[NCMBAddUniqueOperation alloc] initWithClassName:newValue];
+    }
+    
+    [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"You can only add an item to a List." userInfo:nil] raise];
+    return nil;
+}
+
+@end
