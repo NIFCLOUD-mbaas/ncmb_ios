@@ -1,10 +1,18 @@
-//
-//  NCMBPush.m
-//  NCMB
-//
-//  Created by SCI01433 on 2014/11/07.
-//  Copyright (c) 2014年 NIFTY Corporation. All rights reserved.
-//
+/*******
+ Copyright 2014 NIFTY Corporation All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ **********/
 
 #import "NCMBPush.h"
 
@@ -21,6 +29,8 @@
 @end
 
 @implementation NCMBPush
+
+static NCMBRichPushView *rv;
 
 +(NCMBQuery*)query{
     NCMBQuery *query = [NCMBQuery queryWithClassName:@"push"];
@@ -132,12 +142,15 @@
 }
 
 + (void) handleRichPush:(NSDictionary *)userInfo {
-    NSString *url = [userInfo objectForKey:@"com.nifty.RichUrl"];
+    NSString *urlStr = [userInfo objectForKey:@"com.nifty.RichUrl"];
     
-    if ([url isKindOfClass:[NSString class]]) {
-        NCMBRichPushView *rv = [[NCMBRichPushView alloc]init];
+    if ([urlStr isKindOfClass:[NSString class]]) {
+        rv = [[NCMBRichPushView alloc]init];
         UIInterfaceOrientation orientation = [[UIApplication sharedApplication]statusBarOrientation];
-        [rv appearWebView:orientation url:url];
+        [rv appearWebView:orientation url:urlStr];
+        NSURL *url = [NSURL URLWithString:urlStr];
+        NSURLRequest *req = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:5];
+        [rv loadRequest:req];
     }
 }
 
@@ -148,7 +161,7 @@
 }
 
 - (void)setChannel:(NSString *)channel{
-    [_searchCondition whereKey:@"channnels" containedIn:@[channel]];
+    [_searchCondition whereKey:@"channels" containedIn:@[channel]];
 }
 
 - (void)setChannels:(NSArray *)channels{
@@ -172,7 +185,7 @@
             [sendDeviceType removeObjectAtIndex:index];
         }
     }
-    [super setObject:sendDeviceType forKey:@"target"];
+    [self setObject:sendDeviceType forKey:@"target"];
 }
 
 - (void)setPushToIOS:(BOOL)pushToIOS{
@@ -192,25 +205,25 @@
             [sendDeviceType removeObjectAtIndex:index];
         }
     }
-    [super setObject:sendDeviceType forKey:@"target"];
+    [self setObject:sendDeviceType forKey:@"target"];
 }
 
 - (void)setDialog:(BOOL)dialog{
-    [super setObject:[NSNumber numberWithBool:dialog] forKey:@"dialog"];
+    [self setObject:[NSNumber numberWithBool:dialog] forKey:@"dialog"];
 }
 
 - (void)setImmediateDeliveryFlag:(BOOL)immediateDeliveryFlag{
-    [super setObject:[NSNumber numberWithBool:immediateDeliveryFlag] forKey:@"immediateDeliveryFlag"];
+    [self setObject:[NSNumber numberWithBool:immediateDeliveryFlag] forKey:@"immediateDeliveryFlag"];
     [self removeObjectForKey:@"deliveryTime"];
 }
 
 - (void)setDeliveryTime:(NSDate *)date{
-    [super setObject:date forKey:@"deliveryTime"];
+    [self setObject:date forKey:@"deliveryTime"];
     [self removeObjectForKey:@"immediateDeliveryFlag"];
 }
 
 - (void)setMessage:(NSString *)message{
-    [super setObject:message forKey:@"message"];
+    [self setObject:message forKey:@"message"];
 }
 
 - (void)setQuery:(NCMBQuery *)query{
@@ -220,43 +233,47 @@
 }
 
 - (void)setRichUrl:(NSString *)url{
-    [super setObject:url forKey:@"richUrl"];
+    [self setObject:url forKey:@"richUrl"];
 }
 
 - (void)setTitle:(NSString *)title{
-    [super setObject:title forKey:@"title"];
+    [self setObject:title forKey:@"title"];
 }
 
 - (void)setAction:(NSString *)actionName{
-    [super setObject:actionName forKey:@"action"];
+    [self setObject:actionName forKey:@"action"];
 }
 
 - (void)setContentAvailable:(BOOL)contenteAvailable{
-    [super setObject:[NSNumber numberWithBool:contenteAvailable] forKey:@"contentAvailable"];
-    [self removeObjectForKey:@"contentAvailable"];
+    [self setObject:[NSNumber numberWithBool:contenteAvailable] forKey:@"contentAvailable"];
+    [self setObject:[NSNumber numberWithBool:NO] forKey:@"badgeIncrementFlag"];
+    //[self removeObjectForKey:@"badgeIncrementFlag"];
 }
 
 - (void)setBadgeIncrementFlag:(BOOL)badgeIncrementFlag{
-    [super setObject:[NSNumber numberWithBool:badgeIncrementFlag] forKey:@"badgeIncrementFlag"];
-    [self removeObjectForKey:@"contentAvailable"];
+    [self setObject:[NSNumber numberWithBool:badgeIncrementFlag] forKey:@"badgeIncrementFlag"];
+    [self setObject:[NSNumber numberWithBool:NO] forKey:@"contentAvailable"];
+    //[self removeObjectForKey:@"contentAvailable"];
 }
 
 - (void)setBadgeNumber:(int)badgeNumber{
     if (![self objectForKey:@""] && ![self objectForKey:@"badgeIncrementFlag"]){
-        [super setObject:[NSNumber numberWithInt:badgeNumber] forKey:@"badgeSetting"];
+        [self setObject:[NSNumber numberWithInt:badgeNumber] forKey:@"badgeSetting"];
+        [self setObject:[NSNumber numberWithBool:NO] forKey:@"badgeIncrementFlag"];
+        [self setObject:[NSNumber numberWithBool:NO] forKey:@"contentAvailable"];
     }
 }
 
 - (void)setSound:(NSString *)soundFileName{
-    [super setObject:soundFileName forKey:@"sound"];
+    [self setObject:soundFileName forKey:@"sound"];
 }
 
 - (void)expireAtDate:(NSDate *)date{
-    [super setObject:date forKey:@"deliveryExpirationDate"];
+    [self setObject:date forKey:@"deliveryExpirationDate"];
 }
 
 - (void)expireAfterTimeInterval:(NSString *)timeInterval{
-    [super setObject:timeInterval forKey:@"deliveryExpirationTime"];
+    [self setObject:timeInterval forKey:@"deliveryExpirationTime"];
 }
 
 - (void)clearExpiration{
@@ -266,7 +283,7 @@
 
 - (void)setData:(NSDictionary*)dic{
     for (NSString *key in [[dic allKeys] objectEnumerator]){
-        [super setObject:[dic objectForKey:key] forKey:key];
+        [self setObject:[dic objectForKey:key] forKey:key];
     }
 }
 
@@ -382,14 +399,14 @@
 
 - (BOOL)save:(NSError **)error{
     BOOL result = NO;
-    [super setObject:[_searchCondition getQueryDictionary] forKey:@"searchCondition"];
+    [self setObject:[_searchCondition getQueryDictionary] forKey:@"searchCondition"];
     NSString *url = [NSString stringWithFormat:@"push"];
     result = [self save:url error:error];
     return result;
 }
 
 - (void)saveInBackgroundWithBlock:(NCMBSaveResultBlock)userBlock{
-    [super setObject:[_searchCondition getQueryDictionary] forKey:@"searchCondition"];
+    [self setObject:[_searchCondition getQueryDictionary] forKey:@"searchCondition"];
     NSString *url = [NSString stringWithFormat:@"push"];
     [self saveInBackgroundWithBlock:url block:userBlock];
 }
@@ -397,7 +414,7 @@
 - (BOOL)fetch:(NSError **)error{
     BOOL result = NO;
     if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"push"];
+        NSString *url = [NSString stringWithFormat:@"push/%@", self.objectId];
         [self fetch:url error:error isRefresh:NO];
         result = YES;
     }
@@ -406,7 +423,7 @@
 
 - (void)fetchInBackgroundWithBlock:(NCMBFetchResultBlock)block{
     if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"push"];
+        NSString *url = [NSString stringWithFormat:@"push/%@", self.objectId];
         [self fetchInBackgroundWithBlock:url block:block isRefresh:NO];
     }
 }
@@ -414,7 +431,7 @@
 - (BOOL)refresh:(NSError **)error{
     BOOL result = NO;
     if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"push"];
+        NSString *url = [NSString stringWithFormat:@"push/%@", self.objectId];
         [self fetch:url error:error isRefresh:YES];
         result = YES;
     }
@@ -423,7 +440,7 @@
 
 - (void)refreshInBackgroundWithBlock:(NCMBFetchResultBlock)block{
     if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"push"];
+        NSString *url = [NSString stringWithFormat:@"push/%@", self.objectId];
         [self fetchInBackgroundWithBlock:url block:block isRefresh:YES];
     }
 }
@@ -431,7 +448,7 @@
 - (BOOL)delete:(NSError **)error{
     BOOL result = NO;
     if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"push"];
+        NSString *url = [NSString stringWithFormat:@"push/%@", self.objectId];
         [self delete:url error:error];
         result = YES;
     }
@@ -440,14 +457,41 @@
 
 - (void)deleteInBackgroundWithBlock:(NCMBDeleteResultBlock)userBlock{
     if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"push"];
+        NSString *url = [NSString stringWithFormat:@"push/%@", self.objectId];
         [self deleteInBackgroundWithBlock:url block:userBlock];
     }
 }
 
 - (void)setObject:(id)object forKey:(NSString *)key{
-    //NCMBPushクラスは任意フィールドを設定できない
-    [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
+    //既定フィールドの配列を作成
+    NSArray *keys = @[@"deliveryTime",
+                      @"immediateDeliveryFlag",
+                      @"target",
+                      @"searchCondition",
+                      @"message",
+                      @"userSettingValue",
+                      @"deliveryExpirationDate",
+                      @"deliveryExpirationTime",
+                      @"action",
+                      @"title",
+                      @"dialog",
+                      @"badgeIncrementFlag",
+                      @"badgeSetting",
+                      @"sound",
+                      @"contentAvailable",
+                      @"richUrl",
+                      @"acl"
+                      ];
+    if ([keys containsObject:key]){
+        [super setObject:object forKey:key];
+    } else {
+        //NCMBPushクラスは任意フィールドを設定できない
+        [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
+    }
 }
+
+#pragma mark delegate
+
+
 
 @end

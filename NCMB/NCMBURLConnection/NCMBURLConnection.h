@@ -1,10 +1,18 @@
-//
-//  NCMBConnection.h
-//  NIFTY Cloud mobile backend
-//
-//  Created by NIFTY Corporation on 2014/09/01.
-//  Copyright (c) 2014年 NIFTY Corporation. All rights reserved.
-//
+/*******
+ Copyright 2014 NIFTY Corporation All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ **********/
 
 #import <Foundation/Foundation.h>
 #import <CoreFoundation/CoreFoundation.h>
@@ -26,13 +34,13 @@
 
 @property(nonatomic) NSString *appKey;
 @property(nonatomic) NSString *cliKey;
-@property(nonatomic) int cachePolicy;
+@property(nonatomic) NSURLRequestCachePolicy cachePolicy;
 
 @property (nonatomic)NSMutableURLRequest *request;
 @property(nonatomic) NSData *fileData;
 @property(nonatomic,copy) void (^blockProgress)(NSNumber *progress);
-@property(nonatomic,readwrite,retain) NSURLResponse *response;
-@property(nonatomic,readwrite,retain) NSMutableData *receivedData;
+@property(nonatomic,readwrite,strong) NSURLResponse *response;
+@property(nonatomic,readwrite,strong) NSMutableData *receivedData;
 @property(nonatomic,readwrite) long long estimatedDataSize;
 @property(nonatomic,copy) void (^block)(id response, NSError *error);
 
@@ -55,7 +63,7 @@ typedef void (^NCMBResultBlock)(id response, NSError *error);
  @param data 具体的な通信内容(検索条件、登録内容など)
  @param cachePolicy キャッシュポリシー
  */
-- (id)initWithPath:(NSString*)path method:(NSString*)method data:(NSData*)data cachePolicy:(int)cachePolicy;
+- (id)initWithPath:(NSString*)path method:(NSString*)method data:(NSData*)data cachePolicy:(NSURLRequestCachePolicy)cachePolicy;
 
 /**
  初期化を行う。

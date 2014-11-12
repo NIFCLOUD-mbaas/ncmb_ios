@@ -1,10 +1,18 @@
-//
-//  NCMBConnection.m
-//  NIFTY Cloud mobile backend
-//
-//  Created by NIFTY Corporation on 2014/09/01.
-//  Copyright (c) 2014年 NIFTY Corporation. All rights reserved.
-//
+/*******
+ Copyright 2014 NIFTY Corporation All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ **********/
 
 #import "NCMB.h"
 
@@ -63,7 +71,7 @@ typedef enum : NSInteger {
  @param data 具体的な通信内容(検索条件、登録内容など)
  @param cachePolicy キャッシュポリシー
  */
-- (id)initWithPath:(NSString*)path method:(NSString*)method data:(NSData*)data cachePolicy:(int)cachePolicy{
+- (id)initWithPath:(NSString*)path method:(NSString*)method data:(NSData*)data cachePolicy:(NSURLRequestCachePolicy)cachePolicy{
     self = [super init];
     NSString *dataStr;
     if (data != nil){
@@ -117,7 +125,6 @@ typedef enum : NSInteger {
 - (NSMutableURLRequest *)createRequest {
     //url生成
     NSString *url = [kEndPoint stringByAppendingString:self.path];
-    
     //request生成 タイムアウト10秒
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
                                                            cachePolicy:self.cachePolicy
@@ -141,7 +148,6 @@ typedef enum : NSInteger {
     [request setValue:self.timeStamp forHTTPHeaderField:kTimeStampFieldName];
     self.sessionToken = [NCMBUser getCurrentSessionToken];
     if ((self.sessionToken != nil) && (![self.sessionToken isEqual: @""])) {
-        NSLog(@"セッショントーン確認:%@",self.sessionToken);
         [request setValue:self.sessionToken forHTTPHeaderField:kSessionFieldName];
     }
     
@@ -152,7 +158,6 @@ typedef enum : NSInteger {
  シグネチャを生成するメソッド
  */
 - (void)createSignature {
-    //TODO:キーを設定していないときのエラーハンドリング
     NSArray *splitedEndPoint = [kEndPoint componentsSeparatedByString:@"/"];
     NSString *fqdn = splitedEndPoint[2];
     
@@ -165,7 +170,6 @@ typedef enum : NSInteger {
     NSString *timeStamp = [df stringFromDate:[NSDate date]];
     self.timeStamp = timeStamp;
     
-    NSLog(@"Path:%@",self.path);
     //2013-09-01/〜以降のPathの取得
     NSString *apiPath = [self.path componentsSeparatedByString:@"?"][0];
     
@@ -191,9 +195,6 @@ typedef enum : NSInteger {
                            [NSString stringWithFormat:@"%@=%@", kAppliKeyFieldName, self.appKey],
                            [NSString stringWithFormat:@"%@=%@", kTimeStampFieldName, self.timeStamp]];
     }
-    
-    NSLog(@"署名用文字列\n%@", strForSignature);
-    NCMBDEBUGLOG(@"\n【署名用文字列】\n%@",strForSignature);
     self.signature = [self encodingSigneture:strForSignature];
 }
 
@@ -204,6 +205,9 @@ typedef enum : NSInteger {
  @return NSString型シグネチャ
  */
 -(NSString *)encodingSigneture:(NSString *)strForSignature{
+    if (self.cliKey == nil || self.appKey == nil){
+        [[NSException exceptionWithName:NSInvalidArgumentException reason:@"Application key or Client key must not be nil." userInfo:nil] raise];
+    }
     const char *cKey = [self.cliKey cStringUsingEncoding:NSUTF8StringEncoding];
     const char *cData = [strForSignature cStringUsingEncoding:NSUTF8StringEncoding];
     
@@ -246,20 +250,22 @@ typedef enum : NSInteger {
         if(self.fileData){
             //fileでPOSTの場合
             body = self.fileData;
-        }else{
-            body = [[NSString stringWithFormat:@"%@",self.data]dataUsingEncoding:NSUTF8StringEncoding];
+        }else if (self.data != nil){
+            body = [self.data dataUsingEncoding:NSUTF8StringEncoding];
+        } else {
+            body = [NSJSONSerialization dataWithJSONObject:@{} options:kNilOptions error:nil];
         }
         [_request setHTTPBody:body];
     }
-    NSLog(@"request url:%@,signature:%@", _request.URL, self.signature);
     //同期通信開始
     NSData *contents = [NSURLConnection sendSynchronousRequest:_request
                                              returningResponse:&response
                                                          error:&connectionErr];
     if (connectionErr){
         //通信自体がエラーだった場合
-        *error = connectionErr;
-        NSLog(@"通信自体に失敗：%@",connectionErr);
+        if (error != nil){
+            *error = connectionErr;
+        }
         return nil;
     } else {
         return [self convertResponse:contents response:response error:error];
@@ -278,9 +284,14 @@ typedef enum : NSInteger {
                                    response:(NSHTTPURLResponse*)response
                                       error:(NSError**)error
 {
-    //TODO:削除の時はここにひっかかるのでは？
     if (response.statusCode == 200 || response.statusCode == 201){
         NSDictionary *responseDic = [NSDictionary dictionary];
+        //NCMBFile　getDataの処理
+        NSRange range = [[response.URL absoluteString] rangeOfString:@"files/"];
+        if (range.location != NSNotFound && [_request.HTTPMethod isEqualToString:@"GET"]) {
+            *error = nil;
+            return contents;
+        }
         
         if([self.path isEqualToString:[NSString stringWithFormat:@"/%@/%@", kAPIVersion, @"batch"]]) {
             //バッチ処理の場合は配列が返却される
@@ -289,15 +300,7 @@ typedef enum : NSInteger {
             //削除の場合は空、それ以外はNSDictionaryが返却される
             responseDic = [self convertResponseToDic:contents error:error];
         }
-        NCMBDEBUGLOG(@"レスポンス:%@", responseDic);
         [self signatureCheck:response contentsData:contents error:error];
-
-         //NCMBFile　getDataの処理
-        NSRange range = [[response.URL absoluteString] rangeOfString:@"files/"];
-        if (range.location != NSNotFound && [_request.HTTPMethod isEqualToString:@"GET"]) {
-            *error = nil;
-            return contents;
-        }
         
         return responseDic;
     } else {
@@ -319,8 +322,13 @@ typedef enum : NSInteger {
     NSMutableURLRequest *request = [self createRequest];
     
     //body生成
+    NSData *body = [[NSData alloc] init];
     if([self.method isEqualToString:@"POST"] ||[self.method isEqualToString:@"PUT"]){
-        NSData *body = [[NSString stringWithFormat:@"%@",self.data]dataUsingEncoding:NSUTF8StringEncoding];
+        if (self.data != nil){
+            body = [[NSString stringWithFormat:@"%@",self.data]dataUsingEncoding:NSUTF8StringEncoding];
+        } else {
+            body = [NSJSONSerialization dataWithJSONObject:@{} options:kNilOptions error:nil];
+        }
         [request setHTTPBody:body];
     }
     
@@ -346,15 +354,15 @@ typedef enum : NSInteger {
     self.block = block;
     
     //リクエスト生成
-    NSMutableURLRequest *request = [self createRequest];
+    _request = [self createRequest];
     
     //body生成
     if([self.method isEqualToString:@"POST"] ||[self.method isEqualToString:@"PUT"]){
-        [request setHTTPBody:self.fileData];
+        [_request setHTTPBody:self.fileData];
     }
     
     //非同期通信開始
-    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:_request delegate:self];
     return connection;
 }
 
@@ -364,10 +372,7 @@ typedef enum : NSInteger {
  @param error 現在の通信のエラー
  */
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
-    NSLog(@"通信エラーです！");
     NSURLRequest* request =  [connection currentRequest];
-    NSLog(@"request:%@",request);
-    NSLog(@"HTTPMethod:%@",request.HTTPMethod);
     [self connectionDidFinished:self.response contentsData:self.receivedData connectionError:error request:request block:self.block];
     self.block(self.receivedData,error);
 }
@@ -380,13 +385,8 @@ typedef enum : NSInteger {
  @param totalBytesExpectedToWrite block 現在の通信でアップロードする最終的なデータサイズ
  */
 - (void)connection:(NSURLConnection *)connection didSendBodyData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite{
-    NSLog(@"111");
-    NSLog(@"bytesWritten:%ld",(long)bytesWritten);
-    NSLog(@"totalBytesWritten:%ld",(long)totalBytesWritten);
-    NSLog(@"totalBytesExpectedToWrite:%ld",(long)totalBytesExpectedToWrite);
     if (_blockProgress) {
         float f = (float)totalBytesWritten/(float)totalBytesExpectedToWrite;
-        NSLog(@"結果:%f",f);
         _blockProgress([NSNumber numberWithFloat:f]);
         if (f >=1.0f) {
             self.blockProgress = nil;
@@ -400,7 +400,6 @@ typedef enum : NSInteger {
  @param response 現在の通信のレスポンス
  */
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
-    NSLog(@"222");
     self.receivedData = [[NSMutableData alloc] init];
     self.response = response;
     _estimatedDataSize = [response expectedContentLength];
@@ -414,7 +413,6 @@ typedef enum : NSInteger {
  @param data 受信データ
  */
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
-    NSLog(@"333");
     [self.receivedData appendData:data];
     if (_blockProgress) {
         _blockProgress([NSNumber numberWithFloat:[self progress]]);
@@ -426,7 +424,6 @@ typedef enum : NSInteger {
  今までダウンロードしたデータサイズ ÷ 最終的なデータサイズ
  */
 -(CGFloat)progress{
-    NSLog(@"444");
     double f_receivedData = (double)_receivedData.length;
     double f_estimatedDataSize = (double)_estimatedDataSize;
     return  _receivedData ? f_receivedData/f_estimatedDataSize : 0;
@@ -454,38 +451,11 @@ typedef enum : NSInteger {
 
  */
 - (void)connectionDidFinished:(NSURLResponse*)response contentsData:(NSData *)contentsData connectionError:(NSError *)connectionError request:(NSURLRequest*)request block:(NCMBResultBlock)block{
-    
-    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
-    if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201){
-        //mBaaSからcontentsが返ってきた場合の処理
-        NSError *error = nil;
-        NSDictionary *responseDic = [NSDictionary dictionary];
-        if (![self.method  isEqualToString: @"DELETE"] && ![self.path isEqualToString:[NSString stringWithFormat:@"/%@/%@", kAPIVersion, @"batch"]]){
-            responseDic = [self convertResponseToDic:contentsData error:&error];
-        } else if([self.path isEqualToString:[NSString stringWithFormat:@"/%@/%@", kAPIVersion, @"batch"]]) {
-            responseDic = [NSDictionary dictionaryWithObject:[self convertResponseToArr:contentsData error:&error] forKey:@"result"];
-        }
-        NSLog(@"レスポンス:%@",responseDic);
-        [self signatureCheck:response contentsData:contentsData error:&error];
-        
-        NSRange range = [[response.URL absoluteString] rangeOfString:@"files/"];
-        if (range.location != NSNotFound && [request.HTTPMethod isEqualToString:@"GET"]) {
-            //fileでGETの場合
-            if (block){
-                block(contentsData,error);
-            }
-        }else{
-            //それ以外
-            if (block){
-                block(responseDic, error);
-            }
-        }
-    } else {
-        //ステータスコードがエラーだった場合
-        NSDictionary *responseDic = [NSDictionary dictionary];
-        responseDic = [self convertResponseToDic:contentsData error:&connectionError];
-        block(responseDic, connectionError);
+    if (block){
+        id res = [self convertResponse:contentsData response:(NSHTTPURLResponse*)response error:&connectionError];
+        block(res, connectionError);
     }
+    
 }
 /**
  シグネチャが有効かどうかの検証を行う
@@ -529,13 +499,10 @@ typedef enum : NSInteger {
         
         //シグネチャが一致しない場合はエラーを設定する
         if (createdSignature && ![responseSignature isEqualToString:createdSignature]){
-            NSLog(@"レスポンスシグネチャが一致しません");
             NSMutableDictionary *validationErrDetails = [NSMutableDictionary dictionary];
             [validationErrDetails setObject:@"E100001" forKey:@"code"];
             [validationErrDetails setObject:@"Authentication error by response signature incorrect." forKey:NSLocalizedDescriptionKey];
             *error = [NSError errorWithDomain:ERRORDOMAIN code:100001 userInfo:validationErrDetails];
-        }else{
-            NSLog(@"レスポンスシグネチャ一致");//TODO:後で消す
         }
     }
 }
@@ -577,9 +544,12 @@ typedef enum : NSInteger {
     //エラーメッセージの取得/設定
     NSMutableDictionary *errorMessage = [NSMutableDictionary dictionary];
     [errorMessage setObject:[errDic objectForKey:@"error"] forKey:NSLocalizedDescriptionKey];
-    *error = [[NSError alloc] initWithDomain:kNCMBErrorDomain
-                                        code:[codeStr integerValue]
-                                    userInfo:errorMessage];
+    if (error != nil){
+        *error = [[NSError alloc] initWithDomain:kNCMBErrorDomain
+                                            code:[codeStr integerValue]
+                                        userInfo:errorMessage];
+    }
+    
 }
 
 /**

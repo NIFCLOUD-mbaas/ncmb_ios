@@ -1,10 +1,18 @@
-//
-//  NCMB_Twitter.m
-//  NIFTY Cloud mobile backend
-//
-//  Created by NIFTY Corporation on 2014/10/31.
-//  Copyright (c) 2014年 NIFTY Corporation. All rights reserved.
-//
+/*******
+ Copyright 2014 NIFTY Corporation All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ **********/
 
 #import "NCMBTwitterUtils.h"
 
@@ -23,13 +31,13 @@
 #define OAUTH_VERSION @"1.0"
 
 @interface NCMB_Twitter()<UIWebViewDelegate, UIActionSheetDelegate>
-@property(nonatomic,retain) NCMBOAToken* requestToken;
-@property(nonatomic,retain) NSMutableData* responseData;
+@property(nonatomic,strong) NCMBOAToken* requestToken;
+@property(nonatomic,strong) NSMutableData* responseData;
 @property (nonatomic,copy) void (^succeedBlock)();
 @property (nonatomic,copy) void (^failedBlock)(NSError* error);
 @property (nonatomic,copy) void (^cancelBlock)();
-@property (nonatomic,retain) NCMBTwitterLoginView* webView;
-@property (nonatomic,assign) BOOL isLocked;
+@property (nonatomic,strong) NCMBTwitterLoginView* webView;
+@property (nonatomic) BOOL isLocked;
 
 - (NCMB_Twitter*) initWithKey:(NSString*) key withSecret:(NSString*) secret;
 
@@ -95,7 +103,6 @@ enum{
 
 -(void)requestUserDataWithAuthToken:(NSString*)authToken authTokenSecret:(NSString*)authTokenSecret handler:(void(^)(NSDictionary* userData,NSError* error))handler{
     NSURL* url = [NSURL URLWithString:@"https://api.twitter.com/1.1/account/verify_credentials.json"];
-    NSLog(@"url:%@",url);
     self.authToken = authToken;
     self.authTokenSecret = authTokenSecret;
     
@@ -121,8 +128,6 @@ enum{
               handler:(void(^)(BOOL isCallated, NSError* error))handler{
     [self requestUserDataWithAuthToken:authToken authTokenSecret:authTokenSecret handler:^(NSDictionary *userData, NSError *error) {
         if(!error){
-            NSLog(@"id:%@",twitterId);
-            NSLog(@"name:%@",screenName);
             if([[userData objectForKey:@"id_str"] isEqualToString:twitterId]&&[[userData objectForKey:@"screen_name"] isEqualToString:screenName]){
                 handler(YES,nil);
             }else{
@@ -138,10 +143,6 @@ enum{
 }
 
 - (void)signRequest:(NSMutableURLRequest *)request{
-    NSLog(@"_consumerKey:%@",_consumerKey);
-    NSLog(@"_consumerSecret:%@",_consumerSecret);
-    NSLog(@"authToken:%@",self.authToken);
-    NSLog(@"authTokenSecret:%@",self.authTokenSecret);
     NCMBOAConsumer *consumer = [[NCMBOAConsumer alloc] initWithKey:_consumerKey
                                                              secret:_consumerSecret];
     NCMBOAToken* token = [[NCMBOAToken alloc] initWithKey:self.authToken secret:self.authTokenSecret];

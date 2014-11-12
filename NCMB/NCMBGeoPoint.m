@@ -1,10 +1,18 @@
-//
-//  NCMBGeoPoint.m
-//  NCMB
-//
-//  Created by SCI01433 on 2014/10/01.
-//  Copyright (c) 2014年 NIFTY Corporation. All rights reserved.
-//
+/*******
+ Copyright 2014 NIFTY Corporation All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ **********/
 
 #import "NCMBGeoPoint.h"
 
@@ -55,27 +63,16 @@ static CLLocationManager *locationManager;
     currentPoint = [NCMBGeoPoint geoPoint];
     handler = geoPointHandler;
     locationManager = [[CLLocationManager alloc] init];
-    
-    NSLog(@"before geoPointForCurrentLocation");
-    //dispatch_queue_t sub = dispatch_queue_create("geoPointForCurrentLocationInBackground", NULL);
-    
-    //dispatch_async(sub, ^{
         
     if([CLLocationManager locationServicesEnabled]){
-        NSLog(@"LocationService is enable...");
         locationManager = [[CLLocationManager alloc] init];
         locationManager.delegate = currentPoint;
         // 測位開始
         [locationManager startUpdatingLocation];
-    } else {
-        NSLog(@"LocationService is disable...");
     }
-    //});
-    //dispatch_release(sub);
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
-    NSLog(@"didUpdateLocations");
     CLLocation *location = locations[0];
     currentPoint.latitude = location.coordinate.latitude;
     currentPoint.longitude = location.coordinate.longitude;
@@ -84,7 +81,6 @@ static CLLocationManager *locationManager;
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
-    NSLog(@"didFailWithError");
     [locationManager stopUpdatingLocation];
     handler(currentPoint, error);
 }

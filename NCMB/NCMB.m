@@ -1,10 +1,18 @@
-//
-//  NCMB.m
-//  NIFTY Cloud mobile backend
-//
-//  Created by NIFTY Corporation on 2014/09/04.
-//  Copyright (c) 2014年 NIFTY Corporation. All rights reserved.
-//
+/*******
+ Copyright 2014 NIFTY Corporation All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ **********/
 
 #import "NCMB.h"
 
@@ -61,18 +69,20 @@ static BOOL responseValidationFlag = false;
 #pragma mark - File
 
 /**
- ファイルを保存(書込)する場所を確保する
+ SDKで利用するファイルの保存ディレクトリを作成する
  */
 +(void)createFolder{
     //ライブラリファイルのパスを取得
     NSArray* paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
     NSString* dirName = [paths objectAtIndex:0];
-    //ファイル作成
+    
+    //SDKで利用するフォルダを作成
     [NCMB saveDirPath:dirName str:@"Private Documents"];
-    [NCMB saveDirPath:[NSString stringWithFormat:@"%@/Private Documents",dirName] str:@"NCMB"];//ユーザー情報書込に使用
-    //TODO:Cache実装時に必要なら作成
+    [NCMB saveDirPath:[NSString stringWithFormat:@"%@/Private Documents",dirName] str:@"NCMB"];
+    
+    //SaveEventually用の処理内容保存場所
     [NCMB saveDirPath:[NSString stringWithFormat:@"%@/Private Documents/NCMB",dirName] str:@"Command Cache"];
-    //[NCMB saveDirPath:[NSString stringWithFormat:@"%@/Private Documents/NCMB",dirName] str:@"CacheID"];
+    
 }
 
 /**

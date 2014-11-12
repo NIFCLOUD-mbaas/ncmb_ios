@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "5.0"
   s.source       = { :git => 'https://example.com/ncmb_ios.git', :tag => 'v2.0' }
   s.source_files  = "NCMB/**/*.{h,m,c}"
-  #s.resources    = "NCMB/**/FacebookSDK.framework"
+  s.dependency 'Facebook-iOS-SDK'
   s.frameworks = "Foundation", "UIKit", "MobileCoreServices", "AudioToolbox", "SystemConfiguration"
   s.requires_arc = true
 end

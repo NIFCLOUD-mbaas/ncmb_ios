@@ -1,17 +1,20 @@
-//
-//  NCMBQuery.m
-//  NCMB
-//
-//  Created by SCI01433 on 2014/09/11.
-//  Copyright (c) 2014年 NIFTY Corporation. All rights reserved.
-//
+/*******
+ Copyright 2014 NIFTY Corporation All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ **********/
 
-#import "NCMBQuery.h"
-#import "NCMBObject.h"
-#import "NCMBUser.h"
-#import "NCMBGeoPoint.h"
-#import "NCMBRelation.h"
-#import "NCMBACL.h"
+#import "NCMB.h"
 
 #import "NCMBURLConnection.h"
 
@@ -23,6 +26,7 @@
 @property (nonatomic)NSMutableDictionary *query;
 @property (nonatomic)NSMutableArray *orderFieldsAry;
 @property (nonatomic)NCMBURLConnection *connection;
+@property (nonatomic)NSURLRequestCachePolicy cachePolicy;
 
 @end
 
@@ -36,6 +40,7 @@
         _query = [NSMutableDictionary dictionary];
         _orderFieldsAry = [NSMutableArray array];
         _includeKey = nil;
+        _cachePolicy = NSURLRequestReloadIgnoringCacheData;
     }
     return self;
 }
@@ -55,6 +60,16 @@
  */
 + (NCMBQuery*)queryWithClassName:(NSString*)className{
     return [[NCMBQuery alloc] initWithClassName:className];
+}
+
+#pragma mark - description
+
+- (NSString*)description{
+    NSError *error = nil;
+    NSData *json = [NSJSONSerialization dataWithJSONObject:_query
+                                                   options:NSJSONWritingPrettyPrinted
+                                                     error:&error];
+    return [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
 }
 
 #pragma mark - Query configuration
@@ -292,8 +307,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
     NSMutableArray *results = [NSMutableArray arrayWithArray:[response objectForKey:@"results"]];
     NSMutableArray *objects = [NSMutableArray array];
     for (NSDictionary *jsonObj in [results objectEnumerator]){
-        NSLog(@"jsonObj:%@", jsonObj);
-        [objects addObject:[NCMBObject objectWithClassName:_ncmbClassName data:jsonObj]];
+        [objects addObject:[self convertClass:[NSMutableDictionary dictionaryWithDictionary:jsonObj] ncmbClassName:_ncmbClassName]];
     }
     return objects;
     //return [self convertToNCMBObjectFromJSON:[response objectForKey:@"results"]];
@@ -307,8 +321,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         NSMutableArray *results = [NSMutableArray arrayWithArray:[responseDic objectForKey:@"results"]];
         NSMutableArray *objects = [NSMutableArray array];
         for (NSDictionary *jsonObj in [results objectEnumerator]){
-            NSLog(@"jsonObj:%@", jsonObj);
-            [objects addObject:[NCMBObject objectWithClassName:_ncmbClassName data:jsonObj]];
+            [objects addObject:[self convertClass:[NSMutableDictionary dictionaryWithDictionary:jsonObj] ncmbClassName:_ncmbClassName]];
         }
         if (block){
             block(objects, error);
@@ -318,7 +331,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 
 - (void)findObjectsInBackgroundWithTarget:(id)target selector:(SEL)selector{
     if (!target || !selector){
-        [NSException raise:@"NCMBInvalidValueException" format:@"target or selector must not nil."];
+        [NSException raise:@"NCMBInvalidValueException" format:@"target or selector must not be nil."];
     }
     NSMethodSignature *signature = [target methodSignatureForSelector:selector];
     NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -350,24 +363,52 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         if (i == 0){
             queryStr = [NSString stringWithFormat:@"%@",queryArray[i]];
         } else {
-            [queryStr stringByAppendingString:[NSString stringWithFormat:@"&%@",queryArray[i]]];
+            queryStr = [queryStr stringByAppendingString:[NSString stringWithFormat:@"&%@",queryArray[i]]];
         }
-        NSLog(@"queryStr:%@", queryStr);
     }
     [baseUrl appendString:[NSString stringWithFormat:@"?%@", queryStr]];
-    return [[NCMBURLConnection alloc] initWithPath:baseUrl method:@"GET" data:[queryStr dataUsingEncoding:NSUTF8StringEncoding] cachePolicy:NSURLRequestReloadIgnoringCacheData];
+    return [[NCMBURLConnection alloc] initWithPath:baseUrl method:@"GET" data:[queryStr dataUsingEncoding:NSUTF8StringEncoding] cachePolicy:_cachePolicy];
 }
 
 #pragma mark - getFirstObject
 
-- (NCMBObject*)getFirstObject:(NSError **)error{
+- (id)getFirstObject:(NSError **)error{
     //NCMBURLConnectionを用意
     NCMBURLConnection *connect = [self createConnectionForSearch:_query countEnableFlag:NO getFirst:YES];
-    
     //同期通信を実行
     NSDictionary *response = [connect syncConnection:error];
     NSMutableArray *results = [NSMutableArray arrayWithArray:[response objectForKey:@"results"]];
-    return [NCMBObject objectWithClassName:_ncmbClassName data:results[0]];
+    NSMutableDictionary *converted = [NSMutableDictionary dictionary];
+    for (NSString *key in [[results[0] allKeys] objectEnumerator]){
+        [converted setObject:[self convertToNCMBObjectFromJSON:[results[0] objectForKey:key]] forKey:key];
+    }
+    return [self convertClass:converted ncmbClassName:_ncmbClassName];
+}
+
+/**
+ 検索結果から各既定クラスを作成する
+ */
+- (id)convertClass:(NSMutableDictionary*)result
+     ncmbClassName:(NSString*)ncmbClassName{
+    if ([ncmbClassName isEqualToString:@"user"]){
+        NCMBUser *user = [[NCMBUser alloc] initWithClassName:@"user"];
+        [user afterFetch:result isRefresh:YES];
+        return user;
+    } else if ([ncmbClassName isEqualToString:@"push"]){
+        NCMBPush *push = [NCMBPush push];
+        [push afterFetch:result isRefresh:YES];
+        return push;
+    } else if ([ncmbClassName isEqualToString:@"installation"]){
+        NCMBInstallation *installation = [NCMBInstallation currentInstallation];
+        [installation afterFetch:result isRefresh:YES];
+        return installation;
+    } else if ([ncmbClassName isEqualToString:@"role"]){
+        NCMBRole *role = [[NCMBRole alloc] initWithClassName:@"role"];
+        [role afterFetch:result isRefresh:YES];
+        return role;
+    } else {
+        return [NCMBObject objectWithClassName:ncmbClassName data:result];
+    }
 }
 
 - (void)getFirstObjectInBackgroundWithBlock:(NCMBObjectResultBlock)block{
@@ -378,7 +419,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         NSDictionary *responseDic = response;
         NSMutableArray *results = [NSMutableArray arrayWithArray:[responseDic objectForKey:@"results"]];
         if (block){
-            block([NCMBObject objectWithClassName:_ncmbClassName data:results[0]], error);
+            block([self convertClass:results[0] ncmbClassName:_ncmbClassName], error);
         }
     }];
 }
@@ -408,7 +449,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
     //同期通信を実行
     NSDictionary *response = [connect syncConnection:error];
     if ([[response allKeys] containsObject:@"count"]){
-        return [[response objectForKey:@"count"] integerValue];
+        return [[response objectForKey:@"count"] intValue];
     }
     return 0;
 }
@@ -509,7 +550,14 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
     _connection = nil;
 }
 
-#pragma mark - cache
+#pragma mark - Cache Configuration
+
+/**
+ データ検索時のcachePolicyを設定する
+ */
+- (void)setCachePolicy:(NSURLRequestCachePolicy)cachePolicy{
+    _cachePolicy = cachePolicy;
+}
 
 +(void)clearAllCachedResults{
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
@@ -565,12 +613,10 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         }
         [queryArray addObject:orderStr];
     }
-    if (_limit > 0){
-        if (countEnableFlag || getFirstFlag){
-            [queryArray addObject:[NSString stringWithFormat:@"limit=%d", 1]];
-        } else {
-            [queryArray addObject:[NSString stringWithFormat:@"limit=%d", _limit]];
-        }
+    if (countEnableFlag == YES || getFirstFlag == YES){
+        [queryArray addObject:[NSString stringWithFormat:@"limit=%d", 1]];
+    } else if (_limit > 0) {
+        [queryArray addObject:[NSString stringWithFormat:@"limit=%d", _limit]];
     }
     if (_skip > 0){
         [queryArray addObject:[NSString stringWithFormat:@"skip=%d", _skip]];
@@ -584,7 +630,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
     if (convertError){
         return nil;
     }
-    return queryArray;
+    return [queryArray sortedArrayUsingSelector:@selector(compare:)];
 }
 
 /**
@@ -621,7 +667,6 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         return jsonObj;
     } else if ([obj isKindOfClass:[NCMBGeoPoint class]]){
         //objが位置情報だったら
-        NCMBDEBUGLOG(@"NCMBGeoConvertToJSON");
         NCMBGeoPoint *geoPoint = obj;
         NSMutableDictionary *jsonObj = [NSMutableDictionary dictionary];
         [jsonObj setObject:@"GeoPoint" forKey:@"__type"];
@@ -642,17 +687,12 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         //objがリレーションだったら
         NCMBRelation *relation = obj;
         NCMBObject *parentObj = relation.parent;
-        NCMBDEBUGLOG(@"parentObj:%@", parentObj);
         id convertObj = [self convertToJSONDicFromOperation:[parentObj currentOperations]];
-        NCMBDEBUGLOG(@"convertObj:%@", convertObj);
         return convertObj;
         
     } else if ([obj isKindOfClass:[NCMBACL class]]){
         //objがACLだったら
         NCMBACL *acl = obj;
-        //TODO:dicACLは置き換える
-        //NSMutableDictionary *aclDic = [NSMutableDictionary dictionary];
-        //[aclDic setObject:acl.dicACL forKey:@"acl"];
         if ([[acl dicACL] count] == 0){
             return [NSNull null];
         } else {
@@ -667,7 +707,6 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         }
         return jsonObj;
     } else if ([obj isKindOfClass:[NSArray class]]){
-        NCMBDEBUGLOG(@"convertObjIsArray");
         NSMutableArray *array = [NSMutableArray array];//[NSMutableArray arrayWithObject:obj];
         for (int i = 0; i < [obj count]; i++){
             //objがNSArrayだったら再帰呼び出し
@@ -684,7 +723,6 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         return set;
         
     } else if ([obj isKindOfClass:[NCMBQuery class]]){
-        NSLog(@"obj is NCMBQuery");
         NCMBQuery *query = (NCMBQuery*)obj;
         NSMutableDictionary *jsonQuery = [NSMutableDictionary dictionary];
         NSMutableDictionary *subQuery = [NSMutableDictionary dictionary];
@@ -701,7 +739,6 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         if (query.skip > 0){
             [jsonQuery setObject:[NSNumber numberWithInt:query.skip] forKey:@"skip"];
         }
-        NSLog(@"jsonQuery:%@", jsonQuery);
         return jsonQuery;
     }
     //その他の型(文字列、数値、真偽値)はそのまま返却
@@ -741,29 +778,30 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
                 return date;
             } else if ([typeStr isEqualToString:@"GeoPoint"]){
                 //objが位置情報だったら
-                //TODO:NCMBGeoPointのinitができたら修正する
-                //緯度経度をセットしてNCMBGeoPointオブジェクトを作成
                 NCMBGeoPoint *geoPoint = [[NCMBGeoPoint alloc] init];
                 geoPoint.latitude = [[jsonData objectForKey:@"latitude"] doubleValue];
                 geoPoint.longitude = [[jsonData objectForKey:@"longitude"] doubleValue];
                 return geoPoint;
             } else if ([typeStr isEqualToString:@"Pointer"]){
                 //objがポインタだったら
+                id obj = [self convertClass:jsonData
+                              ncmbClassName:[jsonData objectForKey:@"className"]];
+                
+                /*
                 NCMBObject *obj = [NCMBObject objectWithClassName:[jsonData objectForKey:@"className"]
                                                          objectId:[jsonData objectForKey:@"objectId"]];
+                 */
                 return obj;
             } else if ([typeStr isEqualToString:@"Relation"]){
                 //objがリレーションだったら
                 NCMBRelation *relation = [[NCMBRelation alloc] initWithClassName:[jsonData objectForKey:@"className"]];
                 return relation;
             } else if ([typeStr isEqualToString:@"Object"]){
-                //TODO:要テスト
-                NCMBObject *obj = [NCMBObject objectWithClassName:nil data:jsonData];
+                id obj = [self convertClass:jsonData ncmbClassName:[jsonData objectForKey:@"className"]];
                 return obj;
             }
         } else if ([jsonData objectForKey:@"acl"]){
             //objがACLだったら
-            //TODO:ACLの変換
             NCMBACL *acl = [[NCMBACL alloc] init];
             acl.dicACL = [jsonData objectForKey:@"acl"];
             return acl;

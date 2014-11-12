@@ -1,10 +1,18 @@
-//
-//  NCMBFile.m
-//  NIFTY Cloud mobile backend
-//
-//  Created by NIFTY Corporation 2014/11/05.
-//  Copyright (c) 2014年 NIFTY Corporation. All rights reserved.
-//
+/*******
+ Copyright 2014 NIFTY Corporation All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ **********/
 
 #import "NCMBFile.h"
 #import "NCMBObject+Private.h"
@@ -22,7 +30,7 @@
     BOOL isCancel;
 }
 
-@property (nonatomic,retain) NSData *file;
+@property (nonatomic,strong) NSData *file;
 
 @end
 
@@ -251,7 +259,6 @@ static NSMutableData *resultData = nil;
         //プログレス作成
         id proBlock = ^(NSNumber *progress){
             if (progressBlock) {
-                NSLog(@"読込.......");
                 int progressInt = [progress floatValue]*100;
                 progressBlock(progressInt);
             }
@@ -316,7 +323,6 @@ static NSMutableData *resultData = nil;
         }else{
             self.file = responseData;
         }
-        NSLog(@"responseData:%@",responseData);
     }
     isCancel = NO;
     return self.file;
@@ -363,7 +369,6 @@ static NSMutableData *resultData = nil;
         //プログレス作成
         id block = ^(NSNumber *progress){
             if (progressBlock) {
-                NSLog(@"読込.......");
                 int progressInt = [progress floatValue]*100;
                 progressBlock(progressInt);
             }
@@ -468,7 +473,6 @@ static NSMutableData *resultData = nil;
         NSString *boundary = @"_NCMBProjectBoundary";
         NSMutableData* result = [[NSMutableData alloc] init];
         //aclのform-dataを作成
-        NSLog(@"jsonDIC:%@",jsonDic);
         if ([[jsonDic allKeys] count]>0) {
             for (NSString *key in [jsonDic allKeys]) {
                 [result appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -484,16 +488,12 @@ static NSMutableData *resultData = nil;
         [result appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         [result appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", @"file",fileName] dataUsingEncoding:NSUTF8StringEncoding]];
         [result appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n",mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
-        //NSLog(@"data:%@",data);
         [result appendData:data];
         [result appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
         [result appendData:[[NSString stringWithFormat:@"--%@--\r\n\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         if (convertError){
             return nil;
         }
-        NSLog(@"method:%@",method);
-        NSLog(@"path:%@",path);
-        //NSLog(@"result(文字列):%@",[[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding]);
         connect = [[NCMBURLConnection new] initWithProgress:path method:method data:result progress:progress];
     } else {
         //PUTはapplication/jsonなのでaclのみ取り出し、通常の通信と同様に更新する
@@ -508,9 +508,6 @@ static NSMutableData *resultData = nil;
         if (convertError){
             return nil;
         }
-        NSLog(@"method:%@",method);
-        NSLog(@"path:%@",path);
-        //NSLog(@"json(文字列):%@",[[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding]);
         connect = [[NCMBURLConnection new] initWithProgress:path method:method data:json progress:progress];
     }
     return connect;
@@ -554,34 +551,33 @@ static NSMutableData *resultData = nil;
  通信のキャンセルを行う
  */
 - (void)cancel{
-    NSLog(@"1");
     if (connectionLocal) {
-        NSLog(@"2");
         if ([connectionLocal isKindOfClass:[NSURLConnection class]]) {
-            NSLog(@"3");
             [connectionLocal cancel];
-            NSLog(@"キャンセル完了");
         }
         connectionLocal = nil;
         isCancel = NO;
     }else{
-        NSLog(@"4");
         isCancel = YES;
-        NSLog(@"isCancel外部:%d",isCancel);
     }
 }
 
 #pragma mark - query
 
 + (NCMBQuery *)query{
-    //NCMBQuery *query = [NCMBQuery queryWithClassName:[NCMBFile ncmbClassName]];
-    //[query privateSetApiType:ApiTypeFile];
-    //return query;
-    return nil;
+    return [NCMBQuery queryWithClassName:@"file"];
 }
 
 
 #pragma mark - override
+
++(id)object{
+    return [[NCMBFile alloc] init];
+}
+
++(NSString *)ncmbClassName{
+    return @"file";
+}
 
 /**
  オブジェクト更新後に操作履歴とestimatedDataを同期する

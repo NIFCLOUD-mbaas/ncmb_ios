@@ -1,10 +1,18 @@
-//
-//  NCMBOAToken.h
-//  NIFTY Cloud mobile backend
-//
-//  Created by NIFTY Corporation on 2014/10/31.
-//  Copyright (c) 2014年 NIFTY Corporation. All rights reserved.
-//
+/*******
+ Copyright 2014 NIFTY Corporation All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ **********/
 
 
 #import <Foundation/Foundation.h>
@@ -20,12 +28,12 @@
 	BOOL renewable;
 	BOOL forRenewal;
 }
-@property(retain, readwrite) NSString *key;
-@property(retain, readwrite) NSString *secret;
-@property(retain, readwrite) NSString *session;
-@property(retain, readwrite) NSNumber *duration;
-@property(retain, readwrite) NSString *verifier;
-@property(nonatomic, retain, readwrite) NSDictionary *attributes;
+@property(strong, readwrite) NSString *key;
+@property(strong, readwrite) NSString *secret;
+@property(strong, readwrite) NSString *session;
+@property(strong, readwrite) NSNumber *duration;
+@property(strong, readwrite) NSString *verifier;
+@property(nonatomic, strong, readwrite) NSDictionary *attributes;
 @property(readwrite, getter=isForRenewal) BOOL forRenewal;
 
 - (id)initWithKey:(NSString *)aKey secret:(NSString *)aSecret;

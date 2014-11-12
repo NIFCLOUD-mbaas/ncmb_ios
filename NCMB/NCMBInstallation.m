@@ -1,19 +1,24 @@
-//
-//  NCMBInstallation.m
-//  NCMB
-//
-//  Created by SCI01433 on 2014/11/06.
-//  Copyright (c) 2014年 NIFTY Corporation. All rights reserved.
-//
+/*******
+ Copyright 2014 NIFTY Corporation All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ **********/
 
 #import "NCMBInstallation.h"
 #import "NCMBQuery.h"
 #import "NCMBACL.h"
 
 #import "NCMBObject+Private.h"
-
-//TODO:どこかに移す
-#define SDK_VERSION @"2.0"
 
 #define DATA_CURRENTINSTALLATION_PATH [NSString stringWithFormat:@"%@/Private Documents/NCMB/currentInstallation", DATA_MAIN_PATH]
 
@@ -25,14 +30,11 @@
 }
 
 - (void)setDeviceTokenFromData:(NSData *)deviceTokenData{
-    NSLog(@"setDeviceToken start.");
     NSMutableString *tokenId = [[NSMutableString alloc] initWithString:[NSString stringWithFormat:@"%@",deviceTokenData]];
     [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@" " withString:@""]]; //余計な文字を消す
     [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@"<" withString:@""]];
     [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@">" withString:@""]];
-    //[self setDeviceToken:tokenId];
     [self setObject:tokenId forKey:@"deviceToken"];
-    NSLog(@"setDeviceToken end.");
 }
 
 -(NSDictionary*)getLocalData{
@@ -55,20 +57,14 @@
     return dic;
 }
 
--(instancetype)init{
-    self = [super initWithClassName:@"installation"];
-    if (self) {
-        _channels = [NSMutableArray array];
-    }
-    return self;
-}
-
 +(NCMBInstallation*)installation{
-    NCMBInstallation *installation = [[NCMBInstallation alloc] init];
-    [installation setObject:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"] forKey:@"applicationName"];
-    [installation setObject:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"] forKey:@"appVersion"];
+    NCMBInstallation *installation = [[NCMBInstallation alloc]initWithClassName:@"user"];
+    installation.channels = [NSMutableArray array];
+    [installation setObject:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]
+                     forKey:@"applicationName"];
+    [installation setObject:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]
+                     forKey:@"appVersion"];
     [installation setObject:SDK_VERSION forKey:@"sdkVersion"];
-    
     [installation setObject:@"ios" forKey:@"deviceType"];
     
     NSTimeZone *tz = [NSTimeZone systemTimeZone];
@@ -77,9 +73,7 @@
 }
 
 +(NCMBInstallation*)currentInstallation{
-    /*if (currentInstallation) {
-        NSLog(@"currentInstallation exist:%@", currentInstallation);
-    }else*/ if ([[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTINSTALLATION_PATH isDirectory:nil]) {
+    if ([[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTINSTALLATION_PATH isDirectory:nil]) {
         NSError *error = nil;
         NSData *localData = [NSData dataWithContentsOfFile:DATA_CURRENTINSTALLATION_PATH
                                                    options:kNilOptions
@@ -87,17 +81,18 @@
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:localData
                                                              options:kNilOptions
                                                                error:&error];
-        NSLog(@"jsonInstallation:%@", json);
         NCMBInstallation *installation = [[NCMBInstallation alloc] init];
         [installation afterFetch:[NSMutableDictionary dictionaryWithDictionary:json] isRefresh:NO];
         return installation;
     }else{
-        NSLog(@"update current Installation");
         return [NCMBInstallation installation];
     }
 }
 
+#pragma  mark override
+
 - (void)afterFetch:(NSMutableDictionary *)response isRefresh:(BOOL)isRefresh{
+    NCMBDEBUGLOG(@"response:%@", response);
     [super afterFetch:response isRefresh:isRefresh];
     if ([response objectForKey:@"deviceToken"]){
         _deviceToken = [response objectForKey:@"deviceToken"];
@@ -110,6 +105,9 @@
     }
     if ([response objectForKey:@"deviceType"]){
         _deviceType = [response objectForKey:@"deviceType"];
+    }
+    if ([response objectForKey:@"timeZone"]){
+        _timeZone = [response objectForKey:@"timeZone"];
     }
     [self saveInstallationToFile];
 }

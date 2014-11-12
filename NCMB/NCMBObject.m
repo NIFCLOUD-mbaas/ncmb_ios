@@ -1,15 +1,22 @@
-//
-//  NCMBObject.m
-//  NIFTY Cloud mobile backend
-//
-//  Created by NIFTY Corporation on 2014/09/04.
-//  Copyright (c) 2014年 NIFTY Corporation. All rights reserved.
-//
+/*******
+ Copyright 2014 NIFTY Corporation All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ **********/
 
 #import "NCMB.h"
 
 #import "NCMBURLConnection.h"
-#import "NCMBReachability.h"
 
 #import "NCMBSetOperation.h"
 #import "NCMBIncrementOperation.h"
@@ -21,61 +28,6 @@
 #import "SubClassHandler.h"
 #import <objc/runtime.h>
 
-
-
-
-#pragma mark - subclass
-typedef struct property_attr{
-    BOOL isObject;
-    BOOL dynamic;
-    BOOL readOnly;
-    BOOL nonatomic;
-    BOOL retain;
-    BOOL copy;
-}property_attr;
-
-static property_attr getPropertyAttribute(id self, objc_property_t property){
-    const char* attr = property_getAttributes(property);
-    NSArray *k = [[NSString stringWithUTF8String:attr] componentsSeparatedByString:@","];
-    
-    property_attr p_attr;
-    p_attr.readOnly = NO;
-    p_attr.copy = NO;
-    p_attr.retain = NO;
-    p_attr.nonatomic = NO;
-    p_attr.dynamic = NO;
-    
-    for (NSString* code in k) {
-        if([code isEqualToString:@"R"]){
-            p_attr.readOnly = YES;
-        }else if([code isEqualToString:@"C"]){
-            p_attr.copy = YES;
-        }else if([code isEqualToString:@"&"]){
-            p_attr.retain = YES;
-        }else if([code isEqualToString:@"N"]){
-            p_attr.nonatomic = YES;
-        }else if([code isEqualToString:@"D"]){
-            p_attr.dynamic = YES;
-        }else if ([code hasPrefix:@"T@"]){
-            p_attr.isObject = YES;
-        }
-    }
-    return p_attr;
-}
-/*
-static objc_property_t getPropertyByName(id self, NSString* propertyName){
-    unsigned int i, count;
-    objc_property_t *properties = class_copyPropertyList([self class], &count);
-    for (i = 0; i < count; i++) {
-        objc_property_t property = properties[i];
-        NSString *tmpPropertyName = [NSString stringWithUTF8String:property_getName(property)];
-        if([tmpPropertyName isEqualToString:propertyName]){
-            return property;
-        }
-    }
-    return nil;
-}
-*/
 
 #pragma mark - getter
 //プロパティの型ごとに設定
@@ -209,12 +161,10 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 @implementation NCMBObject
 
 #pragma mark - Subclass
-
 + (id)object{
-    id object = [[[self class] alloc] init];
+    id object = [[[self class] alloc] initWithClassName:[[self class] ncmbClassName]];
     return object;
 }
-
 + (id)objectWithoutDataWithObjectId:(NSString *)objectId{
     id object = [[[self class] alloc] init];
     [object setObjectId:objectId];
@@ -222,16 +172,22 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     return object;
 }
 
++ (NCMBQuery *)query{
+    NCMBQuery *query = [NCMBQuery queryWithClassName:[[self class] ncmbClassName]];
+    return query;
+}
 
 + (void)registerSubclass{
     
-    [Subclass_Handler setSubClassName:NSStringFromClass([self class]) ncmbClassName:[[self alloc] ncmbClassName]];
+    [Subclass_Handler setSubClassName:NSStringFromClass([self class]) ncmbClassName:[[self class] ncmbClassName]];
     unsigned int i, count;
     objc_property_t *properties = class_copyPropertyList([self class], &count);
     for (i = 0; i < count; i++) {
         objc_property_t property = properties[i];
-        property_attr attr = getPropertyAttribute(self, property);
-        if(attr.dynamic){
+        const char* attrs = property_getAttributes(property);
+        NSArray *k = [[NSString stringWithUTF8String:attrs] componentsSeparatedByString:@","];
+        if ([k containsObject:@"D"]){
+
             const char *propName = property_getName(property);
             if(propName) {
                 NSString *propertyName = [NSString stringWithUTF8String:propName];
@@ -243,9 +199,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
                 
                 SEL getterSEL = NSSelectorFromString(getterName);
                 SEL setterSEL = NSSelectorFromString(setterName);
-                
-                const char* attrs = property_getAttributes(property);
-                NSArray *k = [[NSString stringWithUTF8String:attrs] componentsSeparatedByString:@","];
                 
                 NSString* code = [k objectAtIndex:0];
                 if ([code isEqualToString:@"Ti"]) {
@@ -292,8 +245,8 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         //ローカルデータを管理
         estimatedData = [[NSMutableDictionary alloc] init];
         
-        //サーバーからの返却データ管理
-        //serverData = [[NSMutableDictionary alloc] init];
+        //デフォルトACLの設定
+        _ACL = [NCMBACL ACL];
     }
     return self;
 }
@@ -301,18 +254,8 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 
 //クラスネームを指定して初期化
 - (id)initWithClassName:(NSString *)className{
-    self = [super init];
+    self = [self init];
     if (self) {
-        //データ操作履歴を管理
-        operationSetQueue = [[NSMutableArray alloc]init];
-        [operationSetQueue addObject:[[NSMutableDictionary alloc] init]];
-        
-        //ローカルデータを管理
-        estimatedData = [[NSMutableDictionary alloc] init];
-        
-        //サーバーからの返却データ管理
-        //serverData = [[NSMutableDictionary alloc] init];
-        
         _ncmbClassName = className;
     }
     return self;
@@ -322,14 +265,14 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  指定されたクラス名でNCMBObjectのインスタンスを作成する
  @param className 指定するクラス名
  */
-+(NCMBObject*)objectWithClassName:(NSString *)className{
++(instancetype)objectWithClassName:(NSString *)className{
     return [[NCMBObject alloc] initWithClassName:className];
 }
 
 /**
  Dictionaryを受け取ってNCMBObjectを返す
  */
-- (id)initWithData:(NSDictionary*)attrs{
+- (id)initWithData:(NSMutableDictionary*)attrs{
     self = [self init];
     for(NSString *key in [attrs keyEnumerator]){
         if ([key isEqualToString:@"objectId"]){
@@ -347,7 +290,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         } else {
             [estimatedData setObject:[self convertToNCMBObjectFromJSON:[attrs objectForKey:key]]
                               forKey:key];
-            NSLog(@"estimatedData:%@", estimatedData);
         }
     }
     return self;
@@ -358,7 +300,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     if (className != nil){
         [objDic setObject:className forKey:@"className"];
     }
-    NSLog(@"objDic:%@", objDic);
     return [[NCMBObject alloc] initWithData:objDic];
 }
 
@@ -402,6 +343,9 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 #pragma mark - 型チェック
 //入力値の型チェック
 -(BOOL)isValidType:(id)object{
+    if (object == nil){
+        return YES;
+    }
     return [object isKindOfClass:[NSString class]]  || [object isKindOfClass:[NSNumber class]]
     || [object isKindOfClass:[NSArray class]]       || [object isKindOfClass:[NSDictionary class]]
     || [object isKindOfClass:[NSDate class]]        || [object isKindOfClass:[NCMBObject class]]
@@ -435,12 +379,10 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 //指定したキーに値を設定する
 - (void)setObject:(id)object forKey:(NSString *)key{
     //入力値チェック
-    NCMBDEBUGLOG(@"datatype:%@", [object class]);
     if(![self isValidType:object]){
         [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"Invalid type for value." userInfo:nil] raise];
     };
     [self performOperation:key byOperation:[[NCMBSetOperation alloc]initWithClassName:object]];
-    NCMBDEBUGLOG(@"currentOperation:%@", [self currentOperations]);
 }
 
 
@@ -751,7 +693,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  @param operations 同期する操作履歴
  */
 -(void)afterSave:(NSDictionary*)response operations:(NSMutableDictionary*)operations{
-    NSLog(@"response:%@",response);
     //リクエスト実行時の該当履歴削除
     NSUInteger index = [operationSetQueue indexOfObject:operations];
     if (index != NSNotFound) {
@@ -759,11 +700,10 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     }
     //プロパティを更新
     if ([response objectForKey:@"objectId"]){
-        _objectId = [response objectForKey:@"objectId"];
+        _objectId = [self convertToNCMBObjectFromJSON:[response objectForKey:@"objectId"]];
     }
     if ([response objectForKey:@"createDate"]){
-        //TODO:指定の日付フォーマットに直してからセットする事
-        _createdDate = [response objectForKey:@"createDate"];
+        _createdDate = [self convertToNCMBObjectFromJSON:[response objectForKey:@"createDate"]];
     }
     if ([response objectForKey:@"updateDate"]){
         _updatedDate = [response objectForKey:@"updateDate"];
@@ -790,7 +730,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         [obj mergePreviousOperation:operation];
     } else {
         NSDictionary *response = [responseDic objectForKey:@"success"];
-        NCMBDEBUGLOG(@"successData:%@", response);
         if([object isKindOfClass:[NCMBObject class]]){
             NCMBObject *obj = object;
             [obj afterSave:response operations:operation];
@@ -800,8 +739,13 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         } else if ([object isKindOfClass:[NCMBRole class]]){
             NCMBRole *role = object;
             [role afterSave:response operations:operation];
+        } else if ([object isKindOfClass:[NCMBPush class]]){
+            NCMBPush *push = object;
+            [push afterSave:response operations:operation];
+        } else if ([object isKindOfClass:[NCMBInstallation class]]){
+            NCMBInstallation *installation = object;
+            [installation afterSave:response operations:operation];
         }
-        //TODO:プッシュとinstallationも作成する
     }
 }
 
@@ -810,15 +754,12 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  @param operations 最新の操作履歴
  */
 - (void)mergePreviousOperation:(NSMutableDictionary*)operations{
-    //TODO:履歴があってもなくてもエラーが返ってきたら履歴をマージ
-    //if ([[self currentOperations] count] != 0){
     for (id key in [operations keyEnumerator]){
         if ([[[self currentOperations] allKeys] containsObject:key]){
         } else {
             [[self currentOperations] setObject:[operations objectForKey:key] forKey:key];
         }
     }
-    //}
 }
 
 - (NSArray *)allKeys{
@@ -893,13 +834,9 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     //同期通信を実行
     //NSError __autoreleasing *fetchError = nil;
     NSDictionary *response = [connect syncConnection:error];
-    if (error != nil && *error){
-        //TODO:通信エラー or mbエラーがあった場合
-    } else {
         //データ取得後にestimatedDataとマージする
-        [self afterFetch:[NSMutableDictionary dictionaryWithDictionary:response] isRefresh:isRefresh];
-        result = YES;
-    }
+    [self afterFetch:[NSMutableDictionary dictionaryWithDictionary:response] isRefresh:isRefresh];
+    result = YES;
     return result;
 }
 
@@ -926,11 +863,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 - (void)fetchInBackgroundWithBlock:(NSString *)url block:(NCMBFetchResultBlock)userBlock isRefresh:(BOOL)isRefresh{
     dispatch_queue_t sub_queue = dispatch_queue_create("fetchInBackgroundWithBlock", NULL);
     dispatch_async(sub_queue, ^{
-        
-        NCMBDEBUGLOG(@"before fetchObject.");
-        
-        NCMBWAIT(5.0f);
-        
         //リクエストを作成
         NCMBURLConnection *connect = [[NCMBURLConnection alloc] initWithPath:url method:@"GET" data:nil];
         //非同期通信を実行
@@ -939,7 +871,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
                 if (error){
                     userBlock(YES, error);
                 } else {
-                    NCMBDEBUGLOG(@"after connect.");
                     //データ取得後にestimatedDataとマージする
                     [self afterFetch:[NSMutableDictionary dictionaryWithDictionary:response] isRefresh:isRefresh];
                     userBlock(YES, nil);
@@ -995,34 +926,30 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 - (void)afterFetch:(NSMutableDictionary*)response isRefresh:(BOOL)isRefresh{
     //プロパティを更新
     if ([response objectForKey:@"objectId"]){
-        NSLog(@"objectId is updated.");
         _objectId = [response objectForKey:@"objectId"];
-        [response removeObjectForKey:@"objectId"];
+        //[response removeObjectForKey:@"objectId"];
     }
     if ([response objectForKey:@"createDate"]){
         _createdDate = [response objectForKey:@"createDate"];
-        [response removeObjectForKey:@"createDate"];
+        //[response removeObjectForKey:@"createDate"];
     }
     if ([response objectForKey:@"updateDate"]){
         _updatedDate = [response objectForKey:@"updateDate"];
-        [response removeObjectForKey:@"updateDate"];
+        //[response removeObjectForKey:@"updateDate"];
     }
     if ([response objectForKey:@"acl"]){
         _ACL = [NCMBACL ACL];
-        _ACL.dicACL = [response objectForKey:@"acl"];
-        [response removeObjectForKey:@"acl"];
+        _ACL.dicACL = [NSMutableDictionary dictionaryWithDictionary:[response objectForKey:@"acl"]];
+        //[response removeObjectForKey:@"acl"];
     }
     if (self.createdDate == nil && self.updatedDate != nil){
         _updatedDate = _createdDate;
     }
-    
     if (isRefresh == YES){
         //refreshが実行された場合は履歴をすべて消去する。saveEventually対策。
         [operationSetQueue setArray:[NSMutableArray array]];
-        NCMBDEBUGLOG(@"isRefresh equal YES.");
-        [estimatedData setDictionary:[self convertToNCMBObjectFromJSON:response]];
+        estimatedData = [NSMutableDictionary dictionaryWithDictionary:response];
     } else {
-        NCMBDEBUGLOG(@"isRefresh equal NO.");
         for (id key in [response keyEnumerator]){
             [estimatedData setObject:[self convertToNCMBObjectFromJSON:[response objectForKey:key]]
                               forKey:key];
@@ -1056,7 +983,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     if (error != nil && *error){
         //通信エラー or mbエラー
         [self mergePreviousOperation:operation];
-        NCMBDEBUGLOG(@"error:%@", *error);
     } else {
         [self afterSave:response operations:operation];
         result = YES;
@@ -1094,19 +1020,10 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
                 userBlock(NO, e);
             }
         }
-        
-        NCMBDEBUGLOG(@"after create json data.");
-        
-        NCMBWAIT(5.0f);
-        
-        NCMBDEBUGLOG(@"before connect.");
-        
         //非同期通信を実行
         NCMBResultBlock block = ^(NSDictionary *responseDic, NSError *error){
             if (error){
-                //TODO:エラーがあった場合
                 [self mergePreviousOperation:operation];
-                //userBlock(NO, error);
             } else {
                 
                 [self afterSave:responseDic operations:operation];
@@ -1265,88 +1182,25 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 }
 
 /**
- 電波状態がONの状態でのみ、保存処理を行う。
- 電波がOFFだった場合はリクエストがローカルに保存され、電波がONになった通知を受けて保存を実行する
- @param target 呼び出すセレクタのターゲット
- @param selector 実行するセレクタ
- */
-- (void)saveEventuallyWithTarget:(id)target selector:(SEL)selector{
-    NSString *url = [NSString stringWithFormat:@"classes/%@", self.ncmbClassName];
-    [self saveEventuallyWithTarget:url target:target selector:selector];
-}
-
-/**
- 指定されたURLに対して、電波状態がONの状態でのみ、保存処理を行う。
- 電波がOFFだった場合はリクエストがローカルに保存され、電波がONになった通知を受けて保存を実行する
- @param url APIリクエストするURL
- @param target 呼び出すセレクタのターゲット
- @param selector 実行するセレクタ
- */
-- (void)saveEventuallyWithTarget:(NSString*)url target:(id)target selector:(SEL)selector{
-    [[NCMBReachability sharedInstance] reachabilityWithHostName:@"mb.api.cloud.nifty.com"];
-    
-    dispatch_queue_t sub_queue = dispatch_queue_create("saveEventuallyWithTargetSelector", NULL);
-    dispatch_async(sub_queue, ^{
-        //ローカルにurlとオペレーションを保存
-        NSString *targetName = NSStringFromClass([target class]);
-        NSString *selectorName = NSStringFromSelector(selector);
-        NSMutableDictionary *operation = [self beforeConnection];
-        NSMutableDictionary *operationDic = [self convertToJSONDicFromOperation:operation];
-        NSMutableDictionary *ncmbDic = [self convertToJSONFromNCMBObject:operationDic];
-        NSMutableDictionary *saveEventuallyOperation = [NSMutableDictionary dictionaryWithDictionary:@{@"path":url,
-                                                  @"saveData":ncmbDic,
-                                                  @"targetName":targetName,
-                                                  @"selectorName":selectorName}];
-    if (self.objectId){
-        [saveEventuallyOperation setObject:@"PUT" forKey:@"method"];
-    } else {
-        [saveEventuallyOperation setObject:@"POST" forKey:@"method"];
-    }
-    //電波がよければ保存してしまう
-    
-    //電波状況の監視をスタート
-        NSLog(@"writeDic:%@", saveEventuallyOperation);
-        NSData *localData = [NSKeyedArchiver archivedDataWithRootObject:saveEventuallyOperation];
-        //ファイル名はタイムスタンプ_オペレーションのアドレス
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-        
-        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-        [dateFormatter setCalendar:calendar];
-        [dateFormatter setLocale:[NSLocale systemLocale]];
-        [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-        [dateFormatter setDateFormat:@"YYYYMMddHHmmssSSSS"];
-        
-        NSString *path = [NSString stringWithFormat:@"%@%@_%p", COMMAND_CACHE_FOLDER_PATH, [dateFormatter stringFromDate:[NSDate date]], saveEventuallyOperation];
-        NSLog(@"filePath:%@", path);
-        NSError *error = nil;
-        //TODO:エラー処理もあとでちゃんとする
-        if([localData writeToFile:path options:NSDataWritingAtomic error:&error]){
-            NSLog(@"file wrote.");
-        } else {
-            NSLog(@"file writing faild:%@", error);
-        }
-        
-    });
-}
-
-/**
  save用のNCMBConnectionを作成する
  @param url APIリクエストするURL
  @param operation オブジェクトの操作履歴
  @return save用のNCMBConnection
  */
 - (NCMBURLConnection*)createConnectionForSave:(NSString*)url operation:(NSMutableDictionary*)operation {
-    if ([operation count] == 0){
-        return nil;
+    NSData *json = [[NSData alloc] init];
+    if ([operation count] != 0){
+        NSMutableDictionary *ncmbDic = [self convertToJSONDicFromOperation:operation];
+        NSMutableDictionary *jsonDic = [self convertToJSONFromNCMBObject:ncmbDic];
+        NSError *convertError = nil;
+        json = [NSJSONSerialization dataWithJSONObject:jsonDic options:kNilOptions error:&convertError];
+        if (convertError){
+            return nil;
+        }
+    } else {
+        json = nil;
     }
-    NSMutableDictionary *ncmbDic = [self convertToJSONDicFromOperation:operation];
-    NSMutableDictionary *jsonDic = [self convertToJSONFromNCMBObject:ncmbDic];
-    NCMBDEBUGLOG(@"jsonDic:%@", jsonDic);
-    NSError *convertError = nil;
-    NSData *json = [NSJSONSerialization dataWithJSONObject:jsonDic options:kNilOptions error:&convertError];
-    if (convertError){
-        return nil;
-    }
+    
     
     NSString *path = nil;
     NSString *method = nil;
@@ -1373,7 +1227,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     NSError *convertError = nil;
     NSData *json = [NSJSONSerialization dataWithJSONObject:requestDic options:kNilOptions error:&convertError];
     if (convertError){
-        //TODO:例外を発生させる？
         return nil;
     }
     //NCMBConnectionを作成
@@ -1393,7 +1246,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  */
 - (NSDictionary*)returnRequestDictionaryForSaveAll:(NCMBObject*)obj operation:(NSMutableDictionary*)operation {
     NSMutableDictionary *operationDic = [obj convertToJSONDicFromOperation:operation];
-    NCMBDEBUGLOG(@"operationDicInSaveAll:%@", operationDic);
     NSMutableDictionary *ncmbDic = [NSMutableDictionary dictionaryWithObject:[obj convertToJSONFromNCMBObject:operationDic] forKey:@"body"];
     if (obj.objectId == nil){
         [ncmbDic setObject:@"POST" forKey:@"method"];
@@ -1447,7 +1299,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
                                                                    data:nil];
     
     //同期通信を実行
-    //TODO:削除みたいにレスポンスがないAPIってNSDictionaryで受け取っていいの？
     [connect syncConnection:error];
     
     if (error == nil || !*error){
@@ -1488,7 +1339,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         NCMBResultBlock block = ^(NSDictionary *responseDic, NSError *error){
             if (userBlock){
                 if (error){
-                    //TODO:通信エラーがあった場合
                     userBlock(NO, error);
                 } else {
                     [self afterDelete];
@@ -1533,65 +1383,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         [invocation setArgument:&error atIndex:3];
         [invocation invoke];
     }];
-}
-
-/**
- 電波状態がONの状態でのみ、保存処理を行う。
- 電波がOFFだった場合はリクエストがローカルに保存され、電波がONになった通知を受けて保存を実行する
- @param target 呼び出すセレクタのターゲット
- @param selector 実行するセレクタ
- */
-- (void)deleteEventuallyWithTarget:(id)target selector:(SEL)selector{
-    if (self.objectId != nil){
-        NSString *url = [NSString stringWithFormat:@"classes/%@/%@", _ncmbClassName, _objectId];
-        [self deleteEventuallyWithTarget:url target:target selector:selector];
-    }
-}
-
-/**
- 指定されたURLに対して、電波状態がONの状態でのみ、削除処理を行う。
- 電波がOFFだった場合はリクエストがローカルに保存され、電波がONになった通知を受けて削除を実行する
- @param url APIリクエストするURL
- @param target 呼び出すセレクタのターゲット
- @param selector 実行するセレクタ
- */
-- (void)deleteEventuallyWithTarget:(NSString*)url target:(id)target selector:(SEL)selector{
-    [[NCMBReachability sharedInstance] reachabilityWithHostName:@"mb.api.cloud.nifty.com"];
-    
-    dispatch_queue_t sub_queue = dispatch_queue_create("saveEventuallyWithTargetSelector", NULL);
-    dispatch_async(sub_queue, ^{
-        //ローカルにurlとオペレーションを保存
-        NSString *targetName = NSStringFromClass([target class]);
-        NSString *selectorName = NSStringFromSelector(selector);
-        NSMutableDictionary *deleteEventuallyOperation = [NSMutableDictionary dictionaryWithDictionary:@{@"path":url,
-                                                                                                         @"targetName":targetName,
-                                                                                                         @"selectorName":selectorName}];
-        [deleteEventuallyOperation setObject:@"DELETE" forKey:@"method"];
-        //電波がよければ保存してしまう
-        
-        //電波状況の監視をスタート
-        
-        NSLog(@"writeDic:%@", deleteEventuallyOperation);
-        NSData *localData = [NSKeyedArchiver archivedDataWithRootObject:deleteEventuallyOperation];
-        //ファイル名はタイムスタンプ_オペレーションのアドレス
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-        
-        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-        [dateFormatter setCalendar:calendar];
-        [dateFormatter setLocale:[NSLocale systemLocale]];
-        [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-        [dateFormatter setDateFormat:@"YYYYMMddHHmmssSSSS"];
-        
-        NSString *path = [NSString stringWithFormat:@"%@%@_%p", COMMAND_CACHE_FOLDER_PATH, [dateFormatter stringFromDate:[NSDate date]], deleteEventuallyOperation];
-        NSLog(@"filePath:%@", path);
-        NSError *error = nil;
-        //TODO:エラー処理もあとでちゃんとする
-        if([localData writeToFile:path options:NSDataWritingAtomic error:&error]){
-            NSLog(@"file wrote.");
-        } else {
-            NSLog(@"file writing faild:%@", error);
-        }
-    });
 }
 
 /**
@@ -1641,8 +1432,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
                 return date;
             } else if ([typeStr isEqualToString:@"GeoPoint"]){
                 //objが位置情報だったら
-                //TODO:NCMBGeoPointのinitができたら修正する
-                //緯度経度をセットしてNCMBGeoPointオブジェクトを作成
                 NCMBGeoPoint *geoPoint = [[NCMBGeoPoint alloc] init];
                 geoPoint.latitude = [[jsonData objectForKey:@"latitude"] doubleValue];
                 geoPoint.longitude = [[jsonData objectForKey:@"longitude"] doubleValue];
@@ -1657,13 +1446,11 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
                 NCMBRelation *relation = [[NCMBRelation alloc] initWithClassName:[jsonData objectForKey:@"className"]];
                 return relation;
             } else if ([typeStr isEqualToString:@"Object"]){
-                //TODO:要テスト
                 NCMBObject *obj = [NCMBObject objectWithClassName:nil data:jsonData];
                 return obj;
             }
         } else if ([jsonData objectForKey:@"acl"]){
             //objがACLだったら
-            //TODO:ACLの変換
             NCMBACL *acl = [[NCMBACL alloc] init];
             acl.dicACL = [jsonData objectForKey:@"acl"];
             return acl;
@@ -1719,7 +1506,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  @param obj NCMBオブジェクト
  */
 - (id)convertToJSONFromNCMBObject:(id)obj{
-    NCMBDEBUGLOG(@"convertNCMBObject:%@", obj);
     if (obj == NULL){
         //objがNULLだったら
         return [NSNull null];
@@ -1733,7 +1519,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         return jsonObj;
     } else if ([obj isKindOfClass:[NCMBGeoPoint class]]){
         //objが位置情報だったら
-        NCMBDEBUGLOG(@"NCMBGeoConvertToJSON");
         NCMBGeoPoint *geoPoint = obj;
         NSMutableDictionary *jsonObj = [NSMutableDictionary dictionary];
         [jsonObj setObject:@"GeoPoint" forKey:@"__type"];
@@ -1754,16 +1539,11 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         //objがリレーションだったら
         NCMBRelation *relation = obj;
         NCMBObject *parentObj = relation.parent;
-        NCMBDEBUGLOG(@"parentObj:%@", parentObj);
         id convertObj = [self convertToJSONDicFromOperation:[parentObj currentOperations]];
-        NCMBDEBUGLOG(@"convertObj:%@", convertObj);
         return convertObj;
     } else if ([obj isKindOfClass:[NCMBACL class]]){
         //objがACLだったら
         NCMBACL *acl = obj;
-        //TODO:dicACLは置き換える
-        //NSMutableDictionary *aclDic = [NSMutableDictionary dictionary];
-        //[aclDic setObject:acl.dicACL forKey:@"acl"];
         if ([[acl dicACL] count] == 0){
             return [NSNull null];
         } else {
@@ -1778,7 +1558,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         }
         return jsonObj;
     } else if ([obj isKindOfClass:[NSArray class]]){
-        NCMBDEBUGLOG(@"convertObjIsArray");
         NSMutableArray *array = [NSMutableArray array];//[NSMutableArray arrayWithObject:obj];
         for (int i = 0; i < [obj count]; i++){
             //objがNSArrayだったら再帰呼び出し
@@ -1797,10 +1576,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     }
     //その他の型(文字列、数値、真偽値)はそのまま返却
     return obj;
-}
-
-- (void)dealloc{
-    NSLog(@"deallocated...");
 }
 
 @end

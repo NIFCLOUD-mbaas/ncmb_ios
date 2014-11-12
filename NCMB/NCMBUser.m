@@ -1,10 +1,18 @@
-//
-//  NCMBUser.m
-//  NCMB
-//
-//  Created by SCI00610 on 2014/09/12.
-//  Copyright (c) 2014年 NIFTY Corporation. All rights reserved.
-//
+/*******
+ Copyright 2014 NIFTY Corporation All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ **********/
 
 #import "NCMBUser.h"
 
@@ -40,7 +48,7 @@ static BOOL isEnableAutomaticUser = FALSE;
 - (NSDictionary*)getLocalData{
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:[super getLocalData]];
     if (self.userName){
-        [dic setObject:self.userName forKey:@"roleName"];
+        [dic setObject:self.userName forKey:@"userName"];
     }
     if (self.mailAddress){
         [dic setObject:self.mailAddress forKey:@"mailAddress"];
@@ -52,20 +60,14 @@ static BOOL isEnableAutomaticUser = FALSE;
 }
 
 //NCMBUserはクラス名を指定しての初期化は出来ない
-- (id)initWithClassName:(NSString *)className{
++ (NCMBObject*)objectWithClassName:(NSString *)className{
     [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cannot initialize a NCMBUser with a custom class name." userInfo:nil] raise];
     return nil;
 }
 
-- (id)init{
-    return [super initWithClassName:@"user"];
-}
-
 + (NCMBUser *)user{
-//    return [[[self class] alloc] init];
-    NCMBUser *user = [[NCMBUser alloc]init];
+    NCMBUser *user = [[NCMBUser alloc]initWithClassName:@"user"];
     return user;
-    //return [[NCMBUser alloc] initWithClassName:@"user"];
 }
 
 + (NCMBQuery*)query{
@@ -617,6 +619,35 @@ static BOOL isEnableAutomaticUser = FALSE;
     }];
 }
 
+/**
+ ログイン用のNCMBURLConnectionを返す
+ */
++(NCMBURLConnection*)createConnectionForLogin:(NSString*)username
+                                   mailAddress:(NSString*)mailAddress
+                                      password:(NSString*)password{
+    //検索文字列の作成
+    NSMutableArray *queryArray = [NSMutableArray array];
+    [queryArray addObject:[NSString stringWithFormat:@"password=%@", password]];
+    if ([username length] != 0 && [mailAddress length] == 0){
+        [queryArray addObject:[NSString stringWithFormat:@"userName=%@", username]];
+    } else if ([username length] == 0 && [mailAddress length] != 0){
+        [queryArray addObject:[NSString stringWithFormat:@"mailAddress=%@", mailAddress]];
+    }
+    NSMutableArray *sortedQueryArray = [NSMutableArray arrayWithArray:[queryArray sortedArrayUsingSelector:@selector(compare:)]];
+    
+    //pathの作成
+    NSString *path = @"";
+    for (int i = 0; i< [sortedQueryArray count]; i++){
+        if (i == 0){
+            path = [path stringByAppendingString:[NSString stringWithFormat:@"%@", sortedQueryArray[i]]];
+        } else {
+            path = [path stringByAppendingString:[NSString stringWithFormat:@"&%@", sortedQueryArray[i]]];
+        }
+    }
+    NSData *strData = [path dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *url = [NSString stringWithFormat:@"login?%@", path];
+    return [[NCMBURLConnection alloc] initWithPath:url method:@"GET" data:strData];
+}
 
 /**
  同期ログイン処理
@@ -631,35 +662,11 @@ static BOOL isEnableAutomaticUser = FALSE;
                   error:(NSError **)error{
     
     NSError *errorLocal = nil;
-    
-    //検索文字列の作成
-    NSMutableArray *queryArray = [NSMutableArray array];
-    if ([username length] != 0 && [email length] == 0){
-        [queryArray addObject:[NSString stringWithFormat:@"userName=%@", username]];
-    } else if ([username length] == 0 && [email length] != 0){
-        [queryArray addObject:[NSString stringWithFormat:@"mailAddress=%@", username]];
-    }
-    
-    //pathの作成
-    NSString *path = URL_LOGIN;
-    for (int i = 0; i< [queryArray count]; i++){
-        if (i == 0){
-            [path stringByAppendingString:[NSString stringWithFormat:@"?%@", queryArray[i]]];
-        } else {
-            [path stringByAppendingString:[NSString stringWithFormat:@"&%@", queryArray[i]]];
-        }
-    }
-    NSError *convertError = nil;
-    NSData *queryData = [NSJSONSerialization dataWithJSONObject:queryArray
-                                                        options:kNilOptions
-                                                          error:&convertError];
-    
-    if (convertError){
-        //TODO:例外？
-    }
-    
+
     //通信開始
-    NCMBURLConnection *connect = [[NCMBURLConnection new] initWithPath:path method:@"GET" data:queryData];
+    NCMBURLConnection *connect = [self createConnectionForLogin:username
+                                                    mailAddress:email
+                                                       password:password];
     NSDictionary * responseData = [connect syncConnection:&errorLocal];
     bool isSuccess = YES;
     NCMBUser *loginUser = nil;
@@ -687,34 +694,10 @@ static BOOL isEnableAutomaticUser = FALSE;
                      password:(NSString *)password
                         block:(NCMBUserResultBlock)block{
     
-    //検索文字列の作成
-    NSMutableArray *queryArray = [NSMutableArray array];
-    if ([username length] != 0 && [email length] == 0){
-        [queryArray addObject:[NSString stringWithFormat:@"userName=%@", username]];
-    } else if ([username length] == 0 && [email length] != 0){
-        [queryArray addObject:[NSString stringWithFormat:@"mailAddress=%@", username]];
-    }
-    
-    //pathの作成
-    NSString *path = URL_LOGIN;
-    for (int i = 0; i< [queryArray count]; i++){
-        if (i == 0){
-            [path stringByAppendingString:[NSString stringWithFormat:@"?%@", queryArray[i]]];
-        } else {
-            [path stringByAppendingString:[NSString stringWithFormat:@"&%@", queryArray[i]]];
-        }
-    }
-    NSError *convertError = nil;
-    NSData *queryData = [NSJSONSerialization dataWithJSONObject:queryArray
-                                                        options:kNilOptions
-                                                          error:&convertError];
-    
-    if (convertError){
-        //TODO:例外？
-    }
-    
     //リクエストを作成
-    NCMBURLConnection *request = [[NCMBURLConnection alloc] initWithPath:path method:@"GET" data:queryData];
+    NCMBURLConnection *request = [self createConnectionForLogin:username
+                                                    mailAddress:email
+                                                       password:password];
     //非同期通信を実行
     [request asyncConnectionWithBlock:^(NSDictionary *responseData, NSError *errorBlock){
         BOOL success = YES;
@@ -827,10 +810,7 @@ static BOOL isEnableAutomaticUser = FALSE;
                                                   options:NSJSONReadingAllowFragments
                                                     error:&error];
     }
-    NSLog(@"dicData:%@",dicData);
     [user afterFetch:[NSMutableDictionary dictionaryWithDictionary:dicData] isRefresh:NO];
-    
-    //[user privateSetDataAvailableFlag:TRUE];
     return user;
 }
 
@@ -842,16 +822,11 @@ static BOOL isEnableAutomaticUser = FALSE;
     if (currentUser != user) {
         [self logOutEvent];
     }
-    //user.isCurrentUser = true;
-    //user.synchronizeAllAuthData();
-    //user.saveToDisk(NCMB.applicationContext, "currentUser");
-    //currentUserMatchesDisk = true;
     NSError *e;
     NSMutableDictionary *dic = [user toJSONObjectForDataFile];
     NSData *json = [NSJSONSerialization dataWithJSONObject:dic options:kNilOptions error:&e];
     NSString *strSaveData = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
     [strSaveData writeToFile:DATA_CURRENTUSER_PATH atomically:YES encoding:NSUTF8StringEncoding error:&e];
-    NSLog(@"ファイル書き込みエラー:%@",e);
     currentUser = user;
 }
 
@@ -863,7 +838,6 @@ static BOOL isEnableAutomaticUser = FALSE;
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     
     for (id key in [estimatedData keyEnumerator]) {
-        //NSLog(@"Key:%@ Value:%@", key, [estimatedData valueForKey:key]);
         [dic setObject:[self convertToJSONFromNCMBObject:[estimatedData valueForKey:key]] forKey:key];
     }
     if (self.objectId) {
@@ -878,18 +852,14 @@ static BOOL isEnableAutomaticUser = FALSE;
     if(self.sessionToken){
         [dic setObject:self.sessionToken forKey:@"sessionToken"];
     }
-    //TODO:ACL対応
-    //if (self.ACL) {
-    //[[dic objectForKey:@"data"] setObject:[self.ACL privateGetDicACL] forKey:@"acl"];
-    //}
-    NSLog(@"file:%@",dic);
+    if (self.ACL) {
+        [dic setObject:self.ACL.dicACL forKey:@"acl"];
+    }
     return dic;
 }
 
 
 #pragma mark - override
-
-//TODO:afterFetchはoverrideしないでいいのか
 
 /**
  mobile backendにオブジェクトを保存する
@@ -1010,8 +980,6 @@ static BOOL isEnableAutomaticUser = FALSE;
     if ([response objectForKey:@"authData"]){
         [estimatedData setObject:[response objectForKey:@"authData"] forKey:@"authData"];
     }
-    
-    NSLog(@"estimatedData:%@",estimatedData);
 }
 
 @end
