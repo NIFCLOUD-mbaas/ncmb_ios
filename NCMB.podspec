@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.license      = "Apache License, Version 2.0"
   s.author             = "NIFTY Corporation"
   s.platform     = :ios, "5.0"
-  s.source       = { :git => 'https://example.com/ncmb_ios.git', :tag => 'v2.0' }
+  s.source       = { :git => 'https://github.com/NIFTYCloud-mbaas/ncmb_ios.git', :tag => 'v2.0.0' }
   s.source_files  = "NCMB/**/*.{h,m,c}"
   s.dependency 'Facebook-iOS-SDK'
   s.frameworks = "Foundation", "UIKit", "MobileCoreServices", "AudioToolbox", "SystemConfiguration"
