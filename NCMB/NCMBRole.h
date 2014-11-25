@@ -44,6 +44,18 @@
 - (void)addRole:(NCMBRole*)role;
 
 /**
+ 子ロールへのリレーションを取得する
+ @return 子ロールへのリレーション。設定されていない場合はnilを返却する
+ */
+- (NCMBRelation*)relationForRole;
+
+/**
+ ロールに属した会員へのリレーションを取得する
+ @return ロールに属した会員へのリレーション。設定されていない場合はnilを返却する
+ */
+- (NCMBRelation*)relationForUser;
+
+/**
  NCMBQueryインスタンスを新規作成する
  @return roleクラスがセットされたNCMBQueryインスタンスを返却する
  */

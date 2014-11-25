@@ -171,7 +171,7 @@ static NCMBRichPushView *rv;
 - (void)setPushToAndroid:(BOOL)pushToAndroid{
     NSMutableArray *sendDeviceType;
     if ([[estimatedData allKeys] containsObject:@"target"]){
-        sendDeviceType = [NSMutableArray arrayWithObject:[estimatedData objectForKey:@"target"]];
+        sendDeviceType = [NSMutableArray arrayWithArray:[estimatedData objectForKey:@"target"]];
     } else {
         sendDeviceType = [NSMutableArray array];
     }
@@ -191,7 +191,7 @@ static NCMBRichPushView *rv;
 - (void)setPushToIOS:(BOOL)pushToIOS{
     NSMutableArray *sendDeviceType;
     if ([[estimatedData allKeys] containsObject:@"target"]){
-        sendDeviceType = [NSMutableArray arrayWithObject:[estimatedData objectForKey:@"target"]];
+        sendDeviceType = [NSMutableArray arrayWithArray:[estimatedData objectForKey:@"target"]];
     } else {
         sendDeviceType = [NSMutableArray array];
     }
@@ -283,7 +283,15 @@ static NCMBRichPushView *rv;
 
 - (void)setData:(NSDictionary*)dic{
     for (NSString *key in [[dic allKeys] objectEnumerator]){
-        [self setObject:[dic objectForKey:key] forKey:key];
+        if ([key isEqualToString:@"badgeSetting"]){
+            [self setBadgeNumber:[[dic objectForKey:key] intValue]];
+        } else if ([key isEqualToString:@"badgeIncrementFlag"]){
+            [self setBadgeIncrementFlag:[dic objectForKey:key]];
+        } else if ([key isEqualToString:@"contentAvailable"]){
+            [self setContentAvailable:[dic objectForKey:key]];
+        } else {
+            [self setObject:[dic objectForKey:key] forKey:key];
+        }
     }
 }
 

@@ -19,7 +19,11 @@
 #import "NCMBURLConnection.h"
 
 #import "NCMBObject+Private.h"
+#import "NCMBObject+Subclass.h"
 #import "NCMBRelationOperation.h"
+
+#import "SubClassHandler.h"
+#import <objc/runtime.h>
 
 @interface NCMBQuery ()
 
@@ -307,7 +311,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
     NSMutableArray *results = [NSMutableArray arrayWithArray:[response objectForKey:@"results"]];
     NSMutableArray *objects = [NSMutableArray array];
     for (NSDictionary *jsonObj in [results objectEnumerator]){
-        [objects addObject:[self convertClass:[NSMutableDictionary dictionaryWithDictionary:jsonObj] ncmbClassName:_ncmbClassName]];
+        [objects addObject:[NCMBObject convertClass:[NSMutableDictionary dictionaryWithDictionary:jsonObj] ncmbClassName:_ncmbClassName]];
     }
     return objects;
     //return [self convertToNCMBObjectFromJSON:[response objectForKey:@"results"]];
@@ -321,7 +325,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         NSMutableArray *results = [NSMutableArray arrayWithArray:[responseDic objectForKey:@"results"]];
         NSMutableArray *objects = [NSMutableArray array];
         for (NSDictionary *jsonObj in [results objectEnumerator]){
-            [objects addObject:[self convertClass:[NSMutableDictionary dictionaryWithDictionary:jsonObj] ncmbClassName:_ncmbClassName]];
+            [objects addObject:[NCMBObject convertClass:[NSMutableDictionary dictionaryWithDictionary:jsonObj] ncmbClassName:_ncmbClassName]];
         }
         if (block){
             block(objects, error);
@@ -349,10 +353,12 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
     NSDictionary *endpoint = @{@"user":@"users",
                                @"role":@"roles",
                                @"installation":@"installations",
-                               @"push":@"push"};
+                               @"push":@"push",
+                               @"file":@"files"};
     NSMutableString *baseUrl = [NSMutableString string];
     if ([_ncmbClassName isEqualToString:@"user"] || [_ncmbClassName isEqualToString:@"role"] ||
-        [_ncmbClassName isEqualToString:@"installation"] || [_ncmbClassName isEqualToString:@"push"]) {
+        [_ncmbClassName isEqualToString:@"installation"] || [_ncmbClassName isEqualToString:@"push"] ||
+        [_ncmbClassName isEqualToString:@"file"]) {
         baseUrl = [NSMutableString stringWithFormat:@"%@", [endpoint objectForKey:_ncmbClassName]];
     } else {
         baseUrl = [NSMutableString stringWithFormat:@"classes/%@", _ncmbClassName];
@@ -378,38 +384,16 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
     //同期通信を実行
     NSDictionary *response = [connect syncConnection:error];
     NSMutableArray *results = [NSMutableArray arrayWithArray:[response objectForKey:@"results"]];
-    NSMutableDictionary *converted = [NSMutableDictionary dictionary];
+    //NSMutableDictionary *converted = [NSMutableDictionary dictionary];
+    /*
     for (NSString *key in [[results[0] allKeys] objectEnumerator]){
-        [converted setObject:[self convertToNCMBObjectFromJSON:[results[0] objectForKey:key]] forKey:key];
-    }
-    return [self convertClass:converted ncmbClassName:_ncmbClassName];
+        [converted setObject:[self convertToNCMBObjectFromJSON:[results[0] objectForKey:key] convertKey:key] forKey:key];
+    }*/
+    id obj = [NCMBObject convertClass:results[0] ncmbClassName:_ncmbClassName];
+    return obj;
 }
 
-/**
- 検索結果から各既定クラスを作成する
- */
-- (id)convertClass:(NSMutableDictionary*)result
-     ncmbClassName:(NSString*)ncmbClassName{
-    if ([ncmbClassName isEqualToString:@"user"]){
-        NCMBUser *user = [[NCMBUser alloc] initWithClassName:@"user"];
-        [user afterFetch:result isRefresh:YES];
-        return user;
-    } else if ([ncmbClassName isEqualToString:@"push"]){
-        NCMBPush *push = [NCMBPush push];
-        [push afterFetch:result isRefresh:YES];
-        return push;
-    } else if ([ncmbClassName isEqualToString:@"installation"]){
-        NCMBInstallation *installation = [NCMBInstallation currentInstallation];
-        [installation afterFetch:result isRefresh:YES];
-        return installation;
-    } else if ([ncmbClassName isEqualToString:@"role"]){
-        NCMBRole *role = [[NCMBRole alloc] initWithClassName:@"role"];
-        [role afterFetch:result isRefresh:YES];
-        return role;
-    } else {
-        return [NCMBObject objectWithClassName:ncmbClassName data:result];
-    }
-}
+
 
 - (void)getFirstObjectInBackgroundWithBlock:(NCMBObjectResultBlock)block{
     //NCMBURLConnectionを用意
@@ -419,7 +403,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         NSDictionary *responseDic = response;
         NSMutableArray *results = [NSMutableArray arrayWithArray:[responseDic objectForKey:@"results"]];
         if (block){
-            block([self convertClass:results[0] ncmbClassName:_ncmbClassName], error);
+            block([NCMBObject convertClass:results[0] ncmbClassName:_ncmbClassName], error);
         }
     }];
 }
@@ -763,7 +747,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
  JSONオブジェクトをNCMBObjectに変換する
  @param jsonData JSON形式のデータ
  */
-- (id)convertToNCMBObjectFromJSON:(id)jsonData{
+- (id)convertToNCMBObjectFromJSON:(id)jsonData convertKey:(NSString *)convertKey{
     if (jsonData == NULL){
         //objがNULLだったら
         return nil;
@@ -784,7 +768,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
                 return geoPoint;
             } else if ([typeStr isEqualToString:@"Pointer"]){
                 //objがポインタだったら
-                id obj = [self convertClass:jsonData
+                id obj = [NCMBObject convertClass:jsonData
                               ncmbClassName:[jsonData objectForKey:@"className"]];
                 
                 /*
@@ -794,10 +778,12 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
                 return obj;
             } else if ([typeStr isEqualToString:@"Relation"]){
                 //objがリレーションだったら
-                NCMBRelation *relation = [[NCMBRelation alloc] initWithClassName:[jsonData objectForKey:@"className"]];
+                NCMBRelation *relation = [[NCMBRelation alloc] initWithClassName:self key:convertKey];
+                relation.targetClass = [jsonData objectForKey:@"className"];
+                //NCMBRelation *relation = [[NCMBRelation alloc] initWithClassName:[jsonData objectForKey:@"className"]];
                 return relation;
             } else if ([typeStr isEqualToString:@"Object"]){
-                id obj = [self convertClass:jsonData ncmbClassName:[jsonData objectForKey:@"className"]];
+                id obj = [NCMBObject convertClass:jsonData ncmbClassName:[jsonData objectForKey:@"className"]];
                 return obj;
             }
         } else if ([jsonData objectForKey:@"acl"]){
@@ -808,9 +794,9 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         } else {
             //objがNSDictionaryだったら再帰呼び出し
             NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-            for (id Key in [jsonData keyEnumerator]){
-                id convertedObj = [self convertToNCMBObjectFromJSON:[jsonData objectForKey:Key]];
-                [dic setObject:convertedObj forKey:Key];
+            for (NSString *key in [jsonData keyEnumerator]){
+                id convertedObj = [self convertToNCMBObjectFromJSON:[jsonData objectForKey:key] convertKey:key];
+                [dic setObject:convertedObj forKey:key];
             }
             return dic;
         }
@@ -819,7 +805,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         NSMutableArray *array = [NSMutableArray array];
         for (int i = 0; i < [jsonData count]; i++){
             //objがNSArrayだったら再帰呼び出し
-            array[i] = [self convertToNCMBObjectFromJSON:jsonData[i]];
+            array[i] = [self convertToNCMBObjectFromJSON:jsonData[i] convertKey:nil];
         }
         return array;
     } else if ([jsonData isKindOfClass:[NSSet class]]){
@@ -827,7 +813,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         NSMutableSet *set = [NSMutableSet set];
         for (id value in [currentSet objectEnumerator]){
             //objがNSSetだったら再帰呼び出し
-            [set addObject:[self convertToNCMBObjectFromJSON:value]];
+            [set addObject:[self convertToNCMBObjectFromJSON:value convertKey:nil]];
         }
         return set;
         

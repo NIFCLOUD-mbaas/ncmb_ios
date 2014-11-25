@@ -250,7 +250,7 @@
 
 
 /**
- 匿名会員を正規会員として同期で登録する。2回のAPIリクエストが発生する。objectiId,createdDate,updatedDate,authdata以外の情報を引き継ぐ。必要があればエラーをセットし、取得することもできる。
+ 匿名会員を正規会員として同期で登録する。2回のAPIリクエストが発生する。objectiId,createDate,updateDate,authdata以外の情報を引き継ぐ。必要があればエラーをセットし、取得することもできる。
  @param userName 正規会員のユーザー名
  @param password 正規会員のパスワード
  @param error 処理中に起きたエラーのポインタ
@@ -259,7 +259,7 @@
 - (BOOL)signUpFromAnonymous:(NSString *)userName password:(NSString *)password error:(NSError **)error;
 
 /**
- 匿名会員を正規会員として非同期で登録する。2回のAPIリクエストが発生する。objectiId,createdDate,updatedDate,authdata以外の情報を引き継ぐ。必要があればエラーをセットし、取得することもできる。
+ 匿名会員を正規会員として非同期で登録する。2回のAPIリクエストが発生する。objectiId,createDate,updateDate,authdata以外の情報を引き継ぐ。必要があればエラーをセットし、取得することもできる。
  @param userName 正規会員のユーザー名
  @param password 正規会員のパスワード
  @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある（BOOL succeeded, NSError *error）succeededには通信結果がBOOL型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
@@ -268,7 +268,7 @@
                                         password:(NSString *)password
                                            block:(NCMBBooleanResultBlock)block;
 /**
- 匿名会員を正規会員として非同期で登録する。2回のAPIリクエストが発生する。objectiId,createdDate,updatedDate,authdata以外の情報を引き継ぐ。必要があればエラーをセットし、取得することもできる。
+ 匿名会員を正規会員として非同期で登録する。2回のAPIリクエストが発生する。objectiId,createDate,updateDate,authdata以外の情報を引き継ぐ。必要があればエラーをセットし、取得することもできる。
  @param userName 正規会員のユーザー名
  @param password 正規会員のパスワード
  @param target 呼び出すセレクタのターゲット

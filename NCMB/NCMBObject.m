@@ -281,14 +281,14 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
             _ncmbClassName = [attrs objectForKey:key];
         } else if ([key isEqualToString:@"createDate"]){
             NSDateFormatter *df = [self createNCMBDateFormatter];
-            _createdDate = [df dateFromString:[attrs objectForKey:key]];
+            _createDate = [df dateFromString:[attrs objectForKey:key]];
         } else if ([key isEqualToString:@"updateDate"]){
             NSDateFormatter *df = [self createNCMBDateFormatter];
-            _updatedDate = [df dateFromString:[attrs objectForKey:key]];
+            _updateDate = [df dateFromString:[attrs objectForKey:key]];
         } else if ([key isEqualToString:@"acl"]){
             _ACL.dicACL = [attrs objectForKey:key];
         } else {
-            [estimatedData setObject:[self convertToNCMBObjectFromJSON:[attrs objectForKey:key]]
+            [estimatedData setObject:[self convertToNCMBObjectFromJSON:[attrs objectForKey:key] convertKey:key]
                               forKey:key];
         }
     }
@@ -328,11 +328,11 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     if (_objectId){
         [returnDic setObject:_objectId forKey:@"objectId"];
     }
-    if (_createdDate){
-        [returnDic setObject:[self convertToJSONFromNCMBObject:_createdDate] forKey:@"createdDate"];
+    if (_createDate){
+        [returnDic setObject:[self convertToJSONFromNCMBObject:_createDate] forKey:@"createDate"];
     }
-    if (_updatedDate){
-        [returnDic setObject:[self convertToJSONFromNCMBObject:_updatedDate] forKey:@"updatedDate"];
+    if (_updateDate){
+        [returnDic setObject:[self convertToJSONFromNCMBObject:_updateDate] forKey:@"updateDate"];
     }
     if (_ACL){
         [returnDic setObject:_ACL.dicACL forKey:@"acl"];
@@ -700,16 +700,16 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     }
     //プロパティを更新
     if ([response objectForKey:@"objectId"]){
-        _objectId = [self convertToNCMBObjectFromJSON:[response objectForKey:@"objectId"]];
+        _objectId = [self convertToNCMBObjectFromJSON:[response objectForKey:@"objectId"] convertKey:@"objectId"];
     }
     if ([response objectForKey:@"createDate"]){
-        _createdDate = [self convertToNCMBObjectFromJSON:[response objectForKey:@"createDate"]];
+        _createDate = [self convertToNCMBObjectFromJSON:[response objectForKey:@"createDate"] convertKey:@"createDate"];
     }
     if ([response objectForKey:@"updateDate"]){
-        _updatedDate = [response objectForKey:@"updateDate"];
+        _updateDate = [response objectForKey:@"updateDate"];
     }
-    if (self.updatedDate == nil && self.createdDate != nil){
-        _updatedDate = _createdDate;
+    if (self.updateDate == nil && self.createDate != nil){
+        _updateDate = _createDate;
     }
 }
 
@@ -930,35 +930,52 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         //[response removeObjectForKey:@"objectId"];
     }
     if ([response objectForKey:@"createDate"]){
-        _createdDate = [response objectForKey:@"createDate"];
-        //[response removeObjectForKey:@"createDate"];
+        _createDate = [response objectForKey:@"createDate"];
     }
     if ([response objectForKey:@"updateDate"]){
-        _updatedDate = [response objectForKey:@"updateDate"];
-        //[response removeObjectForKey:@"updateDate"];
+        _updateDate = [response objectForKey:@"updateDate"];
     }
     if ([response objectForKey:@"acl"]){
         _ACL = [NCMBACL ACL];
         _ACL.dicACL = [NSMutableDictionary dictionaryWithDictionary:[response objectForKey:@"acl"]];
         //[response removeObjectForKey:@"acl"];
     }
-    if (self.createdDate == nil && self.updatedDate != nil){
-        _updatedDate = _createdDate;
+    if (self.createDate == nil && self.updateDate != nil){
+        _updateDate = _createDate;
     }
     if (isRefresh == YES){
         //refreshが実行された場合は履歴をすべて消去する。saveEventually対策。
         [operationSetQueue setArray:[NSMutableArray array]];
-        estimatedData = [NSMutableDictionary dictionaryWithDictionary:response];
-    } else {
-        for (id key in [response keyEnumerator]){
-            [estimatedData setObject:[self convertToNCMBObjectFromJSON:[response objectForKey:key]]
-                              forKey:key];
-        }
+        estimatedData = [NSMutableDictionary dictionary];
+    }
+    for (NSString *key in [response keyEnumerator]){
+        [estimatedData setObject:[self convertToNCMBObjectFromJSON:[response objectForKey:key] convertKey:key]
+                          forKey:key];
     }
 }
 
 
 #pragma mark - Save
+
+/**
+ オペレーションの中にSetOperationがないかチェックし、SetOperationのvalueが保存前のNCMBObjectの場合は保存を実行する
+ @param operation チェックするオペレーション
+ @param error エラーを保持するポインタ
+ */
+- (void)savePointerObjectBeforehand:(NSMutableDictionary*)operation error:(NSError**)error{
+    for (NSString *key in operation){
+        if ([[operation objectForKey:key] isKindOfClass:[NCMBSetOperation class]]){
+            NCMBSetOperation *setOperation = [operation objectForKey:key];
+            if ([setOperation.value isKindOfClass:[NCMBObject class]]){
+                NCMBObject *valueObj = setOperation.value;
+                if (valueObj.objectId == nil){
+                    [valueObj save:error];
+                }
+            }
+        }
+    }
+}
+
 
 /**
  リクエストURLを受け取ってsave処理を実行する
@@ -968,12 +985,18 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  */
 - (BOOL)save:(NSString*)url error:(NSError **)error{
     
-    //estimateDataをJSON文字列に変換する
+    //ポインタ先オブジェクトは事前に保存してから、connectionを作成
     BOOL result = NO;
     NSMutableDictionary *operation = [self beforeConnection];
+    [self savePointerObjectBeforehand:operation
+                                error:error];
     
-    NCMBURLConnection *connect = [self createConnectionForSave:url operation:operation];
+    NCMBURLConnection *connect = [self createConnectionForSave:url
+                                                     operation:operation];
     
+    if (error != nil && *error != nil){
+        return result;
+    }
     if (connect == nil){
         return result;
     }
@@ -1009,13 +1032,16 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 - (void)saveInBackgroundWithBlock:(NSString *)url block:(NCMBSaveResultBlock)userBlock{
     dispatch_queue_t sub_queue = dispatch_queue_create("saveInBackgroundWithBlock", NULL);
     dispatch_async(sub_queue, ^{
-        //リクエストを作成
+        
+        //ポインタ先オブジェクトは事前に保存してから、connectionを作成
         NSError *e = nil;
         NSMutableDictionary *operation = [self beforeConnection];
+        [self savePointerObjectBeforehand:operation error:&e];
         
-        NCMBURLConnection *connect = [self createConnectionForSave:url operation:operation];
+        NCMBURLConnection *connect = [self createConnectionForSave:url
+                                                         operation:operation];
         
-        if (connect == nil){
+        if (connect == nil || e != nil){
             if (userBlock){
                 userBlock(NO, e);
             }
@@ -1390,8 +1416,8 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  */
 - (void)afterDelete{
     _objectId = nil;
-    _createdDate = nil;
-    _updatedDate = nil;
+    _createDate = nil;
+    _updateDate = nil;
     _ncmbClassName = nil;
     estimatedData = nil;
     operationSetQueue = nil;
@@ -1416,8 +1442,10 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 /**
  JSONオブジェクトをNCMBObjectに変換する
  @param jsonData JSON形式のデータ
+ @param convertKey 変換するキー
+ @return JSONオブジェクトから変換されたオブジェクト
  */
-- (id)convertToNCMBObjectFromJSON:(id)jsonData{
+- (id)convertToNCMBObjectFromJSON:(id)jsonData convertKey:(NSString*)convertKey{
     if (jsonData == NULL){
         //objがNULLだったら
         return nil;
@@ -1438,16 +1466,18 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
                 return geoPoint;
             } else if ([typeStr isEqualToString:@"Pointer"]){
                 //objがポインタだったら
-                NCMBObject *obj = [NCMBObject objectWithClassName:[jsonData objectForKey:@"className"]
-                                                         objectId:[jsonData objectForKey:@"objectId"]];
+                id obj = [NCMBObject convertClass:jsonData ncmbClassName:[jsonData objectForKey:@"className"]];
                 return obj;
+
             } else if ([typeStr isEqualToString:@"Relation"]){
                 //objがリレーションだったら
-                NCMBRelation *relation = [[NCMBRelation alloc] initWithClassName:[jsonData objectForKey:@"className"]];
+                NCMBRelation *relation = [[NCMBRelation alloc] initWithClassName:self key:convertKey];
+                relation.targetClass = [jsonData objectForKey:@"className"];
                 return relation;
             } else if ([typeStr isEqualToString:@"Object"]){
-                NCMBObject *obj = [NCMBObject objectWithClassName:nil data:jsonData];
+                id obj = [NCMBObject convertClass:jsonData ncmbClassName:[jsonData objectForKey:@"className"]];
                 return obj;
+
             }
         } else if ([jsonData objectForKey:@"acl"]){
             //objがACLだったら
@@ -1457,9 +1487,9 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         } else {
             //objがNSDictionaryだったら再帰呼び出し
             NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-            for (id Key in [jsonData keyEnumerator]){
-                id convertedObj = [self convertToNCMBObjectFromJSON:[jsonData objectForKey:Key]];
-                [dic setObject:convertedObj forKey:Key];
+            for (NSString *key in [jsonData keyEnumerator]){
+                id convertedObj = [self convertToNCMBObjectFromJSON:[jsonData objectForKey:key] convertKey:key];
+                [dic setObject:convertedObj forKey:key];
             }
             return dic;
         }
@@ -1468,7 +1498,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         NSMutableArray *array = [NSMutableArray array];
         for (int i = 0; i < [jsonData count]; i++){
             //objがNSArrayだったら再帰呼び出し
-            array[i] = [self convertToNCMBObjectFromJSON:jsonData[i]];
+            array[i] = [self convertToNCMBObjectFromJSON:jsonData[i] convertKey:nil];
         }
         return array;
     } else if ([jsonData isKindOfClass:[NSSet class]]){
@@ -1476,7 +1506,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         NSMutableSet *set = [NSMutableSet set];
         for (id value in [currentSet objectEnumerator]){
             //objがNSSetだったら再帰呼び出し
-            [set addObject:[self convertToNCMBObjectFromJSON:value]];
+            [set addObject:[self convertToNCMBObjectFromJSON:value  convertKey:nil]];
         }
         return set;
         
@@ -1576,6 +1606,47 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     }
     //その他の型(文字列、数値、真偽値)はそのまま返却
     return obj;
+}
+
+/**
+ 引数の配列とクラス名からサブクラスor既定クラスorその他のインスタンスを作成する
+ @param NSMutableDictionary *result オブジェクトのデータ
+ @param NSString *ncmbClassName mobile backend上のクラス名
+ */
++ (id)convertClass:(NSMutableDictionary*)result
+     ncmbClassName:(NSString*)ncmbClassName{
+    NSString *subClassName = @"";
+    subClassName = [[SubClassHandler sharedInstance] className:ncmbClassName];
+    if (subClassName != nil){
+        Class vcClass = NSClassFromString(ncmbClassName);
+        NCMBObject *obj = [vcClass objectWithoutDataWithObjectId:[result objectForKey:@"objectId"]];
+        [obj afterFetch:result isRefresh:YES];
+        return obj;
+    } else if ([ncmbClassName isEqualToString:@"user"]){
+        NCMBUser *user = [[NCMBUser alloc] initWithClassName:@"user"];
+        [user afterFetch:result isRefresh:YES];
+        return user;
+    } else if ([ncmbClassName isEqualToString:@"push"]){
+        NCMBPush *push = [NCMBPush push];
+        [push afterFetch:result isRefresh:YES];
+        return push;
+    } else if ([ncmbClassName isEqualToString:@"installation"]){
+        NCMBInstallation *installation = [NCMBInstallation currentInstallation];
+        [installation afterFetch:result isRefresh:YES];
+        return installation;
+    } else if ([ncmbClassName isEqualToString:@"role"]){
+        NCMBRole *role = [[NCMBRole alloc] initWithClassName:@"role"];
+        [role afterFetch:result isRefresh:YES];
+        return role;
+    } else if ([ncmbClassName isEqualToString:@"file"]){
+        NCMBFile *file = [NCMBFile fileWithName:[result objectForKey:@"fileName"] data:nil];
+        file.ACL = [result objectForKey:@"acl"];
+        return file;
+    } else {
+        NCMBObject *obj = [NCMBObject objectWithClassName:ncmbClassName];
+        [obj afterFetch:result isRefresh:YES];
+        return obj;
+    }
 }
 
 @end

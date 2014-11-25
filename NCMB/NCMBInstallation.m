@@ -58,7 +58,7 @@
 }
 
 +(NCMBInstallation*)installation{
-    NCMBInstallation *installation = [[NCMBInstallation alloc]initWithClassName:@"user"];
+    NCMBInstallation *installation = [[NCMBInstallation alloc]initWithClassName:@"installation"];
     installation.channels = [NSMutableArray array];
     [installation setObject:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]
                      forKey:@"applicationName"];
@@ -78,11 +78,25 @@
         NSData *localData = [NSData dataWithContentsOfFile:DATA_CURRENTINSTALLATION_PATH
                                                    options:kNilOptions
                                                      error:&error];
-        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:localData
+        NSMutableDictionary *json = [NSJSONSerialization JSONObjectWithData:localData
                                                              options:kNilOptions
                                                                error:&error];
-        NCMBInstallation *installation = [[NCMBInstallation alloc] init];
-        [installation afterFetch:[NSMutableDictionary dictionaryWithDictionary:json] isRefresh:NO];
+        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:[json objectForKey:@"data"]];
+        NSString *sdkVer = [dic objectForKey:@"sdkVersion"];
+        NSString *appVer = [dic objectForKey:@"appVersion"];
+        NSString *newSdkVer = SDK_VERSION;
+        NSString *newAppVer = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+        //SDKバージョンとアプリバージョンの更新
+        if (![sdkVer isEqualToString:newSdkVer]){
+            [dic setObject:newSdkVer
+                                            forKey:@"sdkVersion"];
+        }
+        if (![appVer isEqualToString:newAppVer]){
+            [dic setObject:newAppVer forKey:@"appVersion"];
+        }
+        NCMBInstallation *installation = [NCMBInstallation installation];
+        [installation afterFetch:[NSMutableDictionary dictionaryWithDictionary:dic]
+                       isRefresh:NO];
         return installation;
     }else{
         return [NCMBInstallation installation];
@@ -92,7 +106,6 @@
 #pragma  mark override
 
 - (void)afterFetch:(NSMutableDictionary *)response isRefresh:(BOOL)isRefresh{
-    NCMBDEBUGLOG(@"response:%@", response);
     [super afterFetch:response isRefresh:isRefresh];
     if ([response objectForKey:@"deviceToken"]){
         _deviceToken = [response objectForKey:@"deviceToken"];
@@ -190,15 +203,20 @@
 }
 
 - (void)saveInstallationToFile{
-    NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:estimatedData];
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    for (NSString *key in [estimatedData keyEnumerator]){
+        [dic setObject:[self convertToJSONFromNCMBObject:[estimatedData objectForKey:key]]
+                forKey:key];
+    }
+    
     if (self.objectId){
         [dic setObject:self.objectId forKey:@"objectId"];
     }
-    if (self.createdDate){
-        [dic setObject:[self convertToJSONFromNCMBObject:self.createdDate] forKey:@"createdDate"];
+    if (self.createDate){
+        [dic setObject:[self convertToJSONFromNCMBObject:self.createDate] forKey:@"createDate"];
     }
-    if (self.updatedDate){
-        [dic setObject:[self convertToJSONFromNCMBObject:self.updatedDate] forKey:@"updatedDate"];
+    if (self.updateDate){
+        [dic setObject:[self convertToJSONFromNCMBObject:self.updateDate] forKey:@"updateDate"];
     }
     if (self.ACL){
         [dic setObject:self.ACL.dicACL forKey:@"acl"];
@@ -212,8 +230,11 @@
     if (_badge){
         [dic setObject:[NSNumber numberWithInteger:_badge] forKey:@"badge"];
     }
+    NSMutableDictionary *saveDictionary = [NSMutableDictionary dictionary];
+    [saveDictionary setObject:dic forKey:@"data"];
+    [saveDictionary setObject:@"installation" forKey:@"className"];
     NSError *error = nil;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dic
+    NSData *data = [NSJSONSerialization dataWithJSONObject:saveDictionary
                                                    options:kNilOptions
                                                      error:&error];
     [data writeToFile:DATA_CURRENTINSTALLATION_PATH atomically:YES];

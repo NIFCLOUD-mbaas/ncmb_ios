@@ -47,6 +47,8 @@
 		5D46C9D81A11EE4D00278A10 /* NCMBCloseImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D46C9D51A11EE4D00278A10 /* NCMBCloseImageView.m */; };
 		5D46C9D91A11EE4D00278A10 /* NCMBRichPushView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D46C9D71A11EE4D00278A10 /* NCMBRichPushView.m */; };
 		5D46CA5F1A1260FC00278A10 /* SubClassHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D46C98E1A11EA2D00278A10 /* SubClassHandler.m */; };
+		5D8F65E51A26F65400C46EA4 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D8F65E41A26F65400C46EA4 /* FacebookSDK.framework */; };
+		5D8F65E61A26F65400C46EA4 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D8F65E41A26F65400C46EA4 /* FacebookSDK.framework */; };
 		5DA035D11A12661900E10D64 /* NCMBFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA035D01A12661900E10D64 /* NCMBFile.m */; };
 		5DA035D91A12675400E10D64 /* NSDataBase64Encode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA035D81A12675400E10D64 /* NSDataBase64Encode.m */; };
 		5DA0363F1A126DEC00E10D64 /* NCMBFacebookUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA0361A1A126DEC00E10D64 /* NCMBFacebookUtils.m */; };
@@ -66,7 +68,6 @@
 		5DA0364D1A126DEC00E10D64 /* NCMBOAToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA0363A1A126DEC00E10D64 /* NCMBOAToken.m */; };
 		5DA0364E1A126DEC00E10D64 /* NCMBTwitterLoginView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA0363C1A126DEC00E10D64 /* NCMBTwitterLoginView.m */; };
 		5DA0364F1A126DEC00E10D64 /* NCMBTwitterUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA0363E1A126DEC00E10D64 /* NCMBTwitterUtils.m */; };
-		5DA18B571A19AEFC0076EA72 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DA18B561A19AEFC0076EA72 /* FacebookSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -140,6 +141,7 @@
 		5D46C9D51A11EE4D00278A10 /* NCMBCloseImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBCloseImageView.m; sourceTree = "<group>"; };
 		5D46C9D61A11EE4D00278A10 /* NCMBRichPushView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBRichPushView.h; sourceTree = "<group>"; };
 		5D46C9D71A11EE4D00278A10 /* NCMBRichPushView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBRichPushView.m; sourceTree = "<group>"; };
+		5D8F65E41A26F65400C46EA4 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		5DA035CF1A12661900E10D64 /* NCMBFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBFile.h; sourceTree = "<group>"; };
 		5DA035D01A12661900E10D64 /* NCMBFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBFile.m; sourceTree = "<group>"; };
 		5DA035D71A12675400E10D64 /* NSDataBase64Encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDataBase64Encode.h; sourceTree = "<group>"; };
@@ -178,7 +180,6 @@
 		5DA0363C1A126DEC00E10D64 /* NCMBTwitterLoginView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBTwitterLoginView.m; sourceTree = "<group>"; };
 		5DA0363D1A126DEC00E10D64 /* NCMBTwitterUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBTwitterUtils.h; sourceTree = "<group>"; };
 		5DA0363E1A126DEC00E10D64 /* NCMBTwitterUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBTwitterUtils.m; sourceTree = "<group>"; };
-		5DA18B561A19AEFC0076EA72 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../../Desktop/FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		5DA18B601A19D5630076EA72 /* NCMBSubclassing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBSubclassing.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -187,8 +188,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5DA18B571A19AEFC0076EA72 /* FacebookSDK.framework in Frameworks */,
 				5D46C8AA1A11D8B300278A10 /* Foundation.framework in Frameworks */,
+				5D8F65E51A26F65400C46EA4 /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,6 +197,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D8F65E61A26F65400C46EA4 /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,7 +207,7 @@
 		5D46C87E1A11CE6200278A10 = {
 			isa = PBXGroup;
 			children = (
-				5DA18B561A19AEFC0076EA72 /* FacebookSDK.framework */,
+				5D8F65E41A26F65400C46EA4 /* FacebookSDK.framework */,
 				5D46C8A91A11D8B300278A10 /* Foundation.framework */,
 				5D46C8891A11CE6200278A10 /* NCMB */,
 				5D46C8931A11CE6200278A10 /* NCMBTests */,
@@ -469,7 +471,7 @@
 		5D46C87F1A11CE6200278A10 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "NIFTY Corporation";
 				TargetAttributes = {
 					5D46C8861A11CE6200278A10 = {
@@ -524,7 +526,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "INFO_PLIST='NCMB_Info.plist'\nFRAMEWORK_NAME=${PROJECT_NAME}\nFRAMEWORK_VERSION_NUMBER=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" ${SRCROOT}/${PROJECT_NAME}/${INFO_PLIST})\nFRAMEWORK_VERSION=A\nFRAMEWORK_BUILD_PATH=\"${SRCROOT}/build/${CONFIGURATION}-framework\"\nFRAMEWORK_DIR=\"${FRAMEWORK_BUILD_PATH}/${FRAMEWORK_NAME}.framework\"\nFRAMEWORK_PACKAGE_NAME=\"${FRAMEWORK_NAME}.${FRAMEWORK_VERSION_NUMBER}.zip\"\n\n[ -d \"${FRAMEWORK_BUILD_PATH}\" ] && rm -rf \"${FRAMEWORK_BUILD_PATH}\"\n\nxcodebuild -project ${PROJECT_NAME}.xcodeproj \\\n-sdk iphonesimulator8.0 \\\n-target \"${PROJECT_NAME}\" \\\n-configuration ${CONFIGURATION} clean build\n\nxcodebuild -project ${PROJECT_NAME}.xcodeproj \\\n-sdk iphoneos8.0 \\\n-target \"${PROJECT_NAME}\" \\\n-configuration ${CONFIGURATION} clean build\n\nmkdir -p ${FRAMEWORK_DIR}\nmkdir -p ${FRAMEWORK_DIR}/Versions\nmkdir -p ${FRAMEWORK_DIR}/Versions/${FRAMEWORK_VERSION}\nmkdir -p ${FRAMEWORK_DIR}/Versions/${FRAMEWORK_VERSION}/Resources\nmkdir -p ${FRAMEWORK_DIR}/Versions/${FRAMEWORK_VERSION}/Headers\n\nln -s ./${FRAMEWORK_VERSION} ${FRAMEWORK_DIR}/Versions/Current\nln -s ./Versions/Current/Headers ${FRAMEWORK_DIR}/Headers\nln -s ./Versions/Current/Resources ${FRAMEWORK_DIR}/Resources\nln -s ./Versions/Current/${FRAMEWORK_NAME} ${FRAMEWORK_DIR}/${FRAMEWORK_NAME}\n\nlipo -create \\\n${SRCROOT}/build/${CONFIGURATION}-iphoneos/lib${FRAMEWORK_NAME}.a \\\n${SRCROOT}/build/${CONFIGURATION}-iphonesimulator/lib${FRAMEWORK_NAME}.a \\\n-output \"${FRAMEWORK_DIR}/Versions/Current/${FRAMEWORK_NAME}\"\n\n#Copy header file for import\ncp ${SRCROOT}/${PROJECT_NAME}/*.h ${FRAMEWORK_DIR}/Headers/\n\ncp ${SRCROOT}/${PROJECT_NAME}/${INFO_PLIST} ${FRAMEWORK_DIR}/Resources\n\ncd ${FRAMEWORK_BUILD_PATH}\nzip -ry ${FRAMEWORK_PACKAGE_NAME} $(basename $FRAMEWORK_DIR)";
+			shellScript = "INFO_PLIST='NCMB_Info.plist'\nFRAMEWORK_NAME=${PROJECT_NAME}\nFRAMEWORK_VERSION_NUMBER=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" ${SRCROOT}/${PROJECT_NAME}/${INFO_PLIST})\nFRAMEWORK_VERSION=A\nFRAMEWORK_BUILD_PATH=\"${SRCROOT}/build/${CONFIGURATION}-framework\"\nFRAMEWORK_DIR=\"${FRAMEWORK_BUILD_PATH}/${FRAMEWORK_NAME}.framework\"\nFRAMEWORK_PACKAGE_NAME=\"${FRAMEWORK_NAME}.${FRAMEWORK_VERSION_NUMBER}.zip\"\n\n[ -d \"${FRAMEWORK_BUILD_PATH}\" ] && rm -rf \"${FRAMEWORK_BUILD_PATH}\"\n\nxcodebuild -project ${PROJECT_NAME}.xcodeproj \\\n-sdk iphonesimulator8.1 \\\n-target \"${PROJECT_NAME}\" \\\n-configuration ${CONFIGURATION} clean build\n\nxcodebuild -project ${PROJECT_NAME}.xcodeproj \\\n-sdk iphoneos8.1 \\\n-target \"${PROJECT_NAME}\" \\\n-configuration ${CONFIGURATION} clean build\n\nmkdir -p ${FRAMEWORK_DIR}\nmkdir -p ${FRAMEWORK_DIR}/Versions\nmkdir -p ${FRAMEWORK_DIR}/Versions/${FRAMEWORK_VERSION}\nmkdir -p ${FRAMEWORK_DIR}/Versions/${FRAMEWORK_VERSION}/Resources\nmkdir -p ${FRAMEWORK_DIR}/Versions/${FRAMEWORK_VERSION}/Headers\n\nln -s ./${FRAMEWORK_VERSION} ${FRAMEWORK_DIR}/Versions/Current\nln -s ./Versions/Current/Headers ${FRAMEWORK_DIR}/Headers\nln -s ./Versions/Current/Resources ${FRAMEWORK_DIR}/Resources\nln -s ./Versions/Current/${FRAMEWORK_NAME} ${FRAMEWORK_DIR}/${FRAMEWORK_NAME}\n\nlipo -create \\\n${SRCROOT}/build/${CONFIGURATION}-iphoneos/lib${FRAMEWORK_NAME}.a \\\n${SRCROOT}/build/${CONFIGURATION}-iphonesimulator/lib${FRAMEWORK_NAME}.a \\\n-output \"${FRAMEWORK_DIR}/Versions/Current/${FRAMEWORK_NAME}\"\n\n#Copy header file for import\ncp ${SRCROOT}/${PROJECT_NAME}/*.h ${FRAMEWORK_DIR}/Headers/\n/*\ncp ${SRCROOT}/${PROJECT_NAME}/${INFO_PLIST} ${FRAMEWORK_DIR}/Resources\n*/\ncd ${FRAMEWORK_BUILD_PATH}\nzip -ry ${FRAMEWORK_PACKAGE_NAME} $(basename $FRAMEWORK_DIR)";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -623,9 +625,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -657,7 +659,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -702,6 +704,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -719,6 +722,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = NCMBTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

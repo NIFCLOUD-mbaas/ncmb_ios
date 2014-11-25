@@ -72,10 +72,10 @@
 @property (nonatomic) NSString *objectId;
 
 /// updatedAt オブジェクトの更新日時
-@property (nonatomic, readonly) NSDate *updatedDate;
+@property (nonatomic, readonly) NSDate *updateDate;
 
 /// createdAt オブジェクトの登録日時
-@property (nonatomic, readonly) NSDate *createdDate;
+@property (nonatomic, readonly) NSDate *createDate;
 
 /// ACL オブジェクトのアクセス権限情報
 @property (nonatomic) NCMBACL *ACL;

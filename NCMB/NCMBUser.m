@@ -843,11 +843,11 @@ static BOOL isEnableAutomaticUser = FALSE;
     if (self.objectId) {
         [dic setObject:self.objectId forKey:@"objectId"];
     }
-    if (self.createdDate) {
-        [dic setObject:self.createdDate forKey:@"createDate"];
+    if (self.createDate) {
+        [dic setObject:self.createDate forKey:@"createDate"];
     }
-    if (self.updatedDate) {
-        [dic setObject:self.updatedDate forKey:@"updateDate"];
+    if (self.updateDate) {
+        [dic setObject:self.updateDate forKey:@"updateDate"];
     }
     if(self.sessionToken){
         [dic setObject:self.sessionToken forKey:@"sessionToken"];
@@ -977,8 +977,15 @@ static BOOL isEnableAutomaticUser = FALSE;
         [estimatedData setObject:[response objectForKey:@"userName"] forKey:@"userName"];
     }
     //SNS連携時に必要
-    if ([response objectForKey:@"authData"]){
-        [estimatedData setObject:[response objectForKey:@"authData"] forKey:@"authData"];
+    if (![[response objectForKey:@"authData"] isKindOfClass:[NSNull class]]){
+        NSDictionary *authDataDic = [response objectForKey:@"authData"];
+        NSMutableDictionary *converted = [NSMutableDictionary dictionary];
+        for (NSString *key in [[authDataDic allKeys] objectEnumerator]){
+            [converted setObject:[self convertToNCMBObjectFromJSON:[authDataDic objectForKey:key]
+                                                          convertKey:key]
+                            forKey:key];
+        }
+        [estimatedData setObject:converted forKey:@"authData"];
     }
 }
 

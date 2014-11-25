@@ -121,8 +121,38 @@
     [_roles addObject:(NCMBObject*)role];
 }
 
+/**
+ 子ロールへのリレーションを取得する
+ @return 子ロールへのリレーション。設定されていない場合はnilを返却する
+ */
+- (NCMBRelation*)relationForRole{
+    if ([_roles isKindOfClass:[NCMBRelation class]]){
+        return _roles;
+    } else {
+        return nil;
+    }
+}
+
+/**
+ ロールに属した会員へのリレーションを取得する
+ @return ロールに属した会員へのリレーション。設定されていない場合はnilを返却する
+ */
+- (NCMBRelation*)relationForUser{
+    if ([_users isKindOfClass:[NCMBRelation class]]){
+        return _users;
+    } else {
+        return nil;
+    }
+}
+
 - (void)afterFetch:(NSMutableDictionary *)response isRefresh:(BOOL)isRefresh{
     [super afterFetch:response isRefresh:isRefresh];
+    if ([response objectForKey:@"belongRole"]){
+        _roles = [self convertToNCMBObjectFromJSON:[response objectForKey:@"belongRole"] convertKey:@"belongRole"];
+    }
+    if ([response objectForKey:@"belongUser"]){
+        _users = [self convertToNCMBObjectFromJSON:[response objectForKey:@"belongUser"] convertKey:@"belongUser"];
+    }
     if ([response objectForKey:@"roleName"]){
         _roleName = [response objectForKey:@"roleName"];
     }

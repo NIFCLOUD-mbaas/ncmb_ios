@@ -30,9 +30,15 @@
 #import "NCMBUser.h"
 #import "NCMBFile.h"
 #import "NCMBTwitterUtils.h"
+
+#if defined(__has_include)
+#if __has_include(<FacebookSDK/FacebookSDK.h>)
 #import "NCMBFacebookUtils.h"
+#endif
+#endif
 
 #import "NCMBSubclassing.h"
+#import "NCMBConstants.h"
 
 @interface NCMB : NSObject
 

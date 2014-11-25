@@ -526,6 +526,7 @@ typedef enum : NSInteger {
         if (error != nil){
             *error = convertErr;
         }
+        return nil;
     }
     return jsonDic;
 }
@@ -537,19 +538,26 @@ typedef enum : NSInteger {
  */
 - (void)convertErrorFromJSON:(NSData*)contents error:(NSError**)error {
     NSDictionary *errDic = [self convertResponseToDic:contents error:error];
-    [self checkE401001Error:[errDic objectForKey:@"code"]];
-    //エラーコードをNSIntegerへの変換
-    NSString *codeStr = [[errDic objectForKey:@"code"] stringByReplacingOccurrencesOfString:@"E"
-                                                                                  withString:@""];
-    //エラーメッセージの取得/設定
-    NSMutableDictionary *errorMessage = [NSMutableDictionary dictionary];
-    [errorMessage setObject:[errDic objectForKey:@"error"] forKey:NSLocalizedDescriptionKey];
-    if (error != nil){
-        *error = [[NSError alloc] initWithDomain:kNCMBErrorDomain
-                                            code:[codeStr integerValue]
-                                        userInfo:errorMessage];
+    if (errDic){
+        [self checkE401001Error:[errDic objectForKey:@"code"]];
+        //エラーコードをNSIntegerへの変換
+        NSString *codeStr = [[errDic objectForKey:@"code"] stringByReplacingOccurrencesOfString:@"E"
+                                                                                     withString:@""];
+        //エラーメッセージの取得/設定
+        NSMutableDictionary *errorMessage = [NSMutableDictionary dictionary];
+        [errorMessage setObject:[errDic objectForKey:@"error"] forKey:NSLocalizedDescriptionKey];
+        if (error != nil){
+            *error = [[NSError alloc] initWithDomain:kNCMBErrorDomain
+                                                code:[codeStr integerValue]
+                                            userInfo:errorMessage];
+        }
+    } else {
+        if (error != nil){
+            *error = [[NSError alloc] initWithDomain:NSCocoaErrorDomain
+                                                code:NSURLErrorUnknown
+                                            userInfo:@{}];
+        }
     }
-    
 }
 
 /**

@@ -296,7 +296,7 @@ static NSMutableData *resultData = nil;
             isCancel = NO;
         });
     });
-    dispatch_release(sub);
+    //dispatch_release(sub);
 }
 
 
@@ -399,7 +399,7 @@ static NSMutableData *resultData = nil;
             }
         });
     });
-    dispatch_release(sub);
+    //dispatch_release(sub);
 }
 
 #pragma mark - create

@@ -71,8 +71,10 @@
 /**
  JSONオブジェクトをNCMBObjectに変換する
  @param jsonData JSON形式のデータ
+ @param convertKey 変換するキー
+ @return JSONオブジェクトから変換されたオブジェクト
  */
-- (id)convertToNCMBObjectFromJSON:(id)jsonData;
+- (id)convertToNCMBObjectFromJSON:(id)jsonData convertKey:(NSString*)convertKey;
 
 /**
  mobile backendにオブジェクトを保存する。非同期通信を行う。
@@ -85,6 +87,14 @@
  @param obj NCMBオブジェクト
  */
 - (id)convertToJSONFromNCMBObject:(id)obj;
+
+/**
+ 引数の配列とクラス名からサブクラスor既定クラスorその他のインスタンスを作成する
+ @param NSMutableDictionary *result オブジェクトのデータ
+ @param NSString *ncmbClassName mobile backend上のクラス名
+ */
++ (id)convertClass:(NSMutableDictionary*)result
+     ncmbClassName:(NSString*)ncmbClassName;
 
 /**
  リクエストURLを受け取ってdeleteを実行する
