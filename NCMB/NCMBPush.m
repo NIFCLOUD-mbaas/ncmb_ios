@@ -257,7 +257,7 @@ static NCMBRichPushView *rv;
 }
 
 - (void)setBadgeNumber:(int)badgeNumber{
-    if (![self objectForKey:@""] && ![self objectForKey:@"badgeIncrementFlag"]){
+    if (![self objectForKey:@"contentAvailable"] && ![self objectForKey:@"badgeIncrementFlag"]){
         [self setObject:[NSNumber numberWithInt:badgeNumber] forKey:@"badgeSetting"];
         [self setObject:[NSNumber numberWithBool:NO] forKey:@"badgeIncrementFlag"];
         [self setObject:[NSNumber numberWithBool:NO] forKey:@"contentAvailable"];
@@ -286,9 +286,9 @@ static NCMBRichPushView *rv;
         if ([key isEqualToString:@"badgeSetting"]){
             [self setBadgeNumber:[[dic objectForKey:key] intValue]];
         } else if ([key isEqualToString:@"badgeIncrementFlag"]){
-            [self setBadgeIncrementFlag:[dic objectForKey:key]];
+            [self setBadgeIncrementFlag:[[dic objectForKey:key] boolValue]];
         } else if ([key isEqualToString:@"contentAvailable"]){
-            [self setContentAvailable:[dic objectForKey:key]];
+            [self setContentAvailable:[[dic objectForKey:key] boolValue]];
         } else {
             [self setObject:[dic objectForKey:key] forKey:key];
         }

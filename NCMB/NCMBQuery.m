@@ -70,6 +70,7 @@
 
 - (NSString*)description{
     NSError *error = nil;
+    _query = [self checkQueryDictionary:_query];
     NSData *json = [NSJSONSerialization dataWithJSONObject:_query
                                                    options:NSJSONWritingPrettyPrinted
                                                      error:&error];
@@ -79,16 +80,35 @@
 #pragma mark - Query configuration
 
 /**
+ 検索条件を_queryに設定する
+ @param object 検索条件に使用する値
+ @param key 検索条件に使用するキー
+ @param operand 検索条件
+ */
+- (void)setCondition:(id)object forKey:(NSString*)key operand:(NSString*)operand{
+    NSMutableDictionary *condition = [NSMutableDictionary dictionaryWithDictionary:[_query objectForKey:key]];
+    if (condition && [condition isKindOfClass:[NSDictionary class]]){
+        //conditionに条件を追加する
+        [condition setObject:[self convertToJSONFromNCMBObject:object] forKey:operand];
+    } else {
+        //引数の条件からconditionを作成する
+        condition = [NSMutableDictionary dictionaryWithObject:[self convertToJSONFromNCMBObject:object]
+                                                       forKey:operand];
+    }
+    [_query setObject:condition forKey:key];
+}
+
+/**
  「親クエリに指定したキーの値の中から指定したオブジェクト(第二引数)と等しいものを検索する」という検索条件を設定
  @param key 検索条件に使用するキー
  @param object 検索条件に使用する値
  */
 - (void)whereKey:(NSString*)key equalTo:(id)object{
-    [_query setObject:[self convertToJSONFromNCMBObject:object] forKey:key];
+    [self setCondition:object forKey:key operand:@"$eq"];
 }
 
 - (void)whereKey:(NSString *)key notEqualTo:(id)object{
-    [_query setObject:@{@"$ne":object} forKey:key];
+    [self setCondition:object forKey:key operand:@"$ne"];
 }
 
 /**
@@ -97,7 +117,7 @@
  @param object 検索条件に使用する値
  */
 - (void)whereKey:(NSString *)key greaterThan:(id)object{
-    [_query setObject:@{@"$gt":[self convertToJSONFromNCMBObject:object]} forKey:key];
+    [self setCondition:object forKey:key operand:@"$gt"];
 }
 
 /**
@@ -106,7 +126,7 @@
  @param object 検索条件に使用する値
  */
 - (void)whereKey:(NSString *)key greaterThanOrEqualTo:(id)object{
-    [_query setObject:@{@"$gte":[self convertToJSONFromNCMBObject:object]} forKey:key];
+    [self setCondition:object forKey:key operand:@"$gte"];
 }
 
 /**
@@ -115,7 +135,7 @@
  @param object 検索条件に使用する値
  */
 - (void)whereKey:(NSString *)key lessThan:(id)object{
-    [_query setObject:@{@"$lt":[self convertToJSONFromNCMBObject:object]} forKey:key];
+    [self setCondition:object forKey:key operand:@"$lt"];
 }
 
 /**
@@ -124,77 +144,68 @@
  @param object 検索条件に使用する値
  */
 - (void)whereKey:(NSString *)key lessThanOrEqualTo:(id)object{
-    [_query setObject:@{@"$lte":[self convertToJSONFromNCMBObject:object]} forKey:key];
+    [self setCondition:object forKey:key operand:@"$lte"];
 }
 
 - (void)whereKey:(NSString *)key containedIn:(NSArray *)array{
-    [_query setObject:@{@"$in":[self convertToJSONFromNCMBObject:array]} forKey:key];
+    [self setCondition:array forKey:key operand:@"$in"];
 }
 
 - (void)whereKey:(NSString *)key notContainedIn:(NSArray *)array{
-    [_query setObject:@{@"$nin":[self convertToJSONFromNCMBObject:array]} forKey:key];
+    [self setCondition:array forKey:key operand:@"$nin"];
 }
 
 - (void)whereKey:(NSString *)key containedInArray:(NSArray *)array{
-    [_query setObject:@{@"$inArray":[self convertToJSONFromNCMBObject:array]} forKey:key];
+    [self setCondition:array forKey:key operand:@"$inArray"];
 }
 
 - (void)whereKey:(NSString *)key notContainedInArray:(NSArray *)array{
-    [_query setObject:@{@"$ninArray":[self convertToJSONFromNCMBObject:array]} forKey:key];
+    [self setCondition:array forKey:key operand:@"$ninArray"];
 }
 
 - (void)whereKey:(NSString *)key containsAllObjectsInArray:(NSArray *)array{
-    [_query setObject:@{@"$all":[self convertToJSONFromNCMBObject:array]} forKey:key];
+    [self setCondition:array forKey:key operand:@"$all"];
 }
 
 - (void)whereKey:(NSString *)key matchesKey:(NSString *)otherKey inQuery:(NCMBQuery *)query{
-    [_query setObject:@{@"$select":@{@"query":[self convertToJSONFromNCMBObject:query],@"key":otherKey}} forKey:key];
+    [self setCondition:@{@"query":query,@"key":otherKey} forKey:key operand:@"$select"];
 }
 
 - (void)whereKey:(NSString *)key matchesQuery:(NCMBQuery *)query{
-    [_query setObject:@{@"$inQuery":[self convertToJSONFromNCMBObject:query]} forKey:key];
+    [self setCondition:query forKey:key operand:@"$inQuery"];
 }
 
 - (void)whereKeyExists:(NSString *)key{
-    [_query setObject:@{@"$exists":[NSNumber numberWithBool:YES]} forKey:key];
+    [self setCondition:[NSNumber numberWithBool:YES] forKey:key operand:@"$exists"];
 }
 
 - (void)whereKeyDoesNotExist:(NSString *)key{
-    [_query setObject:@{@"$exists":[NSNumber numberWithBool:NO]} forKey:key];
+    [self setCondition:[NSNumber numberWithBool:NO] forKey:key operand:@"$exists"];
 }
 
 - (void)whereKey:(NSString *)key nearGeoPoint:(NCMBGeoPoint *)geoPoint{
-    [_query setObject:@{@"$nearSphere":[self convertToJSONFromNCMBObject:geoPoint]}
-               forKey:key];
+    [self setCondition:geoPoint forKey:key operand:@"$nearSphere"];
 }
 
 - (void)whereKey:(NSString *)key nearGeoPoint:(NCMBGeoPoint *)geoPoint withinKilometers:(double)maxDistance{
-    [_query setObject:@{@"$nearSphere":[self convertToJSONFromNCMBObject:geoPoint],
-                        @"$maxDistanceInKilometers":[NSNumber numberWithDouble:maxDistance]}
-               forKey:key];
+    [self setCondition:geoPoint forKey:key operand:@"$nearSphere"];
+    [self setCondition:[NSNumber numberWithDouble:maxDistance] forKey:key operand:@"$maxDistanceInKilometers"];
 }
 
 - (void)whereKey:(NSString *)key nearGeoPoint:(NCMBGeoPoint *)geoPoint withinMiles:(double)maxDistance{
-    [_query setObject:@{@"$nearSphere":[self convertToJSONFromNCMBObject:geoPoint],
-                        @"$maxDistanceInMiles":[NSNumber numberWithDouble:maxDistance]}
-               forKey:key];
+    [self setCondition:geoPoint forKey:key operand:@"$nearSphere"];
+    [self setCondition:[NSNumber numberWithDouble:maxDistance] forKey:key operand:@"$maxDistanceInMiles"];
 }
 
 - (void)whereKey:(NSString *)key nearGeoPoint:(NCMBGeoPoint *)geoPoint withinRadians:(double)maxDistance{
-    [_query setObject:@{@"$nearSphere":[self convertToJSONFromNCMBObject:geoPoint],
-                        @"$maxDistanceInRadians":[NSNumber numberWithDouble:maxDistance]}
-               forKey:key];
+    [self setCondition:geoPoint forKey:key operand:@"$nearSphere"];
+    [self setCondition:[NSNumber numberWithDouble:maxDistance] forKey:key operand:@"$maxDistanceInRadians"];
 }
 
 - (void)whereKey:(NSString *)key
 withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
      toNortheast:(NCMBGeoPoint *)northeast{
-    [_query setObject:@{@"$within":@{@"$box":@[[self convertToJSONFromNCMBObject:southwest],
-                                               [self convertToJSONFromNCMBObject:northeast]
-                                               ]
-                                     }
-                        }
-               forKey:key];
+    [self setCondition:@{@"$box":@[southwest,northeast]} forKey:key operand:@"$within"];
 }
 
 +(NCMBQuery*)orQueryWithSubqueries:(NSArray *)queries{
@@ -206,26 +217,25 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
             [jsonQueries addObject:[aQuery convertToJSONFromNCMBObject:aQuery.query]];
         } else {
             if (![className isEqualToString:aQuery.ncmbClassName]){
-                //@throw @"Sub queries className must be same.";
                 return nil;
             }
             [jsonQueries addObject:[aQuery convertToJSONFromNCMBObject:aQuery.query]];
         }
     }
     NCMBQuery *query = [NCMBQuery queryWithClassName:className];
-    [query.query setObject:jsonQueries forKey:@"$or"];
+    [query setCondition:jsonQueries forKey:@"$or" operand:@"$or"];
     
     return query;
 }
 
 
 - (void)relatedTo:(NSString*)targetClassName objectId:(NSString*)objectId key:(NSString*)key{
-    [_query setObject:@{@"object":@{@"__type":@"Pointer",
-                                    @"className":targetClassName,
-                                    @"objectId":objectId,
-                                    },
-                        @"key":key}
-               forKey:@"$relatedTo"];
+    NSDictionary *relatedDic = @{@"object":@{@"__type":@"Pointer",
+                                             @"className":targetClassName,
+                                             @"objectId":objectId,
+                                             },
+                                 @"key":key};
+    [self setCondition:relatedDic forKey:@"$relatedTo" operand:@"$relatedTo"];
 }
 
 - (void)includeKey:(NSString *)key{
@@ -314,7 +324,6 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         [objects addObject:[NCMBObject convertClass:[NSMutableDictionary dictionaryWithDictionary:jsonObj] ncmbClassName:_ncmbClassName]];
     }
     return objects;
-    //return [self convertToNCMBObjectFromJSON:[response objectForKey:@"results"]];
 }
 
 - (void)findObjectsInBackgroundWithBlock:(NCMBArrayResultBlock)block{
@@ -349,7 +358,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
     }];
 }
 
-- (NCMBURLConnection*)createConnectionForSearch:queryDic countEnableFlag:(BOOL)countEnableFlag getFirst:(BOOL)getFirstFlag{
+- (NCMBURLConnection*)createConnectionForSearch:(NSMutableDictionary*)queryDic countEnableFlag:(BOOL)countEnableFlag getFirst:(BOOL)getFirstFlag{
     NSDictionary *endpoint = @{@"user":@"users",
                                @"role":@"roles",
                                @"installation":@"installations",
@@ -384,11 +393,10 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
     //同期通信を実行
     NSDictionary *response = [connect syncConnection:error];
     NSMutableArray *results = [NSMutableArray arrayWithArray:[response objectForKey:@"results"]];
-    //NSMutableDictionary *converted = [NSMutableDictionary dictionary];
-    /*
-    for (NSString *key in [[results[0] allKeys] objectEnumerator]){
-        [converted setObject:[self convertToNCMBObjectFromJSON:[results[0] objectForKey:key] convertKey:key] forKey:key];
-    }*/
+    
+    if ([results count] == 0){
+        return nil;
+    }
     id obj = [NCMBObject convertClass:results[0] ncmbClassName:_ncmbClassName];
     return obj;
 }
@@ -403,6 +411,9 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         NSDictionary *responseDic = response;
         NSMutableArray *results = [NSMutableArray arrayWithArray:[responseDic objectForKey:@"results"]];
         if (block){
+            if ([results count] == 0){
+                block(nil, error);
+            }
             block([NCMBObject convertClass:results[0] ncmbClassName:_ncmbClassName], error);
         }
     }];
@@ -469,7 +480,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 #pragma mark - getObjectWithId
 
 -(NCMBObject*)getObjectWithId:(NSString *)objectId error:(NSError **)error{
-    NSDictionary *queryDic = @{@"objectId":objectId};
+    NSMutableDictionary *queryDic = [NSMutableDictionary dictionaryWithDictionary:@{@"objectId":objectId}];
     NCMBURLConnection *connect = [self createConnectionForSearch:queryDic countEnableFlag:NO getFirst:YES];
     
     //同期通信を実行
@@ -479,7 +490,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 }
 
 - (void)getObjectInBackgroundWithId:(NSString *)objectId block:(NCMBObjectResultBlock)block{
-    NSDictionary *queryDic = @{@"objectId":objectId};
+    NSMutableDictionary *queryDic = [NSMutableDictionary dictionaryWithDictionary:@{@"objectId":objectId}];
     _connection = [self createConnectionForSearch:queryDic countEnableFlag:NO getFirst:YES];
     
     [_connection asyncConnectionWithBlock:^(id response, NSError *error) {
@@ -565,15 +576,37 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 
 #pragma mark - utility
 
+-(NSMutableDictionary*)checkQueryDictionary:(NSMutableDictionary*)queryDic{
+    for (NSString *key in [[queryDic allKeys] objectEnumerator]){
+        NSMutableDictionary *condition = [NSMutableDictionary dictionaryWithDictionary:[queryDic objectForKey:key]];
+        if ([[condition allKeys] containsObject:@"$eq"]){
+            [queryDic setObject:[condition objectForKey:@"$eq"] forKey:key];
+        } else if([[condition allKeys] containsObject:@"$relatedTo"]){
+            [queryDic setObject:[condition objectForKey:@"$relatedTo"] forKey:key];
+        } else if ([[condition allKeys] containsObject:@"$or"]){
+            NSMutableArray *queries = [NSMutableArray arrayWithArray:[condition objectForKey:@"$or"]];
+
+            for (int i = 0; i < [queries count]; i++){
+                [queries replaceObjectAtIndex:i withObject:[self checkQueryDictionary:queries[i]]];
+            }
+
+            [queryDic setObject:[condition objectForKey:@"$or"] forKey:key];
+        }
+    }
+    return queryDic;
+}
+
 /**
  クエリの内容を配列で返却する
  @param queryDic 配列に変換するクエリが格納されたNSDictionary
  @param countEnableFlag YESが指定されている場合にカウントを行う
  @param getFirstFlag YESが指定されている場合にlimit=1を指定する
  */
-- (NSArray*)queryToArray:(NSDictionary*)queryDic countEnableFlag:(BOOL)countEnableFlag getFirstFlag:(BOOL)getFirstFlag{
+- (NSArray*)queryToArray:(NSMutableDictionary*)queryDic countEnableFlag:(BOOL)countEnableFlag getFirstFlag:(BOOL)getFirstFlag{
     //queryStrを作成する
     NSMutableArray *queryArray = [NSMutableArray array];
+    
+    queryDic = [self checkQueryDictionary:queryDic];
     
     NSMutableDictionary *jsonDic = [self convertToJSONFromNCMBObject:queryDic];
     NSError *convertError = nil;
@@ -778,10 +811,6 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
                 return obj;
             } else if ([typeStr isEqualToString:@"Relation"]){
                 //objがリレーションだったら
-                NCMBRelation *relation = [[NCMBRelation alloc] initWithClassName:self key:convertKey];
-                relation.targetClass = [jsonData objectForKey:@"className"];
-                //NCMBRelation *relation = [[NCMBRelation alloc] initWithClassName:[jsonData objectForKey:@"className"]];
-                return relation;
             } else if ([typeStr isEqualToString:@"Object"]){
                 id obj = [NCMBObject convertClass:jsonData ncmbClassName:[jsonData objectForKey:@"className"]];
                 return obj;
@@ -823,7 +852,8 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 }
 
 - (NSDictionary*)getQueryDictionary{
-    return _query;
+    return [self checkQueryDictionary:_query];
+    //return _query;
 }
 
 @end

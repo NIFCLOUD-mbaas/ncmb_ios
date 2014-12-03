@@ -731,7 +731,7 @@ static BOOL isEnableAutomaticUser = FALSE;
     if ([responseDic objectForKey:@"mailAddressConfirm"]) {
         [responseDic removeObjectForKey:@"mailAddressConfirm"];
     }
-    [loginUser afterFetch:responseDic isRefresh:NO];
+    [loginUser afterFetch:responseDic isRefresh:YES];
     return loginUser;
 }
 
@@ -810,7 +810,7 @@ static BOOL isEnableAutomaticUser = FALSE;
                                                   options:NSJSONReadingAllowFragments
                                                     error:&error];
     }
-    [user afterFetch:[NSMutableDictionary dictionaryWithDictionary:dicData] isRefresh:NO];
+    [user afterFetch:[NSMutableDictionary dictionaryWithDictionary:dicData] isRefresh:YES];
     return user;
 }
 
@@ -932,13 +932,13 @@ static BOOL isEnableAutomaticUser = FALSE;
 }
 
 - (void)afterFetch:(NSMutableDictionary *)response isRefresh:(BOOL)isRefresh{
-    [super afterFetch:response isRefresh:isRefresh];
     if ([response objectForKey:@"userName"]){
         self.userName = [response objectForKey:@"userName"];
     }
     if ([response objectForKey:@"mailAddress"]){
         self.mailAddress = [response objectForKey:@"mailAddress"];
     }
+    [super afterFetch:response isRefresh:isRefresh];
 }
 
 - (BOOL)refresh:(NSError **)error{

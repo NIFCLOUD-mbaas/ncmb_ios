@@ -39,6 +39,12 @@ static id dynamicGetter(id self, SEL _cmd) {
     return [result valueForKey:name];
 }
 
+static NCMBRelation* dynamicGetterRelation(id self, SEL _cmd) {
+    NSString *name = NSStringFromSelector(_cmd);
+    NCMBRelation *relation = [self relationforKey:name];
+    return relation;
+}
+
 static int dynamicGetterInt(id self, SEL _cmd) {
     id result = nil;
     NSString* name = NSStringFromSelector(_cmd);
@@ -186,6 +192,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         objc_property_t property = properties[i];
         const char* attrs = property_getAttributes(property);
         NSArray *k = [[NSString stringWithUTF8String:attrs] componentsSeparatedByString:@","];
+        //@dynamic修飾子のチェック
         if ([k containsObject:@"D"]){
 
             const char *propName = property_getName(property);
@@ -201,13 +208,14 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
                 SEL setterSEL = NSSelectorFromString(setterName);
                 
                 NSString* code = [k objectAtIndex:0];
+                NSRange range = [code rangeOfString:@"NCMBRelation"];
                 if ([code isEqualToString:@"Ti"]) {
                     class_addMethod(self, getterSEL, (IMP) dynamicGetterInt, "@@:");
                     class_addMethod(self, setterSEL, (IMP) dynamicSetterInt, "v@:@");
                 }else if ([code isEqualToString:@"Tf"]) {
                     class_addMethod(self, getterSEL, (IMP) dynamicGetterFloat, "@@:");
                     class_addMethod(self, setterSEL, (IMP) dynamicSetterFloat, "v@:@");
-                }else if ([code isEqualToString:@"Tc"]) {
+                }else if ([code isEqualToString:@"TB"] || [code isEqualToString:@"Tc"]){
                     class_addMethod(self, getterSEL, (IMP) dynamicGetterBOOL, "@@:");
                     class_addMethod(self, setterSEL, (IMP) dynamicSetterBOOL, "v@:@");
                 }else if ([code isEqualToString:@"Td"]) {
@@ -222,6 +230,9 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
                 }else if ([code isEqualToString:@"Tq"]) {
                     class_addMethod(self, getterSEL, (IMP) dynamicGetterLongLong, "@@:");
                     class_addMethod(self, setterSEL, (IMP) dynamicSetterLongLong, "v@:@");
+                } else if (range.location != NSNotFound) {
+                    class_addMethod(self, getterSEL, (IMP) dynamicGetterRelation, "@@:");
+                    class_addMethod(self, setterSEL, (IMP) dynamicSetter, "v@:@");
                 }else{
                     class_addMethod(self, getterSEL, (IMP) dynamicGetter, "@@:");
                     class_addMethod(self, setterSEL, (IMP) dynamicSetter, "v@:@");
@@ -945,7 +956,9 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     }
     if (isRefresh == YES){
         //refreshが実行された場合は履歴をすべて消去する。saveEventually対策。
-        [operationSetQueue setArray:[NSMutableArray array]];
+        //[operationSetQueue setArray:[NSMutableArray array]];
+        NSUInteger index = [operationSetQueue indexOfObject:[self currentOperations]];
+        [operationSetQueue setObject:[NSMutableDictionary dictionary] atIndexedSubscript:index];
         estimatedData = [NSMutableDictionary dictionary];
     }
     for (NSString *key in [response keyEnumerator]){
@@ -1619,7 +1632,10 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     subClassName = [[SubClassHandler sharedInstance] className:ncmbClassName];
     if (subClassName != nil){
         Class vcClass = NSClassFromString(ncmbClassName);
-        NCMBObject *obj = [vcClass objectWithoutDataWithObjectId:[result objectForKey:@"objectId"]];
+        NCMBObject *obj = [vcClass object];
+        obj.objectId = [result objectForKey:@"objectId"];
+        //[vcClass objectWithoutDataWithObjectId:[result objectForKey:@"objectId"]];
+        //obj.ncmbCl = ncmbClassName;
         [obj afterFetch:result isRefresh:YES];
         return obj;
     } else if ([ncmbClassName isEqualToString:@"user"]){

@@ -22,7 +22,7 @@
 
 #pragma mark - error
 #define ERRORDOMAIN @"NCMBErrorDomain"
-#define SDK_VERSION @"2.0.1"
+#define SDK_VERSION @"2.0.2"
 
 /// コールバックブロック
 typedef void (^NCMBBooleanResultBlock)(BOOL succeeded, NSError *error);

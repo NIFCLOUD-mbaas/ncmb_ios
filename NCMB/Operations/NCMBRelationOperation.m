@@ -163,7 +163,6 @@
         }
         return [[NCMBRelationOperation alloc]initWithClassName:self.tagetClass newRelationsToAdd:newRelationsToAdd newRelationsToRemove:newRelationsToRemove];
     }
-    
     [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"Operation is invalid after previous operation." userInfo:nil] raise];
     return nil;
 }

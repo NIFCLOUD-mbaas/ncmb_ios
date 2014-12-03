@@ -362,10 +362,10 @@ static NSMutableData *resultData = nil;
  */
 - (void)getDataInBackgroundWithBlock:(NCMBDataResultBlock)resultBlock
                        progressBlock:(NCMBProgressBlock)progressBlock{
-    isCancel = NO;
     dispatch_queue_t main=dispatch_get_main_queue();
     dispatch_queue_t sub=dispatch_queue_create("getDataInBackgroundWithBlock", NULL);
     dispatch_async(sub, ^{
+        isCancel = NO;
         //プログレス作成
         id block = ^(NSNumber *progress){
             if (progressBlock) {
@@ -381,7 +381,7 @@ static NSMutableData *resultData = nil;
             if (!isCancel) {
                 //非同期通信
                 connectionLocal = [request fileAsyncConnectionWithBlock:^(NSData *responseData, NSError *errorBlock){
-                    isCancel = NO;
+                    //isCancel = NO;
                     if (connectionLocal) {
                         connectionLocal = nil;
                     }
@@ -394,9 +394,9 @@ static NSMutableData *resultData = nil;
                     }
                 }];
             }else{
-                isCancel = NO;
                 connectionLocal = nil;
             }
+            isCancel = NO;
         });
     });
     //dispatch_release(sub);
@@ -527,7 +527,7 @@ static NSMutableData *resultData = nil;
     CFRelease(UTI);
     NSString* resultStr = (__bridge NSString *)(mimeType);
     if (!mimeType) {
-        CFRelease(mimeType);
+        
         return @"application/octet-stream";
     }
     CFRelease(mimeType);

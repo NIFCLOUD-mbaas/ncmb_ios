@@ -195,6 +195,7 @@ typedef enum : NSInteger {
                            [NSString stringWithFormat:@"%@=%@", kAppliKeyFieldName, self.appKey],
                            [NSString stringWithFormat:@"%@=%@", kTimeStampFieldName, self.timeStamp]];
     }
+
     self.signature = [self encodingSigneture:strForSignature];
 }
 
@@ -264,7 +265,12 @@ typedef enum : NSInteger {
     if (connectionErr){
         //通信自体がエラーだった場合
         if (error != nil){
-            *error = connectionErr;
+            //401001が返っているかもしれない
+            if (contents != nil){
+                [self convertErrorFromJSON:contents error:error];
+            } else {
+                *error = connectionErr;
+            }
         }
         return nil;
     } else {
@@ -452,10 +458,22 @@ typedef enum : NSInteger {
  */
 - (void)connectionDidFinished:(NSURLResponse*)response contentsData:(NSData *)contentsData connectionError:(NSError *)connectionError request:(NSURLRequest*)request block:(NCMBResultBlock)block{
     if (block){
-        id res = [self convertResponse:contentsData response:(NSHTTPURLResponse*)response error:&connectionError];
-        block(res, connectionError);
+        if (connectionError){
+            //通信自体がエラーだった場合
+            //401001が返っているかもしれない
+            NSError *error = nil;
+            if (contentsData != nil){
+                [self convertErrorFromJSON:contentsData error:&error];
+                block(nil, error);
+            } else {
+                block(nil, connectionError);
+            }
+        } else {
+            id res = [self convertResponse:contentsData response:(NSHTTPURLResponse*)response error:&connectionError];
+            block(res, connectionError);
+        }
+        
     }
-    
 }
 /**
  シグネチャが有効かどうかの検証を行う
@@ -538,7 +556,7 @@ typedef enum : NSInteger {
  */
 - (void)convertErrorFromJSON:(NSData*)contents error:(NSError**)error {
     NSDictionary *errDic = [self convertResponseToDic:contents error:error];
-    if (errDic){
+    if (errDic != nil){
         [self checkE401001Error:[errDic objectForKey:@"code"]];
         //エラーコードをNSIntegerへの変換
         NSString *codeStr = [[errDic objectForKey:@"code"] stringByReplacingOccurrencesOfString:@"E"
