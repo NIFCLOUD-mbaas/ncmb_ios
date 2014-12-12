@@ -593,6 +593,22 @@ static NSMutableData *resultData = nil;
 }
 
 /**
+ ファイル情報取得時にACLを変換し、保存済みファイルであることを設定する
+ */
+- (void)afterFetch:(NSMutableDictionary *)response isRefresh:(BOOL)isRefresh{
+    self.ACL = [NCMBACL ACL];
+    self.ACL.dicACL = [NSMutableDictionary dictionaryWithDictionary:[response objectForKey:@"acl"]];
+    if ([response objectForKey:@"mimeType"]){
+        [estimatedData setObject:[response objectForKey:@"mimeType"] forKey:@"mimeType"];
+    }
+    if ([response objectForKey:@"fileSize"]){
+        [estimatedData setObject:[response objectForKey:@"fileSize"] forKey:@"fileSize"];
+    }
+    [super afterFetch:response isRefresh:isRefresh];
+    _isDirty = NO;
+}
+
+/**
  fileをmobile backendとローカル上から削除する
  @param error エラーを保持するポインタを保持するポインタ
  */

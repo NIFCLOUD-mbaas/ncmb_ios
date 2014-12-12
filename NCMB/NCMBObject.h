@@ -14,18 +14,6 @@
  limitations under the License.
  **********/
 
-#ifdef NCMBTEST
-#define NCMBDEBUGLOG(...) NSLog(__VA_ARGS__)
-#else
-#define NCMBDEBUGLOG(...)
-#endif
-
-#ifdef NCMBTEST
-#define NCMBWAIT(...) [NSThread sleepForTimeInterval:__VA_ARGS__]
-#else
-#define NCMBWAIT(...)
-#endif
-
 #import <Foundation/Foundation.h>
 
 #import "NCMBConstants.h"

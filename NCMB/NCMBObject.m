@@ -258,6 +258,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         
         //デフォルトACLの設定
         _ACL = [NCMBACL ACL];
+        //[self setACL:[NCMBACL ACL]];
     }
     return self;
 }
@@ -693,6 +694,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  @return currentOperations オブジェクトの操作履歴
  */
 -(NSMutableDictionary *)beforeConnection{
+    //通信前に履歴の取り出し
     NSMutableDictionary *currentOperations = [self currentOperations];
     [operationSetQueue addObject:[[NSMutableDictionary alloc]init]];
     return currentOperations;
@@ -1230,6 +1232,10 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     NSData *json = [[NSData alloc] init];
     if ([operation count] != 0){
         NSMutableDictionary *ncmbDic = [self convertToJSONDicFromOperation:operation];
+        //ACLはoperationSetQueueで管理されていないのでここで変更があれば追加する
+        if (_ACL.isDirty){
+            [ncmbDic setObject:_ACL.dicACL forKey:@"acl"];
+        }
         NSMutableDictionary *jsonDic = [self convertToJSONFromNCMBObject:ncmbDic];
         NSError *convertError = nil;
         json = [NSJSONSerialization dataWithJSONObject:jsonDic options:kNilOptions error:&convertError];
@@ -1656,7 +1662,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         return role;
     } else if ([ncmbClassName isEqualToString:@"file"]){
         NCMBFile *file = [NCMBFile fileWithName:[result objectForKey:@"fileName"] data:nil];
-        file.ACL = [result objectForKey:@"acl"];
+        [file afterFetch:result isRefresh:YES];
         return file;
     } else {
         NCMBObject *obj = [NCMBObject objectWithClassName:ncmbClassName];

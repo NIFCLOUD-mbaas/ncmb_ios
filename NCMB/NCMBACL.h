@@ -32,6 +32,7 @@
  ACLの情報を辞書型で保持する
  */
 @property (nonatomic,strong) NSMutableDictionary *dicACL;
+@property (nonatomic, readonly)BOOL isDirty;
 
 /**
  NCMBACLのインスタンスを生成。デフォルトでは全ての権限が許可されている。

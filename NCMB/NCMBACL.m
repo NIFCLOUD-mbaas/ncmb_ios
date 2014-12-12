@@ -32,6 +32,7 @@ static NCMBACL *defaultACL;
     self = [super init];
     if (self){
         _dicACL = [NSMutableDictionary dictionary];
+        _isDirty = NO;
     }
     return self;
 }
@@ -82,6 +83,7 @@ static NCMBACL *defaultACL;
  @param allowed 読込権限の設定（YES:許可／NO:許可取り消し）
  */
 - (void)setPublicReadAccess:(BOOL)allowed{
+    _isDirty = YES;
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     if ([self.dicACL objectForKey:@"*"]) {
         [dic setDictionary:[self.dicACL objectForKey:@"*"]];
@@ -117,6 +119,7 @@ static NCMBACL *defaultACL;
  @param allowed 書込権限の設定（YES:許可／NO:許可取り消し）
  */
 - (void)setPublicWriteAccess:(BOOL)allowed{
+    _isDirty = YES;
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     if ([self.dicACL objectForKey:@"*"]) {
         [dic setDictionary:[self.dicACL objectForKey:@"*"]];
@@ -166,6 +169,7 @@ static NCMBACL *defaultACL;
  @param name 読込権限を設定するロール名
  */
 - (void)setReadAccess:(BOOL)allowed forRoleWithName:(NSString *)name{
+    _isDirty = YES;
     NSString *roleName = [NSString stringWithFormat:@"role:%@",name];
     
     NSMutableDictionary *dic  = [NSMutableDictionary dictionary];
@@ -208,6 +212,7 @@ static NCMBACL *defaultACL;
  @param name 書込権限を設定するロール名
  */
 - (void)setWriteAccess:(BOOL)allowed forRoleWithName:(NSString *)name{
+    _isDirty = YES;
     NSString *roleName = [NSString stringWithFormat:@"role:%@",name];
     NSMutableDictionary *dic  = [NSMutableDictionary dictionary];
     if ([self.dicACL objectForKey:roleName]) {
@@ -278,6 +283,7 @@ static NCMBACL *defaultACL;
  @param userId 読込権限を設定するユーザID
  */
 - (void)setReadAccess:(BOOL)allowed forUserId:(NSString *)userId{
+    _isDirty = YES;
     //既存のACLを取り出す
     NSMutableDictionary *dic  = [NSMutableDictionary dictionary];
     if ([self.dicACL objectForKey:userId]) {
@@ -318,6 +324,7 @@ static NCMBACL *defaultACL;
  @param userId 書込権限を設定するユーザID
  */
 - (void)setWriteAccess:(BOOL)allowed forUserId:(NSString *)userId{
+    _isDirty = YES;
     NSMutableDictionary *dic  = [NSMutableDictionary dictionary];
     if ([self.dicACL objectForKey:userId]) {
         [dic setDictionary:[self.dicACL objectForKey:userId]];

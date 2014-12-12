@@ -37,6 +37,18 @@
 #endif
 #endif
 
+#ifdef NCMBTEST
+#define NCMBDEBUGLOG(...) NSLog(__VA_ARGS__)
+#else
+#define NCMBDEBUGLOG(...)
+#endif
+
+#ifdef NCMBTEST
+#define NCMBWAIT(...) [NSThread sleepForTimeInterval:__VA_ARGS__]
+#else
+#define NCMBWAIT(...)
+#endif
+
 #import "NCMBSubclassing.h"
 #import "NCMBConstants.h"
 
