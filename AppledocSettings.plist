@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>--project-name</key>
+	<string>NCMB</string>
+	<key>--project-company</key>
+    <string>Nifty</string>
+    <key>--no-repeat-first-par</key>
+    <true/>
+	<key>--create-html</key>
+	<true/>
+	<key>--no-create-docset</key>
+	<true/>
+	<key>--output</key>
+	<string>./doc</string>
+	<key>--input</key>
+	<array>
+		<string>NCMB</string>
+	</array>
+	<key>--ignore</key>
+	<array>
+        <string>.m</string>
+        <string>PrivateHeaders</string>
+        <string>NCMBReachability</string>
+        <string>NCMBRichPush</string>
+        <string>NCMBTwitter</string>
+        <string>NCMBURLConnection</string>
+        <string>NCMBObject+Subclass.h</string>
+        <string>NSDataBase64Encode</string>
+        <string>Operations</string>
+        <string>SubClassHandler</string>
+	</array>
+</dict>
+</plist>

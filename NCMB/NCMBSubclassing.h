@@ -26,22 +26,26 @@ limitations under the License.
 
 /**
  オブジェクトを生成
+ @return サブクラスのインスタンス
  */
 + (id)object;
 
 /**
  指定したobjectIdでオブジェクトを生成
  @param objectId 生成するオブジェクトのobjectIdを指定
+ @return サブクラスのインスタンス
  */
 + (id)objectWithoutDataWithObjectId:(NSString *)objectId;
 
 /**
  mobile backend上のクラス名を返却する。
+ @return サブクラスのデータストア上でのクラス名
  */
 + (NSString *)ncmbClassName;
 
 /**
  設定されているクラスを対象として検索するためのNCMBQueryを生成
+ @return サブクラスのクエリ
  */
 + (NCMBQuery *)query;
 

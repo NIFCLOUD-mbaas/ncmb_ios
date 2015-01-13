@@ -46,11 +46,11 @@
 + (NCMBACL *)ACLWithUser:(NCMBUser *)user;
 
 /**
- 
- オブジェクト生成時にACLが指定されなかった場合のデフォルトACLをaclで指定したアクセス権限に設定する。currentUserAccessがYESの場合は、さらにオブジェクトを生成したユーザーに読込書込権限を設定する。NOの場合はaclで指定されたアクセス権限のみが設定される。
- @param acl アクセス権限情報
- @param currentUserAccess YESの場合は、aclで指定されたアクセス権限に加えてオブジェクトを生成したユーザーに読込書込権限を設定、
- NOの場合は、aclで指定されたアクセス権限のみを設定する。
+ オブジェクト生成時にACLが指定されなかった場合のデフォルトACLをaclで指定したアクセス権限に設定する。
+ currentUserAccessがYESの場合は、さらにオブジェクトを生成したユーザーに読込書込権限を設定する。
+ NOの場合はaclで指定されたデフォルトACLが設定される。
+ @param acl デフォルトACLとして設定するNCMBACLインスタンス
+ @param currentUserAccess オブジェクトを生成したユーザーへのアクセス権限をデフォルトACLに追加する設定
  */
 + (void)setDefaultACL:(NCMBACL *)acl withAccessForCurrentUser:(BOOL)currentUserAccess;
 
@@ -59,13 +59,14 @@
 /** @name Public Access */
 
 /**
- パブリックな読込権限を設定
+ パブリックな読込権限を設定する
  @param allowed 読込権限の設定（YES:許可／NO:許可取り消し）
  */
 - (void)setPublicReadAccess:(BOOL)allowed;
 
 /**
- パブリックな読込権限の有無を取得
+ パブリックな読込権限の有無を取得する
+ @return YES:読み込み権限あり NO:読み込み権限なし
  */
 - (BOOL)isPublicReadAccess;
 
@@ -76,7 +77,8 @@
 - (void)setPublicWriteAccess:(BOOL)allowed;
 
 /**
- パブリックな書込権限の有無を取得
+ パブリックな書込権限の有無を取得する
+ @return YES:書き込み権限あり NO:書き込み権限なし
  */
 - (BOOL)isPublicWriteAccess;
 
@@ -85,52 +87,56 @@
 /** @name Role Access */
 
 /**
- 指定した名前を持つロールの読込権限の有無を取得
+ 指定した名前を持つロールの読込権限の有無を取得する
  @param name 読込権限の有無を調べるロール名
+ @return YES:読み込み権限あり NO:読み込み権限なし
  */
 - (BOOL)isReadAccessForRoleWithName:(NSString *)name;
 
 /**
- 指定した名前を持つロールの読込権限を設定
+ 指定した名前を持つロールの読込権限を設定する
  @param allowed 読込権限の設定（YES:許可／NO:許可取り消し）
  @param name 読込権限を設定するロール名
  */
 - (void)setReadAccess:(BOOL)allowed forRoleWithName:(NSString *)name;
 
 /**
- 指定した名前を持つロールの書込権限の有無を取得
+ 指定した名前を持つロールの書込権限の有無を取得する
  @param name 書込権限の有無を調べるロール名
+ @return YES:書き込み権限あり NO:書き込み権限なし
  */
 - (BOOL)isWriteAccessForRoleWithName:(NSString *)name;
 
 /**
- 指定した名前を持つロールの書込権限を設定
+ 指定した名前を持つロールの書込権限を設定する
  @param allowed 書込権限の設定（YES:許可／NO:許可取り消し）
  @param name 書込権限を設定するロール名
  */
 - (void)setWriteAccess:(BOOL)allowed forRoleWithName:(NSString *)name;
 
 /**
- 指定したロールの読込権限の有無を取得
+ 指定したロールの読込権限の有無を取得する
  @param  role 読込権限の有無を調べるロール
+ @return YES:読み込み権限あり NO:読み込み権限なし
  */
 - (BOOL)isReadAccessForRole:(NCMBRole *)role;
 
 /**
- 指定したロールの読込権限を設定
+ 指定したロールの読込権限を設定する
  @param allowed 読込権限の設定（YES:許可／NO:許可取り消し）
  @param role 読込権限を設定するロール
  */
 - (void)setReadAccess:(BOOL)allowed forRole:(NCMBRole *)role;
 
 /**
- 指定したロールの書込権限の有無を取得
+ 指定したロールの書込権限の有無を取得する
  @param role 書込権限の有無を調べるロール
+ @return YES:書き込み権限あり NO:書き込み権限なし
  */
 - (BOOL)isWriteAccessForRole:(NCMBRole *)role;
 
 /**
- 指定したロールの書込権限を設定
+ 指定したロールの書込権限を設定する
  @param allowed 書込権限の設定（YES:許可／NO:許可取り消し）
  @param role 書込権限を設定するロール
  */
@@ -140,41 +146,44 @@
 /** @name User Access */
 
 /**
- 指定したIDに対応するユーザーの読込権限を設定
+ 指定したIDに対応するユーザーの読込権限を設定する
  @param allowed 読込権限の設定（YES:許可／NO:許可取り消し）
  @param userId 読込権限を設定するユーザID
  */
 - (void)setReadAccess:(BOOL)allowed forUserId:(NSString *)userId;
 
 /**
- 指定したIDに対応するユーザーの読込権限の有無を取得
+ 指定したIDに対応するユーザーの読込権限の有無を取得する
  @param userId 読込権限の有無を調べるユーザID
+ @return YES:読み込み権限あり NO:読み込み権限なし
  */
 - (BOOL)isReadAccessForUserId:(NSString *)userId;
 
 /**
- 指定したIDに対応するユーザーの書込権限を設定
+ 指定したIDに対応するユーザーの書込権限を設定する
  @param allowed 書込権限の設定（YES:許可／NO:許可取り消し）
  @param userId 書込権限を設定するユーザID
  */
 - (void)setWriteAccess:(BOOL)allowed forUserId:(NSString *)userId;
 
 /**
- 指定したIDに対応するユーザーの書込権限の有無を取得
+ 指定したIDに対応するユーザーの書込権限の有無を取得する
  @param userId 書込権限の有無を調べるユーザID
+ @return YES:書き込み権限あり NO:書き込み権限なし
  */
 - (BOOL)isWriteAccessForUserId:(NSString *)userId;
 
 /**
- 指定したユーザーの読込権限を設定
+ 指定したユーザーの読込権限を設定する
  @param allowed 読込権限の設定（YES:許可／NO:許可取り消し）
  @param user 読込権限を設定するユーザ
  */
 - (void)setReadAccess:(BOOL)allowed forUser:(NCMBUser *)user;
 
 /**
- 指定したユーザーの読込権限の有無を取得
+ 指定したユーザーの読込権限の有無を取得する
  @param user 読込権限の有無を調べるユーザ
+ @return YES:読み込み権限あり NO:読み込み権限なし
  */
 - (BOOL)isReadAccessForUser:(NCMBUser *)user;
 
@@ -188,6 +197,7 @@
 /**
  指定したユーザーの書込権限の有無を取得
  @param user 書込権限の有無を調べるユーザ
+ @return YES:書き込み権限あり NO:書き込み権限なし
  */
 - (BOOL)isWriteAccessForUser:(NCMBUser *)user;
 

@@ -58,8 +58,8 @@
     return dic;
 }
 
-+(NCMBInstallation*)installation{
-    NCMBInstallation *installation = [[NCMBInstallation alloc]initWithClassName:@"installation"];
+- (instancetype)init{
+    NCMBInstallation *installation = [self initWithClassName:@"installation"];
     installation.channels = [NSMutableArray array];
     [installation setObject:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]
                      forKey:@"applicationName"];
@@ -71,6 +71,10 @@
     NSTimeZone *tz = [NSTimeZone systemTimeZone];
     [installation setObject:[tz name] forKey:@"timeZone"];
     return installation;
+}
+
++(NCMBInstallation*)installation{
+    return [[NCMBInstallation alloc] init];
 }
 
 +(NCMBInstallation*)currentInstallation{
@@ -126,54 +130,6 @@
     [self saveInstallationToFile];
 }
 
-- (BOOL)fetch:(NSError **)error{
-    BOOL result = NO;
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"installations/%@",self.objectId];
-        result = [self fetch:url error:error isRefresh:NO];
-    }
-    return result;
-}
-
-- (void)fetchInBackgroundWithBlock:(NCMBFetchResultBlock)block{
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"installations/%@",self.objectId];
-        [self fetchInBackgroundWithBlock:url block:block isRefresh:NO];
-    }
-}
-
-- (BOOL)refresh:(NSError **)error{
-    BOOL result = NO;
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"installations/%@",self.objectId];
-        result = [self fetch:url error:error isRefresh:YES];
-    }
-    return result;
-}
-
-- (void)refreshInBackgroundWithBlock:(NCMBFetchResultBlock)block{
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"installations/%@",self.objectId];
-        [self fetchInBackgroundWithBlock:url block:block isRefresh:YES];
-    }
-}
-
-- (BOOL)delete:(NSError **)error{
-    BOOL result = NO;
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"installations/%@",self.objectId];
-        result = [self delete:url error:error];
-    }
-    return result;
-}
-
-- (void)deleteInBackgroundWithBlock:(NCMBDeleteResultBlock)userBlock{
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"installations/%@",self.objectId];
-        [self deleteInBackgroundWithBlock:url block:userBlock];
-    }
-}
-
 - (void)afterDelete{
     [super afterDelete];
     _badge = 0;
@@ -193,15 +149,7 @@
     [self saveInstallationToFile];
 }
 
-- (BOOL)save:(NSError **)error{
-    BOOL result = NO;
-    result = [self save:@"installations" error:error];
-    return result;
-}
-
-- (void)saveInBackgroundWithBlock:(NCMBSaveResultBlock)userBlock{
-    [self saveInBackgroundWithBlock:@"installations" block:userBlock];
-}
+#pragma mark saveToFile
 
 - (void)saveInstallationToFile{
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
@@ -214,10 +162,12 @@
         [dic setObject:self.objectId forKey:@"objectId"];
     }
     if (self.createDate){
-        [dic setObject:[self convertToJSONFromNCMBObject:self.createDate] forKey:@"createDate"];
+        NSDateFormatter *df = [self createNCMBDateFormatter];
+        [dic setObject:[df stringFromDate:self.createDate] forKey:@"createDate"];
     }
     if (self.updateDate){
-        [dic setObject:[self convertToJSONFromNCMBObject:self.updateDate] forKey:@"updateDate"];
+        NSDateFormatter *df = [self createNCMBDateFormatter];
+        [dic setObject:[df stringFromDate:self.updateDate] forKey:@"updateDate"];
     }
     if (self.ACL){
         [dic setObject:self.ACL.dicACL forKey:@"acl"];

@@ -65,8 +65,13 @@ static BOOL isEnableAutomaticUser = FALSE;
     return nil;
 }
 
+- (instancetype)init{
+    self = [self initWithClassName:@"user"];
+    return self;
+}
+
 + (NCMBUser *)user{
-    NCMBUser *user = [[NCMBUser alloc]initWithClassName:@"user"];
+    NCMBUser *user = [[NCMBUser alloc] init];
     return user;
 }
 
@@ -193,81 +198,16 @@ static BOOL isEnableAutomaticUser = FALSE;
  @param error 処理中に起きたエラーのポインタ
  @return 新規登録の成功の有無
  */
-- (BOOL)signUp:(NSError **)error{
-    //JSONデータ作成
-    NSError *errorLocal;
-    NSMutableDictionary *operations = [self beforeConnection];
-    NSMutableDictionary *ncmbDic = [self convertToJSONDicFromOperation:operations];
-    NSMutableDictionary *jsonDic = [self convertToJSONFromNCMBObject:ncmbDic];
-    NSData *json = [NSJSONSerialization dataWithJSONObject:jsonDic options:kNilOptions error:&errorLocal];
-    
-    //url,method作成
-    NSString *url = URL_USERS;
-    NSString *method = @"POST";
-    if(self.objectId){
-        method = @"PUT";
-        url = [url stringByAppendingString:[NSString stringWithFormat:@"/%@", self.objectId]];
-    }
-    
-    //通信開始
-    NCMBURLConnection *connect = [[NCMBURLConnection new] initWithPath:url method:method data:json];
-    NSDictionary *responseDic = [connect syncConnection:&errorLocal];
-    
-    BOOL isSuccess = YES;
-    if(errorLocal){
-        isSuccess = NO;
-        if (error) {
-            *error =  errorLocal;
-        }
-    }else{
-        //レスポンス処理
-        [self afterSave:responseDic operations:operations];
-        //ファイルに登録したユーザーデータ書き込み
-        [NCMBUser saveToFileCurrentUser:self];
-    }
-    return isSuccess;
+- (void)signUp:(NSError **)error{
+    [self save:error];
 }
 
 /**
  ユーザ の新規登録(非同期)
  @param block
  */
-- (void)signUpInBackgroundWithBlock:(NCMBBooleanResultBlock)block{
-    dispatch_queue_t queue = dispatch_queue_create("saveInBackgroundWithBlock", NULL);
-    dispatch_async(queue, ^{
-        //JSONデータ作成
-        NSError *errorLocal;
-        NSMutableDictionary *operations = [self beforeConnection];
-        NSMutableDictionary *ncmbDic = [self convertToJSONDicFromOperation:operations];
-        NSMutableDictionary *jsonDic = [self convertToJSONFromNCMBObject:ncmbDic];
-        NSData *json = [NSJSONSerialization dataWithJSONObject:jsonDic options:kNilOptions error:&errorLocal];
-        //url,method作成
-        NSString *url = URL_USERS;
-        NSString *method = @"POST";
-        if(self.objectId){
-            method = @"PUT";
-            url = [url stringByAppendingString:[NSString stringWithFormat:@"/%@", self.objectId]];
-        }
-        
-        //リクエストを作成
-        NCMBURLConnection *request = [[NCMBURLConnection alloc] initWithPath:url method:method data:json];
-        //非同期通信を実行
-        
-        [request asyncConnectionWithBlock:^(NSDictionary *responseDic, NSError *errorBlock){
-            BOOL success = YES;
-            if (errorBlock){
-                success = NO;
-            } else {
-                //レスポンス処理
-                [self afterSave:responseDic operations:operations];
-                //ファイルに登録したユーザーデータ書き込み
-                [NCMBUser saveToFileCurrentUser:self];
-            }
-            if(block){
-                block(success,errorBlock);
-            }
-        }];
-    });
+- (void)signUpInBackgroundWithBlock:(NCMBErrorResultBlock)block{
+    [self saveInBackgroundWithBlock:block];
 }
 
 
@@ -277,41 +217,41 @@ static BOOL isEnableAutomaticUser = FALSE;
  @param selector
  */
 - (void)signUpInBackgroundWithTarget:(id)target selector:(SEL)selector{
-    NSMethodSignature* signature = [target methodSignatureForSelector: selector ];
-    NSInvocation* invocation = [ NSInvocation invocationWithMethodSignature: signature ];
-    [ invocation setTarget:target];
-    [ invocation setSelector: selector ];
-    
-    [self signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        NSNumber *num = [NSNumber numberWithBool:succeeded];
-        [invocation setArgument:&num  atIndex: 2 ];
-        [invocation setArgument:&error atIndex: 3 ];
-        [invocation invoke ];
-    }];
+    [self saveInBackgroundWithTarget:target selector:selector];
 }
 
 #pragma mark - signUpAnonymous
 
-- (BOOL)signUpFromAnonymous:(NSString *)userName password:(NSString *)password error:(NSError **)error{
+- (void)signUpFromAnonymous:(NSString *)userName password:(NSString *)password error:(NSError **)error{
     //匿名ユーザーか判定し、正規用ユーザー作成
     NCMBUser *signUpUser = [self checkAnonymousUser];
     //正規ユーザーにデータをセットし、削除用ユーザー作成
     NCMBUser *deleteUser = [self setTheDataForUser:signUpUser userName:userName password:password];
     //新規ユーザー登録
-    BOOL success = [signUpUser signUp:error];
-    if(!success){
-        return success;
+    NSError *errorLocal = nil;
+    [signUpUser signUp:&errorLocal];
+    if(errorLocal){
+        if (error){
+            *error = errorLocal;
+        }
+    } else {
+        //匿名ユーザー削除
+        currentUser = deleteUser;
+        [deleteUser delete:&errorLocal];
+        if(errorLocal){
+            if (error){
+                *error = errorLocal;
+            }
+        } else {
+            currentUser = signUpUser;
+        }
     }
-    //匿名ユーザー削除
-    currentUser = deleteUser;
-    success = [deleteUser delete:error];
-    currentUser = signUpUser;
-    
-    return success;
 }
 
 
-- (void)signUpFromAnonymousInBackgroundWithBlock:(NSString *)userName password:(NSString *)password block:(NCMBBooleanResultBlock)block{
+- (void)signUpFromAnonymousInBackgroundWithBlock:(NSString *)userName
+                                        password:(NSString *)password
+                                           block:(NCMBErrorResultBlock)block{
     dispatch_queue_t queue = dispatch_queue_create("saveInBackgroundWithBlock", NULL);
     dispatch_async(queue, ^{
         //匿名ユーザーか判定し、正規用ユーザー作成
@@ -319,15 +259,19 @@ static BOOL isEnableAutomaticUser = FALSE;
         //正規ユーザーにデータをセットし、削除用ユーザー作成
         NCMBUser *deleteUser = [self setTheDataForUser:signUpUser userName:userName password:password];
         //新規ユーザー登録
-        [signUpUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        [signUpUser signUpInBackgroundWithBlock:^(NSError *error) {
             if(error){
-                return block(succeeded,error);
+                if (block){
+                    block(error);
+                }
             }else{
                 //匿名ユーザー削除
                 currentUser = deleteUser;
-                [deleteUser deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                [deleteUser deleteInBackgroundWithBlock:^(NSError *error) {
                     currentUser = signUpUser;
-                    return block(succeeded,error);
+                    if (block){
+                        block(error);
+                    }
                 }];
             }
         }];
@@ -345,10 +289,8 @@ static BOOL isEnableAutomaticUser = FALSE;
     [ invocation setTarget:target];
     [ invocation setSelector: selector ];
     
-    [self signUpFromAnonymousInBackgroundWithBlock:userName password:password block:^(BOOL succeeded, NSError *error) {
-        NSNumber *num = [NSNumber numberWithBool:succeeded];
-        [invocation setArgument:&num  atIndex: 2 ];
-        [invocation setArgument:&error atIndex: 3 ];
+    [self signUpFromAnonymousInBackgroundWithBlock:userName password:password block:^(NSError *error) {
+        [invocation setArgument:&error atIndex: 2 ];
         [invocation invoke ];
     }];
 }
@@ -387,9 +329,9 @@ static BOOL isEnableAutomaticUser = FALSE;
  @param error エラー
  @return BOOL型通信結果の有無
  */
-+ (BOOL)requestAuthenticationMail:(NSString *)email
++ (void)requestAuthenticationMail:(NSString *)email
                             error:(NSError **)error{
-    return [NCMBUser requestMailFromNCMB:URL_AUTHENTICATION_MAIL mail:email error:error];
+    [NCMBUser requestMailFromNCMB:URL_AUTHENTICATION_MAIL mail:email error:error];
 }
 
 /**
@@ -410,7 +352,7 @@ static BOOL isEnableAutomaticUser = FALSE;
  @param block
  */
 + (void)requestAuthenticationMailInBackground:(NSString *)email
-                                        block:(NCMBBooleanResultBlock)block{
+                                        block:(NCMBErrorResultBlock)block{
     [NCMBUser requestMailFromNCMB:URL_AUTHENTICATION_MAIL mail:email block:block];
 }
 
@@ -432,10 +374,8 @@ static BOOL isEnableAutomaticUser = FALSE;
     [ invocation setTarget:target];
     [ invocation setSelector: selector ];
     
-    NCMBBooleanResultBlock block = ^(BOOL succeeded, NSError *error) {
-        NSNumber *num = [NSNumber numberWithBool:succeeded];
-        [ invocation setArgument:&num atIndex: 2 ];
-        [ invocation setArgument:&error atIndex: 3 ];
+    NCMBErrorResultBlock block = ^(NSError *error) {
+        [ invocation setArgument:&error atIndex: 2 ];
         [ invocation invoke ];
     };
     
@@ -485,7 +425,7 @@ static BOOL isEnableAutomaticUser = FALSE;
  */
 + (void)requestMailFromNCMB:(NSString *)path
                        mail:(NSString *)email
-                      block:(NCMBBooleanResultBlock)block{
+                      block:(NCMBErrorResultBlock)block{
     NCMBUser *user = [NCMBUser user];
     user.mailAddress = email;
     
@@ -497,13 +437,9 @@ static BOOL isEnableAutomaticUser = FALSE;
     //リクエストを作成
     NCMBURLConnection *request = [[NCMBURLConnection alloc] initWithPath:path method:@"POST" data:json];
     //非同期通信を実行
-    [request asyncConnectionWithBlock:^(NSDictionary *responseData, NSError *errorBlock){
-        BOOL success = YES;
-        if (errorBlock) {
-            success = NO;
-        }
+    [request asyncConnectionWithBlock:^(NSDictionary *responseData, NSError *error){
         if (block) {
-            block(success,errorBlock);
+            block(error);
         }
     }];
 }
@@ -668,16 +604,12 @@ static BOOL isEnableAutomaticUser = FALSE;
                                                     mailAddress:email
                                                        password:password];
     NSDictionary * responseData = [connect syncConnection:&errorLocal];
-    bool isSuccess = YES;
     NCMBUser *loginUser = nil;
-    if (errorLocal) {
-        if(error){
-            *error = errorLocal;
-        }
-        isSuccess = NO;
-    }else{
+    if (!errorLocal){
         loginUser = [self responseLogIn:responseData];
         [self saveToFileCurrentUser:loginUser];
+    } else {
+        *error = errorLocal;
     }
     return loginUser;
 }
@@ -699,18 +631,14 @@ static BOOL isEnableAutomaticUser = FALSE;
                                                     mailAddress:email
                                                        password:password];
     //非同期通信を実行
-    [request asyncConnectionWithBlock:^(NSDictionary *responseData, NSError *errorBlock){
-        BOOL success = YES;
+    [request asyncConnectionWithBlock:^(NSDictionary *responseData, NSError *error){
         NCMBUser *loginUser = nil;
-        if (errorBlock) {
-            success = NO;
-        }else{
-            
+        if (!error){
             loginUser = [self responseLogIn:responseData];
             [self saveToFileCurrentUser:loginUser];
         }
         if (block) {
-            block(loginUser,errorBlock);
+            block(loginUser,error);
         }
     }];
 }
@@ -770,9 +698,9 @@ static BOOL isEnableAutomaticUser = FALSE;
  同期でパスワードリセット要求を行う。
  @param error
  */
-+ (BOOL)requestPasswordResetForEmail:(NSString *)email
++ (void)requestPasswordResetForEmail:(NSString *)email
                                error:(NSError **)error{
-    return [NCMBUser requestMailFromNCMB:URL_PASSWOR_RESET mail:email error:error];
+    [NCMBUser requestMailFromNCMB:URL_PASSWOR_RESET mail:email error:error];
 }
 
 /**
@@ -792,7 +720,7 @@ static BOOL isEnableAutomaticUser = FALSE;
  @param block
  */
 + (void)requestPasswordResetForEmailInBackground:(NSString *)email
-                                           block:(NCMBBooleanResultBlock)block{
+                                           block:(NCMBErrorResultBlock)block{
     [NCMBUser requestMailFromNCMB:URL_PASSWOR_RESET mail:email block:block];
 }
 
@@ -843,11 +771,13 @@ static BOOL isEnableAutomaticUser = FALSE;
     if (self.objectId) {
         [dic setObject:self.objectId forKey:@"objectId"];
     }
-    if (self.createDate) {
-        [dic setObject:self.createDate forKey:@"createDate"];
+    if (self.createDate){
+        NSDateFormatter *df = [self createNCMBDateFormatter];
+        [dic setObject:[df stringFromDate:self.createDate] forKey:@"createDate"];
     }
-    if (self.updateDate) {
-        [dic setObject:self.updateDate forKey:@"updateDate"];
+    if (self.updateDate){
+        NSDateFormatter *df = [self createNCMBDateFormatter];
+        [dic setObject:[df stringFromDate:self.updateDate] forKey:@"updateDate"];
     }
     if(self.sessionToken){
         [dic setObject:self.sessionToken forKey:@"sessionToken"];
@@ -862,73 +792,11 @@ static BOOL isEnableAutomaticUser = FALSE;
 #pragma mark - override
 
 /**
- mobile backendにオブジェクトを保存する
- @param error エラーを保持するポインタ
- @return result 通信が実行されたらYESを返す
- */
-- (BOOL)save:(NSError **)error{
-    NSString *url = [NSString stringWithFormat:URL_USERS];
-    BOOL result = [self save:url error:error];
-    return result;
-}
-
-/**
- mobile backendにオブジェクトを保存する。非同期通信を行う。
- @param block 通信後に実行されるblock。引数にBOOL succeeded, NSError *errorを持つ。
- */
-- (void)saveInBackgroundWithBlock:(NCMBSaveResultBlock)userBlock{
-    NSString *url = [NSString stringWithFormat:URL_USERS];
-    [self saveInBackgroundWithBlock:url block:userBlock];
-}
-
-/**
- オブジェクトをmobile backendとローカル上から削除する
- @param error エラーを保持するポインタを保持するポインタ
- */
-- (BOOL)delete:(NSError**)error{
-    NSString *url = [NSString stringWithFormat:@"%@/%@",URL_USERS,self.objectId];
-    BOOL result = [self delete:url error:error];
-    return result;
-}
-
-/**
- オブジェクトをmobile backendとローカル上から削除する。非同期通信を行う。
- @param error block 通信後に実行されるblock。引数にBOOL succeeded, NSError *errorを持つ。
- */
-- (void)deleteInBackgroundWithBlock:(NCMBDeleteResultBlock)userBlock{
-    NSString *url = [NSString stringWithFormat:@"%@/%@",URL_USERS,self.objectId];
-    [self deleteInBackgroundWithBlock:url block:userBlock];
-}
-
-/**
  ローカルオブジェクトをリセットし、ログアウトする
  */
 - (void)afterDelete{
     [super afterDelete];
     [NCMBUser logOutEvent];
-}
-
-
-/**
- mobile backendからobjectIdをキーにしてデータを取得する
- @param error エラーを保持するポインタ
- */
-- (BOOL)fetch:(NSError **)error{
-    BOOL result = NO;
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"%@/%@",URL_USERS,self.objectId];
-        result = [self fetch:url error:error isRefresh:NO];
-    }
-    return result;
-}
-
-/**
- mobile backendからobjectIdをキーにしてデータを取得する。非同期通信を行う。
- @param block 通信後に実行されるblock。引数にNSError *errorを持つ。
- */
-- (void)fetchInBackgroundWithBlock:(NCMBFetchResultBlock)block{
-    NSString *url = [NSString stringWithFormat:@"%@/%@",URL_USERS,self.objectId];
-    [self fetchInBackgroundWithBlock:url block:block isRefresh:NO];
 }
 
 - (void)afterFetch:(NSMutableDictionary *)response isRefresh:(BOOL)isRefresh{
@@ -941,20 +809,6 @@ static BOOL isEnableAutomaticUser = FALSE;
     [super afterFetch:response isRefresh:isRefresh];
 }
 
-- (BOOL)refresh:(NSError **)error{
-    BOOL resulst = NO;
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"%@/%@",URL_USERS,self.objectId];
-        resulst = [self fetch:url error:error isRefresh:YES];
-    }
-    return resulst;
-}
-
-- (void)refreshInBackgroundWithBlock:(NCMBFetchResultBlock)block{
-    NSString *url = [NSString stringWithFormat:@"%@/%@",URL_USERS,self.objectId];
-    [self fetchInBackgroundWithBlock:url block:block isRefresh:YES];
-}
-
 /**
  オブジェクト更新後に操作履歴とestimatedDataを同期する
  @param response REST APIのレスポンスデータ
@@ -964,6 +818,7 @@ static BOOL isEnableAutomaticUser = FALSE;
     [super afterSave:response operations:operations];
     if ([response objectForKey:@"sessionToken"]){
         self.sessionToken = [response objectForKey:@"sessionToken"];
+        [NCMBUser saveToFileCurrentUser:self];
     }
     //会員新規登録の有無
     if ([response objectForKey:@"createDate"]&&![response objectForKey:@"updateDate"]){

@@ -20,6 +20,10 @@
 @class NCMBUser;
 @class NCMBRelation;
 
+/**
+ NCMBRoleクラスは、会員をグルーピングするロールを作成・取得・削除を行い、
+ 会員や子ロールの追加・削除ができるようにするものです。
+ */
 @interface NCMBRole : NCMBObject
 
 @property (nonatomic, readonly) NSString *roleName;

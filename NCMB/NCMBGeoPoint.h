@@ -17,6 +17,9 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
+/**
+ NCMBGeoPointクラスは、位置情報をmobile backendで管理するためのクラスです。
+ */
 @interface NCMBGeoPoint : NSObject <CLLocationManagerDelegate>
 
 /// 緯度
@@ -43,7 +46,8 @@ typedef void (^NCMBGeoPointHandler)(NCMBGeoPoint *geoPoint, NSError *error);
 
 /**
  NCMBGeoPointオブジェクトを作成。緯度、経度には引数のCLLocationが示す値が設定される。
- @param location 位置情報
+ @param location CCLocation型の位置情報
+ @return NCMBGeoPoint型のインスタンス
  */
 + (NCMBGeoPoint *)geoPointWithLocation:(CLLocation *) location;
 

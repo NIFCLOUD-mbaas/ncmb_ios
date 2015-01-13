@@ -43,6 +43,7 @@
         NCMBURLConnection *connect = [[NCMBURLConnection alloc] initWithPath:url
                                                                       method:@"POST" data:json];
         [connect asyncConnectionWithBlock:nil];
+        [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     }
 }
 

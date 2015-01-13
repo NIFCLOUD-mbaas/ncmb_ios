@@ -109,9 +109,10 @@
 /**
  指定したユーザにtwitter連携情報をリンクさせる。リンクし終わったら与えられたblockを呼び出す。
  @param user 指定するユーザ
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （BOOL succeeded, NSError *error）succeededにはリンクの有無がBOOL型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （NSError *error）
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
-+ (void)linkUser:(NCMBUser *)user block:(NCMBBooleanResultBlock)block;
++ (void)linkUser:(NCMBUser *)user block:(NCMBErrorResultBlock)block;
 
 /**
  指定したユーザにtwitter連携情報をリンクさせる。リンクし終わったら指定されたコールバックを呼び出す。
@@ -131,14 +132,15 @@
  @param screenName ユーザにリンクさせるtwitterアカウントのscreenName
  @param authToken ユーザにリンクさせるtwitterアカウントのaccessToken
  @param authTokenSecret ユーザにリンクさせるtwitterアカウントのauthTokenSecret
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （BOOL succeeded, NSError *error）succeededにはリンクの有無がBOOL型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （NSError *error）
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
 + (void)linkUser:(NCMBUser *)user
        twitterId:(NSString *)twitterId
       screenName:(NSString *)screenName
        authToken:(NSString *)authToken
  authTokenSecret:(NSString *)authTokenSecret
-           block:(NCMBBooleanResultBlock)block;
+           block:(NCMBErrorResultBlock)block;
 
 /**
 指定したユーザにtwitter連携情報をリンクさせる。リンクし終わったら指定されたコールバックを呼び出す。
@@ -170,10 +172,11 @@
 /**
  指定したユーザとtwitterのリンクを解除。解除し終わったら与えられたblockを呼び出す。
  @param user 指定するユーザ
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （BOOL succeeded, NSError *error）succeededにはリンク解除の有無がBOOL型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （NSError *error）
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
 + (void)unlinkUserInBackground:(NCMBUser *)user
-                         block:(NCMBBooleanResultBlock)block;
+                         block:(NCMBErrorResultBlock)block;
 
 /**
  指定したユーザとtwitterのリンクを解除する。解除し終わったら指定されたコールバックを呼び出す。

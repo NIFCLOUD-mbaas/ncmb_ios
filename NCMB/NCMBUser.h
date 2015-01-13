@@ -23,7 +23,8 @@
 
 /**
  NCMBUserクラスは、ニフティクラウドmobile backend上に保存されたユーザデータを管理するクラスです。
- このクラスは、NCMBObjectのサブクラスなので同じ機能を持っています。さらに、ユーザ新規登録、認証などを行います。
+ ユーザの新規登録やログイン/ログアウト、会員情報の更新・取得・削除を行います。
+ また、パスワードリセットやメールアドレス認証のリクエスト送信も行います。
  */
 @interface NCMBUser : NCMBObject
 
@@ -82,21 +83,21 @@
 /**
  ユーザの新規登録。必要があればエラーをセットし、取得することもできる。
  @param error 処理中に起きたエラーのポインタ
- @return 新規登録の成功の有無
  */
-- (BOOL)signUp:(NSError **)error;
+- (void)signUp:(NSError **)error;
 
 /**
  ユーザを非同期で新規登録。新規登録し終わったら与えられたblockを呼び出す。
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある（BOOL succeeded, NSError *error）succeededには通信結果がBOOL型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある（NSError *error) 
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
-- (void)signUpInBackgroundWithBlock:(NCMBBooleanResultBlock)block;
+- (void)signUpInBackgroundWithBlock:(NCMBErrorResultBlock)block;
 
 /**
  ユーザを非同期で新規登録。新規登録し終わったら指定されたコールバックを呼び出す。
  @param target 呼び出すセレクタのターゲット
- @param selector 呼び出すセレクタ。次のシグネチャを持つ必要がある。 (void)callbackWithResult:(NSNumber *)result error:(NSError **)error
- resultには通信結果がNSNumber型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param selector 呼び出すセレクタ。次のシグネチャを持つ必要がある。 (void)callbackWithResult:(NSError **)error
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
 - (void)signUpInBackgroundWithTarget:(id)target selector:(SEL)selector;
 
@@ -106,17 +107,16 @@
  指定したメールアドレスに対して、会員登録を行うためのメールを送信するよう要求する。必要があればエラーをセットし、取得することもできる。
  @param email 指定するメールアドレス
  @param error 処理中に起きたエラーのポインタ
- @return 通信結果を返却。HTTPステータスが200ならYESを返す
  */
-+ (BOOL)requestAuthenticationMail:(NSString *)email
++ (void)requestAuthenticationMail:(NSString *)email
                             error:(NSError **)error;
 
 /**
  指定したメールアドレスに対して、会員登録を行うためのメールを送信するよう要求する。終わったら指定されたコールバックを呼び出す。
  @param email 指定するメールアドレス
  @param target 呼び出すセレクタのターゲット
- @param selector 呼び出すセレクタ。次のシグネチャを持つ必要がある。 (void)callbackWithResult:(NSNumber *)result error:(NSError **)error
- resultには通信結果をNSNumber型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param selector 呼び出すセレクタ。次のシグネチャを持つ必要がある。 (void)callbackWithResult:(NSError **)error
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
 + (void)requestAuthenticationMailInBackground:(NSString *)email
                                        target:(id)target
@@ -125,10 +125,11 @@
 /**
  指定したメールアドレスに対して、会員登録を行うためのメールを送信するよう要求する。終わったら与えられたblockを呼び出す。
  @param email 指定するメールアドレス
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （BOOL succeeded, NSError *error）succeededには通信結果がBOOL型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （NSError *error）
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
 + (void)requestAuthenticationMailInBackground:(NSString *)email
-                                        block:(NCMBBooleanResultBlock)block;
+                                        block:(NCMBErrorResultBlock)block;
 
 
 /** @name LogIn */
@@ -217,9 +218,8 @@
  指定したメールアドレスを持つユーザのパスワードリセットを要求。ユーザが存在した場合、パスワードをリセットし、再設定のメールを送信する。必要があればエラーをセットし、取得することもできる。
  @param email 指定するメールアドレス
  @param error 処理中に起きたエラーのポインタ
- @return リセットの有無。リセットしたらYESを返す
  */
-+ (BOOL)requestPasswordResetForEmail:(NSString *)email
++ (void)requestPasswordResetForEmail:(NSString *)email
                                error:(NSError **)error;
 
 /**
@@ -236,10 +236,10 @@
 /**
  指定したメールアドレスを持つユーザのパスワードリセットを非同期で要求。ユーザが存在した場合、パスワードをリセットし、再設定のメールを送信する。リセットし終わったら与えられたblockを呼び出す。
  @param email 指定するメールアドレス
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （BOOL succeeded, NSError *error）succeededにはリセットの有無がBOOL型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （NSError *error）errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
 + (void)requestPasswordResetForEmailInBackground:(NSString *)email
-                                           block:(NCMBBooleanResultBlock)block;
+                                           block:(NCMBErrorResultBlock)block;
 
 
 
@@ -254,26 +254,26 @@
  @param userName 正規会員のユーザー名
  @param password 正規会員のパスワード
  @param error 処理中に起きたエラーのポインタ
- @return 通信の成功有無
  */
-- (BOOL)signUpFromAnonymous:(NSString *)userName password:(NSString *)password error:(NSError **)error;
+- (void)signUpFromAnonymous:(NSString *)userName password:(NSString *)password error:(NSError **)error;
 
 /**
  匿名会員を正規会員として非同期で登録する。2回のAPIリクエストが発生する。objectiId,createDate,updateDate,authdata以外の情報を引き継ぐ。必要があればエラーをセットし、取得することもできる。
  @param userName 正規会員のユーザー名
  @param password 正規会員のパスワード
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある（BOOL succeeded, NSError *error）succeededには通信結果がBOOL型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある（NSError *error）
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
 - (void)signUpFromAnonymousInBackgroundWithBlock:(NSString *)userName
                                         password:(NSString *)password
-                                           block:(NCMBBooleanResultBlock)block;
+                                           block:(NCMBErrorResultBlock)block;
 /**
  匿名会員を正規会員として非同期で登録する。2回のAPIリクエストが発生する。objectiId,createDate,updateDate,authdata以外の情報を引き継ぐ。必要があればエラーをセットし、取得することもできる。
  @param userName 正規会員のユーザー名
  @param password 正規会員のパスワード
  @param target 呼び出すセレクタのターゲット
- @param selector 呼び出すセレクタ。次のシグネチャを持つ必要がある。 (void)callbackWithResult:(NSNumber *)result error:(NSError **)error
- resultには通信結果がNSNumber型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param selector 呼び出すセレクタ。次のシグネチャを持つ必要がある。 (void)callbackWithResult:(NSError **)error
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
 - (void)signUpFromAnonymousInBackgroundWithTarget:(NSString *)userName
                                          password:(NSString *)password

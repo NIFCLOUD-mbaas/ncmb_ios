@@ -26,35 +26,29 @@
 /**
  NCMBFileクラスは、ニフティクラウドmobile backend上でアプリに必要な画像や動画、様々なバイナリデータを管理するクラスです。
  
- このクラスはNCMBObjectを継承していますが、– setObject:forKey:や– addObject:forKey:メソッドなどによりNCMBObjectにNCMBFileをセットすることはできません。
+ このクラスはNCMBObjectを継承していますが、REST APIでファイルクラスのフィールド更新ができないため、 
+ setObject:forKey: や addObject:forKey: などは対応していません。
+ 対応していないメソッドは以下の通りです。
  
- また、下記の継承メソッドは対応しておりません。
+    relationForKey:
+    addObject:forKey:
+    addObjectsFromArray:forKey:
+    addUniqueObject:forKey:
+    addUniqueObjectsFromArray:forKey:
+    removeObject:forKey:
+    removeObjectsInArray:forKey:
+    removeObjectForKey:
+    incrementKey:
+    incrementKey:byAmount:
+    saveEventually:
+    refresh:
+    refreshInBackgroundWithBlock:
+    refreshInBackgroundWithTarget:selector:
+    fetch:
+    fetchInBackgroundWithBlock:
+    fetchInBackgroundWithTarget:selector:
+    deleteEventually:
  
- –relationforKey:
- –addObject:forKey:
- –addObjectsFromArray:forKey:
- –addUniqueObject:forKey:
- –addUniqueObjectsFromArray:forKey:
- –removeObject:forKey:
- –removeObjectsInArray:forKey:
- –removeObjectForKey:
- –incrementKey:
- –incrementKey:byAmount:
- –saveEventually
- –saveEventually:
- –refresh
- –refresh:
- –refreshInBackgroundWithBlock:
- –refreshInBackgroundWithTarget:selector:
- –fetch
- –fetch:
- –fetchInBackgroundWithBlock:
- –fetchInBackgroundWithTarget:selector:
- –fetchIfNeeded
- –fetchIfNeeded:
- –fetchIfNeededInBackgroundWithBlock:
- –fetchIfNeededInBackgroundWithTarget:selector:
- –deleteEventually
  */
 @interface NCMBFile : NCMBObject
 
@@ -72,6 +66,7 @@
 /**
  指定したデータ(NSData)を持つNCMBFileのインスタンスを生成
  @param data 指定するデータ(NSData)
+ @return id型 NCMBFileのインスタンス
  */
 + (id)fileWithData:(NSData *)data;
 
@@ -79,7 +74,7 @@
  指定したファイル名とデータ(NSData)を持つNCMBFileのインスタンスを生成
  @param name 指定するファイル名
  @param data 指定するデータ(NSData)
- @return id型 NCMBFile
+ @return id型 NCMBFileのインスタンス
  */
 + (id)fileWithName:(NSString *)name data:(NSData *)data;
 
@@ -87,6 +82,7 @@
  指定したファイルパスで取得したデータと指定したファイル名を持つNCMBFileのインスタンスを生成
  @param name 指定するファイル名
  @param path 指定するファイルパス
+ @return id型 NCMBFileのインスタンス
  */
 + (id)fileWithName:(NSString *)name
     contentsAtPath:(NSString *)path;
@@ -100,10 +96,10 @@
 
 /**
  データを非同期で保存。保存の進度により定期的にprogressBlockを呼び出し、100パーセントに達し保存がし終わったらblockを呼び出す。
- @param block 保存完了後に実行されるblock。blockは次の引数のシグネチャを持つ必要がある（BOOL succeeded, NSError *error）succeededには保存完了の有無がBOOL型で渡される。errorにはエラーがあればエラーのポインタが渡され、なければnilが渡される。
+ @param block 保存完了後に実行されるblock。blockは次の引数のシグネチャを持つ必要がある（NSError *error）<br/>errorにはエラーがあればエラーのポインタが渡され、なければnilが渡される。
  @param progressBlock 保存進度により定期的に実行されるblock。blockは次の引数のシグネチャを持つ必要がある（int percentDone）
  */
-- (void)saveInBackgroundWithBlock:(NCMBBooleanResultBlock)block
+- (void)saveInBackgroundWithBlock:(NCMBErrorResultBlock)block
                     progressBlock:(NCMBProgressBlock)progressBlock;
 
 
@@ -156,23 +152,16 @@
 
 /**
  ファイルを検索するためのNCMBQueryを生成
+ @return NCMBQueryのインスタンス
  */
 + (NCMBQuery *)query;
 
 #pragma mark - Unsupported
--(void)refresh __attribute__((deprecated));
+
 -(void)refresh:(NSError **)error __attribute__((deprecated));
 -(void)refreshInBackgroundWithBlock:(NCMBObjectResultBlock)block __attribute__((deprecated));
 -(void)refreshInBackgroundWithTarget:(id)target selector:(SEL)selector __attribute__((deprecated));
--(void)fetch __attribute__((deprecated));
 -(void)fetch:(NSError **)error __attribute__((deprecated));
--(void)fetchIfNeededInBackgroundWithBlock:(NCMBObjectResultBlock)block __attribute__((deprecated));
--(void)fetchIfNeededInBackgroundWithTarget:(id)target selector:(SEL)selector __attribute__((deprecated));
--(void)fetchInBackgroundWithBlock:(NCMBObjectResultBlock)block __attribute__((deprecated));
--(void)fetchInBackgroundWithTarget:(id)target selector:(SEL)selector __attribute__((deprecated));
--(void)deleteEventually __attribute__((deprecated));
-- (NCMBObject *)fetchIfNeeded __attribute__((deprecated));
-- (NCMBObject *)fetchIfNeeded:(NSError **)error __attribute__((deprecated));
 -(NCMBRelation *)relationForKey:(NSString *)key __attribute__((deprecated));
 -(void)addObject:(id)object forKey:(NSString *)key __attribute__((deprecated));
 -(void)addObjectsFromArray:(NSArray *)objects forKey:(NSString *)key __attribute__((deprecated));
@@ -183,8 +172,8 @@
 -(void)removeObjectForKey:(NSString *)key __attribute__((deprecated));
 -(void)incrementKey:(NSString *)key __attribute__((deprecated));
 -(void)incrementKey:(NSString *)key byAmount:(NSNumber *)amount __attribute__((deprecated));
--(void)saveEventually __attribute__((deprecated));
--(void)saveEventually:(NCMBBooleanResultBlock)callback __attribute__((deprecated));
+-(void)saveEventually:(NCMBErrorResultBlock)callback __attribute__((deprecated));
+-(void)deleteEventually:(NCMBErrorResultBlock)callback __attribute__((deprecated));
 
 
 

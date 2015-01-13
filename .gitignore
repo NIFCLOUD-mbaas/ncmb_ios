@@ -25,3 +25,4 @@ Podfile.lock
 !.gitkeep
 .DS_Store
 FacebookSDK*
+doc/

@@ -42,7 +42,7 @@
 
 @implementation NCMB_Facebook
 
-/**
+/*
  セッションを取得する
  @return session
  */
@@ -52,7 +52,7 @@
 
 #pragma mark - instance method
 
-/**
+/*
  初期化
  */
 -(void)initializeFacebook{
@@ -394,7 +394,7 @@ static NCMB_Facebook* _facebook = nil;
         if(currentUser&&[NCMBAnonymousUtils isLinkedWithUser:currentUser]){
             //ログイン済の場合は更新
             [currentUser setObject:@{AUTH_TYPE_FACEBOOK:authData} forKey:@"authData"];
-            [currentUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            [currentUser signUpInBackgroundWithBlock:^(NSError *error) {
                 if(block){
                     block(currentUser,error);
                 }
@@ -405,8 +405,8 @@ static NCMB_Facebook* _facebook = nil;
             [dic setObject:authData forKey:AUTH_TYPE_FACEBOOK];
             NCMBUser *user = [NCMBUser user];
             [user setObject:dic forKey:@"authData"];
-            [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if(succeeded){
+            [user signUpInBackgroundWithBlock:^(NSError *error) {
+                if(!error){
                     if(block)block(user,nil);
                 }else{
                     if(block)block(nil,error);
@@ -478,9 +478,10 @@ static NCMB_Facebook* _facebook = nil;
  指定したユーザにfacebook連携情報をリンクさせる。リンクし終わったら与えられたblockを呼び出す。
  @param user 指定するユーザ
  @param permissions ログイン時に要求するパーミッション
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （BOOL succeeded, NSError *error）succeededにはリンクの有無がBOOL型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （NSError *error）
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
-+ (void)linkUser:(NCMBUser *)user permissions:(NSArray *)permissions block:(NCMBBooleanResultBlock)block{
++ (void)linkUser:(NCMBUser *)user permissions:(NSArray *)permissions block:(NCMBErrorResultBlock)block{
     [[NCMBFacebookUtils facebook] requestAuthDataWithPermissions:permissions completionHandler:^(NCMB_Facebook* facebook, NSError *error){
         if(!error){
             NSString* fbId = facebook.facebookId;
@@ -488,7 +489,7 @@ static NCMB_Facebook* _facebook = nil;
             NSDate* expirationDate = facebook.expirationDate;
             [self linkUser:user facebookId:fbId accessToken:accessToken expirationDate:expirationDate block:block check:NO];
         }else{
-            if(block)block(NO,error);
+            if(block)block(error);
         }
     }];
 }
@@ -505,14 +506,14 @@ static NCMB_Facebook* _facebook = nil;
       facebookId:(NSString *)facebookId
      accessToken:(NSString *)accessToken
   expirationDate:(NSDate *)expirationDate
-           block:(NCMBBooleanResultBlock)block
+           block:(NCMBErrorResultBlock)block
            check:(BOOL)check{
     if(check){
         [[self facebook] checkAcessToken:accessToken expirationDate:expirationDate facebookId:facebookId handler:^(BOOL isCallated, NSError *error) {
             if(isCallated){
                 [self linkUser:user facebookId:facebookId accessToken:accessToken expirationDate:expirationDate block:block check:NO];
             }else{
-                if(block)block(NO,error);
+                if(block)block(error);
             }
         }];
     }else{
@@ -529,7 +530,7 @@ static NCMB_Facebook* _facebook = nil;
                 [NCMBUser saveToFileCurrentUser:user];
             }
             if (block) {
-                block(succees,errorBlock);
+                block(errorBlock);
             }
         }];
     }
@@ -549,10 +550,8 @@ static NCMB_Facebook* _facebook = nil;
     [ invocation setTarget:target];
     [ invocation setSelector: selector ];
     
-    [self linkUser:user permissions:permissions block:^(BOOL succeeded, NSError *error) {
-        NSNumber *num = [NSNumber numberWithBool:succeeded];
-        [ invocation setArgument:&num atIndex: 2 ];
-        [ invocation setArgument:&error atIndex: 3 ];
+    [self linkUser:user permissions:permissions block:^(NSError *error) {
+        [ invocation setArgument:&error atIndex: 2 ];
         [ invocation invoke ];
     }];
 }
@@ -563,13 +562,14 @@ static NCMB_Facebook* _facebook = nil;
  @param facebookId ユーザにリンクさせるID
  @param accessToken ユーザにリンクさせるaccessToken
  @param expirationDate ユーザにリンクさせるaccessTokenの有効期限
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （BOOL succeeded, NSError *error）succeededにはリンクの有無がBOOL型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （NSError *error）
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
 + (void)linkUser:(NCMBUser *)user
       facebookId:(NSString *)facebookId
      accessToken:(NSString *)accessToken
   expirationDate:(NSDate *)expirationDate
-           block:(NCMBBooleanResultBlock)block{
+           block:(NCMBErrorResultBlock)block{
     [self linkUser:user facebookId:facebookId accessToken:accessToken expirationDate:expirationDate block:block check:YES];
 }
 
@@ -594,10 +594,12 @@ static NCMB_Facebook* _facebook = nil;
     [ invocation setTarget:target];
     [ invocation setSelector: selector ];
     
-    [self linkUser:user facebookId:facebookId accessToken:accessToken expirationDate:expirationDate block:^(BOOL succeeded, NSError *error) {
-        NSNumber *num = [NSNumber numberWithBool:succeeded];
-        [ invocation setArgument:&num atIndex: 2 ];
-        [ invocation setArgument:&error atIndex: 3 ];
+    [self linkUser:user
+        facebookId:facebookId
+       accessToken:accessToken
+    expirationDate:expirationDate
+             block:^(NSError *error) {
+        [ invocation setArgument:&error atIndex: 2 ];
         [ invocation invoke ];
     }];
 }
@@ -640,9 +642,10 @@ static NCMB_Facebook* _facebook = nil;
 /**
  指定したユーザとfacebookのリンクを解除。リンク解除し終わったら与えられたblockを呼び出す。
  @param user 指定するユーザ
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （BOOL succeeded, NSError *error）succeededにはリンク解除の有無がBOOL型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （NSError *error）
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
-+ (void)unlinkUserInBackground:(NCMBUser *)user block:(NCMBBooleanResultBlock)block{
++ (void)unlinkUserInBackground:(NCMBUser *)user block:(NCMBErrorResultBlock)block{
     //解除用のauthData
     id authData = [NSNull null];
     
@@ -662,7 +665,7 @@ static NCMB_Facebook* _facebook = nil;
             [NCMBUser saveToFileCurrentUser:user];
         }
         if(block){
-            block(isSuccess,error);
+            block(error);
         }
     }];
 }
@@ -680,10 +683,8 @@ static NCMB_Facebook* _facebook = nil;
     [ invocation setTarget:target];
     [ invocation setSelector: selector ];
     
-    [self unlinkUserInBackground:user block:^(BOOL succeeded, NSError *error) {
-        NSNumber *num = [NSNumber numberWithBool:succeeded];
-        [ invocation setArgument:&num atIndex: 2 ];
-        [ invocation setArgument:&error atIndex: 3 ];
+    [self unlinkUserInBackground:user block:^(NSError *error) {
+        [ invocation setArgument:&error atIndex: 2 ];
         [ invocation invoke ];
     }];
 }
@@ -696,12 +697,13 @@ static NCMB_Facebook* _facebook = nil;
  @param user 指定するユーザ
  @param permissions 要求するPublishPermissions
  @param audience 投稿の公開範囲
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （BOOL succeeded, NSError *error）succeededには取得の有無がBOOL型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （NSError *error）
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
 + (void)reauthorizeUser:(NCMBUser *)user
             permissions:(NSArray *)permissions
                audience:(NCMBSessionDefaultAudience)audience
-                  block:(NCMBBooleanResultBlock)block{
+                  block:(NCMBErrorResultBlock)block{
     
     NSAssert([NCMBFacebookUtils isLinkedWithUser:user], @"The user must already be linked with Facebook in order to reauthorize.");
     
@@ -717,7 +719,6 @@ static NCMB_Facebook* _facebook = nil;
         if(isCallated){
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[self facebook] requestReAuthorizeWithPermission:permissions defaultAudience:audience block:^(FBSession *session, NSError *error) {
-                    BOOL succeeded = NO;
                     if(session&&!error){
                         NSString* facebookId = fbAuthData[AUTHDATA_ID_KEY];
                         NSString* accessToken = [session accessTokenData].accessToken;
@@ -725,12 +726,12 @@ static NCMB_Facebook* _facebook = nil;
                         //authDataのfacebook情報更新
                         [self linkUser:user facebookId:facebookId accessToken:accessToken expirationDate:expirationDate block:block check:NO];
                     }else{
-                        if(block)block(succeeded,error);
+                        if(block)block(error);
                     }
                 }];
             });
         }else{
-            if(block)block(NO,error);
+            if(block)block(error);
         }
     }];
     
@@ -742,8 +743,8 @@ static NCMB_Facebook* _facebook = nil;
  @param permissions 要求するPublishPermissions
  @param audience 投稿の公開範囲
  @param target 呼び出すセレクタのターゲット
- @param selector 呼び出すセレクタ。次のシグネチャを持つ必要がある。 (void)callbackWithResult:(NSNumber *)result error:(NSError **)error
- resultには取得の有無をNSNumber型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param selector 呼び出すセレクタ。次のシグネチャを持つ必要がある。 (void)callbackWithResult:(NSError **)error
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
 + (void)reauthorizeUser:(NCMBUser *)user
             permissions:(NSArray *)permissions
@@ -755,10 +756,8 @@ static NCMB_Facebook* _facebook = nil;
     [ invocation setTarget:target];
     [ invocation setSelector: selector ];
     
-    [self reauthorizeUser:user permissions:permissions audience:audience block:^(BOOL succeeded, NSError *error) {
-        NSNumber *num = [NSNumber numberWithBool:succeeded];
-        [ invocation setArgument:&num atIndex: 2 ];
-        [ invocation setArgument:&error atIndex: 3 ];
+    [self reauthorizeUser:user permissions:permissions audience:audience block:^(NSError *error) {
+        [ invocation setArgument:&error atIndex: 2 ];
         [ invocation invoke ];
     }];
     

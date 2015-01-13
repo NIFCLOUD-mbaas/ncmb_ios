@@ -51,6 +51,7 @@
 
 #import "NCMBSubclassing.h"
 #import "NCMBConstants.h"
+#import "NCMBReachability.h"
 
 @interface NCMB : NSObject
 
