@@ -18,6 +18,9 @@
 
 @class NCMBQuery;
 
+/**
+ NCMBInstallationクラスは、端末情報の登録・更新・取得・削除を行うクラスです。
+ */
 @interface NCMBInstallation : NCMBObject
 
 /// deviceType 登録された端末の種類
@@ -38,14 +41,17 @@
 + (NCMBQuery *)query;
 
 /**
- アプリが動作している端末のNCMBInstallationを取得。
+ アプリが動作している端末のNCMBInstallationを取得する。 
+ すでに端末情報をmobile backend上に登録しており、
+ アプリ内にその情報が保存されている場合は、アプリ内から端末情報を取得する。
+ アプリ内に情報が保存されていなかった場合は、デバイストークンなどが設定されていないNCMBInstallationのインスタンスを返却する
  @return NCMBInstallationのインスタンスを返却する
  */
 + (NCMBInstallation *)currentInstallation;
 
 /**
- NSData型のデバイストークンを設定
- @param deviceTokenData デバイストークン
+ デバイストークンを設定する
+ @param deviceTokenData NSData型のデバイストークン
  */
 - (void)setDeviceTokenFromData:(NSData *)deviceTokenData;
 

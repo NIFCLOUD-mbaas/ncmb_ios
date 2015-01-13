@@ -24,8 +24,13 @@
  */
 @interface NCMBRelation : NSObject
 
+///リレーションを格納している親オブジェクト
 @property(nonatomic) NCMBObject *parent;
+
+///リレーションを格納している親オブジェクトのキー
 @property(nonatomic) NSString *key;
+
+///リレーション先のクラス名
 @property(nonatomic) NSString *targetClass;
 
 /**

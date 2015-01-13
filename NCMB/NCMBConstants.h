@@ -22,7 +22,12 @@
 
 #pragma mark - error
 #define ERRORDOMAIN @"NCMBErrorDomain"
-#define SDK_VERSION @"2.0.3"
+#define SDK_VERSION @"2.0.4"
+
+#define DATA_MAIN_PATH [NSHomeDirectory() stringByAppendingPathComponent:@"Library/"]
+#define COMMAND_CACHE_FOLDER_PATH [NSString stringWithFormat:@"%@/Private Documents/NCMB/Command Cache/", DATA_MAIN_PATH]
+
+#define API_VERSION_V1 @"2013-09-01"
 
 /// コールバックブロック
 typedef void (^NCMBBooleanResultBlock)(BOOL succeeded, NSError *error);
@@ -31,13 +36,14 @@ typedef void (^NCMBObjectResultBlock)(NCMBObject *object, NSError *error);
 typedef void (^NCMBArrayResultBlock)(NSArray *objects, NSError *error);
 typedef void (^NCMBSetResultBlock)(NSSet *channels, NSError *error);
 typedef void (^NCMBUserResultBlock)(NCMBUser *user, NSError *error);
+typedef void (^NCMBErrorResultBlock) (NSError *error);
 
 typedef void (^NCMBDataResultBlock)(NSData *data, NSError *error);
 typedef void (^NCMBDataStreamResultBlock)(NSInputStream *stream, NSError *error);
 typedef void (^NCMBProgressBlock)(int percentDone);
 
-typedef void (^NCMBFetchResultBlock)(BOOL succeeded, NSError *error);
-typedef void (^NCMBSaveResultBlock)(BOOL succeeded, NSError *error);
-typedef void (^NCMBDeleteResultBlock)(BOOL succeeded, NSError *error);
-typedef void (^NCMBSaveAllResultBlock)(BOOL succeeded, NSArray *results, NSError *error);
-typedef void (^NCMBFetchAllResultBlock)(BOOL succeeded, NSArray *results, NSError *error);
+//typedef void (^NCMBFetchResultBlock)(BOOL succeeded, NSError *error);
+//typedef void (^NCMBSaveResultBlock)(BOOL succeeded, NSError *error);
+//typedef void (^NCMBDeleteResultBlock)(BOOL succeeded, NSError *error);
+typedef void (^NCMBSaveAllResultBlock)(NSArray *results, NSError *error);
+typedef void (^NCMBFetchAllResultBlock)(NSArray *results, NSError *error);

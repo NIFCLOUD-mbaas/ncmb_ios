@@ -16,6 +16,9 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ NCMBAnalyticsクラスは、プッシュ通知の開封をニフティクラウドmobile backendに登録するクラスです。
+ */
 @interface NCMBAnalytics : NSObject
 
 /**

@@ -23,20 +23,35 @@
 @class NCMBUser;
 @class NCMBGeoPoint;
 
+/**
+ NCMBQueryは、mobile backend上のデータを検索するためのクラスです。
+ */
 @interface NCMBQuery : NSObject
 
+///検索を行うデータストアのクラス名
 @property (nonatomic)NSString *ncmbClassName;
+
+///検索結果の件数
 @property (nonatomic)int limit;
+
+///検索結果のスキップ数
 @property (nonatomic)int skip;
+
+///検索結果に子オブジェクトを含める場合の親データのキー
 @property (nonatomic)NSString *includeKey;
+
+/** @name Initialize */
 
 /**
  クラス名を指定してクエリを作成する
  @param className 指定するクラス名
+ @return NCMBQueryのインスタンス
  */
 + (NCMBQuery*)queryWithClassName:(NSString*)className;
 
 #pragma mark - Query configuration
+
+/** @name Configuration */
 
 /**
  子の情報も含めて親情報を取得。クエリに設定された検索条件で取得できるオブジェクトに加えて、各オブジェクトに格納された、キー（引数）のオブジェクトの情報も取得する。
@@ -250,6 +265,7 @@
  @param objectClass 取得するオブジェクトのクラス名
  @param objectId 取得するオブジェクトのobjectID
  @param error 処理中に起きたエラーのポインタ
+ @return 指定されたNCMBObject
  */
 + (NCMBObject *)getObjectOfClass:(NSString *)objectClass
                         objectId:(NSString *)objectId
@@ -260,6 +276,7 @@
  指定したobjectIDを持つオブジェクトを取得。必要があればエラーをセットし、取得することもできる。
  @param objectId 取得するオブジェクトのobjectID
  @param error 処理中に起きたエラーのポインタ
+ @return 指定されたオブジェクト
  */
 - (NCMBObject *)getObjectWithId:(NSString *)objectId error:(NSError **)error;
 
@@ -291,6 +308,7 @@
  指定したobjectIDのユーザを取得。必要があればエラーをセットし、取得することもできる。
  @param objectId 取得するユーザのobjectID
  @param error 処理中に起きたエラーのポインタ
+ @return 指定されたNCMBUser
  */
 + (NCMBUser *)getUserObjectWithId:(NSString *)objectId
                             error:(NSError **)error;
@@ -302,6 +320,7 @@
 /**
  設定されている検索条件に当てはまるオブジェクトを取得。必要があればエラーをセットし、取得することもできる。
  @param error 処理中に起きたエラーのポインタ
+ @return 検索結果の配列
  */
 - (NSArray *)findObjects:(NSError **)error;
 
@@ -320,11 +339,12 @@
  */
 - (void)findObjectsInBackgroundWithTarget:(id)target selector:(SEL)selector;
 
-/** @name Get First Object */
+/** @name Get first object */
 
 /**
  設定されている検索条件に当てはまるオブジェクトを一件取得。必要があればエラーをセットし、取得することもできる。
  @param error 処理中に起きたエラーのポインタ
+ @return 検索条件に該当するオブジェクト
  */
 - (id)getFirstObject:(NSError **)error;
 
@@ -349,6 +369,7 @@
 /**
  設定されている検索条件に当てはまるオブジェクトの件数を取得。必要があればエラーをセットし、取得することもできる。
  @param error 処理中に起きたエラーのポインタ
+ @return 検索条件に該当するオブジェクトの件数
  */
 - (NSInteger)countObjects:(NSError **)error;
 
@@ -376,13 +397,17 @@
 
 #pragma mark cacheConfiguration
 
+/** @name Cache Setting */
+
 /**
  データ検索時のcachePolicyを設定する
+ @param cachePolicy クエリに設定するNSURLRequestCachePolicy
  */
 - (void)setCachePolicy:(NSURLRequestCachePolicy)cachePolicy;
 
 /**
  設定されている検索条件に当てはまるキャッシュの有無を取得
+ @return キャッシュが存在する場合はYESを返す
  */
 - (BOOL)hasCachedResult;
 

@@ -68,6 +68,8 @@
 		5DA0364D1A126DEC00E10D64 /* NCMBOAToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA0363A1A126DEC00E10D64 /* NCMBOAToken.m */; };
 		5DA0364E1A126DEC00E10D64 /* NCMBTwitterLoginView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA0363C1A126DEC00E10D64 /* NCMBTwitterLoginView.m */; };
 		5DA0364F1A126DEC00E10D64 /* NCMBTwitterUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA0363E1A126DEC00E10D64 /* NCMBTwitterUtils.m */; };
+		5DACCB0B1A5E18CF007A4B58 /* NCMBReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DACCB0A1A5E18CF007A4B58 /* NCMBReachability.m */; };
+		5DACCB0C1A5E18CF007A4B58 /* NCMBReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DACCB0A1A5E18CF007A4B58 /* NCMBReachability.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -181,6 +183,8 @@
 		5DA0363D1A126DEC00E10D64 /* NCMBTwitterUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBTwitterUtils.h; sourceTree = "<group>"; };
 		5DA0363E1A126DEC00E10D64 /* NCMBTwitterUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBTwitterUtils.m; sourceTree = "<group>"; };
 		5DA18B601A19D5630076EA72 /* NCMBSubclassing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBSubclassing.h; sourceTree = "<group>"; };
+		5DACCB091A5E18CF007A4B58 /* NCMBReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBReachability.h; sourceTree = "<group>"; };
+		5DACCB0A1A5E18CF007A4B58 /* NCMBReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBReachability.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -227,49 +231,50 @@
 		5D46C8891A11CE6200278A10 /* NCMB */ = {
 			isa = PBXGroup;
 			children = (
-				5DA18B601A19D5630076EA72 /* NCMBSubclassing.h */,
+				5D46C89F1A11D0AC00278A10 /* NCMB.h */,
+				5D46C8A01A11D0AC00278A10 /* NCMB.m */,
+				5D46C95A1A11E79600278A10 /* NCMBACL.h */,
+				5D46C95B1A11E79600278A10 /* NCMBACL.m */,
+				5D46C9C91A11ED6500278A10 /* NCMBAnalytics.h */,
+				5D46C9CA1A11ED6500278A10 /* NCMBAnalytics.m */,
+				5D46C9861A11E92700278A10 /* NCMBAnonymousUtils.h */,
+				5D46C9871A11E92700278A10 /* NCMBAnonymousUtils.m */,
+				5D46C9841A11E8CC00278A10 /* NCMBConstants.h */,
+				5D46C9571A11E77700278A10 /* NCMBError.h */,
+				5D46C9581A11E77700278A10 /* NCMBError.m */,
 				5DA036191A126DEC00E10D64 /* NCMBFacebookUtils.h */,
 				5DA0361A1A126DEC00E10D64 /* NCMBFacebookUtils.m */,
+				5DA035CF1A12661900E10D64 /* NCMBFile.h */,
+				5DA035D01A12661900E10D64 /* NCMBFile.m */,
+				5D46C9611A11E81E00278A10 /* NCMBGeoPoint.h */,
+				5D46C9621A11E81E00278A10 /* NCMBGeoPoint.m */,
+				5D46C9CB1A11ED6500278A10 /* NCMBInstallation.h */,
+				5D46C9CC1A11ED6500278A10 /* NCMBInstallation.m */,
+				5D46C9491A11E5B700278A10 /* NCMBObject.h */,
+				5D46C94A1A11E5B700278A10 /* NCMBObject.m */,
+				5D46C9851A11E8E900278A10 /* NCMBObject+Subclass.h */,
+				5D46C9CD1A11ED6500278A10 /* NCMBPush.h */,
+				5D46C9CE1A11ED6500278A10 /* NCMBPush.m */,
+				5D46C9881A11E92700278A10 /* NCMBQuery.h */,
+				5D46C9891A11E92700278A10 /* NCMBQuery.m */,
+				5DACCB081A5E18CF007A4B58 /* NCMBReachability */,
+				5D46C9631A11E81E00278A10 /* NCMBRelation.h */,
+				5D46C9641A11E81E00278A10 /* NCMBRelation.m */,
+				5D46C9D31A11EE4D00278A10 /* NCMBRichPush */,
+				5D46C9651A11E81E00278A10 /* NCMBRole.h */,
+				5D46C9661A11E81E00278A10 /* NCMBRole.m */,
+				5DA18B601A19D5630076EA72 /* NCMBSubclassing.h */,
 				5DA0361B1A126DEC00E10D64 /* NCMBTwitter */,
 				5DA0363D1A126DEC00E10D64 /* NCMBTwitterUtils.h */,
 				5DA0363E1A126DEC00E10D64 /* NCMBTwitterUtils.m */,
-				5DA035D61A12675400E10D64 /* NSDataBase64Encode */,
-				5DA035CF1A12661900E10D64 /* NCMBFile.h */,
-				5DA035D01A12661900E10D64 /* NCMBFile.m */,
-				5D46C9D31A11EE4D00278A10 /* NCMBRichPush */,
-				5D46C9C91A11ED6500278A10 /* NCMBAnalytics.h */,
-				5D46C9CA1A11ED6500278A10 /* NCMBAnalytics.m */,
-				5D46C9CB1A11ED6500278A10 /* NCMBInstallation.h */,
-				5D46C9CC1A11ED6500278A10 /* NCMBInstallation.m */,
-				5D46C9CD1A11ED6500278A10 /* NCMBPush.h */,
-				5D46C9CE1A11ED6500278A10 /* NCMBPush.m */,
-				5D46C98C1A11EA2D00278A10 /* SubClassHandler */,
-				5D46C9861A11E92700278A10 /* NCMBAnonymousUtils.h */,
-				5D46C9871A11E92700278A10 /* NCMBAnonymousUtils.m */,
-				5D46C9881A11E92700278A10 /* NCMBQuery.h */,
-				5D46C9891A11E92700278A10 /* NCMBQuery.m */,
-				5D46C9851A11E8E900278A10 /* NCMBObject+Subclass.h */,
-				5D46C9841A11E8CC00278A10 /* NCMBConstants.h */,
-				5D46C96B1A11E87300278A10 /* Operations */,
-				5D46C9611A11E81E00278A10 /* NCMBGeoPoint.h */,
-				5D46C9621A11E81E00278A10 /* NCMBGeoPoint.m */,
-				5D46C9631A11E81E00278A10 /* NCMBRelation.h */,
-				5D46C9641A11E81E00278A10 /* NCMBRelation.m */,
-				5D46C9651A11E81E00278A10 /* NCMBRole.h */,
-				5D46C9661A11E81E00278A10 /* NCMBRole.m */,
-				5D46C95A1A11E79600278A10 /* NCMBACL.h */,
-				5D46C95B1A11E79600278A10 /* NCMBACL.m */,
-				5D46C9571A11E77700278A10 /* NCMBError.h */,
-				5D46C9581A11E77700278A10 /* NCMBError.m */,
-				5D46C9541A11E72700278A10 /* PrivateHeaders */,
 				5D46C9501A11E6F000278A10 /* NCMBURLConnection */,
-				5D46C9491A11E5B700278A10 /* NCMBObject.h */,
-				5D46C94A1A11E5B700278A10 /* NCMBObject.m */,
 				5D46C94B1A11E5B700278A10 /* NCMBUser.h */,
 				5D46C94C1A11E5B700278A10 /* NCMBUser.m */,
-				5D46C89F1A11D0AC00278A10 /* NCMB.h */,
-				5D46C8A01A11D0AC00278A10 /* NCMB.m */,
+				5DA035D61A12675400E10D64 /* NSDataBase64Encode */,
+				5D46C96B1A11E87300278A10 /* Operations */,
+				5D46C9541A11E72700278A10 /* PrivateHeaders */,
 				5D46C89E1A11D06300278A10 /* Resources */,
+				5D46C98C1A11EA2D00278A10 /* SubClassHandler */,
 			);
 			path = NCMB;
 			sourceTree = "<group>";
@@ -428,6 +433,15 @@
 			path = Crypto;
 			sourceTree = "<group>";
 		};
+		5DACCB081A5E18CF007A4B58 /* NCMBReachability */ = {
+			isa = PBXGroup;
+			children = (
+				5DACCB091A5E18CF007A4B58 /* NCMBReachability.h */,
+				5DACCB0A1A5E18CF007A4B58 /* NCMBReachability.m */,
+			);
+			path = NCMBReachability;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -569,6 +583,7 @@
 				5D46C97B1A11E87300278A10 /* NCMBAddUniqueOperation.m in Sources */,
 				5DA036461A126DEC00E10D64 /* sha1.c in Sources */,
 				5D46C9691A11E81E00278A10 /* NCMBRole.m in Sources */,
+				5DACCB0B1A5E18CF007A4B58 /* NCMBReachability.m in Sources */,
 				5D46C9671A11E81E00278A10 /* NCMBGeoPoint.m in Sources */,
 				5DA035D91A12675400E10D64 /* NSDataBase64Encode.m in Sources */,
 				5DA0364D1A126DEC00E10D64 /* NCMBOAToken.m in Sources */,
@@ -585,6 +600,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5DACCB0C1A5E18CF007A4B58 /* NCMBReachability.m in Sources */,
 				5D46C98F1A11EA2D00278A10 /* SubClassHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

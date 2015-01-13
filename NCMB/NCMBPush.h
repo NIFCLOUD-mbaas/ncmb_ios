@@ -15,21 +15,27 @@
  **********/
 
 #import "NCMBObject.h"
+#import "NCMBConstants.h"
 
 #import <AudioToolbox/AudioToolbox.h>
 
 @class NCMBQuery;
 
-typedef void (^NCMBBooleanResultBlock)(BOOL succeeded, NSError *error);
 
+/**
+ NCMBPushは、プッシュ通知の登録・更新・取得・削除を行うクラスです。
+ */
 @interface NCMBPush : NCMBObject
 
 /** @name Create */
 
 /**
  NCMBPushのインスタンスを生成
+ @return NCMBPushのインスタンス
  */
 + (NCMBPush *)push;
+
+/** @name Configuration */
 
 /**
  プッシュ通知のタイトルを設定(Androidのみ)
@@ -172,8 +178,9 @@ typedef void (^NCMBBooleanResultBlock)(BOOL succeeded, NSError *error);
  @param channel プッシュ先のチャネル
  @param message メッセージ内容
  @param error 処理中に起きたエラーのポインタ
+ @return APIリクエストを実施した場合にYESを返す
  */
-+ (BOOL)sendPushMessageToChannel:(NSString *)channel
++ (void)sendPushMessageToChannel:(NSString *)channel
                      withMessage:(NSString *)message
                            error:(NSError **)error;
 
@@ -182,12 +189,12 @@ typedef void (^NCMBBooleanResultBlock)(BOOL succeeded, NSError *error);
  指定したチャネルに非同期でメッセージのみのプッシュ通知を送信。登録し終わったら与えられたblockを呼び出す。
  @param channel プッシュ先のチャネル
  @param message メッセージ内容
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある(BOOL succeeded, NSError *error)
- succeededには送信完了の有無がBOOL型で渡される。errorにはエラーがなければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある(NSError *error)
+ errorにはエラーがなければnilが渡される。
  */
 + (void)sendPushMessageToChannelInBackground:(NSString *)channel
                                  withMessage:(NSString *)message
-                                       block:(NCMBBooleanResultBlock)block;
+                                       block:(NCMBErrorResultBlock)block;
 
 /**
  指定したチャネルに非同期でメッセージのみのプッシュ通知を送信。取得し終わったら指定されたcallbackを呼び出す。
@@ -207,8 +214,9 @@ typedef void (^NCMBBooleanResultBlock)(BOOL succeeded, NSError *error);
  @param query 指定するクエリ
  @param message メッセージ内容
  @param error 処理中に起きたエラーのポインタ
+ @return APIリクエストを実行するとYESを返す
  */
-+ (BOOL)sendPushMessageToQuery:(NCMBQuery *)query
++ (void)sendPushMessageToQuery:(NCMBQuery *)query
                    withMessage:(NSString *)message
                          error:(NSError **)error;
 
@@ -217,12 +225,12 @@ typedef void (^NCMBBooleanResultBlock)(BOOL succeeded, NSError *error);
  指定したクエリを満たした配信端末に非同期でメッセージのみのプッシュ通知を送信。登録し終わったら与えられたblockを呼び出す。
  @param query 指定するクエリ
  @param message メッセージ内容
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある(BOOL succeeded, NSError *error)
- succeededには送信完了の有無がBOOL型で渡される。errorにはエラーがなければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある(NSError *error)
+ errorにはエラーがなければnilが渡される。
  */
 + (void)sendPushMessageToQueryInBackground:(NCMBQuery *)query
                                withMessage:(NSString *)message
-                                     block:(NCMBBooleanResultBlock)block;
+                                     block:(NCMBErrorResultBlock)block;
 
 
 /**
@@ -230,8 +238,9 @@ typedef void (^NCMBBooleanResultBlock)(BOOL succeeded, NSError *error);
  @param channel プッシュ先のチャネル
  @param data プッシュ通知内容
  @param error 処理中に起きたエラーのポインタ
+ @return APIリクエストを実行するとYESを返す
  */
-+ (BOOL)sendPushDataToChannel:(NSString *)channel
++ (void)sendPushDataToChannel:(NSString *)channel
                      withData:(NSDictionary *)data
                         error:(NSError **)error;
 
@@ -240,12 +249,12 @@ typedef void (^NCMBBooleanResultBlock)(BOOL succeeded, NSError *error);
  指定したチャネルに非同期でプッシュ通知を送信。登録し終わったら与えられたblockを呼び出す。
  @param channel プッシュ先のチャネル
  @param data プッシュ通知内容
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある(BOOL succeeded, NSError *error)
- succeededには送信完了の有無がBOOL型で渡される。errorにはエラーがなければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある(NSError *error)
+ errorにはエラーがなければnilが渡される。
  */
 + (void)sendPushDataToChannelInBackground:(NSString *)channel
                                  withData:(NSDictionary *)data
-                                    block:(NCMBBooleanResultBlock)block;
+                                    block:(NCMBErrorResultBlock)block;
 
 
 /**
@@ -266,8 +275,9 @@ typedef void (^NCMBBooleanResultBlock)(BOOL succeeded, NSError *error);
  @param query 指定するクエリ
  @param data プッシュ通知内容
  @param error 処理中に起きたエラーのポインタ
+ @return APIリクエストを実行するとYESを返す
  */
-+ (BOOL)sendPushDataToQuery:(NCMBQuery *)query
++ (void)sendPushDataToQuery:(NCMBQuery *)query
                    withData:(NSDictionary *)data
                       error:(NSError **)error;
 
@@ -275,32 +285,31 @@ typedef void (^NCMBBooleanResultBlock)(BOOL succeeded, NSError *error);
  指定したクエリを満たした配信端末に非同期でプッシュ通知を送信。登録し終わったら与えられたblockを呼び出す。
  @param query 指定するクエリ
  @param data プッシュ通知内容
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある(BOOL succeeded, NSError *error)
- succeededには送信完了の有無がBOOL型で渡される。errorにはエラーがなければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある(NSError *error)
+ errorにはエラーがなければnilが渡される。
  */
 + (void)sendPushDataToQueryInBackground:(NCMBQuery *)query
                                withData:(NSDictionary *)data
-                                  block:(NCMBBooleanResultBlock)block;
+                                  block:(NCMBErrorResultBlock)block;
 
 /**
  プッシュ通知を送信。必要があればエラーをセットし、取得することができる。
  @param error 処理中に起きたエラーのポインタ
  */
-- (BOOL)sendPush:(NSError **)error;
+- (void)sendPush:(NSError **)error;
 
 
 /**
  プッシュ通知を非同期で送信。登録し終わったら与えられたblockを呼び出す。
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある(BOOL succeeded, NSError *error)
- succeededには送信完了の有無がBOOL型で渡される。errorにはエラーがなければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある(NSError *error)
+ errorにはエラーがなければnilが渡される。
  */
-- (void)sendPushInBackgroundWithBlock:(NCMBBooleanResultBlock)block;
+- (void)sendPushInBackgroundWithBlock:(NCMBErrorResultBlock)block;
 
 /**
  プッシュ通知を非同期で送信。取得し終わったら指定されたcallbackを呼び出す。
  @param target 呼び出すセレクタのターゲット
- @param selector 呼び出すセレクタ。次のシグネチャを持つ必要がある。(void)callbackWithResult:(NSNumber )result error:(NSError )error
- resultには送信完了の有無をNSNumber型で渡される。errorにはエラーがなければnilが渡される。
+ @param selector 呼び出すセレクタ。引数として(NSError*)errorオブジェクトを取得できる。
  */
 - (void)sendPushInBackgroundWithTarget:(id)target selector:(SEL)selector;
 
@@ -318,14 +327,6 @@ typedef void (^NCMBBooleanResultBlock)(BOOL succeeded, NSError *error);
  @param userInfo プッシュ通知内容
  */
 + (void)handleRichPush:(NSDictionary *)userInfo;
-
-/**
- プッシュ通知のデータを受け取り、Webページや画像を表示する
- @param userInfo .
- */
-/*
- + (void)handleRichPush:(NSDictionary *)userInfo;
- */
 
 /** @name Query */
 

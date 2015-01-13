@@ -78,7 +78,7 @@
 
 /**
  mobile backendにオブジェクトを保存する。非同期通信を行う。
- @param block 通信後に実行されるblock。引数にBOOL succeeded, NSError *errorを持つ。
+ @param block 通信後に実行されるblock。引数にNSError *errorを持つ。
  */
 -(NSMutableDictionary *)convertToJSONDicFromOperation:(NSMutableDictionary*)operations;
 
@@ -108,14 +108,14 @@
  @param url リクエストURL
  @param block
  */
-- (void)deleteInBackgroundWithBlock:(NSString *)url block:(NCMBDeleteResultBlock)userBlock;
+- (void)deleteInBackgroundWithBlock:(NSString *)url block:(NCMBErrorResultBlock)userBlock;
 
 /**
  リクエストURLを受け取ってmobile backendにオブジェクトを保存する。非同期通信を行う。
  @param url リクエストURL
- @param block 通信後に実行されるblock。引数にBOOL succeeded, NSError *errorを持つ。
+ @param block 通信後に実行されるblock。引数にNSError *errorを持つ。
  */
-- (void)saveInBackgroundWithBlock:(NSString *)url block:(NCMBSaveResultBlock)userBlock;
+- (void)saveInBackgroundWithBlock:(NSString *)url block:(NCMBErrorResultBlock)userBlock;
 
 /**
  リクエストURLを受け取ってsave処理を実行する
@@ -123,14 +123,14 @@
  @param エラーを保持するポインタ
  @return 通信が行われたかを真偽値で返却する
  */
-- (BOOL)save:(NSString*)url error:(NSError **)error;
+- (void)save:(NSString*)url error:(NSError **)error;
 
 /**
  リクエストURLを受け取ってfetchを実行する。非同期通信を行う。
  @param url リクエストURL
  @param userBlock 通信後に実行されるblock。引数にNSError *errorを持つ。
  */
-- (void)fetchInBackgroundWithBlock:(NSString *)url block:(NCMBFetchResultBlock)userBlock isRefresh:(BOOL)isRefresh;
+- (void)fetchInBackgroundWithBlock:(NSString *)url block:(NCMBErrorResultBlock)userBlock isRefresh:(BOOL)isRefresh;
 
 /**
  リクエストURLを受け取ってfetchを実行する。
@@ -138,7 +138,7 @@
  @param error エラーを保持するポインタ
  @return 通信が成功した場合にはYESを返す
  */
-- (BOOL)fetch:(NSString*)url error:(NSError **)error isRefresh:(BOOL)isRefresh;
+- (void)fetch:(NSString*)url error:(NSError **)error isRefresh:(BOOL)isRefresh;
 
 /**
  NCMB形式の日付型NSDateFormatterオブジェクトを返す

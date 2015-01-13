@@ -30,22 +30,13 @@ static BOOL responseValidationFlag = false;
  @param clientKey APIを利用する際に必要となるキー
  */
 + (void)setApplicationKey:(NSString *)appKey clientKey:(NSString *)cliKey{
-    //[NCMB createFolder];
-    //[NCMB setApplicationKey:applicationKey];
-    //[NCMB setClientKey:clientKey];
-    //dispatch_queue_t main=dispatch_get_main_queue();
-    //dispatch_queue_t sub=dispatch_queue_create("reachabilityChanged", NULL);
-    //dispatch_async(sub, ^{
-    //   if ([NCMB_REACHABILITY checkStart]) {
-    //        [NCMBCommandCache handleCache:nil];
-    //    }
-    //    dispatch_async(main, ^{
-    //    });
-    //});
-    //dispatch_release(sub);
     [NCMB createFolder];
     applicationKey = appKey;
     clientKey = cliKey;
+    NCMBReachability *reachability = [NCMBReachability sharedInstance];
+    //[reachability reachabilityWithHostName:@"mb.api.cloud.nifty.com"];
+    [reachability startNotifier];
+    
 }
 
 #pragma mark - Key

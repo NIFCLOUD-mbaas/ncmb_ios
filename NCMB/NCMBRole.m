@@ -64,45 +64,6 @@
 }
 
 /**
- mobile backendにオブジェクトを保存する
- @param error エラーを保持するポインタ
- @return result 通信が実行されたらYESを返す
- */
-- (BOOL)save:(NSError **)error{
-    NSString *url = [NSString stringWithFormat:@"roles"];
-    BOOL result = [self save:url error:error];
-    return result;
-}
-
-- (void)saveInBackgroundWithBlock:(NCMBSaveResultBlock)userBlock{
-    NSString *url = [NSString stringWithFormat:@"roles"];
-    [self saveInBackgroundWithBlock:url block:userBlock];
-}
-
-- (void)afterDelete{
-    [super afterDelete];
-    _roleName = nil;
-    _users = nil;
-    _roles = nil;
-}
-
-/**
- mobile backendからロールを削除し、プロパティもリセットする
- @param error エラーを保持するポインタ
- @return result 通信が実行されたらYESを返す
- */
-- (BOOL)delete:(NSError **)error{
-    NSString *url = [NSString stringWithFormat:@"roles/%@", self.objectId];
-    BOOL result = [self delete:url error:error];
-    return result;
-}
-
-- (void)deleteInBackgroundWithBlock:(NCMBDeleteResultBlock)userBlock{
-    NSString *url = [NSString stringWithFormat:@"roles/%@", self.objectId];
-    [self deleteInBackgroundWithBlock:url block:userBlock];
-}
-
-/**
  指定したユーザーをロールに追加する
  @param user 追加する会員
  */
@@ -145,6 +106,8 @@
     }
 }
 
+#pragma mark override
+
 - (void)afterFetch:(NSMutableDictionary *)response isRefresh:(BOOL)isRefresh{
     [super afterFetch:response isRefresh:isRefresh];
     if ([response objectForKey:@"belongRole"]){
@@ -158,43 +121,14 @@
     }
 }
 
-/**
- ロールの内容を取得する
- @param error エラーを保持するポインタ
- */
-- (BOOL)fetch:(NSError **)error{
-    BOOL result = NO;
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"roles/%@", self.objectId];
-        [self fetch:url error:error isRefresh:NO];
-        result = YES;
-    }
-    return result;
+- (void)afterDelete{
+    [super afterDelete];
+    _roleName = nil;
+    _users = nil;
+    _roles = nil;
 }
 
-- (void)fetchInBackgroundWithBlock:(NCMBFetchResultBlock)block{
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"roles/%@", self.objectId];
-        [self fetchInBackgroundWithBlock:url block:block isRefresh:NO];
-    }
-}
-
-- (BOOL)refresh:(NSError **)error{
-    BOOL result = NO;
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"roles/%@", self.objectId];
-        [self fetch:url error:error isRefresh:YES];
-        result = YES;
-    }
-    return result;
-}
-
-- (void)refreshInBackgroundWithBlock:(NCMBFetchResultBlock)block{
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"roles/%@", self.objectId];
-        [self fetchInBackgroundWithBlock:url block:block isRefresh:YES];
-    }
-}
+#pragma mark query
 
 + (NCMBQuery*)query{
     return [NCMBQuery queryWithClassName:@"role"];

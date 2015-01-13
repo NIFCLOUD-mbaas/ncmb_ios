@@ -39,9 +39,6 @@ static NSMutableData *resultData = nil;
 
 #pragma mark - UnsupportedOperationException
 //非推奨メソッド
--(void)refresh {
-    [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
-}
 -(void)refresh:(NSError **)error {
     [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
 }
@@ -51,33 +48,16 @@ static NSMutableData *resultData = nil;
 -(void)refreshInBackgroundWithTarget:(id)target selector:(SEL)selector {
     [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
 }
--(void)fetch {
-    [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
-}
 -(void)fetch:(NSError **)error {
     [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
 }
-- (NCMBObject *)fetchIfNeeded{
-    [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
-    return nil;
-}
-- (NCMBObject *)fetchIfNeeded:(NSError **)error{
-    [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
-    return nil;
-}
--(void)fetchIfNeededInBackgroundWithBlock:(NCMBObjectResultBlock)block {
-    [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
-}
--(void)fetchIfNeededInBackgroundWithTarget:(id)target selector:(SEL)selector {
-    [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
-}
--(void)fetchInBackgroundWithBlock:(NCMBObjectResultBlock)block {
+-(void)fetchInBackgroundWithBlock:(NCMBErrorResultBlock)block {
     [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
 }
 -(void)fetchInBackgroundWithTarget:(id)target selector:(SEL)selector {
     [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
 }
--(void)deleteEventually{
+-(void)deleteEventually:(NCMBErrorResultBlock)callback{
     [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
 }
 -(NCMBRelation *)relationForKey:(NSString *)key{
@@ -111,23 +91,11 @@ static NSMutableData *resultData = nil;
 -(void)incrementKey:(NSString *)key byAmount:(NSNumber *)amount{
     [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
 }
--(void)saveEventually{
-    [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
-}
--(void)saveEventually:(NCMBBooleanResultBlock)callback{
+-(void)saveEventually:(NCMBErrorResultBlock)callback{
     [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"UnsupportedOperation." userInfo:nil] raise];
 }
 
 #pragma mark - init
-/**
- NCMBFileクラスではクラス名を指定しての初期化は出来ない
- @param className クラス名
- @return nil
- */
-- (id)initWithClassName:(NSString *)className{
-    [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"Cannot initialize a NCMBFile with a custom class name." userInfo:nil] raise];
-    return nil;
-}
 
 /**
  指定したファイルパスで取得したデータと指定したファイル名を持つNCMBFileのインスタンスを生成
@@ -154,7 +122,7 @@ static NSMutableData *resultData = nil;
  @return id型 NCMBFile
  */
 + (id)fileWithData:(NSData *)data{
-    NCMBFile *file = [NCMBFile object];
+    NCMBFile *file = [[NCMBFile alloc] initWithClassName:@"file"];
     file.file = data;
     [file privateSetIsDirty:TRUE];
     [file privateSetName:[NCMBFile uniqueTagFromObject]];
@@ -168,7 +136,7 @@ static NSMutableData *resultData = nil;
  @return id型 NCMBFile
  */
 + (id)fileWithName:(NSString *)name data:(NSData *)data{
-    NCMBFile *file = [NCMBFile object];
+    NCMBFile *file = [[NCMBFile alloc] initWithClassName:@"file"];
     file.file = data;
     [file privateSetName:name];
     [file privateSetIsDirty:YES];
@@ -209,48 +177,12 @@ static NSMutableData *resultData = nil;
 #pragma mark - save
 
 /**
- mobile backendにオブジェクトを保存する
- @param error エラーを保持するポインタ
- @return result 通信が実行されたらYESを返す
- */
-- (BOOL)save:(NSError **)error{
-    isCancel = NO;
-    BOOL result = NO;
-    NSMutableDictionary *operation = [self beforeConnection];
-    
-    NCMBURLConnection *connect = [self createConnectionForSave:URL_FILE operation:operation progress:nil];
-    if (connect == nil){
-        return result;
-    }
-    if (!isCancel) {
-        NSDictionary *response = [connect syncConnection:error];
-        //通信エラーだった場合はNOを返す
-        if (error != nil && *error){
-            //通信エラー or mbエラー
-            [self mergePreviousOperation:operation];
-        } else {
-            [self afterSave:response operations:operation];
-            result = YES;
-        }
-    }
-    isCancel = NO;
-    return result;
-}
-
-/**
- mobile backendにfileを保存する。非同期通信を行う。
- @param block 通信後に実行されるblock。引数にBOOL succeeded, NSError *errorを持つ。
- */
-- (void)saveInBackgroundWithBlock:(NCMBSaveResultBlock)userBlock{
-    [self saveInBackgroundWithBlock:userBlock progressBlock:nil];
-}
-
-/**
  データを非同期で保存。保存の進度により定期的にprogressBlockを呼び出し、100パーセントに達し保存がし終わったらblockを呼び出す。
- @param block 保存完了後に実行されるblock。blockは次の引数のシグネチャを持つ必要がある（BOOL succeeded, NSError *error）succeededには保存完了の有無がBOOL型で渡される。errorにはエラーがあればエラーのポインタが渡され、なければnilが渡される。
+ @param block 保存完了後に実行されるblock。blockは次の引数のシグネチャを持つ必要がある（NSError *error）
+ errorにはエラーがあればエラーのポインタが渡され、なければnilが渡される。
  @param progressBlock 保存進度により定期的に実行されるblock。blockは次の引数のシグネチャを持つ必要がある（int percentDone）
  */
-- (void)saveInBackgroundWithBlock:(NCMBBooleanResultBlock)block
+- (void)saveInBackgroundWithBlock:(NCMBErrorResultBlock)block
                     progressBlock:(NCMBProgressBlock)progressBlock{
     dispatch_queue_t main=dispatch_get_main_queue();
     dispatch_queue_t sub=dispatch_queue_create("getDataInBackgroundWithBlock", NULL);
@@ -266,28 +198,31 @@ static NSMutableData *resultData = nil;
         //リクエスト作成
         NSError *e = nil;
         NSMutableDictionary *operation = [self beforeConnection];
-        NCMBURLConnection *request = [self createConnectionForSave:URL_FILE operation:operation progress:proBlock];
-        if (request == nil){
-            block(NO, e);
+        NCMBURLConnection *request = [self createConnectionForSave:URL_FILE
+                                                         operation:operation
+                                                          progress:proBlock
+                                                             error:&e];
+        if (request == nil && e != nil){
+            if (block){
+                block(e);
+            }
         }
         dispatch_async(main, ^{
             //非同期通信
             if (!isCancel) {
-                connectionLocal = [request fileAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *errorBlock){
-                    BOOL succeeded = NO;
+                connectionLocal = [request fileAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
                     if (connectionLocal) {
                         connectionLocal = nil;
                     }
                     //通信エラーだった場合はNOを返す
-                    if (errorBlock){
+                    if (requestError){
                         //通信エラー or mbエラー
                         [self mergePreviousOperation:operation];
                     } else {
                         [self afterSave:responseData operations:operation];
-                        succeeded = YES;
                     }
                     if(block){
-                        block(succeeded,errorBlock);
+                        block(requestError);
                     }
                 }];
             }else{
@@ -446,7 +381,11 @@ static NSMutableData *resultData = nil;
  @param progress プログレス
  @return save用のNCMBConnection
  */
-- (NCMBURLConnection*)createConnectionForSave:(NSString*)url operation:(NSMutableDictionary*)operation progress:(void (^)(NSNumber *progress))progress{
+- (NCMBURLConnection*)createConnectionForSave:(NSString*)url
+                                    operation:(NSMutableDictionary*)operation
+                                     progress:(void (^)(NSNumber *progress))progress
+                                        error:(NSError**)error
+{
     NSMutableDictionary *ncmbDic = [self convertToJSONDicFromOperation:operation];
     //fileは履歴管理していないため直接設定する
     if(self.file){
@@ -571,6 +510,89 @@ static NSMutableData *resultData = nil;
 
 #pragma mark - override
 
+/**
+ mobile backendにオブジェクトを保存する
+ @param error エラーを保持するポインタ
+ */
+- (void)save:(NSError **)error{
+    isCancel = NO;
+    NSMutableDictionary *operation = [self beforeConnection];
+    
+    NSError *connectionError = nil;
+    NCMBURLConnection *connect = [self createConnectionForSave:URL_FILE
+                                                     operation:operation
+                                                      progress:nil
+                                                         error:&connectionError];
+    if (connect == nil && connectionError != nil){
+        if (error){
+            *error = connectionError;
+        }
+    }
+    if (!isCancel) {
+        NSError *requestError = nil;
+        NSDictionary *response = [connect syncConnection:&requestError];
+        //通信エラーだった場合はNOを返す
+        if (requestError){
+            if (error){
+                *error = requestError;
+            }
+            //通信エラー or mbエラー
+            [self mergePreviousOperation:operation];
+        } else {
+            [self afterSave:response operations:operation];
+        }
+    }
+    isCancel = NO;
+}
+
+/**
+ mobile backendにfileを保存する。非同期通信を行う。
+ @param block 通信後に実行されるblock。引数にNSError *errorを持つ。
+ */
+- (void)saveInBackgroundWithBlock:(NCMBErrorResultBlock)userBlock{
+    [self saveInBackgroundWithBlock:userBlock progressBlock:nil];
+}
+
+/**
+ fileをmobile backendとローカル上から削除する
+ @param error エラーを保持するポインタを保持するポインタ
+ */
+- (void)delete:(NSError**)error{
+    if (_name){
+        NSString *url = [NSString stringWithFormat:@"%@/%@",URL_FILE,self.name];
+        [self delete:url error:error];
+    } else {
+        if (error){
+            NSError *localError = [NSError errorWithDomain:ERRORDOMAIN
+                                                      code:400003
+                                                  userInfo:@{NSLocalizedDescriptionKey:@"objectId is empty."}
+                                   ];
+            *error = localError;
+        }
+    }
+    
+}
+
+/**
+ fileをmobile backendとローカル上から削除する。非同期通信を行う。
+ @param error block 通信後に実行されるblock。引数にBOOL succeeded, NSError *errorを持つ。
+ */
+- (void)deleteInBackgroundWithBlock:(NCMBErrorResultBlock)userBlock{
+    if (_name){
+        NSString *url = [NSString stringWithFormat:@"%@/%@",URL_FILE,self.name];
+        [self deleteInBackgroundWithBlock:url block:userBlock];
+    } else {
+        if (userBlock){
+            NSError *localError = [NSError errorWithDomain:ERRORDOMAIN
+                                                      code:400003
+                                                  userInfo:@{NSLocalizedDescriptionKey:@"objectId is empty."}
+                                   ];
+            userBlock(localError);
+        }
+    }
+}
+
+
 +(id)object{
     return [[NCMBFile alloc] init];
 }
@@ -606,24 +628,5 @@ static NSMutableData *resultData = nil;
     }
     [super afterFetch:response isRefresh:isRefresh];
     _isDirty = NO;
-}
-
-/**
- fileをmobile backendとローカル上から削除する
- @param error エラーを保持するポインタを保持するポインタ
- */
-- (BOOL)delete:(NSError**)error{
-    NSString *url = [NSString stringWithFormat:@"%@/%@",URL_FILE,self.name];
-    BOOL result = [self delete:url error:error];
-    return result;
-}
-
-/**
- fileをmobile backendとローカル上から削除する。非同期通信を行う。
- @param error block 通信後に実行されるblock。引数にBOOL succeeded, NSError *errorを持つ。
- */
-- (void)deleteInBackgroundWithBlock:(NCMBDeleteResultBlock)userBlock{
-    NSString *url = [NSString stringWithFormat:@"%@/%@",URL_FILE,self.name];
-    [self deleteInBackgroundWithBlock:url block:userBlock];
 }
 @end

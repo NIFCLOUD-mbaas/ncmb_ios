@@ -30,6 +30,7 @@
 #import "NCMBUser.h"
 #import "NCMBFile.h"
 #import "NCMBTwitterUtils.h"
+#import "NCMBReachability.h"
 
 #if defined(__has_include)
 #if __has_include(<FacebookSDK/FacebookSDK.h>)

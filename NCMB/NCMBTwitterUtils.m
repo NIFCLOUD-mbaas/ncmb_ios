@@ -20,6 +20,8 @@
 #import "NCMBAnonymousUtils.h"
 #import "NCMBACL.h"
 
+#import "NCMBConstants.h"
+
 #define AUTH_TYPE_TWITTER               @"twitter"
 #define AUTHDATA_ID_KEY                 @"id"
 #define AUTHDATA_SCREEN_NAME_KEY        @"screen_name"
@@ -179,7 +181,7 @@ static NCMB_Twitter* _twitter = nil;
         if(currentUser&&[NCMBAnonymousUtils isLinkedWithUser:currentUser]){
             //ログイン済の場合は更新
             [currentUser setObject:@{AUTH_TYPE_TWITTER:authData} forKey:@"authData"];
-            [currentUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            [currentUser signUpInBackgroundWithBlock:^(NSError *error) {
                 if(block){
                     block(currentUser,error);
                 }
@@ -191,8 +193,8 @@ static NCMB_Twitter* _twitter = nil;
             
             NCMBUser *user = [NCMBUser user];
             [user setObject:dic forKey:@"authData"];
-            [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if(succeeded){
+            [user signUpInBackgroundWithBlock:^(NSError *error) {
+                if(!error){
                     //[user dataLocalSave:TRUE];
                     if(block)block(user,nil);
                 }else
@@ -267,16 +269,17 @@ static NCMB_Twitter* _twitter = nil;
 /**
  指定したユーザにtwitter連携情報をリンクさせる。リンクし終わったら与えられたblockを呼び出す。
  @param user 指定するユーザ
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （BOOL succeeded, NSError *error）succeededにはリンクの有無がBOOL型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （NSError *error）
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
-+ (void)linkUser:(NCMBUser *)user block:(NCMBBooleanResultBlock)block{
++ (void)linkUser:(NCMBUser *)user block:(NCMBErrorResultBlock)block{
     NCMB_Twitter* tw = [self twitter];
     [tw authorizeWithSuccess:^{
         [self linkUser:user twitterId:tw.userId screenName:tw.screenName authToken:tw.authToken authTokenSecret:tw.authTokenSecret block:block check:NO];
     } failure:^(NSError *error) {
-        if(block)block(NO,error);
+        if(block)block(error);
     } cancel:^{
-        if(block)block(NO,nil);
+        if(block)block(nil);
     }];
 }
 
@@ -284,7 +287,7 @@ static NCMB_Twitter* _twitter = nil;
  指定したユーザにtwitter連携情報をリンクさせる。リンクし終わったら指定されたコールバックを呼び出す。
  @param user 指定するユーザ
  @param target 呼び出すセレクタのターゲット
- @param selector 呼び出すセレクタ。次のシグネチャを持つ必要がある。 (void)callbackWithResult:(NSNumber *)result error:(NSError **)error
+ @param selector 呼び出すセレクタ。次のシグネチャを持つ必要がある。 ((NSError **)error)
  resultにはリンクの有無をNSNumber型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
 + (void)linkUser:(NCMBUser *)user
@@ -295,10 +298,8 @@ static NCMB_Twitter* _twitter = nil;
     [ invocation setTarget:target];
     [ invocation setSelector: selector ];
     
-    [self linkUser:user block:^(BOOL succeeded, NSError *error) {
-        NSNumber *num = [NSNumber numberWithBool:succeeded];
-        [ invocation setArgument:&num atIndex: 2 ];
-        [ invocation setArgument:&error atIndex: 3 ];
+    [self linkUser:user block:^(NSError *error) {
+        [ invocation setArgument:&error atIndex: 2 ];
         [ invocation invoke ];
     }];
 }
@@ -318,7 +319,7 @@ static NCMB_Twitter* _twitter = nil;
       screenName:(NSString *)screenName
        authToken:(NSString *)authToken
  authTokenSecret:(NSString *)authTokenSecret
-           block:(NCMBBooleanResultBlock)block
+           block:(NCMBErrorResultBlock)block
            check:(BOOL)check
 {
     if(check){
@@ -326,7 +327,7 @@ static NCMB_Twitter* _twitter = nil;
             if(isCallated){
                 [self linkUser:user twitterId:twitterId screenName:screenName authToken:authToken authTokenSecret:authTokenSecret block:block check:NO];
             }else{
-                if(block)block(NO,error);
+                if(block)block(error);
             }
         }];
     }else{
@@ -343,7 +344,7 @@ static NCMB_Twitter* _twitter = nil;
                 [NCMBUser saveToFileCurrentUser:user];
             }
             if (block) {
-                block(succees,errorBlock);
+                block(errorBlock);
             }
         }];
     }
@@ -357,14 +358,15 @@ static NCMB_Twitter* _twitter = nil;
  @param screenName ユーザにリンクさせるtwitterアカウントのscreenName
  @param authToken ユーザにリンクさせるtwitterアカウントのaccessToken
  @param authTokenSecret ユーザにリンクさせるtwitterアカウントのauthTokenSecret
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （BOOL succeeded, NSError *error）succeededにはリンクの有無がBOOL型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （NSError *error）
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
 + (void)linkUser:(NCMBUser *)user
        twitterId:(NSString *)twitterId
       screenName:(NSString *)screenName
        authToken:(NSString *)authToken
  authTokenSecret:(NSString *)authTokenSecret
-           block:(NCMBBooleanResultBlock)block{
+           block:(NCMBErrorResultBlock)block{
     [self linkUser:user twitterId:twitterId screenName:screenName authToken:authToken authTokenSecret:authTokenSecret block:block check:YES];
 }
 
@@ -391,10 +393,8 @@ static NCMB_Twitter* _twitter = nil;
     [ invocation setTarget:target];
     [ invocation setSelector: selector ];
     
-    [self linkUser:user twitterId:twitterId screenName:screenName authToken:authToken authTokenSecret:authTokenSecret block:^(BOOL succeeded, NSError *error) {
-        NSNumber *num = [NSNumber numberWithBool:succeeded];
-        [ invocation setArgument:&num atIndex: 2 ];
-        [ invocation setArgument:&error atIndex: 3 ];
+    [self linkUser:user twitterId:twitterId screenName:screenName authToken:authToken authTokenSecret:authTokenSecret block:^(NSError *error) {
+        [ invocation setArgument:&error atIndex: 2 ];
         [ invocation invoke ];
     }];
 }
@@ -438,10 +438,11 @@ static NCMB_Twitter* _twitter = nil;
 /**
  指定したユーザとtwitterのリンクを解除。解除し終わったら与えられたblockを呼び出す。
  @param user 指定するユーザ
- @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （BOOL succeeded, NSError *error）succeededにはリンク解除の有無がBOOL型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。
+ @param block 通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （NSError *error）
+ errorにはエラーがあればエラーのポインタが、なければnilが渡される。
  */
 + (void)unlinkUserInBackground:(NCMBUser *)user
-                         block:(NCMBBooleanResultBlock)block{
+                         block:(NCMBErrorResultBlock)block{
     id authData = [NSNull null];
     
     //通信処理
@@ -460,7 +461,7 @@ static NCMB_Twitter* _twitter = nil;
             [NCMBUser saveToFileCurrentUser:user];
         }
         if(block){
-            block(isSuccess,error);
+            block(error);
         }
     }];
 }
@@ -479,9 +480,7 @@ static NCMB_Twitter* _twitter = nil;
     [ invocation setTarget:target];
     [ invocation setSelector: selector ];
     
-    [self unlinkUserInBackground:user block:^(BOOL succeeded, NSError *error) {
-        NSNumber *num = [NSNumber numberWithBool:succeeded];
-        [ invocation setArgument:&num atIndex: 2 ];
+    [self unlinkUserInBackground:user block:^(NSError *error) {
         [ invocation setArgument:&error atIndex: 3 ];
         [ invocation invoke ];
     }];

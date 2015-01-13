@@ -19,16 +19,19 @@
 #import "NCMBURLConnection.h"
 #import "NCMBUser+Private.h"
 #import "NCMBError.h"
+#import "NCMBConstants.h"
 
-static NSString *const kEndPoint           = @"https://mb.api.cloud.nifty.com";
-static NSString *const kAPIVersion         = @"2013-09-01";
-static NSString *const kAppliKeyFieldName  = @"X-NCMB-Application-Key";
-static NSString *const kTimeStampFieldName = @"X-NCMB-Timestamp";
-static NSString *const kSignatureFieldName = @"X-NCMB-Signature";
-static NSString *const kSessionFieldName   = @"X-NCMB-Apps-Session-Token";
-static NSString *const kSignatureMethod    = @"SignatureMethod=HmacSHA256";
-static NSString *const kSignatureVersion   = @"SignatureVersion=2";
-static NSString *const kNCMBErrorDomain    = @"com.nifty.cloud.mb";
+static NSString *const kEndPoint            = @"https://mb.api.cloud.nifty.com";
+static NSString *const kAPIVersion          = @"2013-09-01";
+static NSString *const kAppliKeyFieldName   = @"X-NCMB-Application-Key";
+static NSString *const kTimeStampFieldName  = @"X-NCMB-Timestamp";
+static NSString *const kSignatureFieldName  = @"X-NCMB-Signature";
+static NSString *const kSessionFieldName    = @"X-NCMB-Apps-Session-Token";
+static NSString *const kSDKVersionFieldName = @"X-NCMB-SDK-Version";
+static NSString *const kOSVersionFieldName  = @"X-NCMB-OS-Version";
+static NSString *const kSignatureMethod     = @"SignatureMethod=HmacSHA256";
+static NSString *const kSignatureVersion    = @"SignatureVersion=2";
+static NSString *const kNCMBErrorDomain     = @"com.nifty.cloud.mb";
 
 NSString *strForSignature = @"";
 NSString *sesstionToken = nil;
@@ -146,11 +149,14 @@ typedef enum : NSInteger {
     [request setValue:self.appKey forHTTPHeaderField:kAppliKeyFieldName];
     [request setValue:self.signature forHTTPHeaderField:kSignatureFieldName];
     [request setValue:self.timeStamp forHTTPHeaderField:kTimeStampFieldName];
+    [request setValue:[NSString stringWithFormat:@"ios-%@", SDK_VERSION]
+   forHTTPHeaderField:kSDKVersionFieldName];
+    NSString *osVersion = [[UIDevice currentDevice] systemVersion];
+    [request setValue:[NSString stringWithFormat:@"ios-%@", osVersion] forHTTPHeaderField:kOSVersionFieldName];
     self.sessionToken = [NCMBUser getCurrentSessionToken];
     if ((self.sessionToken != nil) && (![self.sessionToken isEqual: @""])) {
         [request setValue:self.sessionToken forHTTPHeaderField:kSessionFieldName];
     }
-    
     return request;
 }
 

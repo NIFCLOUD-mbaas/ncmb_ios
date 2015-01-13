@@ -56,7 +56,7 @@
  */
 + (void)logInWithBlock:(NCMBUserResultBlock)block{
     NCMBUser *user = [NCMBAnonymousUtils createAnonymousUser];
-    [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    [user signUpInBackgroundWithBlock:^(NSError *error) {
         if (block) {
             block(user,error);
         }

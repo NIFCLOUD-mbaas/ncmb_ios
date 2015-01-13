@@ -15,7 +15,6 @@
  **********/
 
 #import "NCMBPush.h"
-
 #import "NCMBQuery.h"
 
 #import "NCMBObject+Private.h"
@@ -24,7 +23,7 @@
 
 @interface NCMBPush ()
 
-@property (nonatomic)NCMBQuery *searchCondition;
+@property (nonatomic)NCMBQuery *query;
 
 @end
 
@@ -38,14 +37,14 @@ static NCMBRichPushView *rv;
 }
 
 +(instancetype)push{
-    NCMBPush *push = [[NCMBPush alloc] init];
+    NCMBPush *push = [[NCMBPush alloc] initWithClassName:@"push"];
     return push;
 }
 
 -(instancetype)init{
     self = [super init];
     if (self){
-        _searchCondition = [NCMBQuery queryWithClassName:@"push"];
+        _query = [NCMBQuery queryWithClassName:@"installation"];
     }
     return self;
 }
@@ -161,11 +160,13 @@ static NCMBRichPushView *rv;
 }
 
 - (void)setChannel:(NSString *)channel{
-    [_searchCondition whereKey:@"channels" containedIn:@[channel]];
+    [_query whereKey:@"channels" containedIn:@[channel]];
+    [self setObject:[_query getQueryDictionary] forKey:@"searchCondition"];
 }
 
 - (void)setChannels:(NSArray *)channels{
-    [_searchCondition whereKey:@"channels" containedIn:channels];
+    [_query whereKey:@"channels" containedIn:channels];
+    [self setObject:[_query getQueryDictionary] forKey:@"searchCondition"];
 }
 
 - (void)setPushToAndroid:(BOOL)pushToAndroid{
@@ -226,9 +227,10 @@ static NCMBRichPushView *rv;
     [self setObject:message forKey:@"message"];
 }
 
-- (void)setQuery:(NCMBQuery *)query{
-    if ([query.ncmbClassName isEqualToString:@"push"]){
-        _searchCondition = query;
+- (void)setSearchCondition:(NCMBQuery *)query{
+    if ([query.ncmbClassName isEqualToString:@"installation"]){
+        _query = query;
+        [self setObject:[_query getQueryDictionary] forKey:@"searchCondition"];
     }
 }
 
@@ -297,11 +299,11 @@ static NCMBRichPushView *rv;
 
 #pragma mark - sendPush
 
-- (BOOL)sendPush:(NSError **)error{
-    return [self save:error];
+- (void)sendPush:(NSError **)error{
+    [self save:error];
 }
 
-- (void)sendPushInBackgroundWithBlock:(NCMBBooleanResultBlock)block{
+- (void)sendPushInBackgroundWithBlock:(NCMBErrorResultBlock)block{
     [self saveInBackgroundWithBlock:block];
 }
 
@@ -309,19 +311,19 @@ static NCMBRichPushView *rv;
     [self saveInBackgroundWithTarget:target selector:selector];
 }
 
-+ (BOOL)sendPushDataToChannel:(NSString *)channel
++ (void)sendPushDataToChannel:(NSString *)channel
                      withData:(NSDictionary *)data
                         error:(NSError **)error{
     NCMBPush *push = [[NCMBPush alloc] init];
     [push setChannel:channel];
     [push setData:data];
-    return [push sendPush:error];
+    [push sendPush:error];
     
 }
 
 + (void)sendPushDataToChannelInBackground:(NSString *)channel
                                  withData:(NSDictionary *)data
-                                    block:(NCMBBooleanResultBlock)block{
+                                    block:(NCMBErrorResultBlock)block{
     NCMBPush *push = [[NCMBPush alloc] init];
     [push setChannel:channel];
     [push setData:data];
@@ -339,36 +341,36 @@ static NCMBRichPushView *rv;
     
 }
 
-+ (BOOL)sendPushDataToQuery:(NCMBQuery *)query
++ (void)sendPushDataToQuery:(NCMBQuery *)query
                    withData:(NSDictionary *)data
                       error:(NSError **)error{
     NCMBPush *push = [[NCMBPush alloc] init];
     [push setQuery:query];
     [push setData:data];
-    return [push sendPush:error];
+    [push sendPush:error];
 }
 
 + (void)sendPushDataToQueryInBackground:(NCMBQuery *)query
                                withData:(NSDictionary *)data
-                                  block:(NCMBBooleanResultBlock)block{
+                                  block:(NCMBErrorResultBlock)block{
     NCMBPush *push = [[NCMBPush alloc] init];
     [push setQuery:query];
     [push setData:data];
     [push sendPushInBackgroundWithBlock:block];
 }
 
-+ (BOOL)sendPushMessageToChannel:(NSString *)channel
++ (void)sendPushMessageToChannel:(NSString *)channel
                      withMessage:(NSString *)message
                            error:(NSError **)error{
     NCMBPush *push = [[NCMBPush alloc] init];
     [push setChannel:channel];
     [push setMessage:message];
-    return [push sendPush:error];
+    [push sendPush:error];
 }
 
 + (void)sendPushMessageToChannelInBackground:(NSString *)channel
                                  withMessage:(NSString *)message
-                                       block:(NCMBBooleanResultBlock)block{
+                                       block:(NCMBErrorResultBlock)block{
     NCMBPush *push = [[NCMBPush alloc] init];
     [push setChannel:channel];
     [push setMessage:message];
@@ -385,7 +387,7 @@ static NCMBRichPushView *rv;
     [push sendPushInBackgroundWithTarget:target selector:selector];
 }
 
-+ (BOOL)sendPushMessageToQuery:(NCMBQuery *)query
++ (void)sendPushMessageToQuery:(NCMBQuery *)query
                    withMessage:(NSString *)message
                          error:(NSError **)error{
     NCMBPush *push = [[NCMBPush alloc] init];
@@ -396,7 +398,7 @@ static NCMBRichPushView *rv;
 
 + (void)sendPushMessageToQueryInBackground:(NCMBQuery *)query
                                withMessage:(NSString *)message
-                                     block:(NCMBBooleanResultBlock)block{
+                                     block:(NCMBErrorResultBlock)block{
     NCMBPush *push = [[NCMBPush alloc] init];
     [push setQuery:query];
     [push setMessage:message];
@@ -404,71 +406,6 @@ static NCMBRichPushView *rv;
 }
 
 #pragma mark - override
-
-- (BOOL)save:(NSError **)error{
-    BOOL result = NO;
-    [self setObject:[_searchCondition getQueryDictionary] forKey:@"searchCondition"];
-    NSString *url = [NSString stringWithFormat:@"push"];
-    result = [self save:url error:error];
-    return result;
-}
-
-- (void)saveInBackgroundWithBlock:(NCMBSaveResultBlock)userBlock{
-    [self setObject:[_searchCondition getQueryDictionary] forKey:@"searchCondition"];
-    NSString *url = [NSString stringWithFormat:@"push"];
-    [self saveInBackgroundWithBlock:url block:userBlock];
-}
-
-- (BOOL)fetch:(NSError **)error{
-    BOOL result = NO;
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"push/%@", self.objectId];
-        [self fetch:url error:error isRefresh:NO];
-        result = YES;
-    }
-    return result;
-}
-
-- (void)fetchInBackgroundWithBlock:(NCMBFetchResultBlock)block{
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"push/%@", self.objectId];
-        [self fetchInBackgroundWithBlock:url block:block isRefresh:NO];
-    }
-}
-
-- (BOOL)refresh:(NSError **)error{
-    BOOL result = NO;
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"push/%@", self.objectId];
-        [self fetch:url error:error isRefresh:YES];
-        result = YES;
-    }
-    return result;
-}
-
-- (void)refreshInBackgroundWithBlock:(NCMBFetchResultBlock)block{
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"push/%@", self.objectId];
-        [self fetchInBackgroundWithBlock:url block:block isRefresh:YES];
-    }
-}
-
-- (BOOL)delete:(NSError **)error{
-    BOOL result = NO;
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"push/%@", self.objectId];
-        [self delete:url error:error];
-        result = YES;
-    }
-    return result;
-}
-
-- (void)deleteInBackgroundWithBlock:(NCMBDeleteResultBlock)userBlock{
-    if (self.objectId){
-        NSString *url = [NSString stringWithFormat:@"push/%@", self.objectId];
-        [self deleteInBackgroundWithBlock:url block:userBlock];
-    }
-}
 
 - (void)setObject:(id)object forKey:(NSString *)key{
     //既定フィールドの配列を作成

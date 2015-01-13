@@ -70,7 +70,6 @@
 
 - (NSString*)description{
     NSError *error = nil;
-    _query = [self checkQueryDictionary:_query];
     NSData *json = [NSJSONSerialization dataWithJSONObject:_query
                                                    options:NSJSONWritingPrettyPrinted
                                                      error:&error];
@@ -86,16 +85,28 @@
  @param operand 検索条件
  */
 - (void)setCondition:(id)object forKey:(NSString*)key operand:(NSString*)operand{
-    NSMutableDictionary *condition = [NSMutableDictionary dictionaryWithDictionary:[_query objectForKey:key]];
-    if (condition && [condition isKindOfClass:[NSDictionary class]]){
-        //conditionに条件を追加する
-        [condition setObject:[self convertToJSONFromNCMBObject:object] forKey:operand];
+    if ([operand isEqualToString:@"$eq"]){
+        //equalToの場合、オペランドはないので値を直接設定する
+        //他の条件と組み合わせ不可なので、既存の設定を無視して上書きする
+        [_query setObject:[self convertToJSONFromNCMBObject:object] forKey:key];
+    } else if ([key isEqualToString:@"$or"] && operand == nil){
+        //or検索の場合、オペランドがキーに設定される
+        [_query setObject:[self convertToJSONFromNCMBObject:object] forKey:key];
+    } else if ([key isEqualToString:@"$relatedTo"] && operand == nil){
+        //relatedToの場合、オペランドがキーに設定される
+        [_query setObject:object forKey:key];
     } else {
-        //引数の条件からconditionを作成する
-        condition = [NSMutableDictionary dictionaryWithObject:[self convertToJSONFromNCMBObject:object]
-                                                       forKey:operand];
+        if ([[_query allKeys] containsObject:key]){
+            //既に検索条件が設定されていた場合は統合する
+            NSMutableDictionary *condition;
+            condition = [NSMutableDictionary dictionaryWithDictionary:[_query objectForKey:key]];
+            [condition setObject:[self convertToJSONFromNCMBObject:object] forKey:operand];
+            [_query setObject:condition forKey:key];
+        } else {
+            [_query setObject:@{operand:[self convertToJSONFromNCMBObject:object]} forKey:key];
+        }
+        
     }
-    [_query setObject:condition forKey:key];
 }
 
 /**
@@ -223,7 +234,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         }
     }
     NCMBQuery *query = [NCMBQuery queryWithClassName:className];
-    [query setCondition:jsonQueries forKey:@"$or" operand:@"$or"];
+    [query setCondition:jsonQueries forKey:@"$or" operand:nil];
     
     return query;
 }
@@ -235,7 +246,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
                                              @"objectId":objectId,
                                              },
                                  @"key":key};
-    [self setCondition:relatedDic forKey:@"$relatedTo" operand:@"$relatedTo"];
+    [self setCondition:relatedDic forKey:@"$relatedTo" operand:nil];
 }
 
 - (void)includeKey:(NSString *)key{
@@ -575,27 +586,6 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 
 
 #pragma mark - utility
-
--(NSMutableDictionary*)checkQueryDictionary:(NSMutableDictionary*)queryDic{
-    for (NSString *key in [[queryDic allKeys] objectEnumerator]){
-        NSMutableDictionary *condition = [NSMutableDictionary dictionaryWithDictionary:[queryDic objectForKey:key]];
-        if ([[condition allKeys] containsObject:@"$eq"]){
-            [queryDic setObject:[condition objectForKey:@"$eq"] forKey:key];
-        } else if([[condition allKeys] containsObject:@"$relatedTo"]){
-            [queryDic setObject:[condition objectForKey:@"$relatedTo"] forKey:key];
-        } else if ([[condition allKeys] containsObject:@"$or"]){
-            NSMutableArray *queries = [NSMutableArray arrayWithArray:[condition objectForKey:@"$or"]];
-
-            for (int i = 0; i < [queries count]; i++){
-                [queries replaceObjectAtIndex:i withObject:[self checkQueryDictionary:queries[i]]];
-            }
-
-            [queryDic setObject:[condition objectForKey:@"$or"] forKey:key];
-        }
-    }
-    return queryDic;
-}
-
 /**
  クエリの内容を配列で返却する
  @param queryDic 配列に変換するクエリが格納されたNSDictionary
@@ -605,8 +595,6 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 - (NSArray*)queryToArray:(NSMutableDictionary*)queryDic countEnableFlag:(BOOL)countEnableFlag getFirstFlag:(BOOL)getFirstFlag{
     //queryStrを作成する
     NSMutableArray *queryArray = [NSMutableArray array];
-    
-    queryDic = [self checkQueryDictionary:queryDic];
     
     NSMutableDictionary *jsonDic = [self convertToJSONFromNCMBObject:queryDic];
     NSError *convertError = nil;
@@ -661,7 +649,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
     [dateFormatter setLocale:[NSLocale systemLocale]];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     
-    [dateFormatter setDateFormat:@"YYYY-MM-dd'T'HH:mm:ss.SSS'Z'"];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
     
     return dateFormatter;
 }
@@ -852,8 +840,8 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 }
 
 - (NSDictionary*)getQueryDictionary{
-    return [self checkQueryDictionary:_query];
-    //return _query;
+    //return [self checkQueryDictionary:_query];
+    return _query;
 }
 
 @end
