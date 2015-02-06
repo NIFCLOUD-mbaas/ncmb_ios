@@ -651,14 +651,6 @@ static BOOL isEnableAutomaticUser = FALSE;
 +(NCMBUser *)responseLogIn:(NSDictionary *)responseData{
     NCMBUser *loginUser = [NCMBUser user];
     NSMutableDictionary *responseDic = [NSMutableDictionary dictionaryWithDictionary:responseData];
-    
-    if ([responseDic objectForKey:@"sessionToken"]) {
-        loginUser.sessionToken = [responseDic objectForKey:@"sessionToken"];
-        [responseDic removeObjectForKey:@"sessionToken"];
-    }
-    if ([responseDic objectForKey:@"mailAddressConfirm"]) {
-        [responseDic removeObjectForKey:@"mailAddressConfirm"];
-    }
     [loginUser afterFetch:responseDic isRefresh:YES];
     return loginUser;
 }
@@ -750,7 +742,7 @@ static BOOL isEnableAutomaticUser = FALSE;
     if (currentUser != user) {
         [self logOutEvent];
     }
-    NSError *e;
+    NSError *e = nil;
     NSMutableDictionary *dic = [user toJSONObjectForDataFile];
     NSData *json = [NSJSONSerialization dataWithJSONObject:dic options:kNilOptions error:&e];
     NSString *strSaveData = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
@@ -805,6 +797,9 @@ static BOOL isEnableAutomaticUser = FALSE;
     }
     if ([response objectForKey:@"mailAddress"]){
         self.mailAddress = [response objectForKey:@"mailAddress"];
+    }
+    if ([response objectForKey:@"sessionToken"]) {
+        self.sessionToken = [response objectForKey:@"sessionToken"];
     }
     [super afterFetch:response isRefresh:isRefresh];
 }
