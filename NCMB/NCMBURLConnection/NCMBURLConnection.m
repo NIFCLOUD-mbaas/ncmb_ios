@@ -87,25 +87,12 @@ typedef enum : NSInteger {
         }
     }
     if (self){
-        path = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
-                                                        NULL,
-                                                        (__bridge CFStringRef)path,
-                                                        NULL,
-                                                        (__bridge CFStringRef)@"!*();@+,%#\"",
-                                                        kCFStringEncodingUTF8 );
-        
-        
         self.path = [NSString stringWithFormat:@"/%@/%@", kAPIVersion, path];
         self.method = method;
         
         if ([method isEqualToString:@"GET"]){
             
-            self.query = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
-                                                        NULL,
-                                                        (__bridge CFStringRef)dataStr,
-                                                        NULL,
-                                                        (__bridge CFStringRef)@"!*();@+,%#\"",
-                                                        kCFStringEncodingUTF8 );
+            self.query = dataStr;
              
             //self.query = dataStr;
         } else {
@@ -118,22 +105,35 @@ typedef enum : NSInteger {
     return self;
 }
 
+- (NSString*)percentEscape:(NSString*)str{
+    CFStringRef escapedStrRef = CFURLCreateStringByAddingPercentEscapes(
+                                                                   NULL,
+                                                                   (__bridge CFStringRef)str,
+                                                                   NULL,
+                                                                   (__bridge CFStringRef)@"!*();@+,%#\"",
+                                                                   kCFStringEncodingUTF8 );
+    NSString *escapedStr = CFBridgingRelease(escapedStrRef);
+    return escapedStr;
+}
+
 
 #pragma mark request
 
 /**
- リクエストを生成するメソッド
+ リクエストを生成とpathとqueryのURLエンコードを実施
  @return NSMutableURLRequest型リクエスト
  */
 - (NSMutableURLRequest *)createRequest {
+    self.query = [self percentEscape:self.query];
+    [self createSignature];
+    self.path = [self percentEscape:self.path];
+    
     //url生成
     NSString *url = [kEndPoint stringByAppendingString:self.path];
     //request生成 タイムアウト10秒
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
                                                            cachePolicy:self.cachePolicy
                                                        timeoutInterval:10.0];
-    
-    [self createSignature];
     
     //ヘッダー設定
     if(self.fileData){
@@ -201,7 +201,6 @@ typedef enum : NSInteger {
                            [NSString stringWithFormat:@"%@=%@", kAppliKeyFieldName, self.appKey],
                            [NSString stringWithFormat:@"%@=%@", kTimeStampFieldName, self.timeStamp]];
     }
-
     self.signature = [self encodingSigneture:strForSignature];
 }
 
