@@ -27,7 +27,11 @@
 }
 
 -(id)encode{
-    return self.value;
+    if (self.value != nil){
+        return self.value;
+    } else {
+        return [NSNull null];
+    }
 }
 
 

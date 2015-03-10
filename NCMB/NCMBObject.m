@@ -363,8 +363,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     || [object isKindOfClass:[NCMBRelation class]]  || [object isKindOfClass:[NSNull class]];
 }
 
-
-
 //リストの入力値チェック
 -(BOOL)listIsValidType:(NSArray*)array{
     for(int i=0; i<[array count]; i++){
@@ -383,8 +381,9 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  */
 - (void)setACL:(NCMBACL*)acl{
     _ACL = acl;
-    [self setObject:acl forKey:@"acl"];
+    [self setObject:_ACL.dicACL forKey:@"acl"];
 }
+
 
 //指定したキーに値を設定する
 - (void)setObject:(id)object forKey:(NSString *)key{
@@ -965,8 +964,12 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         }
     }
     if ([response objectForKey:@"acl"]){
-        _ACL = [NCMBACL ACL];
-        _ACL.dicACL = [NSMutableDictionary dictionaryWithDictionary:[response objectForKey:@"acl"]];
+        if ([response objectForKey:@"acl"] != [NSNull null]){
+            _ACL = [NCMBACL ACL];
+            _ACL.dicACL = [NSMutableDictionary dictionaryWithDictionary:[response objectForKey:@"acl"]];
+        } else {
+            _ACL = nil;
+        }
     }
     //オブジェクト登録時はcreateDateだけ返却されるのでupdateDateにもcreateDateを代入する
     if (self.createDate != nil && self.updateDate == nil){
@@ -1272,8 +1275,8 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     NSData *json = [[NSData alloc] init];
     if ([operation count] != 0){
         NSMutableDictionary *ncmbDic = [self convertToJSONDicFromOperation:operation];
-        //ACLはoperationSetQueueで管理されていないのでここで変更があれば追加する
-        if (_ACL.isDirty){
+        //プロパティのACLを更新された場合がOperationQueueで管理されないのでここで追加
+        if (_ACL != nil && _ACL.isDirty){
             [ncmbDic setObject:_ACL.dicACL forKey:@"acl"];
         }
         NSMutableDictionary *jsonDic = [self convertToJSONFromNCMBObject:ncmbDic];
@@ -1742,7 +1745,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  @param obj NCMBオブジェクト
  */
 - (id)convertToJSONFromNCMBObject:(id)obj{
-    if (obj == NULL){
+    if (obj == NULL || obj == nil){
         //objがNULLだったら
         return [NSNull null];
     } else if ([obj isKindOfClass:[NSDate class]]){

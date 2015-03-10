@@ -315,15 +315,7 @@ static NCMB_Facebook* _facebook = nil;
         NSDictionary* fbAuthData = authData[AUTH_TYPE_FACEBOOK];
         NSString* facebookId = fbAuthData[AUTHDATA_ID_KEY];
         NSString* accessToken = fbAuthData[AUTHDATA_ACCESS_TOKEN_KEY];
-        NSString* expirationDateStr = [fbAuthData objectForKey:AUTHDATA_EXPIRATION_DATE_KEY];
-        
-        //日付をmBaaS形式に直す
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-        [dateFormatter setCalendar:calendar];
-        [dateFormatter setLocale:[NSLocale systemLocale]];
-        [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z"];
-        NSDate *expirationDate = [dateFormatter dateFromString:expirationDateStr];
+        NSDate *expirationDate = [fbAuthData objectForKey:AUTHDATA_EXPIRATION_DATE_KEY];
         
         //ログイン中のfacebook情報が有効か確認する
         [[NCMBFacebookUtils facebook] checkAcessToken:accessToken expirationDate:expirationDate facebookId:facebookId handler:^(BOOL isCallated, NSError *error) {
@@ -630,11 +622,7 @@ static NCMB_Facebook* _facebook = nil;
         }
     }else{
         //解除成功のためauthDataを空にする
-        NSMutableDictionary *mutableResponse = [NSMutableDictionary dictionaryWithDictionary:responseDic];
-        [mutableResponse setValue:[NSMutableDictionary dictionary] forKey:@"authData"];
-        [user afterSave:mutableResponse operations:nil];
-        //ファイルに登録したユーザーデータ書き込み
-        [NCMBUser saveToFileCurrentUser:user];
+        [self deleteAuthData:user response:responseDic];
     }
     return isSuccess;
 }
@@ -653,21 +641,23 @@ static NCMB_Facebook* _facebook = nil;
     NCMBURLConnection *request = [self updateRequestWithUser:user authData:authData];
     [request asyncConnectionWithBlock:^(NSDictionary *responseDic, NSError *error) {
         //レスポンス処理
-        BOOL isSuccess = YES;
-        if(error){
-            isSuccess = NO;
-        }else{
-            //解除成功のためauthDataを空にする
-            NSMutableDictionary *mutableResponse = [NSMutableDictionary dictionaryWithDictionary:responseDic];
-            [mutableResponse setValue:[NSMutableDictionary dictionary] forKey:@"authData"];
-            [user afterSave:mutableResponse operations:nil];
-            //ファイルに登録したユーザーデータ書き込み
-            [NCMBUser saveToFileCurrentUser:user];
+        if(!error){
+            [self deleteAuthData:user response:responseDic];
         }
         if(block){
             block(error);
         }
     }];
+}
+
+//authDataにnullを設定してローカルに保存する
++ (void)deleteAuthData:(NCMBUser*)user response:(NSDictionary*)responseDic{
+    //解除成功のためauthDataを空にする
+    NSMutableDictionary *mutableResponse = [NSMutableDictionary dictionaryWithDictionary:responseDic];
+    [mutableResponse setObject:[NSNull null] forKey:@"authData"];
+    [user afterSave:mutableResponse operations:nil];
+    //ファイルに登録したユーザーデータ書き込み
+    [NCMBUser saveToFileCurrentUser:user];
 }
 
 /**
@@ -712,10 +702,10 @@ static NCMB_Facebook* _facebook = nil;
     NSDictionary* fbAuthData = [authData objectForKey:AUTH_TYPE_FACEBOOK];
     NSString* facebookId = fbAuthData[AUTHDATA_ID_KEY];
     NSString* accessToken = fbAuthData[AUTHDATA_ACCESS_TOKEN_KEY];
-    NSDate * expirationDateStr = [fbAuthData objectForKey:AUTHDATA_EXPIRATION_DATE_KEY];
+    NSDate * expirationDate = [fbAuthData objectForKey:AUTHDATA_EXPIRATION_DATE_KEY];
     
     //セッションを有効にする
-    [[self facebook] checkAcessToken:accessToken expirationDate:expirationDateStr facebookId:facebookId handler:^(BOOL isCallated, NSError *error) {
+    [[self facebook] checkAcessToken:accessToken expirationDate:expirationDate facebookId:facebookId handler:^(BOOL isCallated, NSError *error) {
         if(isCallated){
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[self facebook] requestReAuthorizeWithPermission:permissions defaultAudience:audience block:^(FBSession *session, NSError *error) {
