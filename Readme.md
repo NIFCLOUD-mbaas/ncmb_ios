@@ -19,6 +19,12 @@
 アカウント作成後のSDK導入手順については、
 [クイックスタート](http://mb.cloud.nifty.com/doc/quickstart_ios.html)をご覧ください。
 
+## 動作環境
+
+- iOS 6.0 〜 iOS 8.2.x
+- Xcode6.x
+- armv7, arm64アーキテクチャ
+
 ## ライセンス
 
 このSDKのライセンスはApache License Version 2.0に従います。
