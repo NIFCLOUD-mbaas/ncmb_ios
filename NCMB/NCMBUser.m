@@ -816,8 +816,11 @@ static BOOL isEnableAutomaticUser = FALSE;
         [NCMBUser saveToFileCurrentUser:self];
     }
     //会員新規登録の有無
-    if ([response objectForKey:@"createDate"]&&![response objectForKey:@"updateDate"]){
-        _isNew = YES;
+    //if ([response objectForKey:@"createDate"]&&![response objectForKey:@"updateDate"]){
+    if ([response objectForKey:@"createDate"] && [response objectForKey:@"updateDate"]){
+        if ([response objectForKey:@"createDate"] == [response objectForKey:@"updateDate"]){
+            _isNew = YES;
+        }
     }else{
         _isNew = NO;
     }
