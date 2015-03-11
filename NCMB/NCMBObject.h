@@ -90,7 +90,7 @@
  オブジェクトにACLを設定する
  @param acl 設定するACLオブジェクト
  */
-- (void)setACL:(NCMBACL *)acl;
+//- (void)setACL:(NCMBACL *)acl;
 
 /**
  指定したキーに指定したオブジェクトを設定
