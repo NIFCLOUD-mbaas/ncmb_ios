@@ -424,16 +424,13 @@ static NCMB_Twitter* _twitter = nil;
             *error =  errorLocal;
         }
     }else{
-        //解除成功のためauthDataを空にする
-        NSMutableDictionary *mutableResponse = [NSMutableDictionary dictionaryWithDictionary:responseDic];
-        [mutableResponse setValue:[NSMutableDictionary dictionary] forKey:@"authData"];
-        [user afterSave:mutableResponse operations:nil];
-        //ファイルに登録したユーザーデータ書き込み
-        [NCMBUser saveToFileCurrentUser:user];
+        [self deleteAuthData:user response:responseDic];
     }
     
     return isSuccess;
 }
+
+
 
 /**
  指定したユーザとtwitterのリンクを解除。解除し終わったら与えられたblockを呼び出す。
@@ -453,17 +450,22 @@ static NCMB_Twitter* _twitter = nil;
         if(error){
             isSuccess = NO;
         }else{
-            //解除成功のためauthDataを空にする
-            NSMutableDictionary *mutableResponse = [NSMutableDictionary dictionaryWithDictionary:responseDic];
-            [mutableResponse setValue:[NSMutableDictionary dictionary] forKey:@"authData"];
-            [user afterSave:mutableResponse operations:nil];
-            //ファイルに登録したユーザーデータ書き込み
-            [NCMBUser saveToFileCurrentUser:user];
+            [self deleteAuthData:user response:responseDic];
         }
         if(block){
             block(error);
         }
     }];
+}
+
+//authDataにnullを設定してローカルに保存する
++ (void)deleteAuthData:(NCMBUser*)user response:(NSDictionary*)responseDic{
+    //解除成功のためauthDataを空にする
+    NSMutableDictionary *mutableResponse = [NSMutableDictionary dictionaryWithDictionary:responseDic];
+    [mutableResponse setObject:[NSNull null] forKey:@"authData"];
+    [user afterSave:mutableResponse operations:nil];
+    //ファイルに登録したユーザーデータ書き込み
+    [NCMBUser saveToFileCurrentUser:user];
 }
 
 /**
