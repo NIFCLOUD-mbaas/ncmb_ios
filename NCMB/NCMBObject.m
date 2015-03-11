@@ -382,15 +382,8 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  @param acl 設定するACLオブジェクト
  */
 - (void)setACL:(NCMBACL*)acl{
-    [self setObject:acl.dicACL forKey:@"acl"];
-}
-
-- (NCMBACL*)ACL{
-    NSLog(@"self:%@", self);
-    NSLog(@"aclValue:%@", [self objectForKey:@"acl"]);
-    NCMBACL *localACL = [[NCMBACL alloc] init];
-    localACL.dicACL = [self objectForKey:@"acl"];
-    return localACL;
+    _ACL = acl;
+    [self setObject:_ACL forKey:@"acl"];
 }
 
 
@@ -973,9 +966,11 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         }
     }
     if ([response objectForKey:@"acl"]){
-        self.ACL = [[NCMBACL alloc] init];
         if ([response objectForKey:@"acl"] != [NSNull null]){
-            self.ACL.dicACL = [NSMutableDictionary dictionaryWithDictionary:[response objectForKey:@"acl"]];
+            _ACL = [NCMBACL ACL];
+            _ACL.dicACL = [NSMutableDictionary dictionaryWithDictionary:[response objectForKey:@"acl"]];
+        } else {
+            _ACL = nil;
         }
     }
     //オブジェクト登録時はcreateDateだけ返却されるのでupdateDateにもcreateDateを代入する
@@ -1283,11 +1278,10 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     if ([operation count] != 0){
         NSLog(@"operation:%@", operation);
         NSMutableDictionary *ncmbDic = [self convertToJSONDicFromOperation:operation];
-        //ACLはoperationSetQueueで管理されていないのでここで変更があれば追加する
-        /*if (_ACL != nil && _ACL.isDirty){
-            NSLog(@"setACLToEstimatedData.");
+        //プロパティのACLを更新された場合がOperationQueueで管理されないのでここで追加
+        if (_ACL != nil && _ACL.isDirty){
             [ncmbDic setObject:_ACL.dicACL forKey:@"acl"];
-        }*/
+        }
         NSMutableDictionary *jsonDic = [self convertToJSONFromNCMBObject:ncmbDic];
         NSError *convertError = nil;
         json = [NSJSONSerialization dataWithJSONObject:jsonDic options:kNilOptions error:&convertError];
