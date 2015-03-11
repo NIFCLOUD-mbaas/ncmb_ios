@@ -622,11 +622,7 @@ static NCMB_Facebook* _facebook = nil;
         }
     }else{
         //解除成功のためauthDataを空にする
-        NSMutableDictionary *mutableResponse = [NSMutableDictionary dictionaryWithDictionary:responseDic];
-        [mutableResponse setValue:[NSMutableDictionary dictionary] forKey:@"authData"];
-        [user afterSave:mutableResponse operations:nil];
-        //ファイルに登録したユーザーデータ書き込み
-        [NCMBUser saveToFileCurrentUser:user];
+        [self deleteAuthData:user response:responseDic];
     }
     return isSuccess;
 }
@@ -645,21 +641,23 @@ static NCMB_Facebook* _facebook = nil;
     NCMBURLConnection *request = [self updateRequestWithUser:user authData:authData];
     [request asyncConnectionWithBlock:^(NSDictionary *responseDic, NSError *error) {
         //レスポンス処理
-        BOOL isSuccess = YES;
-        if(error){
-            isSuccess = NO;
-        }else{
-            //解除成功のためauthDataを空にする
-            NSMutableDictionary *mutableResponse = [NSMutableDictionary dictionaryWithDictionary:responseDic];
-            [mutableResponse setValue:[NSMutableDictionary dictionary] forKey:@"authData"];
-            [user afterSave:mutableResponse operations:nil];
-            //ファイルに登録したユーザーデータ書き込み
-            [NCMBUser saveToFileCurrentUser:user];
+        if(!error){
+            [self deleteAuthData:user response:responseDic];
         }
         if(block){
             block(error);
         }
     }];
+}
+
+//authDataにnullを設定してローカルに保存する
++ (void)deleteAuthData:(NCMBUser*)user response:(NSDictionary*)responseDic{
+    //解除成功のためauthDataを空にする
+    NSMutableDictionary *mutableResponse = [NSMutableDictionary dictionaryWithDictionary:responseDic];
+    [mutableResponse setObject:[NSNull null] forKey:@"authData"];
+    [user afterSave:mutableResponse operations:nil];
+    //ファイルに登録したユーザーデータ書き込み
+    [NCMBUser saveToFileCurrentUser:user];
 }
 
 /**

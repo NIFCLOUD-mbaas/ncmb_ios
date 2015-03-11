@@ -830,15 +830,20 @@ static BOOL isEnableAutomaticUser = FALSE;
         [estimatedData setObject:[response objectForKey:@"userName"] forKey:@"userName"];
     }
     //SNS連携時に必要
-    if (![[response objectForKey:@"authData"] isKindOfClass:[NSNull class]]){
-        NSDictionary *authDataDic = [response objectForKey:@"authData"];
-        NSMutableDictionary *converted = [NSMutableDictionary dictionary];
-        for (NSString *key in [[authDataDic allKeys] objectEnumerator]){
-            [converted setObject:[self convertToNCMBObjectFromJSON:[authDataDic objectForKey:key]
-                                                          convertKey:key]
-                            forKey:key];
+    //if (![[response objectForKey:@"authData"] isKindOfClass:[NSNull class]]){
+    if ([response objectForKey:@"authData"]){
+        if([[response objectForKey:@"authData"] isKindOfClass:[NSNull class]]){
+            [estimatedData setObject:[NSNull null] forKey:@"authData"];
+        } else {
+            NSDictionary *authDataDic = [response objectForKey:@"authData"];
+            NSMutableDictionary *converted = [NSMutableDictionary dictionary];
+            for (NSString *key in [[authDataDic allKeys] objectEnumerator]){
+                [converted setObject:[self convertToNCMBObjectFromJSON:[authDataDic objectForKey:key]
+                                                            convertKey:key]
+                              forKey:key];
+            }
+            [estimatedData setObject:converted forKey:@"authData"];
         }
-        [estimatedData setObject:converted forKey:@"authData"];
     }
 }
 
