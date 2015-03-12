@@ -72,6 +72,16 @@ static CLLocationManager *locationManager;
     }
 }
 
+//iOS5.x
+- (void)locationManager:(CLLocationManager *)manager
+    didUpdateToLocation:(CLLocation *)newLocation
+           fromLocation:(CLLocation *)oldLocation{
+    currentPoint.latitude = newLocation.coordinate.latitude;
+    currentPoint.longitude = newLocation.coordinate.longitude;
+    [locationManager stopUpdatingLocation];
+    handler(currentPoint, nil);
+}
+
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
     CLLocation *location = locations[0];
     currentPoint.latitude = location.coordinate.latitude;
