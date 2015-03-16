@@ -47,8 +47,6 @@
 		5D46C9D81A11EE4D00278A10 /* NCMBCloseImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D46C9D51A11EE4D00278A10 /* NCMBCloseImageView.m */; };
 		5D46C9D91A11EE4D00278A10 /* NCMBRichPushView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D46C9D71A11EE4D00278A10 /* NCMBRichPushView.m */; };
 		5D46CA5F1A1260FC00278A10 /* SubClassHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D46C98E1A11EA2D00278A10 /* SubClassHandler.m */; };
-		5D8F65E51A26F65400C46EA4 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D8F65E41A26F65400C46EA4 /* FacebookSDK.framework */; };
-		5D8F65E61A26F65400C46EA4 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D8F65E41A26F65400C46EA4 /* FacebookSDK.framework */; };
 		5DA035D11A12661900E10D64 /* NCMBFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA035D01A12661900E10D64 /* NCMBFile.m */; };
 		5DA035D91A12675400E10D64 /* NSDataBase64Encode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA035D81A12675400E10D64 /* NSDataBase64Encode.m */; };
 		5DA0363F1A126DEC00E10D64 /* NCMBFacebookUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA0361A1A126DEC00E10D64 /* NCMBFacebookUtils.m */; };
@@ -143,7 +141,6 @@
 		5D46C9D51A11EE4D00278A10 /* NCMBCloseImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBCloseImageView.m; sourceTree = "<group>"; };
 		5D46C9D61A11EE4D00278A10 /* NCMBRichPushView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBRichPushView.h; sourceTree = "<group>"; };
 		5D46C9D71A11EE4D00278A10 /* NCMBRichPushView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBRichPushView.m; sourceTree = "<group>"; };
-		5D8F65E41A26F65400C46EA4 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		5DA035CF1A12661900E10D64 /* NCMBFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBFile.h; sourceTree = "<group>"; };
 		5DA035D01A12661900E10D64 /* NCMBFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBFile.m; sourceTree = "<group>"; };
 		5DA035D71A12675400E10D64 /* NSDataBase64Encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDataBase64Encode.h; sourceTree = "<group>"; };
@@ -193,7 +190,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D46C8AA1A11D8B300278A10 /* Foundation.framework in Frameworks */,
-				5D8F65E51A26F65400C46EA4 /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,7 +197,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D8F65E61A26F65400C46EA4 /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,7 +206,6 @@
 		5D46C87E1A11CE6200278A10 = {
 			isa = PBXGroup;
 			children = (
-				5D8F65E41A26F65400C46EA4 /* FacebookSDK.framework */,
 				5D46C8A91A11D8B300278A10 /* Foundation.framework */,
 				5D46C8891A11CE6200278A10 /* NCMB */,
 				5D46C8931A11CE6200278A10 /* NCMBTests */,
