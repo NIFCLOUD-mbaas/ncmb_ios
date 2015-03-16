@@ -22,6 +22,7 @@
 ## 動作環境
 
 - iOS 5.1 〜 iOS 8.2.x
+ - iOS5.1でSDKを利用する場合は、framework形式を利用してください。
 - Xcode6.x
 - armv7, armv7s, arm64アーキテクチャ
 
