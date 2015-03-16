@@ -21,9 +21,9 @@
 
 ## 動作環境
 
-- iOS 6.0 〜 iOS 8.2.x
+- iOS 5.1 〜 iOS 8.2.x
 - Xcode6.x
-- armv7, arm64アーキテクチャ
+- armv7, armv7s, arm64アーキテクチャ
 
 ## ライセンス
 
