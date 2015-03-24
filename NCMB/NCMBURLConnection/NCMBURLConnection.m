@@ -182,7 +182,9 @@ typedef enum : NSInteger {
  シグネチャを生成するメソッド
  */
 - (void)createSignature {
-    NSArray *splitedEndPoint = [kEndPoint componentsSeparatedByString:@"/"];
+    //NSArray *splitedEndPoint = [kEndPoint componentsSeparatedByString:@"/"];
+    NSString *endpointStr = [self returnEndPoint];
+    NSArray *splitedEndPoint = [endpointStr componentsSeparatedByString:@"/"];
     NSString *fqdn = splitedEndPoint[2];
     
     NSDateFormatter *df = [[NSDateFormatter alloc]init];
@@ -219,6 +221,7 @@ typedef enum : NSInteger {
                            [NSString stringWithFormat:@"%@=%@", kAppliKeyFieldName, self.appKey],
                            [NSString stringWithFormat:@"%@=%@", kTimeStampFieldName, self.timeStamp]];
     }
+    NSLog(@"strForSignature:%@", strForSignature);
     self.signature = [self encodingSigneture:strForSignature];
 }
 

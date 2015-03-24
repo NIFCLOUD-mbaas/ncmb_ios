@@ -160,6 +160,13 @@
 - (void)setContentAvailable:(BOOL)contenteAvailable;
 
 /**
+ categoryを設定(iOSのみ)
+ @param category categoryの名前
+ */
+- (void)setCategory:(NSString*)category;
+
+
+/**
  actionを設定(Androidのみ)
  @param actionName アクション名
  */

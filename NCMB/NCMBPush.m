@@ -272,6 +272,11 @@ static NCMBRichPushView *rv;
     [self setObject:soundFileName forKey:@"sound"];
 }
 
+- (void)setCategory:(NSString *)category{
+    [self setObject:category forKey:@"category"];
+}
+
+
 - (void)expireAtDate:(NSDate *)date{
     [self setObject:date forKey:@"deliveryExpirationDate"];
 }
@@ -426,6 +431,7 @@ static NCMBRichPushView *rv;
                       @"badgeSetting",
                       @"sound",
                       @"contentAvailable",
+                      @"category",
                       @"richUrl",
                       @"acl"
                       ];
