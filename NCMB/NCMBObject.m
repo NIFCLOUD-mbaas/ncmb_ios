@@ -381,7 +381,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  */
 - (void)setACL:(NCMBACL*)acl{
     _ACL = acl;
-    [self setObject:_ACL forKey:@"acl"];
+    [self setObject:_ACL.dicACL forKey:@"acl"];
 }
 
 

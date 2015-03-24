@@ -28,7 +28,7 @@
 
 ## ライセンス
 
-このSDKのライセンスはApache License Version 2.0に従います。
+このSDKのライセンスについては、LICENSEファイルをご覧ください。
 
 ## 参考URL集
 

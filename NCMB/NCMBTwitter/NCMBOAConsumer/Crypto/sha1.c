@@ -1,18 +1,15 @@
-/*******
- Copyright 2014 NIFTY Corporation All Rights Reserved.
- 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
- 
- http://www.apache.org/licenses/LICENSE-2.0
- 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- **********/
+/*
+ SHA-1 in C
+ By Steve Reid <steve@edmweb.com>
+ 100% Public Domain
+ Test Vectors (from FIPS PUB 180-1)
+ "abc"
+ A9993E36 4706816A BA3E2571 7850C26C 9CD0D89D
+ "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"
+ 84983E44 1C3BD26E BAAE4AA1 F95129E5 E54670F1
+ A million repetitions of "a"
+ 34AA973C D4C4DAA4 F61EEB2B DBAD2731 6534016F
+ */
 
 
 /*
