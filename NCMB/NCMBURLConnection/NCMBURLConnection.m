@@ -120,6 +120,21 @@ typedef enum : NSInteger {
 #pragma mark request
 
 /**
+ エンドポイントを返却する
+ */
+- (NSString*)returnEndPoint{
+#ifdef NCMBTEST
+    NSString* propertyFile = [[NSBundle mainBundle]pathForResource:@"setting_dev"
+                                                            ofType:@"plist"];
+    NSDictionary *keys = [NSDictionary dictionaryWithContentsOfFile:propertyFile];
+    return keys[@"DebugEndPoint"];
+#else
+    return kEndPoint;
+#endif
+}
+
+
+/**
  リクエストを生成とpathとqueryのURLエンコードを実施
  @return NSMutableURLRequest型リクエスト
  */
@@ -129,7 +144,10 @@ typedef enum : NSInteger {
     self.path = [self percentEscape:self.path];
     
     //url生成
-    NSString *url = [kEndPoint stringByAppendingString:self.path];
+    //NSString *url = [kEndPoint stringByAppendingString:self.path];
+    NSString *endPointStr = [self returnEndPoint];
+    NSLog(@"endpoint:%@", endPointStr);
+    NSString *url = [endPointStr stringByAppendingString:self.path];
     //request生成 タイムアウト10秒
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
                                                            cachePolicy:self.cachePolicy
