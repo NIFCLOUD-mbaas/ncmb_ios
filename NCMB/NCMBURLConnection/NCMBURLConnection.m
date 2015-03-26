@@ -144,9 +144,7 @@ typedef enum : NSInteger {
     self.path = [self percentEscape:self.path];
     
     //url生成
-    //NSString *url = [kEndPoint stringByAppendingString:self.path];
     NSString *endPointStr = [self returnEndPoint];
-    NSLog(@"endpoint:%@", endPointStr);
     NSString *url = [endPointStr stringByAppendingString:self.path];
     //request生成 タイムアウト10秒
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
@@ -221,7 +219,6 @@ typedef enum : NSInteger {
                            [NSString stringWithFormat:@"%@=%@", kAppliKeyFieldName, self.appKey],
                            [NSString stringWithFormat:@"%@=%@", kTimeStampFieldName, self.timeStamp]];
     }
-    NSLog(@"strForSignature:%@", strForSignature);
     self.signature = [self encodingSigneture:strForSignature];
 }
 
