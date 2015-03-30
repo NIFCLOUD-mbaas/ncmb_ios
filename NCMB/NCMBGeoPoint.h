@@ -1,4 +1,4 @@
-/*******
+/*
  Copyright 2014 NIFTY Corporation All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
- **********/
+ */
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
@@ -38,8 +38,8 @@ typedef void (^NCMBGeoPointHandler)(NCMBGeoPoint *geoPoint, NSError *error);
 
 /**
  NCMBGeoPointオブジェクトを作成。緯度、経度には引数で指定したものが設定される。
- @param double latitude 緯度
- @param double longitude 軽度
+ @param latitude 緯度
+ @param longitude 軽度
  @return geoPoint NCMBGeoPointクラスのインスタンス
  */
 + (NCMBGeoPoint*)geoPointWithLatitude:(double)latitude longitude:(double)longitude;

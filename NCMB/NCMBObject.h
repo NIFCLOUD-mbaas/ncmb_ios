@@ -1,4 +1,4 @@
-/*******
+/*
  Copyright 2014 NIFTY Corporation All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
- **********/
+ */
 
 #import <Foundation/Foundation.h>
 
@@ -38,11 +38,6 @@
 
 /**
  クラス名を指定してNCMBObjectのインスタンスを生成
- 
- 【使用例】
- 
-   NCMBObject *testObject = [[NCMBObject alloc]initWithClassName:@"クラス名"];
- 
  @param className 指定するクラス名
  */
 - (id)initWithClassName:(NSString *)className;
@@ -183,7 +178,7 @@
 
 /**
  mobile backendにオブジェクトを保存する。非同期通信を行う。
- @param block 通信後に実行されるblock。引数にNSError *errorを持つ。
+ @param userBlock 通信後に実行されるblock。引数にNSError *errorを持つ。
  */
 - (void)saveInBackgroundWithBlock:(NCMBErrorResultBlock)userBlock;
 
@@ -205,14 +200,15 @@
 /**
  objectsにある、NCMBObjectを継承した全てのオブジェクトを非同期通信で保存する。通信後は渡されたblockを実行する
  @param objects 保存するNCMBObjectが含まれる配列
- @param error APIリクエストについてのエラー
+ @param userBlock 通信後に実行されるblock。引数にNSError *errorを持つ
  */
 + (void)saveAllInBackground:(NSArray*)objects withBlock:(NCMBSaveAllResultBlock)userBlock;
 
 /**
  objectsにある、NCMBObjectを継承した全てのオブジェクトを非同期通信で保存する。通信後は指定されたセレクタを実行する
  @param objects 保存するNCMBObjectが含まれる配列
- @param error APIリクエストについてのエラー
+ @param target APIリクエスト後に実行するターゲット
+ @param selector APIリクエスト後に実行するセレクタ
  */
 + (void)saveAllInBackground:(NSArray*)objects withTarget:(id)target selector:(SEL)selector;
 
@@ -299,7 +295,7 @@
 
 /**
  非同期通信を利用してオブジェクトをmobile backendとローカル上から削除し、指定されたコールバックを呼び出す。
- @param error block 通信後に実行されるblock。引数にNSError *errorを持つ。
+ @param userBlock 通信後に実行されるblock。引数にNSError *errorを持つ。
  */
 - (void)deleteInBackgroundWithBlock:(NCMBErrorResultBlock)userBlock;
 

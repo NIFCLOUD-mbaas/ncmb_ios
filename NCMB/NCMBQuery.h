@@ -1,4 +1,4 @@
-/*******
+/*
  Copyright 2014 NIFTY Corporation All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
- **********/
+ */
 
 
 #import <Foundation/Foundation.h>
@@ -423,6 +423,9 @@
 
 /**
  指定されたオブジェクトのリレーション先オブジェクトを検索する
+ @param targetClassName リレーション元のクラス名
+ @param objectId リレーション元のオブジェクトID
+ @param key リレーション元オブジェクトでリレーションが設定されているフィールド名
  */
 - (void)relatedTo:(NSString*)targetClassName objectId:(NSString*)objectId key:(NSString*)key;
 

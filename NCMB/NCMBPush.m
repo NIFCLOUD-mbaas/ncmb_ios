@@ -1,4 +1,4 @@
-/*******
+/*
  Copyright 2014 NIFTY Corporation All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
- **********/
+ */
 
 #import "NCMBPush.h"
 #import "NCMBQuery.h"
@@ -248,8 +248,8 @@ static NCMBRichPushView *rv;
     [self setObject:actionName forKey:@"action"];
 }
 
-- (void)setContentAvailable:(BOOL)contenteAvailable{
-    [self setObject:[NSNumber numberWithBool:contenteAvailable] forKey:@"contentAvailable"];
+- (void)setContentAvailable:(BOOL)contentAvailable{
+    [self setObject:[NSNumber numberWithBool:contentAvailable] forKey:@"contentAvailable"];
     [self setObject:[NSNumber numberWithBool:NO] forKey:@"badgeIncrementFlag"];
     //[self removeObjectForKey:@"badgeIncrementFlag"];
 }
