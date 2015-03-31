@@ -1,4 +1,4 @@
-/*******
+/*
  Copyright 2014 NIFTY Corporation All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
- **********/
+ */
 
 #import <Foundation/Foundation.h>
 
@@ -22,7 +22,7 @@
 
 #pragma mark - error
 #define ERRORDOMAIN @"NCMBErrorDomain"
-#define SDK_VERSION @"2.0.9"
+#define SDK_VERSION @"2.0.10"
 
 #define DATA_MAIN_PATH [NSHomeDirectory() stringByAppendingPathComponent:@"Library/"]
 #define COMMAND_CACHE_FOLDER_PATH [NSString stringWithFormat:@"%@/Private Documents/NCMB/Command Cache/", DATA_MAIN_PATH]

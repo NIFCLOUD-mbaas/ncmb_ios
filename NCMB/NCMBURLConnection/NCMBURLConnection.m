@@ -1,4 +1,4 @@
-/*******
+/*
  Copyright 2014 NIFTY Corporation All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
- **********/
+ */
 
 #import "NCMB.h"
 
@@ -120,6 +120,21 @@ typedef enum : NSInteger {
 #pragma mark request
 
 /**
+ エンドポイントを返却する
+ */
+- (NSString*)returnEndPoint{
+#ifdef NCMBTEST
+    NSString* propertyFile = [[NSBundle mainBundle]pathForResource:@"setting_dev"
+                                                            ofType:@"plist"];
+    NSDictionary *keys = [NSDictionary dictionaryWithContentsOfFile:propertyFile];
+    return keys[@"DebugEndPoint"];
+#else
+    return kEndPoint;
+#endif
+}
+
+
+/**
  リクエストを生成とpathとqueryのURLエンコードを実施
  @return NSMutableURLRequest型リクエスト
  */
@@ -129,7 +144,8 @@ typedef enum : NSInteger {
     self.path = [self percentEscape:self.path];
     
     //url生成
-    NSString *url = [kEndPoint stringByAppendingString:self.path];
+    NSString *endPointStr = [self returnEndPoint];
+    NSString *url = [endPointStr stringByAppendingString:self.path];
     //request生成 タイムアウト10秒
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
                                                            cachePolicy:self.cachePolicy
@@ -164,7 +180,9 @@ typedef enum : NSInteger {
  シグネチャを生成するメソッド
  */
 - (void)createSignature {
-    NSArray *splitedEndPoint = [kEndPoint componentsSeparatedByString:@"/"];
+    //NSArray *splitedEndPoint = [kEndPoint componentsSeparatedByString:@"/"];
+    NSString *endpointStr = [self returnEndPoint];
+    NSArray *splitedEndPoint = [endpointStr componentsSeparatedByString:@"/"];
     NSString *fqdn = splitedEndPoint[2];
     
     NSDateFormatter *df = [[NSDateFormatter alloc]init];
