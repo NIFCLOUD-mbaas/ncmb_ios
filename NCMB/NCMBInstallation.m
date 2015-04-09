@@ -30,12 +30,17 @@
 }
 
 - (void)setDeviceTokenFromData:(NSData *)deviceTokenData{
-    NSMutableString *tokenId = [[NSMutableString alloc] initWithString:[NSString stringWithFormat:@"%@",deviceTokenData]];
-    [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@" " withString:@""]]; //余計な文字を消す
-    [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@"<" withString:@""]];
-    [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@">" withString:@""]];
-    [self setObject:tokenId forKey:@"deviceToken"];
-    _deviceToken = tokenId;
+    if ([deviceTokenData length] != 0){
+        NSMutableString *tokenId = [[NSMutableString alloc] initWithString:[NSString stringWithFormat:@"%@",deviceTokenData]];
+        [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@" " withString:@""]]; //余計な文字を消す
+        [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@"<" withString:@""]];
+        [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@">" withString:@""]];
+        [self setObject:tokenId forKey:@"deviceToken"];
+        _deviceToken = tokenId;
+    } else {
+        _deviceToken = nil;
+    }
+    
 }
 
 -(NSDictionary*)getLocalData{
