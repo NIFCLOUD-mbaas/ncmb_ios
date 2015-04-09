@@ -30,7 +30,7 @@
 }
 
 - (void)setDeviceTokenFromData:(NSData *)deviceTokenData{
-    if ([deviceTokenData length] != 0){
+    if ([deviceTokenData isKindOfClass:[NSData class]] && [deviceTokenData length] != 0){
         NSMutableString *tokenId = [[NSMutableString alloc] initWithString:[NSString stringWithFormat:@"%@",deviceTokenData]];
         [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@" " withString:@""]]; //余計な文字を消す
         [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@"<" withString:@""]];

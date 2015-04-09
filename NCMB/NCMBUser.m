@@ -561,15 +561,21 @@ static BOOL isEnableAutomaticUser = FALSE;
 +(NCMBURLConnection*)createConnectionForLogin:(NSString*)username
                                    mailAddress:(NSString*)mailAddress
                                       password:(NSString*)password{
-    //検索文字列の作成
+    //ログインパラメーター文字列の作成
     NSMutableArray *queryArray = [NSMutableArray array];
-    [queryArray addObject:[NSString stringWithFormat:@"password=%@", password]];
-    if ([username length] != 0 && [mailAddress length] == 0){
-        [queryArray addObject:[NSString stringWithFormat:@"userName=%@", username]];
-    } else if ([username length] == 0 && [mailAddress length] != 0){
-        [queryArray addObject:[NSString stringWithFormat:@"mailAddress=%@", mailAddress]];
+    NSArray *sortedQueryArray = nil;
+    if (![username isKindOfClass:[NSNull class]] &&
+        ![mailAddress isKindOfClass:[NSNull class]] &&
+        ![password isKindOfClass:[NSNull class]]){
+        
+        [queryArray addObject:[NSString stringWithFormat:@"password=%@", password]];
+        if ([username length] != 0 && [mailAddress length] == 0){
+            [queryArray addObject:[NSString stringWithFormat:@"userName=%@", username]];
+        } else if ([username length] == 0 && [mailAddress length] != 0){
+            [queryArray addObject:[NSString stringWithFormat:@"mailAddress=%@", mailAddress]];
+        }
+        sortedQueryArray = [NSArray arrayWithArray:[queryArray sortedArrayUsingSelector:@selector(compare:)]];
     }
-    NSMutableArray *sortedQueryArray = [NSMutableArray arrayWithArray:[queryArray sortedArrayUsingSelector:@selector(compare:)]];
     
     //pathの作成
     NSString *path = @"";
@@ -725,7 +731,7 @@ static BOOL isEnableAutomaticUser = FALSE;
     NSString *str = [[NSString alloc] initWithContentsOfFile:DATA_CURRENTUSER_PATH encoding:NSUTF8StringEncoding error:&error];
     NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
     NSMutableDictionary *dicData = [NSMutableDictionary dictionary];
-    if ([data length] != 0){
+    if ([data isKindOfClass:[NSData class]] && [data length] != 0){
         dicData = [NSJSONSerialization JSONObjectWithData:data
                                                   options:NSJSONReadingAllowFragments
                                                     error:&error];

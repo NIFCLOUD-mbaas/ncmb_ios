@@ -557,7 +557,7 @@ typedef enum : NSInteger {
 - (NSDictionary *)convertResponseToDic:(NSData *)contentsData error:(NSError **)error{
     NSError *convertErr = nil;
     NSDictionary *jsonDic = [NSDictionary dictionary];
-    if ([contentsData length] != 0){
+    if ([contentsData isKindOfClass:[NSData class]] && [contentsData length] != 0){
         jsonDic = [NSJSONSerialization JSONObjectWithData:contentsData
                                                   options:NSJSONReadingAllowFragments
                                                     error:&convertErr];
