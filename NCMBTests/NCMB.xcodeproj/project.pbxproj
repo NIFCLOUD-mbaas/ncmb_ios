@@ -630,7 +630,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "INFO_PLIST='NCMB_Info.plist'\nFRAMEWORK_NAME=${PROJECT_NAME}\nFRAMEWORK_VERSION_NUMBER=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" ${SRCROOT}/${PROJECT_NAME}/${INFO_PLIST})\nFRAMEWORK_VERSION=A\nFRAMEWORK_BUILD_PATH=\"${SRCROOT}/build/${CONFIGURATION}-framework\"\nFRAMEWORK_DIR=\"${FRAMEWORK_BUILD_PATH}/${FRAMEWORK_NAME}.framework\"\nFRAMEWORK_PACKAGE_NAME=\"${FRAMEWORK_NAME}.${FRAMEWORK_VERSION_NUMBER}.zip\"\n\n[ -d \"${FRAMEWORK_BUILD_PATH}\" ] && rm -rf \"${FRAMEWORK_BUILD_PATH}\"\n\nxcodebuild -project ${PROJECT_NAME}.xcodeproj \\\n-sdk iphonesimulator8.2 \\\n-target \"${PROJECT_NAME}\" \\\n-configuration ${CONFIGURATION} clean build\n\nxcodebuild -project ${PROJECT_NAME}.xcodeproj \\\n-sdk iphoneos8.2 \\\n-target \"${PROJECT_NAME}\" \\\n-configuration ${CONFIGURATION} clean build\n\nmkdir -p ${FRAMEWORK_DIR}\nmkdir -p ${FRAMEWORK_DIR}/Versions\nmkdir -p ${FRAMEWORK_DIR}/Versions/${FRAMEWORK_VERSION}\nmkdir -p ${FRAMEWORK_DIR}/Versions/${FRAMEWORK_VERSION}/Resources\nmkdir -p ${FRAMEWORK_DIR}/Versions/${FRAMEWORK_VERSION}/Headers\n\nln -s ./${FRAMEWORK_VERSION} ${FRAMEWORK_DIR}/Versions/Current\nln -s ./Versions/Current/Headers ${FRAMEWORK_DIR}/Headers\nln -s ./Versions/Current/Resources ${FRAMEWORK_DIR}/Resources\nln -s ./Versions/Current/${FRAMEWORK_NAME} ${FRAMEWORK_DIR}/${FRAMEWORK_NAME}\n\nlipo -create \\\n${SRCROOT}/build/${CONFIGURATION}-iphoneos/lib${FRAMEWORK_NAME}.a \\\n${SRCROOT}/build/${CONFIGURATION}-iphonesimulator/lib${FRAMEWORK_NAME}.a \\\n-output \"${FRAMEWORK_DIR}/Versions/Current/${FRAMEWORK_NAME}\"\n\n#Copy header file for import\ncp ${SRCROOT}/${PROJECT_NAME}/*.h ${FRAMEWORK_DIR}/Headers/\ncp ${SRCROOT}/${PROJECT_NAME}/NCMBReachability/*.h ${FRAMEWORK_DIR}/Headers/\n                              \n\ncp ${SRCROOT}/${PROJECT_NAME}/${INFO_PLIST} ${FRAMEWORK_DIR}/Resources\ncp ${SRCROOT}/LICENSE ${FRAMEWORK_DIR}/LICENSE\n                              \ncd ${FRAMEWORK_BUILD_PATH}\nmkdir ${PROJECT_NAME}\nmv ${FRAMEWORK_DIR}/LICENSE ${PROJECT_NAME}/LICENSE\nmv $(basename $FRAMEWORK_DIR) ${PROJECT_NAME}/$(basename $FRAMEWORK_DIR)\n\nzip -ry ${FRAMEWORK_PACKAGE_NAME} ${PROJECT_NAME}";
+			shellScript = "env > env.txt\nINFO_PLIST='NCMB_Info.plist'\nFRAMEWORK_NAME=\"${PROJECT_NAME}\"\nFRAMEWORK_VERSION_NUMBER=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" ${SRCROOT}/${PROJECT_NAME}/${INFO_PLIST})\nFRAMEWORK_VERSION=A\nFRAMEWORK_BUILD_PATH=\"${SRCROOT}/build/${CONFIGURATION}-framework\"\nFRAMEWORK_DIR=\"${FRAMEWORK_BUILD_PATH}/${FRAMEWORK_NAME}.framework\"\nFRAMEWORK_PACKAGE_NAME=\"${FRAMEWORK_NAME}.${FRAMEWORK_VERSION_NUMBER}.zip\"\n\n[ -d \"${FRAMEWORK_BUILD_PATH}\" ] && rm -rf \"${FRAMEWORK_BUILD_PATH}\"\n\nxcodebuild -project ${PROJECT_NAME}.xcodeproj \\\n-sdk iphonesimulator8.3 \\\n-target \"${PROJECT_NAME}\" \\\n-configuration ${CONFIGURATION} clean build\n\nxcodebuild -project ${PROJECT_NAME}.xcodeproj \\\n-sdk iphoneos8.3 \\\n-target \"${PROJECT_NAME}\" \\\n-configuration ${CONFIGURATION} clean build\n\nmkdir -p ${FRAMEWORK_DIR}\nmkdir -p ${FRAMEWORK_DIR}/Versions\nmkdir -p ${FRAMEWORK_DIR}/Versions/${FRAMEWORK_VERSION}\nmkdir -p ${FRAMEWORK_DIR}/Versions/${FRAMEWORK_VERSION}/Resources\nmkdir -p ${FRAMEWORK_DIR}/Versions/${FRAMEWORK_VERSION}/Headers\n\nln -s ./${FRAMEWORK_VERSION} ${FRAMEWORK_DIR}/Versions/Current\nln -s ./Versions/Current/Headers ${FRAMEWORK_DIR}/Headers\nln -s ./Versions/Current/Resources ${FRAMEWORK_DIR}/Resources\nln -s ./Versions/Current/${FRAMEWORK_NAME} ${FRAMEWORK_DIR}/${FRAMEWORK_NAME}\n\nlipo -create \\\n${SRCROOT}/build/${CONFIGURATION}-iphoneos/lib${FRAMEWORK_NAME}.a \\\n${SRCROOT}/build/${CONFIGURATION}-iphonesimulator/lib${FRAMEWORK_NAME}.a \\\n-output \"${FRAMEWORK_DIR}/Versions/Current/${FRAMEWORK_NAME}\"\n\n#Copy header file for import\ncp ${SRCROOT}/../NCMB/*.h ${FRAMEWORK_DIR}/Headers/\ncp ${SRCROOT}/../NCMB/NCMBReachability/*.h ${FRAMEWORK_DIR}/Headers/\n                              \n\ncp ${SRCROOT}/../NCMB/${INFO_PLIST} ${FRAMEWORK_DIR}/Resources\ncp ${SRCROOT}/../LICENSE ${FRAMEWORK_DIR}/LICENSE\n                              \ncd ${FRAMEWORK_BUILD_PATH}\nmkdir ${PROJECT_NAME}\nmv ${FRAMEWORK_DIR}/LICENSE ${PROJECT_NAME}/LICENSE\nmv $(basename $FRAMEWORK_DIR) ${PROJECT_NAME}/$(basename $FRAMEWORK_DIR)\n\nzip -ry ${FRAMEWORK_PACKAGE_NAME} ${PROJECT_NAME}";
 		};
 		91899C35C0C14839BEDDA5E8 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -881,6 +881,7 @@
 		5D46C8A41A11D28D00278A10 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = (
 					"$(ARCHS_STANDARD)",
 					armv7s,
@@ -892,6 +893,7 @@
 		5D46C8A51A11D28D00278A10 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = (
 					"$(ARCHS_STANDARD)",
 					armv7s,

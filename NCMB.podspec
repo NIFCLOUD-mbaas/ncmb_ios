@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "NCMB"
-  s.version      = "2.0.10"
+  s.version      = "2.0.11"
   s.summary      = "NCMB is SDK for NIFTY Cloud mobile backend."
   s.description  = <<-DESC
                    NCMB is SDK for NIFTY Cloud mobile backend.
