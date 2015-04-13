@@ -121,12 +121,6 @@
     }
 }
 
-- (void)setTimeZone:(NSString *)timeZone{
-    if ([timeZone isKindOfClass:[NSString class]]){
-        [self setObject:timeZone forKey:@"timeZone"];
-    }
-}
-
 - (void)setBadge:(NSInteger)badge{
     [self setObject:[NSNumber numberWithInteger:badge] forKey:@"badge"];
 }
@@ -143,10 +137,6 @@
 
 - (NSInteger)badge{
     return [[self objectForKey:@"badge"] integerValue];
-}
-
-- (NSString*)timeZone{
-    return [self objectForKey:@"timeZone"];
 }
 
 #pragma  mark override
@@ -166,7 +156,7 @@
         _deviceType = [response objectForKey:@"deviceType"];
     }
     if ([response objectForKey:@"timeZone"]){
-        self.timeZone = [response objectForKey:@"timeZone"];
+        _timeZone = [response objectForKey:@"timeZone"];
     }
     [self saveInstallationToFile];
 }
@@ -177,7 +167,7 @@
     self.channels = nil;
     self.deviceToken = nil;
     _deviceType = nil;
-    self.timeZone = nil;
+    _timeZone = nil;
     if ([[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTINSTALLATION_PATH isDirectory:nil]) {
         [[NSFileManager defaultManager] removeItemAtPath:DATA_CURRENTINSTALLATION_PATH error:nil];
     }
