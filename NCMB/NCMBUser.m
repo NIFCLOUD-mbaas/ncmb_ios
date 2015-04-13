@@ -45,6 +45,7 @@ static BOOL isEnableAutomaticUser = FALSE;
 
 #pragma mark - init
 
+//description用のメソッド
 - (NSDictionary*)getLocalData{
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:[super getLocalData]];
     if (self.userName){

@@ -36,29 +36,25 @@
         [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@"<" withString:@""]];
         [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@">" withString:@""]];
         [self setObject:tokenId forKey:@"deviceToken"];
-        _deviceToken = tokenId;
-    } else {
-        _deviceToken = nil;
     }
-    
 }
 
 -(NSDictionary*)getLocalData{
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:[super getLocalData]];
-    if (_deviceType){
-        [dic setObject:_deviceType forKey:@"deviceType"];
+    if (self.deviceType){
+        [dic setObject:self.deviceType forKey:@"deviceType"];
     }
-    if (_deviceToken){
-        [dic setObject:_deviceToken forKey:@"deviceToken"];
+    if (self.deviceToken){
+        [dic setObject:self.deviceToken forKey:@"deviceToken"];
     }
-    if (_badge){
-        [dic setObject:[NSNumber numberWithInteger:_badge] forKey:@"badge"];
+    if (self.badge){
+        [dic setObject:[NSNumber numberWithInteger:self.badge] forKey:@"badge"];
     }
-    if (_timeZone){
-        [dic setObject:_timeZone forKey:@"timeZone"];
+    if (self.timeZone){
+        [dic setObject:self.timeZone forKey:@"timeZone"];
     }
-    if (_channels){
-        [dic setObject:_channels forKey:@"channels"];
+    if (self.channels){
+        [dic setObject:self.channels forKey:@"channels"];
     }
     return dic;
 }
@@ -113,35 +109,75 @@
     }
 }
 
+#pragma mark setter
+
+- (void)setDeviceToken:(NSString *)deviceToken{
+    [self setObject:deviceToken forKey:@"deviceToken"];
+}
+
+- (void)setChannels:(NSMutableArray *)channels{
+    if ([channels isKindOfClass:[NSArray class]] && [channels count] != 0){
+        [self setObject:channels forKey:@"channels"];
+    }
+}
+
+- (void)setTimeZone:(NSString *)timeZone{
+    if ([timeZone isKindOfClass:[NSString class]]){
+        [self setObject:timeZone forKey:@"timeZone"];
+    }
+}
+
+- (void)setBadge:(NSInteger)badge{
+    [self setObject:[NSNumber numberWithInteger:badge] forKey:@"badge"];
+}
+
+#pragma mark getter
+
+- (NSString*)deviceToken{
+    return [self objectForKey:@"deviceToken"];
+}
+
+- (NSMutableArray*)channels{
+    return [self objectForKey:@"channels"];
+}
+
+- (NSInteger)badge{
+    return [[self objectForKey:@"badge"] integerValue];
+}
+
+- (NSString*)timeZone{
+    return [self objectForKey:@"timeZone"];
+}
+
 #pragma  mark override
 
 - (void)afterFetch:(NSMutableDictionary *)response isRefresh:(BOOL)isRefresh{
     [super afterFetch:response isRefresh:isRefresh];
     if ([response objectForKey:@"deviceToken"]){
-        _deviceToken = [response objectForKey:@"deviceToken"];
+        self.deviceToken = [response objectForKey:@"deviceToken"];
     }
     if ([response objectForKey:@"channels"]){
-        _channels = [NSMutableArray arrayWithArray:[response objectForKey:@"channels"]];
+        self.channels = [NSMutableArray arrayWithArray:[response objectForKey:@"channels"]];
     }
     if ([response objectForKey:@"badge"]){
-        _badge = [[response objectForKey:@"badge"] integerValue];
+        self.badge = [[response objectForKey:@"badge"] integerValue];
     }
     if ([response objectForKey:@"deviceType"]){
         _deviceType = [response objectForKey:@"deviceType"];
     }
     if ([response objectForKey:@"timeZone"]){
-        _timeZone = [response objectForKey:@"timeZone"];
+        self.timeZone = [response objectForKey:@"timeZone"];
     }
     [self saveInstallationToFile];
 }
 
 - (void)afterDelete{
     [super afterDelete];
-    _badge = 0;
-    _channels = nil;
-    _deviceToken = nil;
+    self.badge = 0;
+    self.channels = nil;
+    self.deviceToken = nil;
     _deviceType = nil;
-    _timeZone = nil;
+    self.timeZone = nil;
     if ([[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTINSTALLATION_PATH isDirectory:nil]) {
         [[NSFileManager defaultManager] removeItemAtPath:DATA_CURRENTINSTALLATION_PATH error:nil];
     }
@@ -177,14 +213,14 @@
     if (self.ACL){
         [dic setObject:self.ACL.dicACL forKey:@"acl"];
     }
-    if (_deviceToken){
-        [dic setObject:_deviceToken forKey:@"deviceToken"];
+    if (self.deviceToken){
+        [dic setObject:self.deviceToken forKey:@"deviceToken"];
     }
-    if (_channels){
-        [dic setObject:_channels forKey:@"channels"];
+    if (self.channels){
+        [dic setObject:self.channels forKey:@"channels"];
     }
-    if (_badge){
-        [dic setObject:[NSNumber numberWithInteger:_badge] forKey:@"badge"];
+    if (self.badge){
+        [dic setObject:[NSNumber numberWithInteger:self.badge] forKey:@"badge"];
     }
     NSMutableDictionary *saveDictionary = [NSMutableDictionary dictionary];
     [saveDictionary setObject:dic forKey:@"data"];
