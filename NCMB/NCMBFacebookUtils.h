@@ -16,7 +16,6 @@
 
 #import <Foundation/Foundation.h>
 #import "NCMBConstants.h"
-#import <FacebookSDK/FBSession.h>
 
 @class NCMBUser;
 
@@ -29,6 +28,8 @@ typedef int NCMBSessionDefaultAudience;
  */
 @interface NCMBFacebookUtils : NSObject
 
+//TODO:Facebook対応が終わる時はおおきなわくでの括りをなくすこと
+#if __has_include(<FacebookSDK/FacebookSDK.h>)
 
 /*
  FBSessionの取得
@@ -54,7 +55,8 @@ typedef int NCMBSessionDefaultAudience;
  */
 + (BOOL)isLinkedWithUser:(NCMBUser *)user;
 
-/** @name logIn */
+/**@name login **/
+
 
 /**
  facebookを利用してユーザログイン。ログインし終わったら与えられたblockを呼び出す。
@@ -218,5 +220,36 @@ typedef int NCMBSessionDefaultAudience;
  @param url ユーザの認証情報
  */
 + (BOOL)handleOpenURL:(NSURL *)url;
+
+#endif
+
+#pragma mark login With Facebook Account
+
+/** @name isLinkedWithUser */
+
+/**
+ 指定したユーザがFacebookユーザかどうか判定。Facebookユーザの場合はtrueを返す。
+ @param user 指定するユーザ
+ */
++ (BOOL)isLinkedWithUser:(NCMBUser *)user;
+
+/** @name logIn */
+
+
+/**
+ 引数に指定したReadPermissionをもとに、Facebookへのアクセストークン取得をし、
+ Facebookのアカウントでニフティクラウド mobile backendへの会員登録を行う。
+ @param readPermission Facebookにアクセストークンを要求するときのパーミッション設定
+ @param block 会員登録後に実行されるブロック
+ */
++ (void)logInWithReadPermission:(NSArray *)readPermission block:(NCMBUserResultBlock)block;
+
+/**
+ 引数に指定したPublishingPermissionをもとに、Facebookへのアクセストークン取得をし、
+ Facebookのアカウントでニフティクラウド mobile backendへの会員登録を行う。
+ @param publishingPermission Facebookにアクセストークンを要求するときのパーミッション設定
+ @param block 会員登録後に実行されるブロック
+ */
++ (void)logInWithPublishingPermission:(NSArray *)publishingPermission block:(NCMBUserResultBlock)block;
 
 @end

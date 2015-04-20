@@ -221,6 +221,11 @@ static BOOL isEnableAutomaticUser = FALSE;
     [self saveInBackgroundWithTarget:target selector:selector];
 }
 
+- (void)signUpWithFacebookToken:(NSDictionary *)facebookInfo block:(NCMBErrorResultBlock)block{
+    [self setObject:facebookInfo forKey:@"authData"];
+    [self saveInBackgroundWithBlock:block];
+}
+
 #pragma mark - signUpAnonymous
 
 - (void)signUpFromAnonymous:(NSString *)userName password:(NSString *)password error:(NSError **)error{
