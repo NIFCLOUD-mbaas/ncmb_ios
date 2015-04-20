@@ -788,9 +788,16 @@ static NCMB_Facebook* _facebook = nil;
 
 #pragma mark login With Facebook Account
 
-+ (void)logInWithReadPermission:(NSArray *)readPermission block:(NCMBUserResultBlock)block{
-    
-#if __has_include(<FBSDKLoginKit/FBSDKLoginKit.h>)
+/**
+ 引数のパーミッションでFacebook認証とmobile backendへの会員登録を行う
+ @param permission Facebook認証時にリクエストするパーミッション
+ @param readPermissionFlag readPermissionの場合にYESを設定する
+ @param block mobile backendへの会員登録をリクエストしたあとに実行される処理
+ */
++ (void)logInWithPermission:(NSArray *)permission
+             readPermissionFlag:(BOOL)readPermissionFlag
+                      block:(NCMBUserResultBlock)block
+{
     
     //FBSDKLoginKitがある場合
     
@@ -799,77 +806,167 @@ static NCMB_Facebook* _facebook = nil;
     if (currentUser == nil){
         currentUser = [NCMBUser user];
     }
-    
     if ([self isLinkedWithUser:currentUser]){
         
         //認証済みであれば、既存のauthDataでmobile backendへのログインを実施
         NSDictionary *facebookInfo = [[currentUser objectForKey:@"authData"] objectForKey:@"facebook"];
-        [currentUser signUpWithFacebookToken:facebookInfo block:^(NSError *error) {
-            if (error){
-                block(nil,error);
-            } else {
-                block(currentUser, error);
-            }
-        }];
+        [self signUp:currentUser facebookInfo:facebookInfo block:block];
     } else {
         
         //認証済みでなければ、有効なaccessTokenがあるか確認
-        if ([FBSDKAccessToken currentAccessToken]){
+        //if ([FBSDKAccessToken currentAccessToken]){
+        if ([self isValidFacebookAccessToken]){
             
             //有効なaccessTokenがあればそれで会員登録を実施
-            //アクセストークンからfacebookInfoを取得
-            FBSDKAccessToken *token = [FBSDKAccessToken currentAccessToken];
-            NSDictionary *facebookInfo = @{@"facebook":@{@"id":token.userID,
-                                                         @"access_token":token.tokenString,
-                                                         @"expiration_date":token.expirationDate}
-                                           };
+            NSDictionary *facebookInfo = [self returnFacebookAuthDataFromAccessToken];
+            
             //mobile backendへのログインを実施
-            [currentUser signUpWithFacebookToken:facebookInfo block:^(NSError *error) {
-                if (error){
-                    block(nil,error);
-                } else {
-                    block(currentUser, error);
-                }
-            }];
+            [self signUp:currentUser facebookInfo:facebookInfo block:block];
+            
         } else {
             
             //なければFacebookLoginを実施
-            FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
-            [loginManager logInWithReadPermissions:readPermission handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-                if (error) {
-                    block(nil,error);
-                } else if (result.isCancelled) {
-                    // Handle cancellations
-                } else {
-                    
-                    //アクセストークンからfacebookInfoを取得
-                    FBSDKAccessToken *token = [FBSDKAccessToken currentAccessToken];
-                    NSDictionary *facebookInfo = @{@"facebook":@{@"id":token.userID,
-                                                                 @"access_token":token.tokenString,
-                                                                 @"expiration_date":token.expirationDate}
-                                                   };
-                    //mobile backendへのログインを実施
-                    [currentUser signUpWithFacebookToken:facebookInfo block:^(NSError *error) {
-                        if (error){
-                            block(nil,error);
-                        } else {
-                            block(currentUser, error);
-                        }
-                    }];
-                }
-            }];
+            if (readPermissionFlag){
+                [self logInToFacebook:currentUser
+                   withReadPermission:permission
+                                block:block];
+            } else {
+                [self logInToFacebook:currentUser
+                   withPublishPermission:permission
+                                block:block];
+            }
         }
         
     }
-    
-#else
-    //FacebookSDKがある場合
-    
-    
-#endif
+}
+
++ (void)logInWithReadPermission:(NSArray *)readPermission block:(NCMBUserResultBlock)block{
+    [self logInWithPermission:readPermission
+           readPermissionFlag:YES
+                        block:block];
 }
 
 + (void)logInWithPublishingPermission:(NSArray *)publishingPermission block:(NCMBUserResultBlock)block{
+    [self logInWithPermission:publishingPermission
+           readPermissionFlag:NO
+                        block:block];
+}
+
+#pragma mark Utilities
+
+/**
+ 引数のreadPermissionの内容をリクエストして、Facebookのログインを行う
+ */
++ (void)logInToFacebook:(NCMBUser*)user
+     withReadPermission:(NSArray*)readPermission
+                  block:(NCMBUserResultBlock)block
+{
+#if __has_include(<FBSDKLoginKit/FBSDKLoginKit.h>)
+    FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
+    [loginManager logInWithReadPermissions:readPermission
+                                   handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+#else
+#endif
+        if (error) {
+            block(nil,error);
+        } else if (result.isCancelled) {
+            // Handle cancellations
+        } else {
+            
+            //アクセストークンからfacebookInfoを取得
+            NSDictionary *facebookInfo = [self returnFacebookAuthDataFromAccessToken];
+            
+            //mobile backendへのログインを実施
+            [self signUp:user facebookInfo:facebookInfo block:block];
+        }
+    }];
+}
+
+/**
+ 引数のpublishingPermissionの内容をリクエストして、Facebookのログインを行う
+ */
++ (void)logInToFacebook:(NCMBUser*)user
+     withPublishPermission:(NSArray*)publishPermission
+                  block:(NCMBUserResultBlock)block
+{
+#if __has_include(<FBSDKLoginKit/FBSDKLoginKit.h>)
+    FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
+    [loginManager logInWithPublishPermissions:publishPermission
+                                   handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+#else
+#endif
+                                       if (error) {
+                                           block(nil,error);
+                                       } else if (result.isCancelled) {
+                                           // Handle cancellations
+                                       } else {
+                                           
+                                           //アクセストークンからfacebookInfoを取得
+                                           NSDictionary *facebookInfo = [self returnFacebookAuthDataFromAccessToken];
+                                           
+                                           //mobile backendへのログインを実施
+                                           [self signUp:user facebookInfo:facebookInfo block:block];
+                                       }
+                                   }];
+}
+
+/**
+ FacebookのauthDataでmobile backendへの会員登録を実行する
+ @param user 会員登録を行うNCMBUserのインスタンス
+ @param facebookInfor mobile backendに会員登録するためのfacebookの認証情報
+ @param block 会員登録実行後に行う処理
+ */
++ (void)signUp:(NCMBUser*)user
+  facebookInfo:(NSDictionary*)facebookInfo
+         block:(NCMBUserResultBlock)block{
+    [user signUpWithFacebookToken:facebookInfo block:^(NSError *error) {
+        if (error){
+            block(nil,error);
+        } else {
+            block(user, error);
+        }
+    }];
+}
+
+
+/**
+ 有効なFacebook Access Tokenがないかをチェックする
+ @return 有効なFacebook Access Tokenがある場合はYESを返す
+ */
++ (BOOL)isValidFacebookAccessToken{
+    
+#if __has_include(<FBSDKLoginKit/FBSDKLoginKit.h>)
+    if([FBSDKAccessToken currentAccessToken] != nil){
+#else
+    
+#endif
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+/**
+ Facebook Access Tokenを取得してcurrentUserでログインする
+ ログイン後は引数のblockを実行する
+ @param block mobile backendへのログインをリクエストしたあとに実行されるブロック
+ */
++(NSDictionary*)returnFacebookAuthDataFromAccessToken{
+    
+    NSDictionary *facebookInfo = nil;
+
+#if __has_include(<FBSDKLoginKit/FBSDKLoginKit.h>)
+    //アクセストークンからfacebookInfoを取得
+    FBSDKAccessToken *token = [FBSDKAccessToken currentAccessToken];
+    if (token != nil){
+        facebookInfo = @{@"facebook":@{@"id":token.userID,
+                                       @"access_token":token.tokenString,
+                                       @"expiration_date":token.expirationDate}
+                         };
+    }
+#else
+#endif
+    return facebookInfo;
     
 }
 
