@@ -31,7 +31,6 @@
 #import "NCMBAnonymousUtils.h"
 #import "NCMBObject+Private.h"
 #import "NCMBACL.h"
-#import "NCMBError.h"
 
 #define AUTH_TYPE_FACEBOOK              @"facebook"
 #define FACEBOOKAPPID_KEY               @"FacebookAppID"
@@ -171,19 +170,7 @@
                                   completionHandler:
      ^(FBSession *session, FBSessionState state, NSError *error) {
          if (error) {
-             if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryUserCancelled){
-                 NSError *ncmbError = [NSError errorWithDomain:ERRORDOMAIN
-                                                          code:NCMBErrorFacebookLoginCanceled
-                                                      userInfo:nil
-                                       ];
-                 if (block){
-                     block(nil,ncmbError);
-                 }
-             } else {
-                 if (block){
-                     block(nil, error);
-                 }
-             }
+             block(nil, error);
          } else {
              
              //アクセストークンからfacebookInfoを取得
@@ -205,18 +192,10 @@
 
 
         if (error) {
-            if (block){
-                block(nil,error);
-            }
+            block(nil,error);
         } else if (result.isCancelled) {
             // Handle cancellations
-            NSError *ncmbError = [NSError errorWithDomain:ERRORDOMAIN
-                                                     code:NCMBErrorFacebookLoginCanceled
-                                                 userInfo:nil
-                                  ];
-            if (block){
-                block(nil,ncmbError);
-            }
+            
         } else {
             
             //アクセストークンからfacebookInfoを取得
@@ -243,19 +222,7 @@
                                      completionHandler:
      ^(FBSession *session, FBSessionState state, NSError *error) {
          if (error) {
-             if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryUserCancelled){
-                 NSError *ncmbError = [NSError errorWithDomain:ERRORDOMAIN
-                                                          code:NCMBErrorFacebookLoginCanceled
-                                                      userInfo:nil
-                                       ];
-                 if (block){
-                     block(nil,ncmbError);
-                 }
-             } else {
-                 if (block){
-                     block(nil, error);
-                 }
-             }
+             block(nil, error);
          } else {
              
              //アクセストークンからfacebookInfoを取得
@@ -275,19 +242,9 @@
     [loginManager logInWithPublishPermissions:publishPermission
                                    handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
         if (error) {
-            if (block){
-                block(nil,error);
-            }
+            block(nil,error);
         } else if (result.isCancelled) {
-
-            // Handle cancellations
-            NSError *ncmbError = [NSError errorWithDomain:ERRORDOMAIN
-                                                     code:NCMBErrorFacebookLoginCanceled
-                                                 userInfo:nil
-                                  ];
-            if (block){
-                block(nil,ncmbError);
-            }
+            // Handle cancellation
         } else {
 
             //アクセストークンからfacebookInfoを取得
@@ -313,12 +270,10 @@
   facebookInfo:(NSDictionary*)facebookInfo
          block:(NCMBUserResultBlock)block{
     [user signUpWithFacebookToken:facebookInfo block:^(NSError *error) {
-        if (block){
-            if (error){
-                block(nil,error);
-            } else {
-                block(user, error);
-            }
+        if (error){
+            block(nil,error);
+        } else {
+            block(user, error);
         }
     }];
 }
