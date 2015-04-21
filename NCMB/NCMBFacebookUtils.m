@@ -171,7 +171,19 @@
                                   completionHandler:
      ^(FBSession *session, FBSessionState state, NSError *error) {
          if (error) {
-             block(nil, error);
+             if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryUserCancelled){
+                 NSError *ncmbError = [NSError errorWithDomain:ERRORDOMAIN
+                                                          code:NCMBErrorFacebookLoginCanceled
+                                                      userInfo:nil
+                                       ];
+                 if (block){
+                     block(nil,ncmbError);
+                 }
+             } else {
+                 if (block){
+                     block(nil, error);
+                 }
+             }
          } else {
              
              //アクセストークンからfacebookInfoを取得
@@ -231,7 +243,19 @@
                                      completionHandler:
      ^(FBSession *session, FBSessionState state, NSError *error) {
          if (error) {
-             block(nil, error);
+             if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryUserCancelled){
+                 NSError *ncmbError = [NSError errorWithDomain:ERRORDOMAIN
+                                                          code:NCMBErrorFacebookLoginCanceled
+                                                      userInfo:nil
+                                       ];
+                 if (block){
+                     block(nil,ncmbError);
+                 }
+             } else {
+                 if (block){
+                     block(nil, error);
+                 }
+             }
          } else {
              
              //アクセストークンからfacebookInfoを取得
