@@ -23,8 +23,6 @@
 /* Begin PBXBuildFile section */
 		5D46C8AA1A11D8B300278A10 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D46C8A91A11D8B300278A10 /* Foundation.framework */; };
 		5D7FAA341AD228BC00727042 /* NCMBTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D7FAA331AD228BC00727042 /* NCMBTest.m */; };
-		5D863CD21ADD0ABC008B7E8A /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D863CD11ADD0ABC008B7E8A /* FBSDKCoreKit.framework */; };
-		5D863CD41ADD0AD3008B7E8A /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D863CD31ADD0AD3008B7E8A /* FBSDKLoginKit.framework */; };
 		5DABD2C11AD68835001C63DF /* NCMB.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DABD2571AD68835001C63DF /* NCMB.m */; };
 		5DABD2C21AD68835001C63DF /* NCMB.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DABD2571AD68835001C63DF /* NCMB.m */; };
 		5DABD2C31AD68835001C63DF /* NCMB_Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5DABD2581AD68835001C63DF /* NCMB_Info.plist */; };
@@ -147,8 +145,6 @@
 		5D7FAA2F1AD228BC00727042 /* NCMBTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NCMBTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D7FAA321AD228BC00727042 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5D7FAA331AD228BC00727042 /* NCMBTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NCMBTest.m; sourceTree = "<group>"; };
-		5D863CD11ADD0ABC008B7E8A /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
-		5D863CD31ADD0AD3008B7E8A /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../../../Documents/FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		5DABD2561AD68835001C63DF /* NCMB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMB.h; sourceTree = "<group>"; };
 		5DABD2571AD68835001C63DF /* NCMB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMB.m; sourceTree = "<group>"; };
 		5DABD2581AD68835001C63DF /* NCMB_Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = NCMB_Info.plist; sourceTree = "<group>"; };
@@ -245,6 +241,7 @@
 		5DABD2BD1AD68835001C63DF /* NCMBUser+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NCMBUser+Private.h"; sourceTree = "<group>"; };
 		5DABD2BF1AD68835001C63DF /* SubClassHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubClassHandler.h; sourceTree = "<group>"; };
 		5DABD2C01AD68835001C63DF /* SubClassHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubClassHandler.m; sourceTree = "<group>"; };
+		5DF1E9831AE65E90001A41F7 /* NCMBFacebookUtils+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NCMBFacebookUtils+Private.h"; sourceTree = "<group>"; };
 		5F00D2E1F57B80D49147CA2E /* libPods-NCMBTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NCMBTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B73A548D36449A8841F82C33 /* Pods-NCMBTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NCMBTest.release.xcconfig"; path = "Pods/Target Support Files/Pods-NCMBTest/Pods-NCMBTest.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -254,8 +251,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D863CD41ADD0AD3008B7E8A /* FBSDKLoginKit.framework in Frameworks */,
-				5D863CD21ADD0ABC008B7E8A /* FBSDKCoreKit.framework in Frameworks */,
 				5D46C8AA1A11D8B300278A10 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -489,6 +484,7 @@
 				5DABD2BB1AD68835001C63DF /* NCMBQuery+Private.h */,
 				5DABD2BC1AD68835001C63DF /* NCMBRelation+Private.h */,
 				5DABD2BD1AD68835001C63DF /* NCMBUser+Private.h */,
+				5DF1E9831AE65E90001A41F7 /* NCMBFacebookUtils+Private.h */,
 			);
 			path = PrivateHeaders;
 			sourceTree = "<group>";
@@ -505,8 +501,6 @@
 		E4A1F69D59CE7BAFDB745712 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5D863CD31ADD0AD3008B7E8A /* FBSDKLoginKit.framework */,
-				5D863CD11ADD0ABC008B7E8A /* FBSDKCoreKit.framework */,
 				5F00D2E1F57B80D49147CA2E /* libPods-NCMBTest.a */,
 			);
 			name = Frameworks;
@@ -861,10 +855,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/NCMB",
-					/Users/SCI01433/workspace/ncmb_ios_test,
-					/Users/SCI01433/Desktop/FacebookSDK,
-					/Users/SCI01433/workspace/iOSProject/NCMB,
-					/Users/SCI01433/Documents/FacebookSDK,
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -879,10 +869,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/NCMB",
-					/Users/SCI01433/workspace/ncmb_ios_test,
-					/Users/SCI01433/Desktop/FacebookSDK,
-					/Users/SCI01433/workspace/iOSProject/NCMB,
-					/Users/SCI01433/Documents/FacebookSDK,
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
