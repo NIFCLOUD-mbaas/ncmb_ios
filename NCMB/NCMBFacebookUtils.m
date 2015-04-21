@@ -295,6 +295,22 @@
     
 }
 
+    
++(void)clearFacebookSession{
+#if __has_include(<FacebookSDK/FacebookSDK.h>)
+    FBSession *session = [FBSession activeSession];
+    if (session){
+        [session closeAndClearTokenInformation];
+    }
+#else
+    FBSDKAccessToken *token = [FBSDKAccessToken currentAccessToken];
+    if (token){
+        FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
+        [loginManager logOut];
+    }
+#endif
+}
+
 @end
 
 #endif
