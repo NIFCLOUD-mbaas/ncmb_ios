@@ -46,16 +46,34 @@ typedef int NCMBSessionDefaultAudience;
  引数に指定したReadPermissionをもとに、Facebookへのアクセストークン取得をし、
  Facebookのアカウントでニフティクラウド mobile backendへの会員登録を行う。
  @param readPermission Facebookにアクセストークンを要求するときのパーミッション設定
- @param block 会員登録後に実行されるブロック
+ @param block 会員登録をリクエストした後に実行されるブロック
  */
 + (void)logInWithReadPermission:(NSArray *)readPermission block:(NCMBUserResultBlock)block;
+
+/**
+ 引数に指定したReadPermissionをもとに、Facebookへのアクセストークン取得をし、
+ Facebookのアカウントでニフティクラウド mobile backendへの会員登録を行う。
+ @param readPermission Facebookにアクセストークンを要求するときのパーミッション設定
+ @param target 会員登録をリクエストした後に実行するセレクタのターゲット
+ @param selector 会員登録をリクエストした後に実行するセレクタ
+ */
++ (void)logInWithReadPermission:(NSArray *)readPermission target:(id)target selector:(SEL)selector;
 
 /**
  引数に指定したPublishingPermissionをもとに、Facebookへのアクセストークン取得をし、
  Facebookのアカウントでニフティクラウド mobile backendへの会員登録を行う。
  @param publishingPermission Facebookにアクセストークンを要求するときのパーミッション設定
- @param block 会員登録後に実行されるブロック
+ @param block 会員登録をリクエストした後に実行されるブロック
  */
 + (void)logInWithPublishingPermission:(NSArray *)publishingPermission block:(NCMBUserResultBlock)block;
+
+/**
+ 引数に指定したPublishingPermissionをもとに、Facebookへのアクセストークン取得をし、
+ Facebookのアカウントでニフティクラウド mobile backendへの会員登録を行う。
+ @param publishingPermission Facebookにアクセストークンを要求するときのパーミッション設定
+ @param target 会員登録をリクエストした後に実行するセレクタのターゲット
+ @param selector 会員登録をリクエストした後に実行するセレクタ
+ */
++ (void)logInWithPublishingPermission:(NSArray *)publishingPermission target:(id)target selector:(SEL)selector;
 
 @end

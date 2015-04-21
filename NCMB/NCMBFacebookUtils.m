@@ -100,11 +100,45 @@
                         block:block];
 }
 
++ (void)logInWithReadPermission:(NSArray *)readPermission target:(id)target selector:(SEL)selector{
+    if (!target || !selector){
+        [NSException raise:@"NCMBInvalidValueException" format:@"target and selector must not be nil."];
+    }
+    NSMethodSignature *signature = [target methodSignatureForSelector:selector];
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:signature];
+    [invocation setTarget:target];
+    [invocation setSelector:selector];
+    [self logInWithReadPermission:readPermission block:^(NCMBUser *user, NSError *error) {
+        [invocation retainArguments];
+        [invocation setArgument:&user atIndex:2];
+        [invocation setArgument:&error atIndex:3];
+        [invocation invoke];
+    }];
+}
+
 + (void)logInWithPublishingPermission:(NSArray *)publishingPermission block:(NCMBUserResultBlock)block{
     [self logInWithPermission:publishingPermission
            readPermissionFlag:NO
                         block:block];
 }
+
++ (void)logInWithPublishingPermission:(NSArray *)publishingPermission target:(id)target selector:(SEL)selector{
+    if (!target || !selector){
+        [NSException raise:@"NCMBInvalidValueException" format:@"target and selector must not be nil."];
+    }
+    NSMethodSignature *signature = [target methodSignatureForSelector:selector];
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:signature];
+    [invocation setTarget:target];
+    [invocation setSelector:selector];
+    [self logInWithPublishingPermission:publishingPermission block:^(NCMBUser *user, NSError *error) {
+        [invocation retainArguments];
+        [invocation setArgument:&user atIndex:2];
+        [invocation setArgument:&error atIndex:3];
+        [invocation invoke];
+    }];
+}
+
+
 
 #pragma mark isLinkedWithUser
 /**
