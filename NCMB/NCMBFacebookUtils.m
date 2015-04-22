@@ -44,29 +44,36 @@
 #pragma mark login With Facebook Account
 
 /**
- 引数のパーミッションでFacebook認証とmobile backendへの会員登録を行う
+ 引数のパーミッションが許可されたFacebookのaccess tokenをもとに、
+ mobile backendへの会員登録または会員情報の更新を行う
+ @param linkUser Facebookのaccess tokenを紐付ける会員。nilだった場合は会員登録を行う。
  @param permission Facebook認証時にリクエストするパーミッション
  @param readPermissionFlag readPermissionの場合にYESを設定する
  @param block mobile backendへの会員登録をリクエストしたあとに実行される処理
  */
-+ (void)logInWithPermission:(NSArray *)permission
-             readPermissionFlag:(BOOL)readPermissionFlag
-                      block:(NCMBUserResultBlock)block
++ (void)signUpToNCMB:(NCMBUser*)linkUser
+      withPermission:(NSArray *)permission
+  readPermissionFlag:(BOOL)readPermissionFlag
+               block:(NCMBUserResultBlock)block
 {
     
-    //FBSDKLoginKitがある場合
+    NCMBUser *user = nil;
+    if (linkUser && [linkUser isKindOfClass:[NCMBUser class]]){
+        user = linkUser;
+    } else {
+        user = [NCMBUser currentUser];
+        if (user == nil){
+            user = [NCMBUser user];
+        }
+    }
     
     //currentUserがFacebookアカウントで認証済みかを確認する
-    NCMBUser *currentUser = [NCMBUser currentUser];
-    if (currentUser == nil){
-        currentUser = [NCMBUser user];
-    }
-    if ([self isLinkedWithUser:currentUser]){
+    if ([self isLinkedWithUser:user]){
         
         //認証済みであれば、既存のauthDataでmobile backendへのログインを実施
         NSDictionary *facebookInfo = nil;
-        facebookInfo = [NSDictionary dictionaryWithObject:[[currentUser objectForKey:@"authData"] objectForKey:@"facebook"] forKey:@"facebook"];
-        [self signUp:currentUser facebookInfo:facebookInfo block:block];
+        facebookInfo = [NSDictionary dictionaryWithObject:[[user objectForKey:@"authData"] objectForKey:@"facebook"] forKey:@"facebook"];
+        [self signUp:user facebookInfo:facebookInfo block:block];
     } else {
         
         //認証済みでなければ、有効なaccessTokenがあるか確認
@@ -77,17 +84,17 @@
             NSDictionary *facebookInfo = [self returnFacebookAuthDataFromAccessToken];
             
             //mobile backendへのログインを実施
-            [self signUp:currentUser facebookInfo:facebookInfo block:block];
+            [self signUp:user facebookInfo:facebookInfo block:block];
             
         } else {
             
             //なければFacebookLoginを実施
             if (readPermissionFlag){
-                [self logInToFacebook:currentUser
+                [self logInToFacebook:user
                    withReadPermission:permission
                                 block:block];
             } else {
-                [self logInToFacebook:currentUser
+                [self logInToFacebook:user
                    withPublishPermission:permission
                                 block:block];
             }
@@ -97,9 +104,7 @@
 }
 
 + (void)logInWithReadPermission:(NSArray *)readPermission block:(NCMBUserResultBlock)block{
-    [self logInWithPermission:readPermission
-           readPermissionFlag:YES
-                        block:block];
+    [self signUpToNCMB:nil withPermission:readPermission readPermissionFlag:YES block:block];
 }
 
 + (void)logInWithReadPermission:(NSArray *)readPermission target:(id)target selector:(SEL)selector{
@@ -119,9 +124,7 @@
 }
 
 + (void)logInWithPublishingPermission:(NSArray *)publishingPermission block:(NCMBUserResultBlock)block{
-    [self logInWithPermission:publishingPermission
-           readPermissionFlag:NO
-                        block:block];
+    [self signUpToNCMB:nil withPermission:publishingPermission readPermissionFlag:NO block:block];
 }
 
 + (void)logInWithPublishingPermission:(NSArray *)publishingPermission target:(id)target selector:(SEL)selector{
@@ -140,7 +143,47 @@
     }];
 }
 
+#pragma mark linkUser
 
++ (void)linkUser:(NCMBUser *)user withReadPermission:(NSArray *)readPermission block:(NCMBUserResultBlock)block{
+    [self signUpToNCMB:user withPermission:readPermission readPermissionFlag:YES block:block];
+}
+
++ (void)linkUser:(NCMBUser *)user withPublishingPermission:(NSArray *)publishingPermission block:(NCMBUserResultBlock)block{
+    [self signUpToNCMB:user withPermission:publishingPermission readPermissionFlag:NO block:block];
+}
+
++ (void)unLinkUser:(NCMBUser *)user withBlock:(NCMBUserResultBlock)block{
+    if ([user isKindOfClass:[NCMBUser class]]){
+        NSMutableDictionary *authData = nil;
+        authData = [NSMutableDictionary dictionaryWithDictionary:[user objectForKey:@"authData"]];
+        
+        if (authData && [[authData allKeys] containsObject:@"facebook"]){
+            
+            [authData removeObjectForKey:@"facebook"];
+            [user setObject:authData forKey:@"authData"];
+            [user saveInBackgroundWithBlock:^(NSError *error) {
+                if (block){
+                    block(user, error);
+                }
+            }];
+        } else {
+            
+            //facebookの認証情報がなかった場合
+            NSError *error = [NSError errorWithDomain:ERRORDOMAIN
+                                                 code:404003
+                                             userInfo:@{NSLocalizedDescriptionKey:@"Facebook token not found."}];
+            block(user,error);
+        }
+    } else {
+        
+        //user以外が指定されている場合のエラーを返す
+        NSError *error = [NSError errorWithDomain:ERRORDOMAIN
+                                             code:400002
+                                         userInfo:@{NSLocalizedDescriptionKey:@"User is invalid type."}];
+        block(user,error);
+    }
+}
 
 #pragma mark isLinkedWithUser
 /**
@@ -156,7 +199,6 @@
     }
     return isLinkerFlag;
 }
-
 #pragma mark Utilities
 
 /**
@@ -318,7 +360,6 @@
 + (void)signUp:(NCMBUser*)user
   facebookInfo:(NSDictionary*)facebookInfo
          block:(NCMBUserResultBlock)block{
-    NSLog(@"facebookInfo:%@", facebookInfo);
     [user signUpWithFacebookToken:facebookInfo block:^(NSError *error) {
         if (block){
             if (error){

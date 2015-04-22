@@ -76,4 +76,35 @@ typedef int NCMBSessionDefaultAudience;
  */
 + (void)logInWithPublishingPermission:(NSArray *)publishingPermission target:(id)target selector:(SEL)selector;
 
+#pragma mark linkUser
+
+/** @name linkUser */
+
+/**
+ 引数に指定したReadPermissionをもとに、Facebookへのアクセストークン取得をし、
+ Facebookのアカウントをニフティクラウド mobile backendの会員情報と紐付けを行う。
+ @param user Facebookのアカウント情報を紐付ける会員情報
+ @param readPermission Facebookにアクセストークンを要求するときのパーミッション設定
+ @param block 会員情報の更新をリクエストした後に実行されるブロック
+ */
++ (void)linkUser:(NCMBUser*)user withReadPermission:(NSArray *)readPermission block:(NCMBUserResultBlock)block;
+
+/**
+ 引数に指定したPublishingPermissionをもとに、Facebookへのアクセストークン取得をし、
+ Facebookのアカウントをニフティクラウド mobile backendの会員情報と紐付けを行う。
+ @param user Facebookのアカウント情報を紐付ける会員情報
+ @param publishingPermission Facebookにアクセストークンを要求するときのパーミッション設定
+ @param block 会員情報の更新をリクエストした後に実行されるブロック
+ */
++ (void)linkUser:(NCMBUser*)user
+withPublishingPermission:(NSArray *)publishingPermission
+           block:(NCMBUserResultBlock)block;
+
+/**
+ 指定した会員のauthDataからFacebookの認証情報を削除する
+ @param user Facebookの認証情報を削除する会員情報
+ @param block 会員情報の更新をリクエストしたあとに実行されるブロック
+ */
++ (void)unLinkUser:(NCMBUser*)user withBlock:(NCMBUserResultBlock)block;
+
 @end
