@@ -63,7 +63,8 @@
     if ([self isLinkedWithUser:currentUser]){
         
         //認証済みであれば、既存のauthDataでmobile backendへのログインを実施
-        NSDictionary *facebookInfo = [[currentUser objectForKey:@"authData"] objectForKey:@"facebook"];
+        NSDictionary *facebookInfo = nil;
+        facebookInfo = [NSDictionary dictionaryWithObject:[[currentUser objectForKey:@"authData"] objectForKey:@"facebook"] forKey:@"facebook"];
         [self signUp:currentUser facebookInfo:facebookInfo block:block];
     } else {
         
@@ -180,7 +181,6 @@
                                                           @"expiration_date":tokenData.expirationDate
                                                           }
                                             };
-             
              //mobile backendへのログインを実施
              [self signUp:user facebookInfo:facebookInfo block:block];
          }
