@@ -228,7 +228,19 @@ static BOOL isEnableAutomaticUser = FALSE;
 }
 
 - (void)signUpWithFacebookToken:(NSDictionary *)facebookInfo block:(NCMBErrorResultBlock)block{
-    [self setObject:facebookInfo forKey:@"authData"];
+    
+    NSMutableDictionary *newAuthData = nil;
+    NSDictionary *authData = [self objectForKey:@"authData"];
+    if (authData && [authData isKindOfClass:[NSDictionary class]]){
+        newAuthData = [NSMutableDictionary dictionaryWithDictionary:authData];
+        if ([facebookInfo isKindOfClass:[NSDictionary class]]){
+            [newAuthData addEntriesFromDictionary:facebookInfo];
+        }
+    } else {
+        newAuthData = [NSMutableDictionary dictionaryWithDictionary:facebookInfo];
+    }
+    
+    [self setObject:newAuthData forKey:@"authData"];
     [self saveInBackgroundWithBlock:block];
 }
 
@@ -836,7 +848,6 @@ static BOOL isEnableAutomaticUser = FALSE;
     [super afterSave:response operations:operations];
     if ([response objectForKey:@"sessionToken"]){
         self.sessionToken = [response objectForKey:@"sessionToken"];
-        [NCMBUser saveToFileCurrentUser:self];
     }
     //会員新規登録の有無
     //if ([response objectForKey:@"createDate"]&&![response objectForKey:@"updateDate"]){
@@ -856,7 +867,6 @@ static BOOL isEnableAutomaticUser = FALSE;
     //if (![[response objectForKey:@"authData"] isKindOfClass:[NSNull class]]){
     if ([response objectForKey:@"authData"]){
         if([[response objectForKey:@"authData"] isKindOfClass:[NSNull class]]){
-            [estimatedData setObject:[NSNull null] forKey:@"authData"];
         } else {
             NSDictionary *authDataDic = [response objectForKey:@"authData"];
             NSMutableDictionary *converted = [NSMutableDictionary dictionary];
@@ -868,6 +878,7 @@ static BOOL isEnableAutomaticUser = FALSE;
             [estimatedData setObject:converted forKey:@"authData"];
         }
     }
+    [NCMBUser saveToFileCurrentUser:self];
 }
 
 @end
