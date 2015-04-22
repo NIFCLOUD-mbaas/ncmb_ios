@@ -277,7 +277,7 @@ withPublishingPermission:(NSArray *)readPermission
          if (error) {
              if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryUserCancelled){
                  NSError *ncmbError = [NSError errorWithDomain:ERRORDOMAIN
-                                                          code:NCMBErrorFacebookLoginCanceled
+                                                          code:NCMBErrorFacebookLoginCancelled
                                                       userInfo:nil
                                        ];
                  if (block){
@@ -317,7 +317,7 @@ withPublishingPermission:(NSArray *)readPermission
         } else if (result.isCancelled) {
             // Handle cancellations
             NSError *ncmbError = [NSError errorWithDomain:ERRORDOMAIN
-                                                     code:NCMBErrorFacebookLoginCanceled
+                                                     code:NCMBErrorFacebookLoginCancelled
                                                  userInfo:nil
                                   ];
             if (block){
@@ -351,7 +351,7 @@ withPublishingPermission:(NSArray *)readPermission
          if (error) {
              if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryUserCancelled){
                  NSError *ncmbError = [NSError errorWithDomain:ERRORDOMAIN
-                                                          code:NCMBErrorFacebookLoginCanceled
+                                                          code:NCMBErrorFacebookLoginCancelled
                                                       userInfo:nil
                                        ];
                  if (block){
@@ -391,7 +391,7 @@ withPublishingPermission:(NSArray *)readPermission
 
             // Handle cancellations
             NSError *ncmbError = [NSError errorWithDomain:ERRORDOMAIN
-                                                     code:NCMBErrorFacebookLoginCanceled
+                                                     code:NCMBErrorFacebookLoginCancelled
                                                  userInfo:nil
                                   ];
             if (block){

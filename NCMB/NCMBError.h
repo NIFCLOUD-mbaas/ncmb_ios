@@ -18,7 +18,7 @@
 #import <Foundation/Foundation.h>
 
 
-extern NSInteger const NCMBErrorFacebookLoginCanceled;
+extern NSInteger const NCMBErrorFacebookLoginCancelled;
 
 /*! @abstract E400001 JSON形式不正 */
 extern NSString const *kNCMBErrorInvalidJson;

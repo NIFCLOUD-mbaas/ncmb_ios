@@ -16,7 +16,7 @@
 
 #import "NCMBError.h"
 
-NSInteger const NCMBErrorFacebookLoginCanceled = 401004;
+NSInteger const NCMBErrorFacebookLoginCancelled = 401004;
 
 NSString const *kNCMBErrorInvalidJson = @"E400001";
 NSString const *kNCMBErrorInvalidType = @"E400002";
