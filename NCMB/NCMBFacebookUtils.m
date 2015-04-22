@@ -149,8 +149,53 @@
     [self signUpToNCMB:user withPermission:readPermission readPermissionFlag:YES block:block];
 }
 
-+ (void)linkUser:(NCMBUser *)user withPublishingPermission:(NSArray *)publishingPermission block:(NCMBUserResultBlock)block{
++ (void)linkUser:(NCMBUser *)user
+withReadPermission:(NSArray *)readPermission
+          target:(id)target
+        selector:(SEL)selector
+{
+    
+    if (!target || !selector){
+        [NSException raise:@"NCMBInvalidValueException" format:@"target and selector must not be nil."];
+    }
+    NSMethodSignature *signature = [target methodSignatureForSelector:selector];
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:signature];
+    [invocation setTarget:target];
+    [invocation setSelector:selector];
+    [self linkUser:user withReadPermission:readPermission block:^(NCMBUser *user, NSError *error) {
+        [invocation retainArguments];
+        [invocation setArgument:&user atIndex:2];
+        [invocation setArgument:&error atIndex:3];
+        [invocation invoke];
+    }];
+}
+
++ (void)linkUser:(NCMBUser *)user
+withPublishingPermission:(NSArray *)publishingPermission
+           block:(NCMBUserResultBlock)block
+{
     [self signUpToNCMB:user withPermission:publishingPermission readPermissionFlag:NO block:block];
+}
+
++ (void)linkUser:(NCMBUser *)user
+withPublishingPermission:(NSArray *)readPermission
+          target:(id)target
+        selector:(SEL)selector
+{
+    
+    if (!target || !selector){
+        [NSException raise:@"NCMBInvalidValueException" format:@"target and selector must not be nil."];
+    }
+    NSMethodSignature *signature = [target methodSignatureForSelector:selector];
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:signature];
+    [invocation setTarget:target];
+    [invocation setSelector:selector];
+    [self linkUser:user withPublishingPermission:readPermission block:^(NCMBUser *user, NSError *error) {
+        [invocation retainArguments];
+        [invocation setArgument:&user atIndex:2];
+        [invocation setArgument:&error atIndex:3];
+        [invocation invoke];
+    }];
 }
 
 + (void)unLinkUser:(NCMBUser *)user withBlock:(NCMBUserResultBlock)block{
@@ -183,6 +228,22 @@
                                          userInfo:@{NSLocalizedDescriptionKey:@"User is invalid type."}];
         block(user,error);
     }
+}
+
++ (void)unLinkUser:(NCMBUser *)user withTarget:(id)target selector:(SEL)selector{
+    if (!target || !selector){
+        [NSException raise:@"NCMBInvalidValueException" format:@"target and selector must not be nil."];
+    }
+    NSMethodSignature *signature = [target methodSignatureForSelector:selector];
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:signature];
+    [invocation setTarget:target];
+    [invocation setSelector:selector];
+    [self unLinkUser:user withBlock:^(NCMBUser *user, NSError *error) {
+        [invocation retainArguments];
+        [invocation setArgument:&user atIndex:2];
+        [invocation setArgument:&error atIndex:3];
+        [invocation invoke];
+    }];
 }
 
 #pragma mark isLinkedWithUser

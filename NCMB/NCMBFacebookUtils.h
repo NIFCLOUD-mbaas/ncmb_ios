@@ -90,6 +90,19 @@ typedef int NCMBSessionDefaultAudience;
 + (void)linkUser:(NCMBUser*)user withReadPermission:(NSArray *)readPermission block:(NCMBUserResultBlock)block;
 
 /**
+ 引数に指定したReadPermissionをもとに、Facebookへのアクセストークン取得をし、
+ Facebookのアカウントをニフティクラウド mobile backendの会員情報と紐付けを行う。
+ @param user Facebookのアカウント情報を紐付ける会員情報
+ @param readPermission Facebookにアクセストークンを要求するときのパーミッション設定
+ @param target 会員情報の更新をリクエストした後に実行されるセレクタのターゲット
+ @param selector 会員情報の更新をリクエストした後に実行されるセレクタ
+ */
++ (void)linkUser:(NCMBUser*)user
+withReadPermission:(NSArray *)readPermission
+          target:(id)target
+        selector:(SEL)selector;
+
+/**
  引数に指定したPublishingPermissionをもとに、Facebookへのアクセストークン取得をし、
  Facebookのアカウントをニフティクラウド mobile backendの会員情報と紐付けを行う。
  @param user Facebookのアカウント情報を紐付ける会員情報
@@ -101,10 +114,31 @@ withPublishingPermission:(NSArray *)publishingPermission
            block:(NCMBUserResultBlock)block;
 
 /**
+ 引数に指定したPublishingPermissionをもとに、Facebookへのアクセストークン取得をし、
+ Facebookのアカウントをニフティクラウド mobile backendの会員情報と紐付けを行う。
+ @param user Facebookのアカウント情報を紐付ける会員情報
+ @param publishingPermission Facebookにアクセストークンを要求するときのパーミッション設定
+ @param target 会員情報の更新をリクエストした後に実行されるセレクタのターゲット
+ @param selector 会員情報の更新をリクエストした後に実行されるセレクタ
+ */
++ (void)linkUser:(NCMBUser*)user
+withPublishingPermission:(NSArray *)publishingPermission
+          target:(id)target
+        selector:(SEL)selector;
+
+/**
  指定した会員のauthDataからFacebookの認証情報を削除する
  @param user Facebookの認証情報を削除する会員情報
  @param block 会員情報の更新をリクエストしたあとに実行されるブロック
  */
 + (void)unLinkUser:(NCMBUser*)user withBlock:(NCMBUserResultBlock)block;
+
+/**
+ 指定した会員のauthDataからFacebookの認証情報を削除する
+ @param user Facebookの認証情報を削除する会員情報
+ @param target 会員情報の更新をリクエストした後に実行されるセレクタのターゲット
+ @param selector 会員情報の更新をリクエストした後に実行されるセレクタ
+ */
++ (void)unLinkUser:(NCMBUser*)user withTarget:(id)target selector:(SEL)selector;
 
 @end
