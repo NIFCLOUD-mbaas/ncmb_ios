@@ -41,7 +41,7 @@
 
 
 static NCMBUser *currentUser = nil;
-static BOOL isEnableAutomaticUser = FALSE;
+static BOOL isEnableAutomaticUser = NO;
 
 #pragma mark - init
 
@@ -164,20 +164,43 @@ static BOOL isEnableAutomaticUser = FALSE;
     //アプリ再起動などでcurrentUserがnilになった時は端末に保存したユーザ情報を取得、設定する。
     if ([[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTUSER_PATH isDirectory:nil]) {
         currentUser = [NCMBUser getFromFileCurrentUser];
-    }else{
-        //匿名ユーザーの自動生成がYESの時は匿名ユーザーでログインする
-        if (isEnableAutomaticUser) {
-            isEnableAutomaticUser = NO;
-            [NCMBAnonymousUtils logInWithBlock:^(NCMBUser *user, NSError *error) {
-                if (!error) {
-                    currentUser = user;
-                }
-                isEnableAutomaticUser = TRUE;
-            }];
-        }
     }
-    
     return currentUser;
+}
+
++ (void)automaticCurrentUserWithBlock:(NCMBUserResultBlock)block{
+    if ([self currentUser]) {
+        block([self currentUser], nil);
+    }
+    //匿名ユーザーの自動生成がYESの時は匿名ユーザーでログインする
+    else if (isEnableAutomaticUser) {
+        isEnableAutomaticUser = NO;
+        [NCMBAnonymousUtils logInWithBlock:^(NCMBUser *user, NSError *error) {
+            if (!error) {
+                currentUser = user;
+            }
+            isEnableAutomaticUser = YES;
+            if (block){
+                block(user, error);
+            }
+        }];
+    }
+}
+
++ (void)automaticCurrentUserWithTarget:(id)target selector:(SEL)selector{
+    if (!target || !selector){
+        [NSException raise:@"NCMBInvalidValueException" format:@"target and selector must not be nil."];
+    }
+    NSMethodSignature *signature = [target methodSignatureForSelector:selector];
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:signature];
+    [invocation setTarget:target];
+    [invocation setSelector:selector];
+    [self automaticCurrentUserWithBlock:^(NCMBUser *user, NSError *error) {
+        [invocation retainArguments];
+        [invocation setArgument:&user atIndex:2];
+        [invocation setArgument:&error atIndex:3];
+        [invocation invoke];
+    }];
 }
 
 /**
