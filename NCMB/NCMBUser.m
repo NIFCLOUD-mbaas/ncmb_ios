@@ -774,9 +774,6 @@ static BOOL isEnableAutomaticUser = FALSE;
  @param NCMBUSer型ファイルに保存するユーザー
  */
 + (void) saveToFileCurrentUser:(NCMBUser *)user {
-    if (currentUser != user) {
-        [self logOutEvent];
-    }
     NSError *e = nil;
     NSMutableDictionary *dic = [user toJSONObjectForDataFile];
     NSData *json = [NSJSONSerialization dataWithJSONObject:dic options:kNilOptions error:&e];
@@ -791,7 +788,6 @@ static BOOL isEnableAutomaticUser = FALSE;
  */
 - (NSMutableDictionary *)toJSONObjectForDataFile{
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    
     for (id key in [estimatedData keyEnumerator]) {
         [dic setObject:[self convertToJSONFromNCMBObject:[estimatedData valueForKey:key]] forKey:key];
     }
@@ -823,6 +819,10 @@ static BOOL isEnableAutomaticUser = FALSE;
  */
 - (void)afterDelete{
     [super afterDelete];
+    self.userName = nil;
+    self.password = nil;
+    self.sessionToken = nil;
+    self.mailAddress = nil;
     [NCMBUser logOutEvent];
 }
 
@@ -847,7 +847,7 @@ static BOOL isEnableAutomaticUser = FALSE;
 -(void)afterSave:(NSDictionary*)response operations:(NSMutableDictionary *)operations{
     [super afterSave:response operations:operations];
     if ([response objectForKey:@"sessionToken"]){
-        self.sessionToken = [response objectForKey:@"sessionToken"];
+        [self setSessionToken:[response objectForKey:@"sessionToken"]];
     }
     //会員新規登録の有無
     //if ([response objectForKey:@"createDate"]&&![response objectForKey:@"updateDate"]){
