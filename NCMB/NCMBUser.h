@@ -69,17 +69,21 @@
 + (NCMBUser *)currentUser;
 
 /**
- enableAutomaticUserを設定した場合に、anonymous認証による自動会員登録を実行する
- enableAutomaticUserが設定されていない場合や、すでにログイン済みの会員が存在している場合はcurrentUserと同じ処理を行う
+ enableAutomaticUserを設定した場合に、anonymous認証による自動会員登録を実行する。
+ 
+ enableAutomaticUserが設定されていない場合や、すでにログイン済みの会員が存在している場合はcurrentUserと同じ処理を行う。
+ 
  @param block anonymous認証による会員登録がリクエストされたあとに実行されるブロック
  */
 + (void)automaticCurrentUserWithBlock:(NCMBUserResultBlock)block;
 
 /**
- enableAutomaticUserを設定した場合に、anonymous認証による自動会員登録を実行する
- enableAutomaticUserが設定されていない場合や、すでにログイン済みの会員が存在している場合はcurrentUserと同じ処理を行う
+ enableAutomaticUserを設定した場合に、anonymous認証による自動会員登録を実行する。
+ 
+ enableAutomaticUserが設定されていない場合や、すでにログイン済みの会員が存在している場合はcurrentUserと同じ処理を行う。
+ 
  @param target anonymous認証による会員登録がリクエストされたあとに実行されるセレクタのターゲット
-@param target anonymous認証による会員登録がリクエストされたあとに実行されるセレクタ
+ @param selector anonymous認証による会員登録がリクエストされたあとに実行されるセレクタ
  */
 + (void)automaticCurrentUserWithTarget:(id)target selector:(SEL)selector;
 
