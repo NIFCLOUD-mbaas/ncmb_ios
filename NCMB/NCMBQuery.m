@@ -420,8 +420,9 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         if (block){
             if ([results count] == 0){
                 block(nil, error);
+            } else {
+                block([NCMBObject convertClass:results[0] ncmbClassName:_ncmbClassName], error);
             }
-            block([NCMBObject convertClass:results[0] ncmbClassName:_ncmbClassName], error);
         }
     }];
 }
