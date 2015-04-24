@@ -407,27 +407,22 @@ static NCMB_Twitter* _twitter = nil;
  @param error 処理中に起きたエラーのポインタ
  @return BOOL型 通信成功の場合YESを返す
  */
-+ (BOOL)unlinkUser:(NCMBUser *)user error:(NSError **)error{
-    //解除用のauthData
-    id authData = [NSNull null];
-    
-    //通信処理
-    NSError *errorLocal = nil;
-    NCMBURLConnection *request = [self updateRequestWithUser:user authData:authData];
-    NSDictionary *responseDic = [request syncConnection:&errorLocal];
-    
-    //レスポンス処理
-    BOOL isSuccess = YES;
-    if(errorLocal){
-        isSuccess = NO;
-        if (error) {
-            *error =  errorLocal;
-        }
-    }else{
-        [self deleteAuthData:user response:responseDic];
++ (void)unlinkUser:(NCMBUser *)user error:(NSError **)error{
+
+    if ([[user objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
+        NSMutableDictionary *authData = nil;
+        authData = [NSMutableDictionary dictionaryWithDictionary:[user objectForKey:@"authData"]];
+        
+        [authData removeObjectForKey:@"twitter"];
+        
+        [user setObject:authData forKey:@"authData"];
+        [user save:error];
+        
+    } else {
+        *error = [NSError errorWithDomain:ERRORDOMAIN
+                                     code:404003
+                                 userInfo:@{NSLocalizedDescriptionKey:@"twitter token not found"}];
     }
-    
-    return isSuccess;
 }
 
 
@@ -440,32 +435,21 @@ static NCMB_Twitter* _twitter = nil;
  */
 + (void)unlinkUserInBackground:(NCMBUser *)user
                          block:(NCMBErrorResultBlock)block{
-    id authData = [NSNull null];
-    
-    //通信処理
-    NCMBURLConnection *request = [self updateRequestWithUser:user authData:authData];
-    [request asyncConnectionWithBlock:^(NSDictionary *responseDic, NSError *error) {
-        //レスポンス処理
-        BOOL isSuccess = YES;
-        if(error){
-            isSuccess = NO;
-        }else{
-            [self deleteAuthData:user response:responseDic];
-        }
-        if(block){
+    if ([[user objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
+        NSMutableDictionary *authData = nil;
+        authData = [NSMutableDictionary dictionaryWithDictionary:[user objectForKey:@"authData"]];
+        
+        [authData removeObjectForKey:@"twitter"];
+        [user setObject:authData forKey:@"authData"];
+        [user saveInBackgroundWithBlock:block];
+    } else {
+        if (block){
+            NSError *error = [NSError errorWithDomain:ERRORDOMAIN
+                                                 code:404003
+                                             userInfo:@{NSLocalizedDescriptionKey:@"twitter token not found"}];
             block(error);
         }
-    }];
-}
-
-//authDataにnullを設定してローカルに保存する
-+ (void)deleteAuthData:(NCMBUser*)user response:(NSDictionary*)responseDic{
-    //解除成功のためauthDataを空にする
-    NSMutableDictionary *mutableResponse = [NSMutableDictionary dictionaryWithDictionary:responseDic];
-    [mutableResponse setObject:[NSNull null] forKey:@"authData"];
-    [user afterSave:mutableResponse operations:nil];
-    //ファイルに登録したユーザーデータ書き込み
-    [NCMBUser saveToFileCurrentUser:user];
+    }
 }
 
 /**
