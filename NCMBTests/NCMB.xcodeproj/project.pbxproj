@@ -241,6 +241,7 @@
 		5DABD2BD1AD68835001C63DF /* NCMBUser+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NCMBUser+Private.h"; sourceTree = "<group>"; };
 		5DABD2BF1AD68835001C63DF /* SubClassHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubClassHandler.h; sourceTree = "<group>"; };
 		5DABD2C01AD68835001C63DF /* SubClassHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubClassHandler.m; sourceTree = "<group>"; };
+		5DF1E9831AE65E90001A41F7 /* NCMBFacebookUtils+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NCMBFacebookUtils+Private.h"; sourceTree = "<group>"; };
 		5F00D2E1F57B80D49147CA2E /* libPods-NCMBTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NCMBTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B73A548D36449A8841F82C33 /* Pods-NCMBTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NCMBTest.release.xcconfig"; path = "Pods/Target Support Files/Pods-NCMBTest/Pods-NCMBTest.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -483,6 +484,7 @@
 				5DABD2BB1AD68835001C63DF /* NCMBQuery+Private.h */,
 				5DABD2BC1AD68835001C63DF /* NCMBRelation+Private.h */,
 				5DABD2BD1AD68835001C63DF /* NCMBUser+Private.h */,
+				5DF1E9831AE65E90001A41F7 /* NCMBFacebookUtils+Private.h */,
 			);
 			path = PrivateHeaders;
 			sourceTree = "<group>";
@@ -852,9 +854,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/NCMB",
-					/Users/SCI01433/workspace/ncmb_ios_test,
-					/Users/SCI01433/Desktop/FacebookSDK,
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -868,9 +867,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/NCMB",
-					/Users/SCI01433/workspace/ncmb_ios_test,
-					/Users/SCI01433/Desktop/FacebookSDK,
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";

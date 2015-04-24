@@ -117,6 +117,15 @@
  */
 - (void)signUpInBackgroundWithTarget:(id)target selector:(SEL)selector;
 
+/**
+ facebookのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ @param facebookInfo Facebook認証に必要なauthData
+ @param block サインアップ後に実行されるblock
+ */
+- (void)signUpWithFacebookToken:(NSDictionary*)facebookInfo block:(NCMBErrorResultBlock)block;
+
+
+#pragma mark requestAuthenticationMail
 /** @name requestAuthenticationMail */
 
 /**
@@ -219,7 +228,7 @@
                                 password:(NSString *)password
                                    block:(NCMBUserResultBlock)block;
 
-
+#pragma mark Logout
 /** @name Logout */
 
 /**

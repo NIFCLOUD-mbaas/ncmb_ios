@@ -26,6 +26,12 @@
 #import "NCMBObject+Subclass.h"
 #import "NCMBRelation+Private.h"
 
+#if defined(__has_include)
+#if __has_include(<FacebookSDK/FacebookSDK.h>) || __has_include(<FBSDKLoginKit/FBSDKLoginKit.h>)
+#import "NCMBFacebookUtils+Private.h"
+#endif
+#endif
+
 
 @implementation NCMBUser
 #define DATA_MAIN_PATH [NSHomeDirectory() stringByAppendingPathComponent:@"Library/"]
@@ -242,6 +248,23 @@ static BOOL isEnableAutomaticUser = NO;
  */
 - (void)signUpInBackgroundWithTarget:(id)target selector:(SEL)selector{
     [self saveInBackgroundWithTarget:target selector:selector];
+}
+
+- (void)signUpWithFacebookToken:(NSDictionary *)facebookInfo block:(NCMBErrorResultBlock)block{
+    
+    NSMutableDictionary *newAuthData = nil;
+    NSDictionary *authData = [self objectForKey:@"authData"];
+    if (authData && [authData isKindOfClass:[NSDictionary class]]){
+        newAuthData = [NSMutableDictionary dictionaryWithDictionary:authData];
+        if ([facebookInfo isKindOfClass:[NSDictionary class]]){
+            [newAuthData addEntriesFromDictionary:facebookInfo];
+        }
+    } else {
+        newAuthData = [NSMutableDictionary dictionaryWithDictionary:facebookInfo];
+    }
+    
+    [self setObject:newAuthData forKey:@"authData"];
+    [self saveInBackgroundWithBlock:block];
 }
 
 #pragma mark - signUpAnonymous
@@ -709,6 +732,11 @@ static BOOL isEnableAutomaticUser = NO;
         currentUser.sessionToken = nil;
         currentUser = nil;
     }
+#if __has_include(<FacebookSDK/FacebookSDK.h>) || __has_include(<FBSDKLoginKit/FBSDKLoginKit.h>)
+    
+    //Facebookのセッションを削除
+    [NCMBFacebookUtils clearFacebookSession];
+#endif
     if ([[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTUSER_PATH isDirectory:nil]) {
         [[NSFileManager defaultManager] removeItemAtPath:DATA_CURRENTUSER_PATH error:nil];
     }
@@ -769,9 +797,6 @@ static BOOL isEnableAutomaticUser = NO;
  @param NCMBUSer型ファイルに保存するユーザー
  */
 + (void) saveToFileCurrentUser:(NCMBUser *)user {
-    if (currentUser != user) {
-        [self logOutEvent];
-    }
     NSError *e = nil;
     NSMutableDictionary *dic = [user toJSONObjectForDataFile];
     NSData *json = [NSJSONSerialization dataWithJSONObject:dic options:kNilOptions error:&e];
@@ -786,7 +811,6 @@ static BOOL isEnableAutomaticUser = NO;
  */
 - (NSMutableDictionary *)toJSONObjectForDataFile{
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    
     for (id key in [estimatedData keyEnumerator]) {
         [dic setObject:[self convertToJSONFromNCMBObject:[estimatedData valueForKey:key]] forKey:key];
     }
@@ -818,6 +842,10 @@ static BOOL isEnableAutomaticUser = NO;
  */
 - (void)afterDelete{
     [super afterDelete];
+    self.userName = nil;
+    self.password = nil;
+    self.sessionToken = nil;
+    self.mailAddress = nil;
     [NCMBUser logOutEvent];
 }
 
@@ -842,8 +870,7 @@ static BOOL isEnableAutomaticUser = NO;
 -(void)afterSave:(NSDictionary*)response operations:(NSMutableDictionary *)operations{
     [super afterSave:response operations:operations];
     if ([response objectForKey:@"sessionToken"]){
-        self.sessionToken = [response objectForKey:@"sessionToken"];
-        [NCMBUser saveToFileCurrentUser:self];
+        [self setSessionToken:[response objectForKey:@"sessionToken"]];
     }
     //会員新規登録の有無
     //if ([response objectForKey:@"createDate"]&&![response objectForKey:@"updateDate"]){
@@ -863,7 +890,6 @@ static BOOL isEnableAutomaticUser = NO;
     //if (![[response objectForKey:@"authData"] isKindOfClass:[NSNull class]]){
     if ([response objectForKey:@"authData"]){
         if([[response objectForKey:@"authData"] isKindOfClass:[NSNull class]]){
-            [estimatedData setObject:[NSNull null] forKey:@"authData"];
         } else {
             NSDictionary *authDataDic = [response objectForKey:@"authData"];
             NSMutableDictionary *converted = [NSMutableDictionary dictionary];
@@ -875,6 +901,7 @@ static BOOL isEnableAutomaticUser = NO;
             [estimatedData setObject:converted forKey:@"authData"];
         }
     }
+    [NCMBUser saveToFileCurrentUser:self];
 }
 
 @end
