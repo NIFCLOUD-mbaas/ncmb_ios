@@ -165,9 +165,8 @@
  指定したユーザとtwitterのリンクを解除。必要があればエラーをセットし、取得することもできる。
  @param user 指定するユーザ
  @param error 処理中に起きたエラーのポインタ
- @return BOOL型 通信成功の場合YESを返す
  */
-+ (BOOL)unlinkUser:(NCMBUser *)user error:(NSError **)error;
++ (void)unlinkUser:(NCMBUser *)user error:(NSError **)error;
 
 /**
  指定したユーザとtwitterのリンクを解除。解除し終わったら与えられたblockを呼び出す。
