@@ -783,12 +783,19 @@ static BOOL isEnableAutomaticUser = NO;
     NSString *str = [[NSString alloc] initWithContentsOfFile:DATA_CURRENTUSER_PATH encoding:NSUTF8StringEncoding error:&error];
     NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
     NSMutableDictionary *dicData = [NSMutableDictionary dictionary];
+    
     if ([data isKindOfClass:[NSData class]] && [data length] != 0){
+        
         dicData = [NSJSONSerialization JSONObjectWithData:data
                                                   options:NSJSONReadingAllowFragments
                                                     error:&error];
+        if ([[dicData allKeys] containsObject:@"data"] && [dicData count] == 1){
+            //v1の形式でファイルを保存していた場合
+            [user afterFetch:[NSMutableDictionary dictionaryWithDictionary:dicData[@"data"]] isRefresh:YES];
+        } else {
+            [user afterFetch:[NSMutableDictionary dictionaryWithDictionary:dicData] isRefresh:YES];
+        }
     }
-    [user afterFetch:[NSMutableDictionary dictionaryWithDictionary:dicData] isRefresh:YES];
     return user;
 }
 
