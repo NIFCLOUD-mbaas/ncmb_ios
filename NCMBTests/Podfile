@@ -1,5 +1,4 @@
 target :NCMB do
-    pod 'Facebook-iOS-SDK', '~> 3.23'
 end
 
 target :NCMBTest do
