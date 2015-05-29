@@ -30,6 +30,9 @@
 #if __has_include(<FacebookSDK/FacebookSDK.h>) || __has_include(<FBSDKLoginKit/FBSDKLoginKit.h>)
 #import "NCMBFacebookUtils+Private.h"
 #endif
+#if __has_include(<GoogleSignIn/GoogleSignIn.h>)
+#import "NCMBGoogleUtils+Private.h"
+#endif
 #endif
 
 
@@ -265,6 +268,26 @@ static BOOL isEnableAutomaticUser = NO;
     
     [self setObject:newAuthData forKey:@"authData"];
     [self saveInBackgroundWithBlock:block];
+}
+
+/**
+ googleのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ @param googleInfo google認証に必要なauthData
+ @param block サインアップ後に実行されるblock
+ */
+- (void)signUpWithGoogleToken:(NSDictionary*)googleInfo block:(NCMBErrorResultBlock)block{
+    //既存のauthDataのgoogle情報のみ更新する
+    NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
+    if([[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
+        userAuthData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
+    }
+    [userAuthData setObject:googleInfo forKey:@"google"];
+    [self setObject:userAuthData forKey:@"authData"];
+    [self signUpInBackgroundWithBlock:^(NSError *error) {
+        if(block){
+            block(error);
+        }
+    }];
 }
 
 #pragma mark - signUpAnonymous
@@ -736,6 +759,10 @@ static BOOL isEnableAutomaticUser = NO;
     
     //Facebookのセッションを削除
     [NCMBFacebookUtils clearFacebookSession];
+#endif
+#if __has_include(<GoogleSignIn/GoogleSignIn.h>)
+    //Googleのセッションを削除
+    [NCMBGoogleUtils clearGoogleSession];
 #endif
     if ([[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTUSER_PATH isDirectory:nil]) {
         [[NSFileManager defaultManager] removeItemAtPath:DATA_CURRENTUSER_PATH error:nil];

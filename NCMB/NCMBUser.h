@@ -128,6 +128,12 @@
  */
 - (void)signUpWithFacebookToken:(NSDictionary*)facebookInfo block:(NCMBErrorResultBlock)block;
 
+/**
+ googleのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ @param googleInfo google認証に必要なauthData
+ @param block サインアップ後に実行されるblock
+ */
+- (void)signUpWithGoogleToken:(NSDictionary*)googleInfo block:(NCMBErrorResultBlock)block;
 
 #pragma mark requestAuthenticationMail
 /** @name requestAuthenticationMail */
@@ -269,14 +275,6 @@
  */
 + (void)requestPasswordResetForEmailInBackground:(NSString *)email
                                            block:(NCMBErrorResultBlock)block;
-
-
-
-
-
-
-
-
 
 /**
  匿名会員を正規会員として同期で登録する。2回のAPIリクエストが発生する。objectiId,createDate,updateDate,authdata以外の情報を引き継ぐ。必要があればエラーをセットし、取得することもできる。
