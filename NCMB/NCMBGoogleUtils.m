@@ -98,6 +98,17 @@ static NCMBUser *linkUser = nil;
  @param block mBaaSへの会員情報更新をリクエスト後に実行されるblock。NSErrorを引数に持つ。
  */
 +(void)linkUser:(NCMBUser*)user googleAccountWithblock:(NCMBUserResultBlock)block{
+    //nilやNCMBUser型以外は許容しない
+    if (![user isKindOfClass:[NCMBUser class]]){
+        if (block){
+            NSError *error = [NSError errorWithDomain:ERRORDOMAIN
+                                                 code:400002
+                                             userInfo:@{NSLocalizedDescriptionKey:@"User is invalid type."}];
+            block(user,error);
+            return;
+        }
+    }
+    
     //ライブラリのコールバックを設定
     googleUtils = [[NCMBGoogleUtils alloc]init];
     [GIDSignIn sharedInstance].delegate = googleUtils;//コールバックに自身を設定
@@ -138,13 +149,14 @@ static NCMBUser *linkUser = nil;
  @param block mBaaSへの会員情報更新をリクエスト後に実行されるblock。NSErrorを引数に持つ。
  */
 +(void)unLinkUser:(NCMBUser*)user withBlock:(NCMBUserResultBlock)block{
+    //nilやNCMBUser型以外は許容しない
     if (![user isKindOfClass:[NCMBUser class]]){
-        //User以外はエラーを返す
         if (block){
             NSError *error = [NSError errorWithDomain:ERRORDOMAIN
                                                  code:400002
                                              userInfo:@{NSLocalizedDescriptionKey:@"User is invalid type."}];
             block(user,error);
+            return;
         }
     }
     
