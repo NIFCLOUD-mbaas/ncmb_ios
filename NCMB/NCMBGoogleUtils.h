@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-//Googleのライブラリがある場合はビルド対象から外す
+//Googleのライブラリがある場合はビルド対象に含める
 #if defined(__has_include)
 #if __has_include(<GoogleSignIn/GoogleSignIn.h>)
 

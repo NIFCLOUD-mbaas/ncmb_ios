@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-//Googleのライブラリがある場合はビルド対象から外す
+//Googleのライブラリがある場合はビルド対象に含める
 #if defined(__has_include)
 #if __has_include(<GoogleSignIn/GoogleSignIn.h>)
 
@@ -65,20 +65,10 @@ static NCMBUser *linkUser = nil;
     [GIDSignIn sharedInstance].delegate = googleUtils;//コールバックに自身を設定
     //ユーザへのコールバックを設定
     userBlock = block;
-    NCMBUser *currentUser = [NCMBUser currentUser];
-    if ([self isLinkedWithUser:currentUser]&&[[GIDSignIn sharedInstance] currentUser]){
-        //認証済:既存のauthDataでmobile backendへのログインを実施
-        NSDictionary *googleInfo = nil;
-        googleInfo = [[currentUser objectForKey:@"authData"] objectForKey:@"google"];
-        [currentUser signUpWithGoogleToken:googleInfo block:^(NSError *error) {
-            if(userBlock){
-                userBlock(currentUser,error);
-            }
-        }];
-    }else{
-        //未認証:アカウント画面に遷移する。承認後signInコールバックが実行される
-        [[GIDSignIn sharedInstance] signIn];
-    }
+    
+    //認証済:アカウント画面に遷移しない。直接signInコールバックが実行される
+    //未認証:アカウント画面に遷移する。承認後signInコールバックが実行される
+    [[GIDSignIn sharedInstance] signIn];
 }
 
 /**
@@ -225,7 +215,7 @@ static NCMBUser *linkUser = nil;
                 }
             }];
         }else{
-            //ログイン:新規会員登録
+            //ログイン:新規会員登録 ※mBaaSのサーバー上で同じid(googleInfo内のid)がある場合はログインを行う
             NCMBUser *user = [NCMBUser user];
             [user signUpWithGoogleToken:googleInfo block:^(NSError *error) {
                 if(userBlock){
@@ -247,6 +237,9 @@ static NCMBUser *linkUser = nil;
  */
 +(void)clearGoogleSession{
     [[GIDSignIn sharedInstance] signOut];
+    googleUtils = nil;
+    userBlock = nil;
+    linkUser = nil;
 }
 
 @end
