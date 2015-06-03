@@ -63,6 +63,7 @@ static NCMBUser *linkUser = nil;
     //ライブラリのコールバックを設定
     googleUtils = [[NCMBGoogleUtils alloc]init];
     [GIDSignIn sharedInstance].delegate = googleUtils;//コールバックに自身を設定
+    [GIDSignIn sharedInstance].allowsSignInWithWebView = NO;//webViewに遷移しないよう設定
     //ユーザへのコールバックを設定
     userBlock = block;
     
@@ -100,6 +101,7 @@ static NCMBUser *linkUser = nil;
     //ライブラリのコールバックを設定
     googleUtils = [[NCMBGoogleUtils alloc]init];
     [GIDSignIn sharedInstance].delegate = googleUtils;//コールバックに自身を設定
+    [GIDSignIn sharedInstance].allowsSignInWithWebView = NO;//webViewに遷移しないよう設定
     //ユーザへのコールバックを設定
     userBlock = block;
     linkUser = user;
