@@ -105,8 +105,8 @@ static NCMBUser *linkUser = nil;
                                                  code:400002
                                              userInfo:@{NSLocalizedDescriptionKey:@"User is invalid type."}];
             block(user,error);
-            return;
         }
+        return;
     }
     
     //ライブラリのコールバックを設定
@@ -156,8 +156,8 @@ static NCMBUser *linkUser = nil;
                                                  code:400002
                                              userInfo:@{NSLocalizedDescriptionKey:@"User is invalid type."}];
             block(user,error);
-            return;
         }
+        return;
     }
     
     //UserのGoogle情報を取得し削除する
