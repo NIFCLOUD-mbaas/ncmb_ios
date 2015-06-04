@@ -53,6 +53,7 @@
 
 /**
  Googleの認証情報を利用してmBaaSへの会員登録を行う
+ @param user Googleの認証情報を追加するmBaaSの会員情報
  @param target mBaaSへの会員登録をリクエスト後に実行されるselectorのtarget
  @param selector mBaaSへの会員登録をリクエスト後に実行されるselector
  */
