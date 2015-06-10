@@ -16,7 +16,6 @@
 
 #import "NCMBRichPushView.h"
 #import "NCMBCloseImageView.h"
-#import <objc/runtime.h>
 
 #define SIZE_OF_STATUS_BAR 20.0
 #define DEFAULT_MARGIN_WIDTH 10
