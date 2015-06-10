@@ -16,6 +16,7 @@
 
 #import "NCMBRichPushView.h"
 #import "NCMBCloseImageView.h"
+#import <objc/runtime.h>
 
 #define SIZE_OF_STATUS_BAR 20.0
 #define DEFAULT_MARGIN_WIDTH 10
@@ -50,7 +51,8 @@ enum{
                                                  name:UIDeviceOrientationDidChangeNotification
                                                object:nil];
 
-    UIWindow* window = [UIApplication sharedApplication].windows[0];
+    UIWindow* window = [[UIApplication sharedApplication].windows lastObject];
+    [window makeKeyAndVisible];
     
     self.cv = [[UIView alloc] initWithFrame:window.frame];
     self.cv.backgroundColor = [UIColor clearColor];
