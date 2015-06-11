@@ -50,7 +50,8 @@ enum{
                                                  name:UIDeviceOrientationDidChangeNotification
                                                object:nil];
 
-    UIWindow* window = [UIApplication sharedApplication].windows[0];
+    UIWindow* window = [[UIApplication sharedApplication].windows lastObject];
+    [window makeKeyAndVisible];
     
     self.cv = [[UIView alloc] initWithFrame:window.frame];
     self.cv.backgroundColor = [UIColor clearColor];
