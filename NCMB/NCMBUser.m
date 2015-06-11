@@ -816,7 +816,9 @@ static BOOL isEnableAutomaticUser = NO;
         dicData = [NSJSONSerialization JSONObjectWithData:data
                                                   options:NSJSONReadingAllowFragments
                                                     error:&error];
-        if ([[dicData allKeys] containsObject:@"data"] && [dicData count] == 1){
+        if ([[dicData allKeys] containsObject:@"data"] &&
+            [[dicData allKeys] containsObject:@"className"] &&
+            [dicData count] == 2){
             //v1の形式でファイルを保存していた場合
             [user afterFetch:[NSMutableDictionary dictionaryWithDictionary:dicData[@"data"]] isRefresh:YES];
         } else {
