@@ -67,40 +67,29 @@
         }
     }
     
-    //currentUserがFacebookアカウントで認証済みかを確認する
-    if ([self isLinkedWithUser:user]){
+    //認証済みでなければ、有効なaccessTokenがあるか確認
+    if ([self isValidFacebookAccessToken:permission]){
         
-        //認証済みであれば、既存のauthDataでmobile backendへのログインを実施
-        NSDictionary *facebookInfo = nil;
-        facebookInfo = [NSDictionary dictionaryWithObject:[[user objectForKey:@"authData"] objectForKey:@"facebook"] forKey:@"facebook"];
+        //有効なaccessTokenがあればそれで会員登録を実施
+        NSDictionary *facebookInfo = [self returnFacebookAuthDataFromAccessToken];
+        
+        //mobile backendへのログインを実施
         [self signUp:user facebookInfo:facebookInfo block:block];
+        
     } else {
         
-        //認証済みでなければ、有効なaccessTokenがあるか確認
-        //if ([FBSDKAccessToken currentAccessToken]){
-        if ([self isValidFacebookAccessToken]){
-            
-            //有効なaccessTokenがあればそれで会員登録を実施
-            NSDictionary *facebookInfo = [self returnFacebookAuthDataFromAccessToken];
-            
-            //mobile backendへのログインを実施
-            [self signUp:user facebookInfo:facebookInfo block:block];
-            
+        //なければFacebookLoginを実施
+        if (readPermissionFlag){
+            [self logInToFacebook:user
+               withReadPermission:permission
+                            block:block];
         } else {
-            
-            //なければFacebookLoginを実施
-            if (readPermissionFlag){
-                [self logInToFacebook:user
-                   withReadPermission:permission
-                                block:block];
-            } else {
-                [self logInToFacebook:user
-                   withPublishPermission:permission
-                                block:block];
-            }
+            [self logInToFacebook:user
+            withPublishPermission:permission
+                            block:block];
         }
-        
     }
+
 }
 
 + (void)logInWithReadPermission:(NSArray *)readPermission block:(NCMBUserResultBlock)block{
@@ -435,20 +424,31 @@ withPublishingPermission:(NSArray *)readPermission
 
 /**
  有効なFacebook Access Tokenがないかをチェックする
+ @param permissions 要求しているFacebook APIのパーミッション
  @return 有効なFacebook Access Tokenがある場合はYESを返す
  */
-+ (BOOL)isValidFacebookAccessToken{
++ (BOOL)isValidFacebookAccessToken:(NSArray*)permissions{
 
 #if __has_include(<FacebookSDK/FacebookSDK.h>)
     FBSession *session = [FBSession activeSession];
     if(session.state == FBSessionStateOpen && session.accessTokenData != nil){
+        FBAccessTokenData *token = session.accessTokenData;
+        if ([token.permissions containsObject:permissions]) {
+            return YES;
+        }
 #else
     if([FBSDKAccessToken currentAccessToken] != nil){
-#endif
+        FBSDKAccessToken *token = [FBSDKAccessToken currentAccessToken];
+        for (NSString *permissionStr in permissions) {
+            if (![token.permissions containsObject:permissionStr]) {
+                return NO;
+            }
+        }
         return YES;
-    } else {
-        return NO;
+        
+#endif
     }
+    return NO;
 }
 
 /**
