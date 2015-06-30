@@ -494,7 +494,11 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
     //同期通信を実行
     NSDictionary *response = [connect syncConnection:error];
     NSMutableArray *results = [NSMutableArray arrayWithArray:[response objectForKey:@"results"]];
-    return [NCMBObject objectWithClassName:_ncmbClassName data:results[0]];
+    if ([results count] == 0){
+        return nil;
+    } else {
+        return [NCMBObject objectWithClassName:_ncmbClassName data:results[0]];
+    }
 }
 
 - (void)getObjectInBackgroundWithId:(NSString *)objectId block:(NCMBObjectResultBlock)block{
@@ -505,7 +509,11 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         NSDictionary *responseDic = response;
         NSMutableArray *results = [NSMutableArray arrayWithArray:[responseDic objectForKey:@"results"]];
         if (block){
-            block([NCMBObject objectWithClassName:_ncmbClassName data:results[0]], error);
+            if ([results count] == 0){
+                block(nil, error);
+            } else {
+                block([NCMBObject objectWithClassName:_ncmbClassName data:results[0]], error);
+            }
         }
     }];
 }
