@@ -16,6 +16,7 @@
 
 #import "NCMBRichPushView.h"
 #import "NCMBCloseImageView.h"
+#import "NCMBPush.h"
 
 #define SIZE_OF_STATUS_BAR 20.0
 #define DEFAULT_MARGIN_WIDTH 10
@@ -205,9 +206,21 @@ enum{
     [[UIDevice currentDevice]endGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter]removeObserver:self];
     [self.uv removeFromSuperview];
+    [self.wv removeFromSuperview];
     [self.cv removeFromSuperview];
     self.uv = nil;
+    self.wv = nil;
     self.cv = nil;
+    
+    // define selector
+    SEL selector = NSSelectorFromString(@"resetRichPushView");
+    // get method signeture
+    NSMethodSignature* signature = [[NCMBPush class] methodSignatureForSelector: selector];
+    // make NSInvocation instance
+    NSInvocation* invocation = [ NSInvocation invocationWithMethodSignature: signature ];
+    [invocation setSelector:selector];
+    [invocation setTarget:[NCMBPush class]];
+    [invocation invoke];
 }
 
 -(void)startWebViewLoading{
