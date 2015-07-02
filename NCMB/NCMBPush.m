@@ -146,13 +146,19 @@ static NCMBRichPushView *rv;
     NSString *urlStr = [userInfo objectForKey:@"com.nifty.RichUrl"];
     
     if ([urlStr isKindOfClass:[NSString class]]) {
-        rv = [[NCMBRichPushView alloc]init];
-        UIInterfaceOrientation orientation = [[UIApplication sharedApplication]statusBarOrientation];
-        [rv appearWebView:orientation url:urlStr];
+        if (rv == nil){
+            rv = [[NCMBRichPushView alloc]init];
+            UIInterfaceOrientation orientation = [[UIApplication sharedApplication]statusBarOrientation];
+            [rv appearWebView:orientation url:urlStr];
+        }
         NSURL *url = [NSURL URLWithString:urlStr];
         NSURLRequest *req = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:5];
         [rv loadRequest:req];
     }
+}
+
++ (void) resetRichPushView {
+    rv = nil;
 }
 
 #pragma mark - push notification configuration
