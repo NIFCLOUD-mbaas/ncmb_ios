@@ -147,7 +147,6 @@ static NCMBRichPushView *rv;
     
     if ([urlStr isKindOfClass:[NSString class]]) {
         if (rv == nil){
-            [rv closeWebView:nil];
             rv = [[NCMBRichPushView alloc]init];
             UIInterfaceOrientation orientation = [[UIApplication sharedApplication]statusBarOrientation];
             [rv appearWebView:orientation url:urlStr];
