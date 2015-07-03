@@ -21,13 +21,14 @@
 
 ## 動作環境
 
-- iOS 5.1 〜 iOS 8.4.x
- - iOS5.1でSDKを利用する場合は、framework形式を利用してください。
+- iOS 5.1 〜 iOS 8.4
 - Xcode6.x
 - armv7, armv7s, arm64アーキテクチャ
 - Facebookアカウントでの会員登録機能を利用する場合は、[Facebook iOS SDK](https://developers.facebook.com/docs/ios)が必要です。
  - Facebook iOS SDKのv4.xはiOS7以上、v3.xはiOS6以上に依存しています。
  - サポートしたいOSバージョンによって使用するFacebook iOS SDKのバージョンを指定してください。
+- Googleアカウントでの会員登録機能を利用する場合は、[Google Sign-in for iOS](https://developers.google.com/identity/sign-in/ios/)の設定が必要です。
+
 
 ## ライセンス
 
