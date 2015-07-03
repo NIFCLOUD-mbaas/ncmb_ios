@@ -544,6 +544,9 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 +(NCMBUser*)getUserObjectWithId:(NSString *)objectId error:(NSError **)error{
     NCMBQuery *query = [NCMBQuery queryWithClassName:@"user"];
     NCMBObject *userObj = [query getObjectWithId:objectId error:error];
+    if (userObj == nil){
+        return nil;
+    }
     NCMBUser *user = [NCMBUser user];
     if ([[userObj allKeys] containsObject:@"userName"]){
         user.userName = [userObj objectForKey:@"userName"];
