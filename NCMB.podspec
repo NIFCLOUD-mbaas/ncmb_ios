@@ -15,8 +15,16 @@ Pod::Spec.new do |s|
   s.license      = "Apache License, Version 2.0"
   s.author             = "NIFTY Corporation"
   s.platform     = :ios, "5.1"
+  s.subspec 'Core' do |cs|
+    s.source_files  = "NCMB/Core/**/*.{h,m,c}"
+  end
+  s.subspec 'FacebookUtils' do |cs|
+    s.source_files  = "NCMB/FacebookUtils/**/*.{h,m,c}"
+  end
+  s.subspec 'GoogleUtils' do |cs|
+    s.source_files  = "NCMB/GoogleUtils/**/*.{h,m,c}"
+  end
   s.source       = { :git => 'https://github.com/NIFTYCloud-mbaas/ncmb_ios.git', :tag => 'v2.2.1' }
-  s.source_files  = "NCMB/**/*.{h,m,c}"
   s.frameworks = "Foundation", "UIKit", "MobileCoreServices", "AudioToolbox", "SystemConfiguration"
   s.requires_arc = true
 end
