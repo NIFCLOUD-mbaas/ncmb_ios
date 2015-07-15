@@ -26,15 +26,6 @@
 #import "NCMBObject+Subclass.h"
 #import "NCMBRelation+Private.h"
 
-#if defined(__has_include)
-#if __has_include(<FacebookSDK/FacebookSDK.h>) || __has_include(<FBSDKLoginKit/FBSDKLoginKit.h>)
-#import "NCMBFacebookUtils+Private.h"
-#endif
-#if __has_include(<GoogleSignIn/GoogleSignIn.h>)
-#import "NCMBGoogleUtils+Private.h"
-#endif
-#endif
-
 
 @implementation NCMBUser
 #define DATA_MAIN_PATH [NSHomeDirectory() stringByAppendingPathComponent:@"Library/"]
@@ -755,6 +746,8 @@ static BOOL isEnableAutomaticUser = NO;
         currentUser.sessionToken = nil;
         currentUser = nil;
     }
+    //TODO:SNS連携時のログアウト処理実行
+/*
 #if __has_include(<FacebookSDK/FacebookSDK.h>) || __has_include(<FBSDKLoginKit/FBSDKLoginKit.h>)
     
     //Facebookのセッションを削除
@@ -764,6 +757,7 @@ static BOOL isEnableAutomaticUser = NO;
     //Googleのセッションを削除
     [NCMBGoogleUtils clearGoogleSession];
 #endif
+ */
     if ([[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTUSER_PATH isDirectory:nil]) {
         [[NSFileManager defaultManager] removeItemAtPath:DATA_CURRENTUSER_PATH error:nil];
     }
