@@ -1,11 +1,28 @@
-target :NCMB do
+source 'https://github.com/CocoaPods/Specs.git'
+
+target :CoreTest do
+  pod 'NCMB/Core', :path => '../'
+
+  pod 'Specta'
+  pod 'Expecta'
+  pod 'OHHTTPStubs'
 end
 
-target :NCMBTest do
-  pod 'Specta', '~> 0.5'
-  # pod 'Expecta',     '~> 0.3'   # expecta matchers
-  # pod 'OCMock',      '~> 2.2'   # OCMock
-  # pod 'OCHamcrest',  '~> 3.0'   # hamcrest matchers
-  # pod 'OCMockito',   '~> 1.0'   # OCMock
-  # pod 'LRMocky',     '~> 0.9'   # LRMocky
+target :FacebookUtilsTest do
+  pod 'NCMB/FacebookUtils', :path => '../'
+  pod 'FBSDKCoreKit', '~> 4.1.0'
+  pod 'FBSDKLoginKit', '~> 4.1.0'
+
+  pod 'Specta'
+  pod 'Expecta'
+  pod 'OHHTTPStubs'
+end
+
+target :GoogleUtilsTest do
+  pod 'NCMB/GoogleUtils', :path => '../'
+  pod 'Google/SignIn'
+
+  pod 'Specta'
+  pod 'Expecta'
+  pod 'OHHTTPStubs'
 end
