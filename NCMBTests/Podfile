@@ -5,6 +5,7 @@ target :CoreTest do
 
   pod 'Specta'
   pod 'Expecta'
+  pod 'OHHTTPStubs'
 end
 
 target :FacebookUtilsTest do
@@ -14,6 +15,7 @@ target :FacebookUtilsTest do
 
   pod 'Specta'
   pod 'Expecta'
+  pod 'OHHTTPStubs'
 end
 
 target :GoogleUtilsTest do
@@ -22,4 +24,5 @@ target :GoogleUtilsTest do
 
   pod 'Specta'
   pod 'Expecta'
+  pod 'OHHTTPStubs'
 end
