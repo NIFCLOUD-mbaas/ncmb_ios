@@ -21,8 +21,10 @@
 
 ## 動作環境
 
-- iOS 5.1 〜 iOS 8.4
-- Xcode6.x
+- iOS 5.1 〜 iOS 9.x
+ - SNS連携を利用する場合にiOS 9向けの対応を実施する必要があります
+ - [SDKガイド:SNS連携](http://mb.cloud.nifty.com/doc/current/sdkguide/ios/sns.html#iOS%209対応について)をご覧ください。
+- Xcode6.x、Xcode7.x
 - armv7, armv7s, arm64アーキテクチャ
 - Facebookアカウントでの会員登録機能を利用する場合は、[Facebook iOS SDK](https://developers.facebook.com/docs/ios)が必要です。
  - Facebook iOS SDKのv4.xはiOS7以上、v3.xはiOS6以上に依存しています。
