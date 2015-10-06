@@ -23,9 +23,9 @@
 #import "NCMBURLConnection.h"
 #import "NCMBTwitterLoginView.h"
 
-#define AUTHORIZE_URL @"https://twitter.com/oauth/authorize"
+#define AUTHORIZE_URL @"https://api.twitter.com/oauth/authorize"
 #define REQUEST_TOKEN_URL @"https://api.twitter.com/oauth/request_token"
-#define TOKEN_FORMAT_URL @"https://twitter.com/oauth/authorize?oauth_token=%@"
+#define TOKEN_FORMAT_URL @"https://api.twitter.com/oauth/authorize?oauth_token=%@"
 
 #define SIGNATURE_METHOD @"HMAC-SHA1"
 #define OAUTH_VERSION @"1.0"
@@ -282,6 +282,7 @@ enum{
 shouldStartLoadWithRequest:(NSURLRequest*) request
   navigationType:(UIWebViewNavigationType) navigationType
 {
+    
     // WebView内でリンクをクリックした際に、認証と無関係な遷移を捕捉してSafariで開く処理
     if (navigationType == UIWebViewNavigationTypeLinkClicked) {
         NSRange range = [[request.URL absoluteString] rangeOfString:@"https://api.twitter.com/"];
@@ -331,7 +332,7 @@ shouldStartLoadWithRequest:(NSURLRequest*) request
     if([[params allKeys] containsObject:@"oauth_verifier"]){
         NSString* oauth_verifier = params[@"oauth_verifier"];
         [self requestOAuthAccessTokenWithVerifier:oauth_verifier];
-        return YES;
+        return NO;
     }
     
     return YES;
