@@ -282,7 +282,6 @@ enum{
 shouldStartLoadWithRequest:(NSURLRequest*) request
   navigationType:(UIWebViewNavigationType) navigationType
 {
-    
     // WebView内でリンクをクリックした際に、認証と無関係な遷移を捕捉してSafariで開く処理
     if (navigationType == UIWebViewNavigationTypeLinkClicked) {
         NSRange range = [[request.URL absoluteString] rangeOfString:@"https://api.twitter.com/"];
@@ -320,6 +319,12 @@ shouldStartLoadWithRequest:(NSURLRequest*) request
             return NO;
         }
 
+    }
+    
+    //iOS9かつ、一度Twitter認証で失敗して、/login/errorにアクセスしようとしている場合をエラーとする
+    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_3 &&
+        [[request.URL absoluteString] containsString:@"https://api.twitter.com/login/error"]) {
+        return NO;
     }
     
     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithCapacity:0];
