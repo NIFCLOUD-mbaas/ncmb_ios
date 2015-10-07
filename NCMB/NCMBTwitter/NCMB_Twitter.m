@@ -322,7 +322,7 @@ shouldStartLoadWithRequest:(NSURLRequest*) request
     }
     
     //iOS9かつ、一度Twitter認証で失敗して、/login/errorにアクセスしようとしている場合をエラーとする
-    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_3 &&
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0 &&
         [[request.URL absoluteString] containsString:@"https://api.twitter.com/login/error"]) {
         return NO;
     }
