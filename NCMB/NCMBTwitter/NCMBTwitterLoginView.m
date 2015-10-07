@@ -212,7 +212,7 @@ enum{
     UIView* bg = [self.webView viewWithTag:ActivityIndicatorBackgroundTag];
     [bg removeFromSuperview];
     
-    NSString *html = @"<html><body><h1>ページを開けません。</h1></body></html>";
+    NSString *html = @"<html><body><h1>Twitterアカウントでのログインに失敗しました。<br/>ポップアップ画面を閉じて、ログインをもう一度行ってください。</h1></body></html>";
     NSData *bodyData = [html dataUsingEncoding:NSUTF8StringEncoding];
     [self.webView loadData:bodyData MIMEType:@"text/html" textEncodingName:@"utf-8" baseURL:nil];
 }

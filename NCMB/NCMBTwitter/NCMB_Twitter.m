@@ -23,9 +23,9 @@
 #import "NCMBURLConnection.h"
 #import "NCMBTwitterLoginView.h"
 
-#define AUTHORIZE_URL @"https://twitter.com/oauth/authorize"
+#define AUTHORIZE_URL @"https://api.twitter.com/oauth/authorize"
 #define REQUEST_TOKEN_URL @"https://api.twitter.com/oauth/request_token"
-#define TOKEN_FORMAT_URL @"https://twitter.com/oauth/authorize?oauth_token=%@"
+#define TOKEN_FORMAT_URL @"https://api.twitter.com/oauth/authorize?oauth_token=%@"
 
 #define SIGNATURE_METHOD @"HMAC-SHA1"
 #define OAUTH_VERSION @"1.0"
@@ -321,6 +321,12 @@ shouldStartLoadWithRequest:(NSURLRequest*) request
 
     }
     
+    //iOS9かつ、一度Twitter認証で失敗して、/login/errorにアクセスしようとしている場合をエラーとする
+    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_3 &&
+        [[request.URL absoluteString] containsString:@"https://api.twitter.com/login/error"]) {
+        return NO;
+    }
+    
     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithCapacity:0];
     NSArray *pairs = [[[request URL] query] componentsSeparatedByString:@"&"];
     for (NSString *pair in pairs) {
@@ -331,7 +337,7 @@ shouldStartLoadWithRequest:(NSURLRequest*) request
     if([[params allKeys] containsObject:@"oauth_verifier"]){
         NSString* oauth_verifier = params[@"oauth_verifier"];
         [self requestOAuthAccessTokenWithVerifier:oauth_verifier];
-        return YES;
+        return NO;
     }
     
     return YES;
