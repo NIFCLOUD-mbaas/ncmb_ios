@@ -164,7 +164,7 @@ static NCMBReachability *ncmbReachability = nil;
         NSError *error = nil;
         [connect syncConnection:&error] ;
         if (error){
-            if (error.code == -1009){
+            if (error.code == NSURLErrorNotConnectedToInternet || error.code == NSURLErrorNetworkConnectionLost){
                 //オフライン時はファイルを復元する
                 [data writeToFile:[NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, fileName] options:NSDataWritingAtomic error:nil];
             }
