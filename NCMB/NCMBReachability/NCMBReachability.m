@@ -69,10 +69,6 @@ static NCMBReachability *ncmbReachability = nil;
  ニフティクラウドを指定して、インターネット接続確認用のリファレンスを作成
  */
 - (NCMBReachability *)init{
-    struct sockaddr_in zeroAddress;
-    bzero(&zeroAddress, sizeof(zeroAddress));
-    zeroAddress.sin_len = sizeof(zeroAddress);
-    zeroAddress.sin_family = AF_INET;
     self->internetReachabilityRef = SCNetworkReachabilityCreateWithName(NULL, [kHostName UTF8String]);
     return self;
 }
