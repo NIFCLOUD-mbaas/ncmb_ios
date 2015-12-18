@@ -133,6 +133,7 @@ static NCMBReachability *ncmbReachability = nil;
 
 /**
  ファイルに書き出された処理を実行する
+ ファイル削除後にオフラインになっていた場合はファイル復元を復元する
  */
 - (void)excecuteCommand:(NSString*)fileName{
     //非同期で更新された電波状況を見て、通信可能であればファイルの処理を実行
@@ -153,22 +154,21 @@ static NCMBReachability *ncmbReachability = nil;
                                                          error:&error];
         }
         
+        //ファイルを削除する
+        [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, fileName] error:nil];
         
         //APIリクエスト用コネクションを作成
         NCMBURLConnection *connect = [[NCMBURLConnection new] initWithPath:url method:method data:saveData];
         
         //同期通信を実行
         NSError *error = nil;
-        [connect syncConnection:&error];
-        NSError *deleteError = nil;
+        [connect syncConnection:&error] ;
         if (error){
-            if (error.code != -1009){
-                //オフラインエラーだった場合は再実行のためにファイルを残す
-                [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, fileName] error:&deleteError];
+            if (error.code == -1009){
+                //オフライン時はファイルを復元する
+                [data writeToFile:[NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, fileName] options:NSDataWritingAtomic error:nil];
             }
-        } else {
-            //エラーがない場合の処理ファイル削除
-            [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, fileName] error:&deleteError];
+
         }
     }
 }
