@@ -23,6 +23,8 @@
 #import <ifaddrs.h>
 #import <net/if.h>
 
+static NSString *const kHostName = @"mb.api.cloud.nifty.com";
+
 /**
  通信状況が変化した際に呼び出されるコールバックメソッド
  */
@@ -64,15 +66,14 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
 static NCMBReachability *ncmbReachability = nil;
 
 /**
- 0.0.0.0を指定して、インターネット接続確認用のリファレンスを作成
+ ニフティクラウドを指定して、インターネット接続確認用のリファレンスを作成
  */
 - (NCMBReachability *)init{
     struct sockaddr_in zeroAddress;
     bzero(&zeroAddress, sizeof(zeroAddress));
     zeroAddress.sin_len = sizeof(zeroAddress);
     zeroAddress.sin_family = AF_INET;
-    self->internetReachabilityRef = SCNetworkReachabilityCreateWithAddress(NULL,
-                                                                           (struct sockaddr *)&zeroAddress);
+    self->internetReachabilityRef = SCNetworkReachabilityCreateWithName(NULL, [kHostName UTF8String]);
     return self;
 }
 
@@ -83,7 +84,7 @@ static NCMBReachability *ncmbReachability = nil;
     @synchronized(self){
         if (!ncmbReachability){
             ncmbReachability = [[NCMBReachability alloc] init];
-            [ncmbReachability reachabilityWithHostName:@"mb.api.cloud.nifty.com"];
+            [ncmbReachability reachabilityWithHostName:kHostName];
         }
     }
     return ncmbReachability;
