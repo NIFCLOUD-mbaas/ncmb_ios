@@ -135,37 +135,42 @@ static NCMBReachability *ncmbReachability = nil;
 - (void)excecuteCommand:(NSString*)fileName{
     //非同期で更新された電波状況を見て、通信可能であればファイルの処理を実行
     if ([self isReachableToTarget]){
-    //if ((reachabilityFlags & kSCNetworkReachabilityFlagsReachable) == kSCNetworkReachabilityFlagsReachable){
-        //各ファイルから処理内容を取り出す
-        NSData *data = [NSData dataWithContentsOfFile:[NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, fileName]];
-        NSDictionary *dictForEventually = [NSKeyedUnarchiver unarchiveObjectWithData:data];
         
-        NSString *url = [dictForEventually objectForKey:@"path"];
-        NSString *method = [dictForEventually objectForKey:@"method"];
-        NSData *saveData = nil;
-        if ([[dictForEventually allKeys] containsObject:@"saveData"]){
-            NSDictionary *saveDic = [dictForEventually objectForKey:@"saveData"];
-            NSError *error = nil;
-            saveData = [NSJSONSerialization dataWithJSONObject:saveDic
-                                                       options:kNilOptions
-                                                         error:&error];
-        }
-        
-        //ファイルを削除する
-        [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, fileName] error:nil];
-        
-        //APIリクエスト用コネクションを作成
-        NCMBURLConnection *connect = [[NCMBURLConnection new] initWithPath:url method:method data:saveData];
-        
-        //同期通信を実行
-        NSError *error = nil;
-        [connect syncConnection:&error] ;
-        if (error){
-            if (error.code == NSURLErrorNotConnectedToInternet || error.code == NSURLErrorNetworkConnectionLost){
-                //オフライン時はファイルを復元する
-                [data writeToFile:[NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, fileName] options:NSDataWritingAtomic error:nil];
+        NSFileManager *fileManager = [[NSFileManager alloc] init];
+        NSString *filePath = [NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, fileName];
+        if ([fileManager fileExistsAtPath:filePath]) {
+            
+            //各ファイルから処理内容を取り出す
+            NSData *data = [NSData dataWithContentsOfFile:filePath];
+            NSDictionary *dictForEventually = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            
+            NSString *url = [dictForEventually objectForKey:@"path"];
+            NSString *method = [dictForEventually objectForKey:@"method"];
+            NSData *saveData = nil;
+            if ([[dictForEventually allKeys] containsObject:@"saveData"]){
+                NSDictionary *saveDic = [dictForEventually objectForKey:@"saveData"];
+                NSError *error = nil;
+                saveData = [NSJSONSerialization dataWithJSONObject:saveDic
+                                                           options:kNilOptions
+                                                             error:&error];
             }
-
+            
+            //ファイルを削除する
+            [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, fileName] error:nil];
+            
+            //APIリクエスト用コネクションを作成
+            NCMBURLConnection *connect = [[NCMBURLConnection new] initWithPath:url method:method data:saveData];
+            
+            //同期通信を実行
+            NSError *error = nil;
+            [connect syncConnection:&error] ;
+            if (error){
+                if (error.code == NSURLErrorNotConnectedToInternet || error.code == NSURLErrorNetworkConnectionLost){
+                    //オフライン時はファイルを復元する
+                    [data writeToFile:[NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, fileName] options:NSDataWritingAtomic error:nil];
+                }
+                
+            }
         }
     }
 }
