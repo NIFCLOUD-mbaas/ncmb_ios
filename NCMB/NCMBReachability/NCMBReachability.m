@@ -66,7 +66,7 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
 static NCMBReachability *ncmbReachability = nil;
 
 /**
- ニフティクラウドを指定して、インターネット接続確認用のリファレンスを作成
+ APIのエンドポイントを指定して、インターネット接続確認用のリファレンスを作成
  */
 - (NCMBReachability *)init{
     self->internetReachabilityRef = SCNetworkReachabilityCreateWithName(NULL, [kHostName UTF8String]);
