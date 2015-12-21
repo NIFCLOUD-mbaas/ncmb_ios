@@ -122,7 +122,7 @@ static NCMBReachability *ncmbReachability = nil;
             ncmbReachability = nil;
         } else {
             for (NSString *fileName in contents){
-                [self excecuteCommand:fileName];
+                [self executeCommand:fileName];
             }
         }
     });
@@ -132,7 +132,7 @@ static NCMBReachability *ncmbReachability = nil;
  ファイルに書き出された処理を実行する
  ファイル削除後にオフラインになっていた場合はファイル復元を復元する
  */
-- (void)excecuteCommand:(NSString*)fileName{
+- (void)executeCommand:(NSString*)fileName{
     //非同期で更新された電波状況を見て、通信可能であればファイルの処理を実行
     if ([self isReachableToTarget]){
         
