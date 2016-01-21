@@ -30,6 +30,7 @@
 #import "NCMBUser.h"
 #import "NCMBFile.h"
 #import "NCMBTwitterUtils.h"
+#import "NCMBScript.h"
 
 
 #if defined(__has_include)

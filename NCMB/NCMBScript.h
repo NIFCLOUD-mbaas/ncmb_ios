@@ -1,5 +1,5 @@
 /*
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2016 NIFTY Corporation All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -13,3 +13,23 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
+
+#import <Foundation/Foundation.h>
+#import "NCMBScriptService.h"
+
+
+@interface NCMBScript : NSObject
+
+@property NCMBScriptService* service;
+
+@property NSString *scriptName;
+
+@property NCMBScriptRequestMethod method;
+
++ (instancetype)scriptWithName:(NSString*)name method:(NCMBScriptRequestMethod)method;
+
+- (NSData *)execute:(NSData*)data error:(NSError**)error;
+
+- (void)execute:(NSData *)data withBlock:(NCMBScriptExecuteCallback)block;
+
+@end

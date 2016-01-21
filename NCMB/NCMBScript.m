@@ -1,0 +1,50 @@
+/*
+ Copyright 2016 NIFTY Corporation All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
+
+#import "NCMBScript.h"
+
+@implementation NCMBScript
+
+- (instancetype)initWithName:(NSString*)name method:(NCMBScriptRequestMethod)method{
+    self = [super init];
+    _service = [[NCMBScriptService alloc] init];
+    _scriptName = name;
+    _method = method;
+    return self;
+}
+
++ (instancetype)scriptWithName:(NSString * __nonnull)name method:(NCMBScriptRequestMethod)method{
+    if (name == nil){
+        [NSException raise:NSInvalidArgumentException format:@"script name must not be nil."];
+    }
+    if (method != NCMBSCRIPT_GET &&
+        method != NCMBSCRIPT_POST &&
+        method != NCMBSCRIPT_PUT &&
+        method != NCMBSCRIPT_DELETE) {
+        [NSException raise:NSInvalidArgumentException format:@"invalid request method."];
+    }
+    return [[NCMBScript alloc] initWithName:name method:method];
+}
+
+- (NSData*)execute:(NSData *)data error:(NSError**)error {
+    return [_service executeScript:data error:error];
+}
+
+- (void)execute:(NSData *)data withBlock:(NCMBScriptExecuteCallback)block {
+    [_service executeScript:data withBlock:block];
+}
+
+@end
