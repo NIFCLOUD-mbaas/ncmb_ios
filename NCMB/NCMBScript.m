@@ -18,15 +18,26 @@
 
 @implementation NCMBScript
 
-- (instancetype)initWithName:(NSString*)name method:(NCMBScriptRequestMethod)method{
+- (instancetype)initWithName:(NSString*)name method:(NCMBScriptRequestMethod)method endpoint:(NSString *)endpoint{
+    if (endpoint != nil) {
+        _service = [[NCMBScriptService alloc] initWithEndpoint:endpoint];
+    } else {
+        _service = [[NCMBScriptService alloc] init];
+    }
     self = [super init];
-    _service = [[NCMBScriptService alloc] init];
     _scriptName = name;
     _method = method;
     return self;
 }
 
 + (instancetype)scriptWithName:(NSString * __nonnull)name method:(NCMBScriptRequestMethod)method{
+    return [self scriptWithName:name method:method endpoint:nil];
+}
+
++ (instancetype)scriptWithName:(NSString *)name
+                        method:(NCMBScriptRequestMethod)method
+                      endpoint:(NSString *)endpoint
+{
     if (name == nil){
         [NSException raise:NSInvalidArgumentException format:@"script name must not be nil."];
     }
@@ -36,15 +47,21 @@
         method != NCMBSCRIPT_DELETE) {
         [NSException raise:NSInvalidArgumentException format:@"invalid request method."];
     }
-    return [[NCMBScript alloc] initWithName:name method:method];
+    return [[NCMBScript alloc] initWithName:name method:method endpoint:endpoint];
 }
 
 - (NSData*)execute:(NSData *)data error:(NSError**)error {
     return [_service executeScript:data error:error];
 }
 
-- (void)execute:(NSData *)data withBlock:(NCMBScriptExecuteCallback)block {
-    [_service executeScript:data withBlock:block];
+- (void)execute:(NSData *)data
+queryDictionary:(NSDictionary *)queryDictionary
+      withBlock:(NCMBScriptExecuteCallback)block {
+    [_service executeScript:_scriptName
+                     method:_method
+                      param:data
+                 queryParam:queryDictionary
+                  withBlock:block];
 }
 
 @end

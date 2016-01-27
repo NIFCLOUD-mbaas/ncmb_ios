@@ -16,6 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "NCMBRequest.h"
+
 typedef NS_ENUM(NSUInteger, NCMBScriptRequestMethod) {
     NCMBSCRIPT_GET,
     NCMBSCRIPT_POST,
@@ -23,18 +25,28 @@ typedef NS_ENUM(NSUInteger, NCMBScriptRequestMethod) {
     NCMBSCRIPT_DELETE
 };
 
+extern NSString *const defaultEndPoint;
+extern NSString *const apiVersion;
+extern NSString *const servicePath;
+
 typedef void (^NCMBScriptExecuteCallback) (NSData *data, NSError *error);
 
 @interface NCMBScriptService : NSObject
 
-@property NSURLRequest *request;
+@property NSString *endpoint;
+
+@property NCMBRequest *request;
 
 @property NSURLSession *session;
 
-- (instancetype)initWithScriptName:(NSString*)name method:(NCMBScriptRequestMethod)method;
+- (instancetype)initWithEndpoint:(NSString *)endpoint;
 
 - (NSData *)executeScript:(NSData*)data error:(NSError**)error;
 
-- (void)executeScript:(NSData *)data withBlock:(NCMBScriptExecuteCallback)block;
+- (void)executeScript:(NSString *)name
+               method:(NCMBScriptRequestMethod)method
+                param:(NSData *)param
+           queryParam:(NSDictionary *)queryParam
+            withBlock:(NCMBScriptExecuteCallback)callback;
 
 @end

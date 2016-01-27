@@ -28,8 +28,14 @@
 
 + (instancetype)scriptWithName:(NSString*)name method:(NCMBScriptRequestMethod)method;
 
++ (instancetype)scriptWithName:(NSString *)name
+                        method:(NCMBScriptRequestMethod)method
+                      endpoint:(NSString *)endpoint;
+
 - (NSData *)execute:(NSData*)data error:(NSError**)error;
 
-- (void)execute:(NSData *)data withBlock:(NCMBScriptExecuteCallback)block;
+- (void)execute:(NSData *)data
+queryDictionary:(NSDictionary *)queryDictionary
+      withBlock:(NCMBScriptExecuteCallback)block;
 
 @end

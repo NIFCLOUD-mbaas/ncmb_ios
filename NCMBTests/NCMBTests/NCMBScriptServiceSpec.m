@@ -24,12 +24,46 @@ SpecBegin(NCMBScriptService)
 
 describe(@"NCMBScriptService", ^{
     
+    //Dummy API key from mobile backend document
+    NSString *applicationKey = @"6145f91061916580c742f806bab67649d10f45920246ff459404c46f00ff3e56";
+    NSString *clientKey = @"1343d198b510a0315db1c03f3aa0e32418b7a743f8e4b47cbff670601345cf75";
     beforeAll(^{
-
+        [NCMB setApplicationKey:applicationKey
+                      clientKey:clientKey];
     });
     
     beforeEach(^{
 
+    });
+    
+    it (@"should set default endpoint", ^{
+        NCMBScriptService *service = [[NCMBScriptService alloc]init];
+        expect(service.endpoint).to.equal(@"https://logic.mb.api.cloud.nifty.com");
+    });
+    
+    it (@"should return specified endpoint and request url",^{
+        NCMBScriptService *service = [[NCMBScriptService alloc] initWithEndpoint:@"http://localhost"];
+        expect(service.endpoint).to.equal(@"http://localhost");
+    });
+    
+    it (@"should create request", ^{
+        
+        NCMBScriptService *service = [[NCMBScriptService alloc] init];
+        
+        [service executeScript:@"testScript.js"
+                        method:NCMBSCRIPT_GET
+                         param:nil
+                    queryParam:@{@"where":@{@"testKey":@"testValue"}}
+                     withBlock:nil];
+        
+        NSString *expectStr = [NSString stringWithFormat:@"%@/%@/%@/%@?%@",
+                               defaultEndPoint,
+                               apiVersion,
+                               servicePath,
+                               @"testScript.js",
+                               @"where=%7B%22testKey%22%3A%22testValue%22%7D"];
+        expect(service.request.URL.absoluteString).to.equal(expectStr);
+        
     });
     
     it(@"should run callback response of execute asynchronously script in GET method", ^{
@@ -76,11 +110,14 @@ describe(@"NCMBScriptService", ^{
             OCMStub([[mockSession dataTaskWithRequest:OCMOCK_ANY
                                    completionHandler:OCMOCK_ANY] resume]).andDo(invocation);
             
-            NCMBScriptService *service = [[NCMBScriptService alloc] initWithScriptName:@"testScript.js"
-                                                                        method:NCMBSCRIPT_GET];
+            NCMBScriptService *service = [[NCMBScriptService alloc] init];
             
             service.session = mockSession;
-            [service executeScript:nil withBlock:callbackBlock];
+            [service executeScript:@"testScript.js"
+                            method:NCMBSCRIPT_GET
+                             param:nil
+                        queryParam:nil
+                         withBlock:callbackBlock];
         });
         
     });
