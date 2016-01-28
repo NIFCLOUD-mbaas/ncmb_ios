@@ -46,7 +46,7 @@ describe(@"NCMBScriptService", ^{
         expect(service.endpoint).to.equal(@"http://localhost");
     });
     
-    it (@"should create request", ^{
+    it (@"should create request with specified parameters", ^{
         
         NCMBScriptService *service = [[NCMBScriptService alloc] init];
         
@@ -66,7 +66,7 @@ describe(@"NCMBScriptService", ^{
         
     });
     
-    it(@"should run callback response of execute asynchronously script in GET method", ^{
+    it(@"should run callback response of execute asynchronously script", ^{
         waitUntil(^(DoneCallback done) {
             
             __block NSData *resultData = nil;
@@ -96,7 +96,7 @@ describe(@"NCMBScriptService", ^{
                 
                 
                 NSURL *url = [NSURL URLWithString:@"http://sample.com"];
-                NSDictionary *resDic = @{@"Content-Type":@"application/json"};
+                NSDictionary *resDic = @{@"Content-Type":@"text/plane"};
                 
                 NSHTTPURLResponse *res = [[NSHTTPURLResponse alloc] initWithURL:url
                                                                      statusCode:200
@@ -120,6 +120,62 @@ describe(@"NCMBScriptService", ^{
                          withBlock:callbackBlock];
         });
         
+    });
+    
+    it(@"should return error in callback", ^{
+        waitUntil(^(DoneCallback done) {
+            
+            NCMBScriptExecuteCallback callbackBlock = ^(NSData *result, NSError *error){
+                if (error) {
+                    expect(error.code).to.equal(@404);
+                    expect([error.userInfo objectForKey:NSLocalizedDescriptionKey]).to.equal(@"Not Found");
+                } else {
+                    failure(@"This shnould not happen");
+                }
+                
+                done();
+            };
+            
+            NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+            NSURLSession *session = [NSURLSession sessionWithConfiguration:config
+                                                                  delegate:nil
+                                                             delegateQueue:[NSOperationQueue mainQueue]];
+            
+            id mockSession = OCMPartialMock(session);
+            
+            void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+                __unsafe_unretained void(^completionHandler)(NSData *data, NSURLResponse *res, NSError *error);
+                [invocation getArgument:&completionHandler atIndex:3];
+                
+                
+                NSURL *url = [NSURL URLWithString:@"http://sample.com"];
+                NSDictionary *resDic = @{@"Content-Type":@"application/json"};
+                
+                NSHTTPURLResponse *res = [[NSHTTPURLResponse alloc] initWithURL:url
+                                                                     statusCode:404
+                                                                    HTTPVersion:@"HTTP/1.1"
+                                                                   headerFields:resDic];
+                
+                //invoke completion handler of NSURLSession
+                NSDictionary *errorDic = @{@"error":@"Not Found", @"status":@400};
+                completionHandler([NSJSONSerialization dataWithJSONObject:errorDic
+                                                                  options:kNilOptions
+                                                                    error:nil],
+                                  (NSURLResponse *)res, nil);
+            };
+            
+            OCMStub([[mockSession dataTaskWithRequest:OCMOCK_ANY
+                                    completionHandler:OCMOCK_ANY] resume]).andDo(invocation);
+            
+            NCMBScriptService *service = [[NCMBScriptService alloc] init];
+            
+            service.session = mockSession;
+            [service executeScript:@"testScript.js"
+                            method:NCMBSCRIPT_GET
+                             param:nil
+                        queryParam:nil
+                         withBlock:callbackBlock];
+        });
     });
     
     afterEach(^{

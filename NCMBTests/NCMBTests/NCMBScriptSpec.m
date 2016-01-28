@@ -50,7 +50,7 @@ describe(@"NCMBScript", ^{
         //expect([NCMBScript scriptWithName:@"testScript.js" method:10]).to.raise(NSInvalidArgumentException);
     });
     
-    it(@"should run callback block of execute script asynchronously in GET method", ^{
+    it(@"should run callback block after execute script asynchronously", ^{
         
         waitUntil(^(DoneCallback done) {
             
