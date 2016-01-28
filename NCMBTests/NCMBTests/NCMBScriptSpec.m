@@ -70,7 +70,7 @@ describe(@"NCMBScript", ^{
             
             void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
                 __unsafe_unretained void(^block)(NSData *data, NSError *error);
-                [invocation getArgument:&block atIndex:6];
+                [invocation getArgument:&block atIndex:7];
                 
                 //invoke callback block of NCMBScriptService
                 block([@"hello" dataUsingEncoding:NSUTF8StringEncoding],nil);
@@ -78,15 +78,15 @@ describe(@"NCMBScript", ^{
             
             OCMStub([mockService executeScript:OCMOCK_ANY
                                         method:NCMBSCRIPT_GET
-                                         param:OCMOCK_ANY
-                                    queryParam:OCMOCK_ANY
+                                        header:OCMOCK_ANY
+                                          body:OCMOCK_ANY
+                                         query:OCMOCK_ANY
                                      withBlock:block
                      ]).andDo(invocation);
             
             NCMBScript *script = [NCMBScript scriptWithName:@"testScript.js" method:NCMBSCRIPT_GET];
             script.service = mockService;
-            
-            [script execute:nil queryDictionary:nil withBlock:block];
+            [script execute:nil headers:nil queries:nil withBlock:block];
         });
     });
     

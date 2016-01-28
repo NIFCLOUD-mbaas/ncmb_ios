@@ -28,7 +28,11 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
 
 @implementation NCMBRequest
 
-+(instancetype)requestWithURL:(NSURL *)url method:(NSString *)method HTTPBody:(NSData *)data {
++(instancetype)requestWithURL:(NSURL *)url
+                       method:(NSString *)method
+                       header:(NSDictionary *)headers
+                         body:(NSDictionary *)body
+{
     NCMBRequest *request = [NCMBRequest requestWithURL:url
                                            cachePolicy:NSURLRequestReloadIgnoringCacheData
                                        timeoutInterval:5.0];
@@ -40,8 +44,25 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
                                      method:method
                                   timestamp:timestampStr]
    forHTTPHeaderField:signatureField];
-    if (data != nil) {
-        request.HTTPBody = data;
+    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    if (headers != nil && [headers count] > 0) {
+        for (NSString *key in [headers allKeys]) {
+            if ([key isEqualToString:@"Content-Type"]) {
+                continue;
+            }
+            [request addValue:[headers objectForKey:key] forHTTPHeaderField:key];
+        }
+    }
+    if (body != nil && [body count] > 0) {
+        NSError *error = nil;
+        NSData *bodyData = [NSJSONSerialization dataWithJSONObject:body
+                                                           options:kNilOptions
+                                                             error:&error];
+        if (!error) {
+            request.HTTPBody = bodyData;
+        } else {
+            [NSException raise:NSInvalidArgumentException format:@"body data is invalid json format."];
+        }
     }
     return request;
 }

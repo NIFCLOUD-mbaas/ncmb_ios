@@ -46,17 +46,18 @@ NSString *const servicePath = @"script";
 
 - (void)executeScript:(NSString *)name
                method:(NCMBScriptRequestMethod)method
-                param:(NSData *)param
-           queryParam:(NSDictionary *)queryParam
+               header:(NSDictionary *)header
+                 body:(NSDictionary *)body
+                query:(NSDictionary *)query
             withBlock:(NCMBScriptExecuteCallback)callback
 {
     NSString *url = [NSString stringWithFormat:@"%@/%@/%@/%@", _endpoint, apiVersion, servicePath, name];
     NSURLComponents *components = [NSURLComponents componentsWithString:url];
-    if(queryParam != nil && [queryParam count] > 0) {
+    if(query != nil && [query count] > 0) {
         NSMutableArray *queryArray = [NSMutableArray array];
-        for (NSString *key in [queryParam allKeys]) {
+        for (NSString *key in [query allKeys]) {
             NSError *convertError = nil;
-            NSData *json = [NSJSONSerialization dataWithJSONObject:[queryParam objectForKey:key]
+            NSData *json = [NSJSONSerialization dataWithJSONObject:[query objectForKey:key]
                                                            options:kNilOptions
                                                              error:&convertError];
             NSString *valueStr = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
@@ -85,7 +86,8 @@ NSString *const servicePath = @"script";
     }
     _request = [NCMBRequest requestWithURL:[NSURL URLWithString:url]
                                   method:methodStr
-                                  HTTPBody:param];
+                                    header:header
+                                      body:body];
     [[_session dataTaskWithRequest:_request
                 completionHandler:^(NSData * _Nullable data,
                                     NSURLResponse * _Nullable response,

@@ -49,11 +49,13 @@ describe(@"NCMBScriptService", ^{
     it (@"should create request with specified parameters", ^{
         
         NCMBScriptService *service = [[NCMBScriptService alloc] init];
-        
+
         [service executeScript:@"testScript.js"
                         method:NCMBSCRIPT_GET
-                         param:nil
-                    queryParam:@{@"where":@{@"testKey":@"testValue"}}
+                       header:@{@"X-Custom-Header":@"customValue",
+                                 @"Content-Type":@"text/plain"}
+                         body:@{@"paramKey":@"paramValue"}
+                         query:@{@"where":@{@"testKey":@"testValue"}}
                      withBlock:nil];
         
         NSString *expectStr = [NSString stringWithFormat:@"%@/%@/%@/%@?%@",
@@ -63,6 +65,18 @@ describe(@"NCMBScriptService", ^{
                                @"testScript.js",
                                @"where=%7B%22testKey%22%3A%22testValue%22%7D"];
         expect(service.request.URL.absoluteString).to.equal(expectStr);
+        
+        NSDictionary *headers = [service.request allHTTPHeaderFields];
+        expect([headers objectForKey:@"X-Custom-Header"]).to.equal(@"customValue");
+        
+        expect([headers objectForKey:@"Content-Type"]).toNot.equal(@"text/plain");
+        expect([headers objectForKey:@"Content-Type"]).to.equal(@"application/json");
+        
+        NSDictionary *body = [NSJSONSerialization JSONObjectWithData:service.request.HTTPBody
+                                                             options:NSJSONReadingAllowFragments
+                                                               error:nil];
+        expect([body objectForKey:@"paramKey"]).to.equal(@"paramValue");
+        
         
     });
     
@@ -115,8 +129,9 @@ describe(@"NCMBScriptService", ^{
             service.session = mockSession;
             [service executeScript:@"testScript.js"
                             method:NCMBSCRIPT_GET
-                             param:nil
-                        queryParam:nil
+                            header:nil
+                              body:nil
+                             query:nil
                          withBlock:callbackBlock];
         });
         
@@ -172,8 +187,9 @@ describe(@"NCMBScriptService", ^{
             service.session = mockSession;
             [service executeScript:@"testScript.js"
                             method:NCMBSCRIPT_GET
-                             param:nil
-                        queryParam:nil
+                            header:nil
+                              body:nil
+                             query:nil
                          withBlock:callbackBlock];
         });
     });

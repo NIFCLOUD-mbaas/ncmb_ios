@@ -54,13 +54,15 @@
     return [_service executeScript:data error:error];
 }
 
-- (void)execute:(NSData *)data
-queryDictionary:(NSDictionary *)queryDictionary
+- (void)execute:(NSDictionary *)data
+        headers:(NSDictionary *)headers
+        queries:(NSDictionary *)queries
       withBlock:(NCMBScriptExecuteCallback)block {
     [_service executeScript:_scriptName
                      method:_method
-                      param:data
-                 queryParam:queryDictionary
+                     header:headers
+                       body:data
+                      query:queries
                   withBlock:block];
 }
 

@@ -18,7 +18,10 @@
 
 @interface NCMBRequest : NSMutableURLRequest
 
-+(instancetype)requestWithURL:(NSURL *)url method:(NSString *)method HTTPBody:(NSData *)data;
++(instancetype)requestWithURL:(NSURL *)url
+                       method:(NSString *)method
+                       header:(NSDictionary *)headers
+                         body:(NSDictionary *)body;
 
 +(NSString *)returnTimeStamp;
 

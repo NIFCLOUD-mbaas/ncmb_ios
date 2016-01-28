@@ -45,8 +45,9 @@ typedef void (^NCMBScriptExecuteCallback) (NSData *data, NSError *error);
 
 - (void)executeScript:(NSString *)name
                method:(NCMBScriptRequestMethod)method
-                param:(NSData *)param
-           queryParam:(NSDictionary *)queryParam
+               header:(NSDictionary *)header
+                 body:(NSDictionary *)body
+                query:(NSDictionary *)query
             withBlock:(NCMBScriptExecuteCallback)callback;
 
 @end

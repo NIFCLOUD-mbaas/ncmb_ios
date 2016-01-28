@@ -51,7 +51,8 @@ describe(@"NCMBRequest", ^{
         
         NCMBRequest *request = [NCMBRequest requestWithURL:url
                                                     method:@"GET"
-                                                  HTTPBody:nil];
+                                                    header:nil
+                                                      body:nil];
         
         NSDictionary *headers = [request allHTTPHeaderFields];
         expect([headers objectForKey:@"X-NCMB-Application-Key"]).to.equal(applicationKey);
@@ -62,6 +63,8 @@ describe(@"NCMBRequest", ^{
         expect([headers objectForKey:@"X-NCMB-Timestamp"]).to.equal(expectTimeStamp);
         
         expect([headers objectForKey:@"X-NCMB-Apps-Session-Token"]).to.equal(expectSessionToken);
+        
+        expect([headers objectForKey:@"Content-Type"]).to.equal(@"application/json");
         
     });
     
