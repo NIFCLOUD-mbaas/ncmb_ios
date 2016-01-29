@@ -30,12 +30,13 @@
     [NCMB setApplicationKey:@"YOUR_APP_KEY"
                   clientKey:@"YOUR_CLIENT_KEY"];
     
-    NCMBScript *script = [NCMBScript scriptWithName:@"testScript.js"
+    NCMBScript *script = [NCMBScript scriptWithName:@"testScript_GET.js"
                                              method:NCMBSCRIPT_GET
-                                           endpoint:@"YOUR_END_POINT"];
-    
-    [script execute:nil
-    queryDictionary:nil
+                                           endpoint:@"http://localhost:3000"];
+
+    [script execute:@{@"name":@"Test"}
+            headers:nil
+            queries:@{@"objectId":@"testId"}
           withBlock:^(NSData *data, NSError *error) {
               if (error) {
                   NSLog(@"error:%@", error.description);
@@ -43,7 +44,6 @@
                   NSLog(@"data:%@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
               }
           }];
-    
     
     return YES;
 }
