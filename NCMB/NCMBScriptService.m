@@ -56,13 +56,24 @@ NSString *const servicePath = @"script";
     if(query != nil && [query count] > 0) {
         NSMutableArray *queryArray = [NSMutableArray array];
         for (NSString *key in [query allKeys]) {
-            NSError *convertError = nil;
-            NSData *json = [NSJSONSerialization dataWithJSONObject:[query objectForKey:key]
-                                                           options:kNilOptions
-                                                             error:&convertError];
-            NSString *valueStr = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
-            NSString *encodedStr = [NCMBRequest returnEncodedString:valueStr];
-            [queryArray addObject:[NSURLQueryItem queryItemWithName:key value:encodedStr]];
+            NSString *encodedStr = nil;
+            if ([[query objectForKey:key] isKindOfClass:[NSDictionary class]] ||
+                [[query objectForKey:key] isKindOfClass:[NSArray class]])
+            {
+                NSError *error = nil;
+                NSData *json = [NSJSONSerialization dataWithJSONObject:[query objectForKey:key]
+                                                               options:kNilOptions
+                                                                 error:&error];
+                if (!error) {
+                    NSString *jsonStr = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
+                    encodedStr = [NCMBRequest returnEncodedString:jsonStr];
+                }
+            } else {
+                encodedStr = [NCMBRequest returnEncodedString:[NSString stringWithFormat:@"%@",[query objectForKey:key]]];
+            }
+            if (encodedStr) {
+                [queryArray addObject:[NSURLQueryItem queryItemWithName:key value:encodedStr]];
+            }
         }
         components.queryItems = queryArray;
         url = [url stringByAppendingString:[NSString stringWithFormat:@"?%@", components.query]];
@@ -88,37 +99,43 @@ NSString *const servicePath = @"script";
                                   method:methodStr
                                     header:header
                                       body:body];
-    [[_session dataTaskWithRequest:_request
-                completionHandler:^(NSData * _Nullable data,
-                                    NSURLResponse * _Nullable response,
-                                    NSError * _Nullable error)
-     {
-         NSHTTPURLResponse *httpRes = (NSHTTPURLResponse*)response;
-         if (httpRes.statusCode != 200 && httpRes.statusCode != 201) {
-             NSError *jsonError = nil;
-             if (data != nil) {
-                 NSDictionary *errorRes = [NSJSONSerialization JSONObjectWithData:data
-                                                                          options:NSJSONReadingAllowFragments
-                                                                            error:&jsonError];
-                 if (jsonError) {
-                     error = jsonError;
-                 } else {
-                     error = [NSError errorWithDomain:@"NCMBErrorDomain"
-                                                 code:httpRes.statusCode
-                                             userInfo:@{NSLocalizedDescriptionKey:[errorRes objectForKey:@"error"]}];
-                     
-                 }
-             }
-             if (callback != nil) {
+    void (^completionHandler)(NSData *data, NSURLResponse *response, NSError *error) = ^void (NSData *data, NSURLResponse *response, NSError *error) {
+        NSHTTPURLResponse *httpRes = (NSHTTPURLResponse*)response;
+        if (httpRes.statusCode != 200 && httpRes.statusCode != 201) {
+            NSError *jsonError = nil;
+            if (data != nil) {
+                NSDictionary *errorRes = [NSJSONSerialization JSONObjectWithData:data
+                                                                         options:NSJSONReadingAllowFragments
+                                                                           error:&jsonError];
+                if (jsonError) {
+                    error = jsonError;
+                } else {
+                    error = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                                code:httpRes.statusCode
+                                            userInfo:@{NSLocalizedDescriptionKey:[errorRes objectForKey:@"error"]}];
+                    
+                }
+            }
+            if (callback != nil) {
                 callback(nil, error);
-             }
-
-         } else {
-             if (callback != nil) {
+            }
+            
+        } else {
+            if (callback != nil) {
                 callback(data, error);
-             }
-         }
-     }] resume];
+            }
+        }
+    };
+    if (method == NCMBSCRIPT_GET || method == NCMBSCRIPT_DELETE) {
+        _request.HTTPBody = nil;
+        [[_session dataTaskWithRequest:_request
+                     completionHandler:completionHandler] resume];
+    } else {
+        [[_session uploadTaskWithRequest:_request
+                                fromData:_request.HTTPBody
+                       completionHandler:completionHandler] resume];
+        
+    }
 }
 
 @end
