@@ -72,10 +72,7 @@ describe(@"NCMBScriptService", ^{
         expect([headers objectForKey:@"Content-Type"]).toNot.equal(@"text/plain");
         expect([headers objectForKey:@"Content-Type"]).to.equal(@"application/json");
         
-        NSDictionary *body = [NSJSONSerialization JSONObjectWithData:service.request.HTTPBody
-                                                             options:NSJSONReadingAllowFragments
-                                                               error:nil];
-        expect([body objectForKey:@"paramKey"]).to.equal(@"paramValue");
+        expect(service.request.HTTPBody).to.beNil;
         
         
     });
