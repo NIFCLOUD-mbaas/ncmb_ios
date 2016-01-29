@@ -36,6 +36,7 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
     NCMBRequest *request = [NCMBRequest requestWithURL:url
                                            cachePolicy:NSURLRequestReloadIgnoringCacheData
                                        timeoutInterval:5.0];
+    request.HTTPMethod = method;
     [request addValue:[NCMB getApplicationKey] forHTTPHeaderField:appKeyField];
     NSString *timestampStr = [self returnTimeStamp];
     [request addValue:timestampStr forHTTPHeaderField:timestampField];
