@@ -14,6 +14,10 @@
  limitations under the License.
  */
 
+//Googleのライブラリがある場合はビルド対象に含める
+#if defined(__has_include)
+#if __has_include(<GoogleSignIn/GoogleSignIn.h>)
+
 #import "NCMBGoogleUtils.h"
 
 @interface NCMBGoogleUtils (Private)
@@ -25,3 +29,6 @@
 +(void)clearGoogleSession;
 
 @end
+
+#endif
+#endif
