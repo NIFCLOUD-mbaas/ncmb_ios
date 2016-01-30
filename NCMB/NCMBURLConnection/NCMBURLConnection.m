@@ -20,6 +20,7 @@
 #import "NCMBUser+Private.h"
 #import "NCMBError.h"
 #import "NCMBConstants.h"
+#import <CommonCrypto/CommonCrypto.h>
 
 static NSString *const kEndPoint            = @"https://mb.api.cloud.nifty.com";
 static NSString *const kAPIVersion          = @"2013-09-01";

@@ -16,7 +16,6 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreFoundation/CoreFoundation.h>
-#import <CommonCrypto/CommonCrypto.h>
 #import <UIKit/UIKit.h>
 
 @class NCMBUser;
