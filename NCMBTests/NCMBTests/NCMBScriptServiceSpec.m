@@ -73,8 +73,29 @@ describe(@"NCMBScriptService", ^{
         expect([headers objectForKey:@"Content-Type"]).to.equal(@"application/json");
         
         expect(service.request.HTTPBody).to.beNil;
+    });
+    
+    it (@"should create request with specified query string", ^{
+        NCMBScriptService *service = [[NCMBScriptService alloc] init];
         
+        [service executeScript:@"testScript.js"
+                        method:NCMBSCRIPT_GET
+                        header:nil
+                          body:nil
+                         query:@{@"number":@12345,
+                                 @"string":@"test",
+                                 @"array":@[@"typeA",@"typeB"],
+                                 @"dictionary":@{@"key":@"value"},
+                                 @"bool":@YES}
+                     withBlock:nil];
         
+        NSString *expectStr = [NSString stringWithFormat:@"%@/%@/%@/%@?%@",
+                               defaultEndPoint,
+                               apiVersion,
+                               servicePath,
+                               @"testScript.js",
+                               @"array=%5B%22typeA%22%2C%22typeB%22%5D&bool=1&dictionary=%7B%22key%22%3A%22value%22%7D&number=12345&string=test"];
+        expect(service.request.URL.absoluteString).to.equal(expectStr);
     });
     
     it(@"should run callback response of execute asynchronously script", ^{
