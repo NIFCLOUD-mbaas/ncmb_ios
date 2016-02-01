@@ -52,10 +52,9 @@ NSString *const servicePath = @"script";
             withBlock:(NCMBScriptExecuteCallback)callback
 {
     NSString *url = [NSString stringWithFormat:@"%@/%@/%@/%@", _endpoint, apiVersion, servicePath, name];
-    NSURLComponents *components = [NSURLComponents componentsWithString:url];
     if(query != nil && [query count] > 0) {
-        NSMutableArray *queryArray = [NSMutableArray array];
-        for (NSString *key in [query allKeys]) {
+        url = [url stringByAppendingString:@"?"];
+        for (NSString *key in [[query allKeys] sortedArrayUsingSelector:@selector(compare:)]) {
             NSString *encodedStr = nil;
             if ([[query objectForKey:key] isKindOfClass:[NSDictionary class]] ||
                 [[query objectForKey:key] isKindOfClass:[NSArray class]])
@@ -72,11 +71,14 @@ NSString *const servicePath = @"script";
                 encodedStr = [NCMBRequest returnEncodedString:[NSString stringWithFormat:@"%@",[query objectForKey:key]]];
             }
             if (encodedStr) {
-                [queryArray addObject:[NSURLQueryItem queryItemWithName:key value:encodedStr]];
+                url = [url stringByAppendingString:[NSString stringWithFormat:@"%@=%@&", key, encodedStr]];
             }
+            
         }
-        components.queryItems = queryArray;
-        url = [url stringByAppendingString:[NSString stringWithFormat:@"?%@", components.query]];
+        url = [url stringByReplacingOccurrencesOfString:@"&$"
+                                              withString:@""
+                                                options:NSRegularExpressionSearch
+                                                  range:NSMakeRange(0, url.length)];
     }
     NSString *methodStr = nil;
     switch (method) {
