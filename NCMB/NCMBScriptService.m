@@ -44,23 +44,17 @@ NSString *const servicePath = @"script";
     return nil;
 }
 
-- (void)executeScript:(NSString *)name
-               method:(NCMBScriptRequestMethod)method
-               header:(NSDictionary *)header
-                 body:(NSDictionary *)body
-                query:(NSDictionary *)query
-            withBlock:(NCMBScriptExecuteCallback)callback
-{
-    NSString *url = [NSString stringWithFormat:@"%@/%@/%@/%@", _endpoint, apiVersion, servicePath, name];
-    if(query != nil && [query count] > 0) {
+- (NSURL *)createUrlFromScriptName:(NSString *)scriptName query:(NSDictionary *)queryDic {
+    NSString *url = [NSString stringWithFormat:@"%@/%@/%@/%@", _endpoint, apiVersion, servicePath, scriptName];
+    if(queryDic != nil && [queryDic count] > 0) {
         url = [url stringByAppendingString:@"?"];
-        for (NSString *key in [[query allKeys] sortedArrayUsingSelector:@selector(compare:)]) {
+        for (NSString *key in [[queryDic allKeys] sortedArrayUsingSelector:@selector(compare:)]) {
             NSString *encodedStr = nil;
-            if ([[query objectForKey:key] isKindOfClass:[NSDictionary class]] ||
-                [[query objectForKey:key] isKindOfClass:[NSArray class]])
+            if ([[queryDic objectForKey:key] isKindOfClass:[NSDictionary class]] ||
+                [[queryDic objectForKey:key] isKindOfClass:[NSArray class]])
             {
                 NSError *error = nil;
-                NSData *json = [NSJSONSerialization dataWithJSONObject:[query objectForKey:key]
+                NSData *json = [NSJSONSerialization dataWithJSONObject:[queryDic objectForKey:key]
                                                                options:kNilOptions
                                                                  error:&error];
                 if (!error) {
@@ -68,7 +62,7 @@ NSString *const servicePath = @"script";
                     encodedStr = [NCMBRequest returnEncodedString:jsonStr];
                 }
             } else {
-                encodedStr = [NCMBRequest returnEncodedString:[NSString stringWithFormat:@"%@",[query objectForKey:key]]];
+                encodedStr = [NCMBRequest returnEncodedString:[NSString stringWithFormat:@"%@",[queryDic objectForKey:key]]];
             }
             if (encodedStr) {
                 url = [url stringByAppendingString:[NSString stringWithFormat:@"%@=%@&", key, encodedStr]];
@@ -76,10 +70,19 @@ NSString *const servicePath = @"script";
             
         }
         url = [url stringByReplacingOccurrencesOfString:@"&$"
-                                              withString:@""
+                                             withString:@""
                                                 options:NSRegularExpressionSearch
                                                   range:NSMakeRange(0, url.length)];
     }
+    return [NSURL URLWithString:url];
+}
+
+- (NCMBRequest *)createRequest:(NSURL *)url
+                        method:(NCMBScriptRequestMethod)method
+                        header:(NSDictionary *)headerDic
+                          body:(NSDictionary *)body
+{
+    
     NSString *methodStr = nil;
     switch (method) {
         case NCMBSCRIPT_GET:
@@ -97,10 +100,82 @@ NSString *const servicePath = @"script";
         default:
             break;
     }
-    _request = [NCMBRequest requestWithURL:[NSURL URLWithString:url]
-                                  method:methodStr
-                                    header:header
-                                      body:body];
+    
+    return [NCMBRequest requestWithURL:url
+                                method:methodStr
+                                header:headerDic
+                                  body:body];
+}
+
+- (NSData *)executeScript:(NSString *)name
+                   method:(NCMBScriptRequestMethod)method
+                   header:(NSDictionary *)header
+                     body:(NSDictionary *)body
+                    query:(NSDictionary *)query
+                    error:(NSError **)error {
+    _request = [self createRequest:[self createUrlFromScriptName:name query:query]
+                            method:method
+                            header:header
+                              body:body];
+    
+    __block NSData *result = nil;
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    void (^completionHandler)(NSData *data, NSURLResponse *response, NSError *error) = ^void (NSData *data, NSURLResponse *response, NSError *responseError) {
+        NSHTTPURLResponse *httpRes = (NSHTTPURLResponse*)response;
+        if (httpRes.statusCode != 200 && httpRes.statusCode != 201) {
+            NSError *jsonError = nil;
+            if (data != nil) {
+                NSDictionary *errorRes = [NSJSONSerialization JSONObjectWithData:data
+                                                                         options:NSJSONReadingAllowFragments
+                                                                           error:&jsonError];
+                if (jsonError) {
+                    responseError = jsonError;
+                } else {
+                    responseError = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                                code:httpRes.statusCode
+                                            userInfo:@{NSLocalizedDescriptionKey:[errorRes objectForKey:@"error"]}];
+                    
+                }
+            }
+            if (error != nil) {
+                *error = responseError;
+                result = nil;
+            }
+            
+        } else {
+            result = data;
+        }
+        dispatch_semaphore_signal(semaphore);
+        
+    };
+    if (method == NCMBSCRIPT_GET || method == NCMBSCRIPT_DELETE) {
+        _request.HTTPBody = nil;
+        [[_session dataTaskWithRequest:_request
+                     completionHandler:completionHandler] resume];
+    } else {
+        [[_session uploadTaskWithRequest:_request
+                                fromData:_request.HTTPBody
+                       completionHandler:completionHandler] resume];
+        
+    }
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    return result;
+}
+
+- (void)executeScript:(NSString *)name
+               method:(NCMBScriptRequestMethod)method
+               header:(NSDictionary *)header
+                 body:(NSDictionary *)body
+                query:(NSDictionary *)query
+            withBlock:(NCMBScriptExecuteCallback)callback
+{
+    _request = [self createRequest:[self createUrlFromScriptName:name query:query]
+                            method:method
+                            header:header
+                              body:body];
     void (^completionHandler)(NSData *data, NSURLResponse *response, NSError *error) = ^void (NSData *data, NSURLResponse *response, NSError *error) {
         NSHTTPURLResponse *httpRes = (NSHTTPURLResponse*)response;
         if (httpRes.statusCode != 200 && httpRes.statusCode != 201) {

@@ -32,7 +32,10 @@
                         method:(NCMBScriptRequestMethod)method
                       endpoint:(NSString *)endpoint;
 
-- (NSData *)execute:(NSDictionary*)data error:(NSError**)error;
+- (NSData *)execute:(NSDictionary *)data
+            headers:(NSDictionary *)headers
+            queries:(NSDictionary *)queries
+              error:(NSError **)error;
 
 - (void)execute:(NSDictionary *)data
         headers:(NSDictionary *)headers

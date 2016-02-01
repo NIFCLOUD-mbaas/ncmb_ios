@@ -50,8 +50,17 @@
     return [[NCMBScript alloc] initWithName:name method:method endpoint:endpoint];
 }
 
-- (NSData*)execute:(NSData *)data error:(NSError**)error {
-    return [_service executeScript:data error:error];
+- (NSData *)execute:(NSDictionary *)data
+            headers:(NSDictionary *)headers
+            queries:(NSDictionary *)queries
+              error:(NSError **)error{
+    return [_service executeScript:_scriptName
+                     method:_method
+                     header:headers
+                       body:data
+                      query:queries
+                      error:error];
+    
 }
 
 - (void)execute:(NSDictionary *)data

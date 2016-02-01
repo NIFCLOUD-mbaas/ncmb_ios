@@ -41,7 +41,12 @@ typedef void (^NCMBScriptExecuteCallback) (NSData *data, NSError *error);
 
 - (instancetype)initWithEndpoint:(NSString *)endpoint;
 
-- (NSData *)executeScript:(NSData*)data error:(NSError**)error;
+- (NSData *)executeScript:(NSString *)name
+               method:(NCMBScriptRequestMethod)method
+               header:(NSDictionary *)header
+                 body:(NSDictionary *)body
+                query:(NSDictionary *)query
+                error:(NSError **)error;
 
 - (void)executeScript:(NSString *)name
                method:(NCMBScriptRequestMethod)method
