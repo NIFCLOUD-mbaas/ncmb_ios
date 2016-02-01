@@ -112,12 +112,8 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
                                    signatureVersion,
                                    [NSString stringWithFormat:@"%@=%@", appKeyField, [NCMB getApplicationKey]],
                                    [NSString stringWithFormat:@"%@=%@", timestampField, timestamp]];
-    if (components.query != nil) {
-        NSArray *queryItems = components.queryItems;
-        for (NSURLQueryItem *item in queryItems) {
-            NSString *encodedQueryString = [self returnEncodedString:item.value];
-            strForSignature = [strForSignature stringByAppendingString:[NSString stringWithFormat:@"&%@=%@", item.name, encodedQueryString]];
-        }
+    if (components.percentEncodedQuery != nil) {
+        strForSignature = [strForSignature stringByAppendingString:[NSString stringWithFormat:@"&%@", components.percentEncodedQuery]];
     }
     
     const char *cKey = [[NCMB getClientKey] cStringUsingEncoding:NSUTF8StringEncoding];
