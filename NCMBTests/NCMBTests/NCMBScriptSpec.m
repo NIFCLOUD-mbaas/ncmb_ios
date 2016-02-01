@@ -90,6 +90,68 @@ describe(@"NCMBScript", ^{
         });
     });
     
+    it(@"should return NSData response when execute script synchronously", ^{
+        
+        NCMBScriptService *scriptService = [[NCMBScriptService alloc] init];
+        id mockService = OCMPartialMock(scriptService);
+        OCMStub([mockService executeScript:OCMOCK_ANY
+                                    method:NCMBSCRIPT_GET
+                                    header:OCMOCK_ANY
+                                      body:OCMOCK_ANY
+                                     query:OCMOCK_ANY
+                                     error:[OCMArg anyObjectRef]])
+        .andReturn([@"hello" dataUsingEncoding:NSUTF8StringEncoding]);
+        
+        NCMBScript *script = [NCMBScript scriptWithName:@"testScript.js" method:NCMBSCRIPT_GET];
+        script.service = mockService;
+        NSError *error = nil;
+        NSData *result = [script execute:nil
+                                 headers:nil
+                                   queries:nil
+                                   error:&error];
+        
+        expect([[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding]).to.equal(@"hello");
+        
+    });
+    
+    it(@"should return NSError response when execute invalid script synchronously", ^{
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            NSError * __autoreleasing *error;
+            [invocation getArgument:&error atIndex:7];
+            
+            //create error response
+            *error = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                        code:404
+                                    userInfo:@{NSLocalizedDescriptionKey:@"Not Found."}];
+            
+        };
+        
+        NCMBScriptService *scriptService = [[NCMBScriptService alloc] init];
+        id mockService = OCMPartialMock(scriptService);
+        
+        OCMStub([mockService executeScript:OCMOCK_ANY
+                                    method:NCMBSCRIPT_GET
+                                    header:OCMOCK_ANY
+                                      body:OCMOCK_ANY
+                                     query:OCMOCK_ANY
+                                     error:[OCMArg anyObjectRef]])
+        .andDo(invocation).andReturn(nil);
+        
+        NCMBScript *script = [NCMBScript scriptWithName:@"notExistScript.js" method:NCMBSCRIPT_GET];
+        script.service = mockService;
+        NSError *error = nil;
+        NSData *result = [script execute:nil
+                                 headers:nil
+                                   queries:nil
+                                   error:&error];
+        
+        expect(result).to.beNil;
+        expect(error).toNot.beNil;
+        expect(error.code).to.equal(404);
+        
+    });
+    
     afterEach(^{
 
     });

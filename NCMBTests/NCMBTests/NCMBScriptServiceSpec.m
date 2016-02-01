@@ -212,6 +212,97 @@ describe(@"NCMBScriptService", ^{
         });
     });
     
+    it(@"should return result of execute script synchronously", ^{
+        
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:config
+                                                              delegate:nil
+                                                         delegateQueue:[NSOperationQueue mainQueue]];
+        
+        id mockSession = OCMPartialMock(session);
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void(^completionHandler)(NSData *data, NSURLResponse *res, NSError *error);
+            [invocation getArgument:&completionHandler atIndex:3];
+            
+            
+            NSURL *url = [NSURL URLWithString:@"http://sample.com"];
+            NSDictionary *resDic = @{@"Content-Type":@"text/plane"};
+            
+            NSHTTPURLResponse *res = [[NSHTTPURLResponse alloc] initWithURL:url
+                                                                 statusCode:200
+                                                                HTTPVersion:@"HTTP/1.1"
+                                                               headerFields:resDic];
+            
+            //invoke completion handler of NSURLSession
+            completionHandler([@"hello" dataUsingEncoding:NSUTF8StringEncoding], (NSURLResponse *)res, nil);
+        };
+        
+        OCMStub([[mockSession dataTaskWithRequest:OCMOCK_ANY
+                                completionHandler:OCMOCK_ANY] resume]).andDo(invocation);
+        
+        NCMBScriptService *service = [[NCMBScriptService alloc] init];
+        
+        service.session = mockSession;
+        NSError *error = nil;
+        NSData *result = [service executeScript:@"testScript.js"
+                        method:NCMBSCRIPT_GET
+                        header:nil
+                          body:nil
+                         query:nil
+                         error:&error];
+        
+        expect(error).to.beNil;
+        expect([[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding]).to.equal(@"hello");
+    });
+    
+    it(@"should return error when execute invalid script synchronously", ^{
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:config
+                                                              delegate:nil
+                                                         delegateQueue:[NSOperationQueue mainQueue]];
+        
+        id mockSession = OCMPartialMock(session);
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void(^completionHandler)(NSData *data, NSURLResponse *res, NSError *error);
+            [invocation getArgument:&completionHandler atIndex:3];
+            
+            
+            NSURL *url = [NSURL URLWithString:@"http://sample.com"];
+            NSDictionary *resDic = @{@"Content-Type":@"application/json"};
+            
+            NSHTTPURLResponse *res = [[NSHTTPURLResponse alloc] initWithURL:url
+                                                                 statusCode:404
+                                                                HTTPVersion:@"HTTP/1.1"
+                                                               headerFields:resDic];
+            
+            //invoke completion handler of NSURLSession
+            NSDictionary *errorDic = @{@"error":@"Not Found", @"status":@400};
+            completionHandler([NSJSONSerialization dataWithJSONObject:errorDic
+                                                              options:kNilOptions
+                                                                error:nil],
+                              (NSURLResponse *)res, nil);
+        };
+        
+        OCMStub([[mockSession dataTaskWithRequest:OCMOCK_ANY
+                                completionHandler:OCMOCK_ANY] resume]).andDo(invocation);
+        
+        NCMBScriptService *service = [[NCMBScriptService alloc] init];
+        
+        service.session = mockSession;
+        NSError *error = nil;
+        NSData *result = [service executeScript:@"testScript.js"
+                                         method:NCMBSCRIPT_GET
+                                         header:nil
+                                           body:nil
+                                          query:nil
+                                          error:&error];
+        expect(result).to.beNil;
+        expect(error.code).to.equal(@404);
+        expect([error.userInfo objectForKey:NSLocalizedDescriptionKey]).to.equal(@"Not Found");
+    });
+    
     afterEach(^{
 
     });
