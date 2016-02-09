@@ -35,13 +35,13 @@ describe(@"NCMBScript", ^{
     
     it(@"should create instance of NCMBScript with script name and request method", ^{
         NSString *scriptName = @"testScript.js";
-        NCMBScript *script = [NCMBScript scriptWithName:scriptName method:NCMBSCRIPT_GET];
+        NCMBScript *script = [NCMBScript scriptWithName:scriptName method:NCMBExecuteWithGetMethod];
         expect(script.scriptName).to.equal(scriptName);
-        expect(script.method).to.equal(NCMBSCRIPT_GET);
+        expect(script.method).to.equal(NCMBExecuteWithGetMethod);
     });
     
     it(@"should raise NSInvalidArgumentException when script name is empty ", ^{
-        XCTAssertThrows([NCMBScript scriptWithName:nil method:NCMBSCRIPT_GET], @"no raise exception");
+        XCTAssertThrows([NCMBScript scriptWithName:nil method:NCMBExecuteWithGetMethod], @"no raise exception");
         //expect().to.raise(NSInvalidArgumentException);
     });
     
@@ -77,14 +77,14 @@ describe(@"NCMBScript", ^{
             };
             
             OCMStub([mockService executeScript:OCMOCK_ANY
-                                        method:NCMBSCRIPT_GET
+                                        method:NCMBExecuteWithGetMethod
                                         header:OCMOCK_ANY
                                           body:OCMOCK_ANY
                                          query:OCMOCK_ANY
                                      withBlock:block
                      ]).andDo(invocation);
             
-            NCMBScript *script = [NCMBScript scriptWithName:@"testScript.js" method:NCMBSCRIPT_GET];
+            NCMBScript *script = [NCMBScript scriptWithName:@"testScript.js" method:NCMBExecuteWithGetMethod];
             script.service = mockService;
             [script execute:nil headers:nil queries:nil withBlock:block];
         });
@@ -95,14 +95,14 @@ describe(@"NCMBScript", ^{
         NCMBScriptService *scriptService = [[NCMBScriptService alloc] init];
         id mockService = OCMPartialMock(scriptService);
         OCMStub([mockService executeScript:OCMOCK_ANY
-                                    method:NCMBSCRIPT_GET
+                                    method:NCMBExecuteWithGetMethod
                                     header:OCMOCK_ANY
                                       body:OCMOCK_ANY
                                      query:OCMOCK_ANY
                                      error:[OCMArg anyObjectRef]])
         .andReturn([@"hello" dataUsingEncoding:NSUTF8StringEncoding]);
         
-        NCMBScript *script = [NCMBScript scriptWithName:@"testScript.js" method:NCMBSCRIPT_GET];
+        NCMBScript *script = [NCMBScript scriptWithName:@"testScript.js" method:NCMBExecuteWithGetMethod];
         script.service = mockService;
         NSError *error = nil;
         NSData *result = [script execute:nil
@@ -131,14 +131,14 @@ describe(@"NCMBScript", ^{
         id mockService = OCMPartialMock(scriptService);
         
         OCMStub([mockService executeScript:OCMOCK_ANY
-                                    method:NCMBSCRIPT_GET
+                                    method:NCMBExecuteWithGetMethod
                                     header:OCMOCK_ANY
                                       body:OCMOCK_ANY
                                      query:OCMOCK_ANY
                                      error:[OCMArg anyObjectRef]])
         .andDo(invocation).andReturn(nil);
         
-        NCMBScript *script = [NCMBScript scriptWithName:@"notExistScript.js" method:NCMBSCRIPT_GET];
+        NCMBScript *script = [NCMBScript scriptWithName:@"notExistScript.js" method:NCMBExecuteWithGetMethod];
         script.service = mockService;
         NSError *error = nil;
         NSData *result = [script execute:nil

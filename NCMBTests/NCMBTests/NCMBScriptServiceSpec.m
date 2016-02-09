@@ -51,7 +51,7 @@ describe(@"NCMBScriptService", ^{
         NCMBScriptService *service = [[NCMBScriptService alloc] init];
 
         [service executeScript:@"testScript.js"
-                        method:NCMBSCRIPT_GET
+                        method:NCMBExecuteWithGetMethod
                        header:@{@"X-Custom-Header":@"customValue",
                                  @"Content-Type":@"text/plain"}
                          body:@{@"paramKey":@"paramValue"}
@@ -79,7 +79,7 @@ describe(@"NCMBScriptService", ^{
         NCMBScriptService *service = [[NCMBScriptService alloc] init];
         
         [service executeScript:@"testScript.js"
-                        method:NCMBSCRIPT_GET
+                        method:NCMBExecuteWithGetMethod
                         header:nil
                           body:nil
                          query:@{@"number":@12345,
@@ -146,7 +146,7 @@ describe(@"NCMBScriptService", ^{
             
             service.session = mockSession;
             [service executeScript:@"testScript.js"
-                            method:NCMBSCRIPT_GET
+                            method:NCMBExecuteWithGetMethod
                             header:nil
                               body:nil
                              query:nil
@@ -204,7 +204,7 @@ describe(@"NCMBScriptService", ^{
             
             service.session = mockSession;
             [service executeScript:@"testScript.js"
-                            method:NCMBSCRIPT_GET
+                            method:NCMBExecuteWithGetMethod
                             header:nil
                               body:nil
                              query:nil
@@ -246,7 +246,7 @@ describe(@"NCMBScriptService", ^{
         service.session = mockSession;
         NSError *error = nil;
         NSData *result = [service executeScript:@"testScript.js"
-                        method:NCMBSCRIPT_GET
+                        method:NCMBExecuteWithGetMethod
                         header:nil
                           body:nil
                          query:nil
@@ -293,7 +293,7 @@ describe(@"NCMBScriptService", ^{
         service.session = mockSession;
         NSError *error = nil;
         NSData *result = [service executeScript:@"testScript.js"
-                                         method:NCMBSCRIPT_GET
+                                         method:NCMBExecuteWithGetMethod
                                          header:nil
                                            body:nil
                                           query:nil

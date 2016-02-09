@@ -89,16 +89,16 @@ NSString *const NCMBScriptServicePath = @"script";
     
     NSString *methodStr = nil;
     switch (method) {
-        case NCMBSCRIPT_GET:
+        case NCMBExecuteWithGetMethod:
             methodStr = @"GET";
             break;
-        case NCMBSCRIPT_POST:
+        case NCMBExecuteWithPostMethod:
             methodStr = @"POST";
             break;
-        case NCMBSCRIPT_PUT:
+        case NCMBExecuteWithPutMethod:
             methodStr = @"PUT";
             break;
-        case NCMBSCRIPT_DELETE:
+        case NCMBExecuteWithDeleteMethod:
             methodStr = @"DELETE";
             break;
         default:
@@ -153,7 +153,7 @@ NSString *const NCMBScriptServicePath = @"script";
         dispatch_semaphore_signal(semaphore);
         
     };
-    if (method == NCMBSCRIPT_GET || method == NCMBSCRIPT_DELETE) {
+    if (method == NCMBExecuteWithGetMethod || method == NCMBExecuteWithDeleteMethod) {
         _request.HTTPBody = nil;
         [[_session dataTaskWithRequest:_request
                      completionHandler:completionHandler] resume];
@@ -207,7 +207,7 @@ NSString *const NCMBScriptServicePath = @"script";
             }
         }
     };
-    if (method == NCMBSCRIPT_GET || method == NCMBSCRIPT_DELETE) {
+    if (method == NCMBExecuteWithGetMethod || method == NCMBExecuteWithDeleteMethod) {
         _request.HTTPBody = nil;
         [[_session dataTaskWithRequest:_request
                      completionHandler:completionHandler] resume];

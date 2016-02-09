@@ -41,10 +41,10 @@
     if (name == nil){
         [NSException raise:NSInvalidArgumentException format:@"script name must not be nil."];
     }
-    if (method != NCMBSCRIPT_GET &&
-        method != NCMBSCRIPT_POST &&
-        method != NCMBSCRIPT_PUT &&
-        method != NCMBSCRIPT_DELETE) {
+    if (method != NCMBExecuteWithGetMethod &&
+        method != NCMBExecuteWithPostMethod &&
+        method != NCMBExecuteWithPutMethod &&
+        method != NCMBExecuteWithDeleteMethod) {
         [NSException raise:NSInvalidArgumentException format:@"invalid request method."];
     }
     return [[NCMBScript alloc] initWithName:name method:method endpoint:endpoint];

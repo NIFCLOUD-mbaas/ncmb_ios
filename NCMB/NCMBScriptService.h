@@ -19,10 +19,10 @@
 #import "NCMBRequest.h"
 
 typedef NS_ENUM(NSUInteger, NCMBScriptRequestMethod) {
-    NCMBSCRIPT_GET,
-    NCMBSCRIPT_POST,
-    NCMBSCRIPT_PUT,
-    NCMBSCRIPT_DELETE
+    NCMBExecuteWithGetMethod,
+    NCMBExecuteWithPostMethod,
+    NCMBExecuteWithPutMethod,
+    NCMBExecuteWithDeleteMethod
 };
 
 extern NSString *const NCMBScriptServiceDefaultEndPoint;
