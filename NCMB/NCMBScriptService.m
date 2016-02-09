@@ -16,15 +16,15 @@
 
 #import "NCMBScriptService.h"
 
-NSString *const defaultEndPoint = @"https://logic.mb.api.cloud.nifty.com";
-NSString *const apiVersion = @"2015-09-01";
-NSString *const servicePath = @"script";
+NSString *const NCMBScriptServiceDefaultEndPoint = @"https://logic.mb.api.cloud.nifty.com";
+NSString *const NCMBScriptServiceApiVersion = @"2015-09-01";
+NSString *const NCMBScriptServicePath = @"script";
 
 @implementation NCMBScriptService
 
 - (instancetype)init {
     self = [super init];
-    self.endpoint = defaultEndPoint;
+    self.endpoint = NCMBScriptServiceDefaultEndPoint;
     
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     
@@ -45,7 +45,11 @@ NSString *const servicePath = @"script";
 }
 
 - (NSURL *)createUrlFromScriptName:(NSString *)scriptName query:(NSDictionary *)queryDic {
-    NSString *url = [NSString stringWithFormat:@"%@/%@/%@/%@", _endpoint, apiVersion, servicePath, scriptName];
+    NSString *url = [NSString stringWithFormat:@"%@/%@/%@/%@",
+                     _endpoint,
+                     NCMBScriptServiceApiVersion,
+                     NCMBScriptServicePath,
+                     scriptName];
     if(queryDic != nil && [queryDic count] > 0) {
         url = [url stringByAppendingString:@"?"];
         for (NSString *key in [[queryDic allKeys] sortedArrayUsingSelector:@selector(compare:)]) {

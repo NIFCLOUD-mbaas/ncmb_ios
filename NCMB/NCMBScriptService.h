@@ -25,9 +25,9 @@ typedef NS_ENUM(NSUInteger, NCMBScriptRequestMethod) {
     NCMBSCRIPT_DELETE
 };
 
-extern NSString *const defaultEndPoint;
-extern NSString *const apiVersion;
-extern NSString *const servicePath;
+extern NSString *const NCMBScriptServiceDefaultEndPoint;
+extern NSString *const NCMBScriptServiceApiVersion;
+extern NSString *const NCMBScriptServicePath;
 
 typedef void (^NCMBScriptExecuteCallback) (NSData *data, NSError *error);
 

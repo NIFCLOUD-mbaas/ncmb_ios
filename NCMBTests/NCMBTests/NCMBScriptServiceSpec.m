@@ -59,9 +59,9 @@ describe(@"NCMBScriptService", ^{
                      withBlock:nil];
         
         NSString *expectStr = [NSString stringWithFormat:@"%@/%@/%@/%@?%@",
-                               defaultEndPoint,
-                               apiVersion,
-                               servicePath,
+                               NCMBScriptServiceDefaultEndPoint,
+                               NCMBScriptServiceApiVersion,
+                               NCMBScriptServicePath,
                                @"testScript.js",
                                @"where=%7B%22testKey%22%3A%22testValue%22%7D"];
         expect(service.request.URL.absoluteString).to.equal(expectStr);
@@ -90,9 +90,9 @@ describe(@"NCMBScriptService", ^{
                      withBlock:nil];
         
         NSString *expectStr = [NSString stringWithFormat:@"%@/%@/%@/%@?%@",
-                               defaultEndPoint,
-                               apiVersion,
-                               servicePath,
+                               NCMBScriptServiceDefaultEndPoint,
+                               NCMBScriptServiceApiVersion,
+                               NCMBScriptServicePath,
                                @"testScript.js",
                                @"array=%5B%22typeA%22%2C%22typeB%22%5D&bool=1&dictionary=%7B%22key%22%3A%22value%22%7D&number=12345&string=test"];
         expect(service.request.URL.absoluteString).to.equal(expectStr);
