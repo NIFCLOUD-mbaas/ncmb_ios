@@ -24,7 +24,7 @@
 - (NCMBAddUniqueOperation *)initWithClassName:(id)newValue{
     self = [super init];
     if( self ) {
-        self.objects =  [NSMutableSet set];
+        self.objects =  [NSMutableArray array];
         if ([newValue isKindOfClass:[NSArray class]]) {
             NSMutableArray *newArray = (NSMutableArray *)newValue;
             [self.objects addObjectsFromArray:newArray];
@@ -38,15 +38,13 @@
 -(NSMutableDictionary *)encode{
     NSMutableDictionary *json = [[NSMutableDictionary alloc]init];
     [json setObject:@"AddUnique" forKey:@"__op"];
-    NSArray *objects = [self.objects allObjects];//NSSetの全ての要素をNSArray型で取得する
-    [json setObject:objects forKey:@"objects"];
+    [json setObject:self.objects forKey:@"objects"];
     return json;
 }
 
 - (id)apply:(id)oldValue NCMBObject:(id)object forkey:(NSString *)key{
     if (oldValue == nil) {
-        NSMutableArray *objects = [NSMutableArray arrayWithObjects:self.objects, nil];
-        return objects;
+        return self.objects;
     }
     
     if ([oldValue isKindOfClass:[NSArray class]]) {
@@ -120,7 +118,7 @@
     
     if ([previous isKindOfClass:[NCMBAddUniqueOperation class]]) {
         //オペレーション要素全てをresultに挿入(初期化)
-        NSArray *oldValue = [((NCMBAddUniqueOperation *)previous).objects allObjects];
+        NSArray *oldValue = ((NCMBAddUniqueOperation *)previous).objects;
         //オペレーション要素に対してapply実行
         NSMutableArray * newValue = [self apply:oldValue NCMBObject:nil forkey:nil];
         //apply結果を元にインスタンスの生成
