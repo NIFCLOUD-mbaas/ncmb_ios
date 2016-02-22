@@ -360,7 +360,8 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     || [object isKindOfClass:[NSArray class]]       || [object isKindOfClass:[NSDictionary class]]
     || [object isKindOfClass:[NSDate class]]        || [object isKindOfClass:[NCMBObject class]]
     || [object isKindOfClass:[NCMBGeoPoint class]]  || [object isKindOfClass:[NCMBACL class]]
-    || [object isKindOfClass:[NCMBRelation class]]  || [object isKindOfClass:[NSNull class]];
+    || [object isKindOfClass:[NCMBRelation class]]  || [object isKindOfClass:[NSNull class]]
+    || [object isKindOfClass:[NSData class]];
 }
 
 //リストの入力値チェック
@@ -1109,7 +1110,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
                     if (error){
                         [self mergePreviousOperation:operation];
                     } else {
-                        
                         [self afterSave:responseDic operations:operation];
                         
                     }
@@ -1655,6 +1655,10 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  @return JSONオブジェクトから変換されたオブジェクト
  */
 - (id)convertToNCMBObjectFromJSON:(id)jsonData convertKey:(NSString*)convertKey{
+    if(![self isValidType:jsonData]){
+        [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"Invalid type for object value." userInfo:nil] raise];
+    };
+    
     if (jsonData == NULL){
         //objがNULLだったら
         return nil;
@@ -1710,15 +1714,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
             array[i] = [self convertToNCMBObjectFromJSON:jsonData[i] convertKey:nil];
         }
         return array;
-    } else if ([jsonData isKindOfClass:[NSSet class]]){
-        NSMutableSet *currentSet = [NSMutableSet setWithObject:jsonData];
-        NSMutableSet *set = [NSMutableSet set];
-        for (id value in [currentSet objectEnumerator]){
-            //objがNSSetだったら再帰呼び出し
-            [set addObject:[self convertToNCMBObjectFromJSON:value  convertKey:nil]];
-        }
-        return set;
-        
     }
     //その他の型(文字列、数値、真偽値)はそのまま返却
     return jsonData;
@@ -1745,6 +1740,10 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  @param obj NCMBオブジェクト
  */
 - (id)convertToJSONFromNCMBObject:(id)obj{
+    if(![self isValidType:obj]){
+        [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"Invalid type for object value." userInfo:nil] raise];
+    };
+    
     if (obj == NULL || obj == nil){
         //objがNULLだったら
         return [NSNull null];
@@ -1803,15 +1802,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
             array[i] = [self convertToJSONFromNCMBObject:obj[i]];
         }
         return array;
-    } else if ([obj isKindOfClass:[NSSet class]]){
-        NSMutableSet *currentSet = [NSMutableSet setWithObject:obj];
-        NSMutableSet *set = [NSMutableSet set];
-        for (id value in [currentSet objectEnumerator]){
-            //objがNSSetだったら再帰呼び出し
-            [set addObject:[self convertToJSONFromNCMBObject:value]];
-        }
-        return set;
-        
     }
     //その他の型(文字列、数値、真偽値)はそのまま返却
     return obj;
