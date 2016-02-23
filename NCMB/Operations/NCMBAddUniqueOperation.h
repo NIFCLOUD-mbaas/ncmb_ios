@@ -18,7 +18,7 @@
 
 @interface NCMBAddUniqueOperation : NSObject
 
-@property (nonatomic,strong)NSMutableSet *objects;
+@property (nonatomic,strong)NSMutableArray *objects;
 
 - (NCMBAddUniqueOperation *)initWithClassName:(id)newValue;
 
