@@ -31,7 +31,7 @@
                   clientKey:@"YOUR_CLIENT_KEY"];
     
     NCMBScript *script = [NCMBScript scriptWithName:@"testScript_GET.js"
-                                             method:NCMBSCRIPT_GET
+                                             method:NCMBExecuteWithGetMethod
                                            endpoint:@"http://localhost:3000"];
 
     [script execute:@{@"name":@"Test"}

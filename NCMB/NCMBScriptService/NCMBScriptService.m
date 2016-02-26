@@ -16,7 +16,7 @@
 
 #import "NCMBScriptService.h"
 
-NSString *const NCMBScriptServiceDefaultEndPoint = @"https://logic.mb.api.cloud.nifty.com";
+NSString *const NCMBScriptServiceDefaultEndPoint = @"https://script.mb.api.cloud.nifty.com";
 NSString *const NCMBScriptServiceApiVersion = @"2015-09-01";
 NSString *const NCMBScriptServicePath = @"script";
 
