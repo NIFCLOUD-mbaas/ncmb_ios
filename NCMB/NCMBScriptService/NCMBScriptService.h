@@ -18,10 +18,17 @@
 
 #import "NCMBRequest.h"
 
+/**
+ スクリプトを実行するリクエストメソッド
+*/
 typedef NS_ENUM(NSUInteger, NCMBScriptRequestMethod) {
+    /// GETメソッドでのスクリプト実行
     NCMBExecuteWithGetMethod,
+    /// POSTメソッドでのスクリプト実行
     NCMBExecuteWithPostMethod,
+    /// PUTメソッドでのスクリプト実行
     NCMBExecuteWithPutMethod,
+    /// DELETEメソッドでのスクリプト実行
     NCMBExecuteWithDeleteMethod
 };
 
