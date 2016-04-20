@@ -98,6 +98,29 @@ describe(@"NCMBScriptService", ^{
         expect(service.request.URL.absoluteString).to.equal(expectStr);
     });
     
+    it (@"should create post method request with specified query string", ^{
+        NCMBScriptService *service = [[NCMBScriptService alloc] init];
+        
+        [service executeScript:@"testScript.js"
+                        method:NCMBExecuteWithPostMethod
+                        header:nil
+                          body:nil
+                         query:@{@"number":@12345,
+                                 @"string":@"test",
+                                 @"array":@[@"typeA",@"typeB"],
+                                 @"dictionary":@{@"key":@"value"},
+                                 @"bool":@YES}
+                     withBlock:nil];
+        
+        NSString *expectStr = [NSString stringWithFormat:@"%@/%@/%@/%@",
+                               NCMBScriptServiceDefaultEndPoint,
+                               NCMBScriptServiceApiVersion,
+                               NCMBScriptServicePath,
+                               @"testScript.js"];
+        
+        expect(service.request.URL.absoluteString).to.equal(expectStr);
+    });
+    
     it(@"should run callback response of execute asynchronously script", ^{
         waitUntil(^(DoneCallback done) {
             
