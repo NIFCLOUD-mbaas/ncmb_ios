@@ -286,16 +286,22 @@ shouldStartLoadWithRequest:(NSURLRequest*) request
     if (navigationType == UIWebViewNavigationTypeLinkClicked) {
         NSRange range = [[request.URL absoluteString] rangeOfString:@"https://api.twitter.com/"];
         if (range.location == NSNotFound) {
-            UIWindow* window = [UIApplication sharedApplication].windows[0];
+            
+            if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+                // iPadではアクションシートを使わず直接Safariで開く
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[[request URL] absoluteString]]];
+            } else {
+                UIWindow* window = [UIApplication sharedApplication].windows[0];
                 
-            UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
-            actionSheet.delegate = self;
-            actionSheet.title = [[request URL] absoluteString];
-            [actionSheet addButtonWithTitle:@"Safariで開く"];
-            [actionSheet addButtonWithTitle:@"キャンセル"];
-            actionSheet.cancelButtonIndex = 1;
+                UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
+                actionSheet.delegate = self;
+                actionSheet.title = [[request URL] absoluteString];
+                [actionSheet addButtonWithTitle:@"Safariで開く"];
+                [actionSheet addButtonWithTitle:@"キャンセル"];
+                actionSheet.cancelButtonIndex = 1;
                 
-            [actionSheet showInView:window];
+                [actionSheet showInView:window];
+            }
 
             return NO;
         }
