@@ -47,7 +47,10 @@
 #define URL_AUTHENTICATION_MAIL @"requestMailAddressUserEntry"
 #define URL_PASSWOR_RESET  @"requestPasswordReset"
 
-
+#define AUTH_TYPE_GOOGLE                @"google"
+#define AUTH_TYPE_TWITTER               @"twitter"
+#define AUTH_TYPE_FACEBOOK              @"facebook"
+#define AUTH_TYPE_ANONYMOUS             @"Anonymous"
 
 static NCMBUser *currentUser = nil;
 static BOOL isEnableAutomaticUser = NO;
@@ -938,6 +941,90 @@ static BOOL isEnableAutomaticUser = NO;
         }
     }
     [NCMBUser saveToFileCurrentUser:self];
+}
+
+#pragma mark - google signIn
+
+/**
+ 他の認証方法でログイン中のcurrentUserに、Googleの認証情報を紐付ける
+ @param googleInfo Googleの認証情報（idとaccess_token）
+ @param block 既存のauthDataのgoogle情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
+ */
+- (void)linkWithGoogleToken:(NSDictionary *)googleInfo withBlock:(NCMBErrorResultBlock)block{
+    //既存のauthDataのgoogle情報のみ更新する
+    NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
+    if([[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
+        userAuthData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
+    }
+    [userAuthData setObject:googleInfo forKey:AUTH_TYPE_GOOGLE];
+    [self setObject:userAuthData forKey:@"authData"];
+    [self signUpInBackgroundWithBlock:^(NSError *error) {
+        if(block){
+            block(error);
+        }
+    }];
+}
+
+/**
+ 会員情報に、引数で指定したtypeの認証情報が含まれているか確認する
+ @param type 認証情報のType（GoogleもしくはTwitter、Facebook、anonymous）
+ @return 引数で指定したtypeの会員情報が含まれている場合はYESを返す
+ */
+- (BOOL)isLinkedWith:(NSString *)type{
+    
+    BOOL isLinkerFlag = NO;
+    if ([type isEqualToString:AUTH_TYPE_GOOGLE]
+        || [type isEqualToString:AUTH_TYPE_TWITTER]
+        || [type isEqualToString:AUTH_TYPE_FACEBOOK]
+        || [type isEqualToString:AUTH_TYPE_ANONYMOUS])
+    {
+        if ([self objectForKey:@"authData"] && [[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]) {
+            if ([[self objectForKey:@"authData"] objectForKey:type]) {
+                isLinkerFlag = YES;
+            }
+        }
+    }
+    return isLinkerFlag;
+}
+
+/**
+ 会員情報から、引数で指定したtypeの認証情報を削除する
+ @param type 認証情報のType（GoogleもしくはTwitter、Facebook、anonymous）
+ @param block エラー情報を返却するblock エラーがあればエラーのポインタが、なければnilが渡される。
+ */
+- (void)unlink:(NSString *)type withBlock:(NCMBErrorResultBlock)block{
+    
+    // Userから指定したtypeの認証情報を削除する
+    if ([[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
+        // 指定したtypeと同じ認証情報の場合は削除する
+        if ([self isLinkedWith:type]) {
+            NSMutableDictionary *authData = nil;
+            authData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
+            [authData removeObjectForKey:type];
+            [self setObject:authData forKey:@"authData"];
+            [self saveInBackgroundWithBlock:^(NSError *error) {
+                if (block){
+                    block(error);
+                }
+            }];
+        } else {
+            // 指定したtype以外の認証情報の場合はエラーを返す
+            if (block){
+                NSError *error = [NSError errorWithDomain:ERRORDOMAIN
+                                                     code:404003
+                                                 userInfo:@{NSLocalizedDescriptionKey:@"other token type"}];
+                block(error);
+            }
+        }
+    } else {
+        // 認証情報がない場合エラーを返す
+        if (block){
+            NSError *error = [NSError errorWithDomain:ERRORDOMAIN
+                                                 code:404003
+                                             userInfo:@{NSLocalizedDescriptionKey:@"token not found"}];
+            block(error);
+        }
+    }
 }
 
 @end
