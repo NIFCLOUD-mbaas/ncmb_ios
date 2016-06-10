@@ -30,9 +30,6 @@
 #if __has_include(<FacebookSDK/FacebookSDK.h>) || __has_include(<FBSDKLoginKit/FBSDKLoginKit.h>)
 #import "NCMBFacebookUtils+Private.h"
 #endif
-#if __has_include(<GoogleSignIn/GoogleSignIn.h>)
-#import "NCMBGoogleUtils+Private.h"
-#endif
 #endif
 
 
@@ -762,10 +759,6 @@ static BOOL isEnableAutomaticUser = NO;
     
     //Facebookのセッションを削除
     [NCMBFacebookUtils clearFacebookSession];
-#endif
-#if __has_include(<GoogleSignIn/GoogleSignIn.h>)
-    //Googleのセッションを削除
-    [NCMBGoogleUtils clearGoogleSession];
 #endif
     if ([[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTUSER_PATH isDirectory:nil]) {
         [[NSFileManager defaultManager] removeItemAtPath:DATA_CURRENTUSER_PATH error:nil];
