@@ -10,6 +10,7 @@
 		5D40F2941C578B6D00358E63 /* NCMBRequestSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D40F2931C578B6D00358E63 /* NCMBRequestSpec.m */; };
 		5D69FBAA1C55D9FD00526E87 /* NCMBScriptServiceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D69FBA91C55D9FD00526E87 /* NCMBScriptServiceSpec.m */; };
 		5DAF49AE1C5080DC0012F4DA /* NCMBScriptSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DAF49AD1C5080DC0012F4DA /* NCMBScriptSpec.m */; };
+		9D8D7DAD1D0A4FBF00963745 /* NCMBUserSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D8D7DAC1D0A4FBF00963745 /* NCMBUserSpec.m */; };
 		DA4A60A010626E247AF35325 /* libPods-NCMBTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B70F2F83AA3F5861F40A1CE /* libPods-NCMBTests.a */; };
 /* End PBXBuildFile section */
 
@@ -21,6 +22,7 @@
 		5DE7EB6A1C5075000082ED93 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		724CF6FBB40BF7A1421D5E2B /* Pods-NCMBTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NCMBTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NCMBTests/Pods-NCMBTests.release.xcconfig"; sourceTree = "<group>"; };
 		7B70F2F83AA3F5861F40A1CE /* libPods-NCMBTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NCMBTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D8D7DAC1D0A4FBF00963745 /* NCMBUserSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBUserSpec.m; sourceTree = "<group>"; };
 		A9A51BAA7673E88272305FBD /* Pods-NCMBTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NCMBTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NCMBTests/Pods-NCMBTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -70,6 +72,7 @@
 				5D69FBA91C55D9FD00526E87 /* NCMBScriptServiceSpec.m */,
 				5DAF49AD1C5080DC0012F4DA /* NCMBScriptSpec.m */,
 				5D40F2931C578B6D00358E63 /* NCMBRequestSpec.m */,
+				9D8D7DAC1D0A4FBF00963745 /* NCMBUserSpec.m */,
 			);
 			path = NCMBTests;
 			sourceTree = "<group>";
@@ -89,12 +92,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5DE7EB6B1C5075000082ED93 /* Build configuration list for PBXNativeTarget "NCMBTests" */;
 			buildPhases = (
-				C31F0BADE8326605C1026F0A /* Check Pods Manifest.lock */,
+				C31F0BADE8326605C1026F0A /* 📦 Check Pods Manifest.lock */,
 				5DE7EB611C5075000082ED93 /* Sources */,
 				5DE7EB621C5075000082ED93 /* Frameworks */,
 				5DE7EB631C5075000082ED93 /* Resources */,
-				276B43A9F27291362FC8BE9C /* Embed Pods Frameworks */,
-				B1DB812ED827A56329886944 /* Copy Pods Resources */,
+				276B43A9F27291362FC8BE9C /* 📦 Embed Pods Frameworks */,
+				B1DB812ED827A56329886944 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -146,14 +149,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		276B43A9F27291362FC8BE9C /* Embed Pods Frameworks */ = {
+		276B43A9F27291362FC8BE9C /* 📦 Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "📦 Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -161,14 +164,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NCMBTests/Pods-NCMBTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B1DB812ED827A56329886944 /* Copy Pods Resources */ = {
+		B1DB812ED827A56329886944 /* 📦 Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "📦 Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -176,14 +179,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NCMBTests/Pods-NCMBTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C31F0BADE8326605C1026F0A /* Check Pods Manifest.lock */ = {
+		C31F0BADE8326605C1026F0A /* 📦 Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "📦 Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -201,6 +204,7 @@
 				5DAF49AE1C5080DC0012F4DA /* NCMBScriptSpec.m in Sources */,
 				5D69FBAA1C55D9FD00526E87 /* NCMBScriptServiceSpec.m in Sources */,
 				5D40F2941C578B6D00358E63 /* NCMBRequestSpec.m in Sources */,
+				9D8D7DAD1D0A4FBF00963745 /* NCMBUserSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
