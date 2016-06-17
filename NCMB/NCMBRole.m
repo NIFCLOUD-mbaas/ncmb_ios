@@ -71,6 +71,10 @@
  @param user 追加する会員
  */
 - (void)addUser:(NCMBUser*)user{
+    //ロールに属するユーザー情報がNSArrayだった場合はリレーションを新規作成する
+    if ([_users isKindOfClass:[NSArray class]]) {
+        _users = [self relationforKey:@"belongUser"];
+    }
     //プロパティの更新
     [_users addObject:(NCMBObject*)user];
     
@@ -81,6 +85,10 @@
  @param role 追加するロール
  */
 - (void)addRole:(NCMBRole*)role{
+    //ロールに属する子ロール情報がNSArrayだった場合はリレーションを新規作成する
+    if ([_roles isKindOfClass:[NSArray class]]) {
+        _roles = [self relationforKey:@"belongRole"];
+    }
     //プロパティの更新
     [_roles addObject:(NCMBObject*)role];
 }
