@@ -944,14 +944,28 @@ static BOOL isEnableAutomaticUser = NO;
  @param block 既存のauthDataのgoogle情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
  */
 - (void)linkWithGoogleToken:(NSDictionary *)googleInfo withBlock:(NCMBErrorResultBlock)block{
+    // ローカルデータを取得
+    NSMutableDictionary *localAuthData = [NSMutableDictionary dictionary];
+    if([[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
+        localAuthData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
+    }
     //既存のauthDataのgoogle情報のみ更新する
     NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
-    if([[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
-        userAuthData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
-    }
     [userAuthData setObject:googleInfo forKey:AUTH_TYPE_GOOGLE];
     [self setObject:userAuthData forKey:@"authData"];
-    [self signUpInBackgroundWithBlock:^(NSError *error) {
+    [self saveInBackgroundWithBlock:^(NSError *error) {
+        if (!error){
+            // ローカルデータから既にあるauthDataを取得してgoogleInfoをマージ
+            [localAuthData setObject:googleInfo forKey:AUTH_TYPE_GOOGLE];
+            [estimatedData setObject:localAuthData forKey:@"authData"];
+            // ログインユーザーをファイルに保存する
+            [NCMBUser saveToFileCurrentUser:self];
+        } else {
+            // 保存に失敗した場合は、元のデータに戻す
+            [estimatedData setObject:localAuthData forKey:@"authData"];
+            // ログインユーザーをファイルに保存する
+            [NCMBUser saveToFileCurrentUser:self];
+        }
         if(block){
             block(error);
         }
@@ -991,11 +1005,30 @@ static BOOL isEnableAutomaticUser = NO;
     if ([[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
         // 指定したtypeと同じ認証情報の場合は削除する
         if ([self isLinkedWith:type]) {
-            NSMutableDictionary *authData = nil;
-            authData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
-            [authData removeObjectForKey:type];
+            // ローカルデータを取得
+            NSMutableDictionary *localAuthData = [NSMutableDictionary dictionary];
+            if([[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
+                localAuthData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
+            }
+            // 削除する認証情報を取得
+            NSMutableDictionary *authData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
+            // 引数で指定した認証情報を削除
+            [authData setObject:[NSNull null] forKey:type];
+            
             [self setObject:authData forKey:@"authData"];
             [self saveInBackgroundWithBlock:^(NSError *error) {
+                if (!error){
+                    // ローカルデータから既にあるauthDataを取得してgoogleInfoをマージ
+                    [localAuthData removeObjectForKey:type];
+                    [estimatedData setObject:localAuthData forKey:@"authData"];
+                    // ログインユーザーをファイルに保存する
+                    [NCMBUser saveToFileCurrentUser:self];
+                } else {
+                    // 保存に失敗した場合は、元のデータに戻す
+                    [estimatedData setObject:localAuthData forKey:@"authData"];
+                    // ログインユーザーをファイルに保存する
+                    [NCMBUser saveToFileCurrentUser:self];
+                }
                 if (block){
                     block(error);
                 }
