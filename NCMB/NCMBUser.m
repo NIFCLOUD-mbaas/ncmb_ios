@@ -748,6 +748,22 @@ static BOOL isEnableAutomaticUser = NO;
 }
 
 /**
+ 非同期でログアウトを行い、コールバック後にSNSのsignOut処理をしてもらうようにする
+ @param block ログアウトのリクエストをした後に実行されるblock
+ */
++ (void)logoutWithClearSNSSession:(NCMBErrorResultBlock)block{
+    NCMBURLConnection *connect = [[NCMBURLConnection new] initWithPath:URL_LOGOUT method:@"GET" data:nil];
+    [connect asyncConnectionWithBlock:^(id response, NSError *error) {
+        if (!error) {
+            [self logOutEvent];
+            block(nil);
+        } else {
+            block(error);
+        }
+    }];
+}
+
+/**
  ログアウトの処理
  */
 + (void)logOutEvent{
