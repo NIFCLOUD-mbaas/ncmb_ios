@@ -37,9 +37,9 @@ describe(@"NCMBUser", ^{
     
     it(@"should link with google token", ^{
         
-        NSDictionary *googleInfo = [NSMutableDictionary dictionary];
-        [googleInfo setValue:@"googleId" forKey:@"id"];
-        [googleInfo setValue:@"googlgAccessToken" forKey:@"access_token"];
+        NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                     @"access_token" : @"googleAccessToken"
+                                     };
         
         NCMBUser *user = [NCMBUser user];
         id mock = OCMPartialMock(user);
@@ -50,19 +50,146 @@ describe(@"NCMBUser", ^{
             block(nil);
         };
         
-        OCMStub([mock signUpInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
         
         [mock linkWithGoogleToken:googleInfo withBlock:^(NSError *error) {
             expect(error).beNil();
+            if(!error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
+            }
         }];
         
     });
     
+    it(@"should link with google token if already other token", ^{
+        
+        NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                     @"access_token" : @"googleAccessToken"
+                                     };
+        
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+        
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+        
+        NSMutableDictionary *twitterAuth = [NSMutableDictionary dictionary];
+        [twitterAuth setObject:twitterInfo forKey:@"twitter"];
+        [mock setObject:twitterAuth forKey:@"authData"];
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            block(nil);
+        };
+        
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        [mock linkWithGoogleToken:googleInfo withBlock:^(NSError *error) {
+            expect(error).beNil();
+            if(!error) {
+                for (id key in [[mock objectForKey:@"authData"]keyEnumerator]) {
+                    if([key isEqualToString:@"google"]) {
+                        expect([[mock objectForKey:@"authData"]objectForKey:key]).to.equal(googleInfo);
+                    } else if ([key isEqualToString:@"twitter"]) {
+                        expect([[mock objectForKey:@"authData"]objectForKey:key]).to.equal(twitterInfo);
+                    }
+                }
+            }
+        }];
+    });
+    
+    it(@"should case of network error are not link with google token and return existing token", ^{
+        
+        NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                     @"access_token" : @"googleAccessToken"
+                                     };
+        
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+        
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+        
+        NSMutableDictionary *twitterAuth = [NSMutableDictionary dictionary];
+        [twitterAuth setObject:twitterInfo forKey:@"twitter"];
+        [mock setObject:twitterAuth forKey:@"authData"];
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                                 code:-1
+                                             userInfo:nil];
+            block(e);
+        };
+        
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        [mock linkWithGoogleToken:googleInfo withBlock:^(NSError *error) {
+            expect(error).to.beTruthy();
+            if(error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).toNot.equal(googleInfo);
+                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+            }
+        }];
+    });
+    
+    it(@"should link with google token update for private documents device currentUser files", ^{
+        
+        NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                     @"access_token" : @"googleAccessToken"
+                                     };
+        
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+        
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+        
+        NSMutableDictionary *twitterAuth = [NSMutableDictionary dictionary];
+        [twitterAuth setObject:twitterInfo forKey:@"twitter"];
+        [mock setObject:twitterAuth forKey:@"authData"];
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            block(nil);
+        };
+        
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        [mock linkWithGoogleToken:googleInfo withBlock:^(NSError *error) {
+            expect(error).beNil();
+            if(!error) {
+                NCMBUser *currentUser = [NCMBUser currentUser];
+                expect([[currentUser objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+                expect([[currentUser objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
+            }
+        }];
+    });
+    
     it(@"should is linked google token with user", ^{
         
-        NSMutableDictionary *googleInfo = [NSMutableDictionary dictionary];
-        [googleInfo setValue:@"googleId" forKey:@"id"];
-        [googleInfo setValue:@"googlgAccessToken" forKey:@"access_token"];
+        NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                     @"access_token" : @"googleAccessToken"
+                                     };
+        
         NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
         [userAuthData setObject:googleInfo forKey:@"google"];
         
@@ -75,9 +202,10 @@ describe(@"NCMBUser", ^{
     
     it(@"should is not linked google token with user", ^{
         
-        NSMutableDictionary *googleInfo = [NSMutableDictionary dictionary];
-        [googleInfo setValue:@"googleId" forKey:@"id"];
-        [googleInfo setValue:@"googlgAccessToken" forKey:@"access_token"];
+        NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                     @"access_token" : @"googleAccessToken"
+                                     };
+        
         NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
         [userAuthData setObject:googleInfo forKey:@"google"];
         
@@ -87,14 +215,24 @@ describe(@"NCMBUser", ^{
         expect([user isLinkedWith:@"twitter"]).to.beFalsy();
         
     });
-    
+
     it(@"should unlink google token with user", ^{
         
-        NSMutableDictionary *googleInfo = [NSMutableDictionary dictionary];
-        [googleInfo setValue:@"googleId" forKey:@"id"];
-        [googleInfo setValue:@"googlgAccessToken" forKey:@"access_token"];
+        NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                     @"access_token" : @"googleAccessToken"
+                                     };
+        
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+        
         NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
         [userAuthData setObject:googleInfo forKey:@"google"];
+        [userAuthData setObject:twitterInfo forKey:@"twitter"];
         
         NCMBUser *user = [NCMBUser user];
         [user setObject:userAuthData forKey:@"authData"];
@@ -111,8 +249,15 @@ describe(@"NCMBUser", ^{
         
         OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
         
+        expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
+        expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+        
         [mock unlink:@"google" withBlock:^(NSError *error) {
             expect(error).beNil();
+            if(!error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).toNot.equal(googleInfo);
+                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+            }
         }];
     });
     
@@ -171,6 +316,52 @@ describe(@"NCMBUser", ^{
                                              userInfo:@{NSLocalizedDescriptionKey:@"token not found"}];
             
             expect(error).to.equal(tokenError);
+        }];
+    });
+    
+    it(@"should case of network error are not unlink with google token and return existing token", ^{
+        
+        NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                     @"access_token" : @"googleAccessToken"
+                                     };
+        
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+        
+        NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
+        [userAuthData setObject:googleInfo forKey:@"google"];
+        [userAuthData setObject:twitterInfo forKey:@"twitter"];
+        
+        NCMBUser *user = [NCMBUser user];
+        [user setObject:userAuthData forKey:@"authData"];
+        
+        id mock = OCMPartialMock(user);
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                             code:-1
+                                         userInfo:nil];
+            block(e);
+        };
+        
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
+        expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+        
+        [mock unlink:@"google" withBlock:^(NSError *error) {
+            expect(error).to.beTruthy();
+            if(error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
+                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+            }
         }];
     });
     
