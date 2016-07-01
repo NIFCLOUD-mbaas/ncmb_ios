@@ -246,6 +246,11 @@
  */
 + (void)logOut;
 
+/**
+ 非同期でログアウトを行い、コールバック後にSNSのsignOut処理をしてもらうようにする
+ @param block ログアウトのリクエストをした後に実行されるblock
+ */
++ (void)logoutWithClearSNSSession:(NCMBErrorResultBlock)block;
 
 /** @name requestPasswordReset */
 
