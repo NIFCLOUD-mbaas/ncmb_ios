@@ -139,7 +139,7 @@ describe(@"NCMBUser", ^{
         [mock linkWithGoogleToken:googleInfo withBlock:^(NSError *error) {
             expect(error).to.beTruthy();
             if(error) {
-                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).toNot.equal(googleInfo);
+                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.beNil();
                 expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
             }
         }];
@@ -255,7 +255,7 @@ describe(@"NCMBUser", ^{
         [mock unlink:@"google" withBlock:^(NSError *error) {
             expect(error).beNil();
             if(!error) {
-                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).toNot.equal(googleInfo);
+                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.beNil();
                 expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
             }
         }];
