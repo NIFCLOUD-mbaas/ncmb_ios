@@ -748,10 +748,10 @@ static BOOL isEnableAutomaticUser = NO;
 }
 
 /**
- 非同期でログアウトを行い、コールバック後にSNSのsignOut処理をしてもらうようにする
+ 非同期でログアウトを行う
  @param block ログアウトのリクエストをした後に実行されるblock
  */
-+ (void)logoutWithClearSNSSession:(NCMBErrorResultBlock)block{
++ (void)logOutInBackgroundWithBlock:(NCMBErrorResultBlock)block{
     NCMBURLConnection *connect = [[NCMBURLConnection new] initWithPath:URL_LOGOUT method:@"GET" data:nil];
     [connect asyncConnectionWithBlock:^(id response, NSError *error) {
         if (!error) {
@@ -973,15 +973,10 @@ static BOOL isEnableAutomaticUser = NO;
         if (!error){
             // ローカルデータから既にあるauthDataを取得してgoogleInfoをマージ
             [localAuthData setObject:googleInfo forKey:AUTH_TYPE_GOOGLE];
-            [estimatedData setObject:localAuthData forKey:@"authData"];
-            // ログインユーザーをファイルに保存する
-            [NCMBUser saveToFileCurrentUser:self];
-        } else {
-            // 保存に失敗した場合は、元のデータに戻す
-            [estimatedData setObject:localAuthData forKey:@"authData"];
-            // ログインユーザーをファイルに保存する
-            [NCMBUser saveToFileCurrentUser:self];
         }
+        [estimatedData setObject:localAuthData forKey:@"authData"];
+        // ログインユーザーをファイルに保存する
+        [NCMBUser saveToFileCurrentUser:self];
         if(block){
             block(error);
         }
@@ -1036,15 +1031,10 @@ static BOOL isEnableAutomaticUser = NO;
                 if (!error){
                     // ローカルデータから既にあるauthDataを取得してgoogleInfoをマージ
                     [localAuthData removeObjectForKey:type];
-                    [estimatedData setObject:localAuthData forKey:@"authData"];
-                    // ログインユーザーをファイルに保存する
-                    [NCMBUser saveToFileCurrentUser:self];
-                } else {
-                    // 保存に失敗した場合は、元のデータに戻す
-                    [estimatedData setObject:localAuthData forKey:@"authData"];
-                    // ログインユーザーをファイルに保存する
-                    [NCMBUser saveToFileCurrentUser:self];
                 }
+                [estimatedData setObject:localAuthData forKey:@"authData"];
+                // ログインユーザーをファイルに保存する
+                [NCMBUser saveToFileCurrentUser:self];
                 if (block){
                     block(error);
                 }
