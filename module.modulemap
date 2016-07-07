@@ -9,8 +9,6 @@ framework module NCMB {
   header "NCMBFacebookUtils.h"
   header "NCMBFile.h"
   header "NCMBGeoPoint.h"
-  header "NCMBGoogleUtils.h"
-  header "NCMBGoogleUtils+Private.h"
   header "NCMBInstallation.h"
   header "NCMBObject.h"
   header "NCMBObject+Subclass.h"
