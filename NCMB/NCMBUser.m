@@ -952,11 +952,11 @@ static BOOL isEnableAutomaticUser = NO;
     [NCMBUser saveToFileCurrentUser:self];
 }
 
-#pragma mark - google signIn
+#pragma mark - link
 
 /**
- 他の認証方法でログイン中のcurrentUserに、Googleの認証情報を紐付ける
- @param googleInfo Googleの認証情報（idとaccess_token）
+ 他の認証方法でログイン中のcurrentUserに、googleの認証情報を紐付ける
+ @param googleInfo googleの認証情報（idとaccess_token）
  @param block 既存のauthDataのgoogle情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
  */
 - (void)linkWithGoogleToken:(NSDictionary *)googleInfo withBlock:(NCMBErrorResultBlock)block{
@@ -985,7 +985,7 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  会員情報に、引数で指定したtypeの認証情報が含まれているか確認する
- @param type 認証情報のType（GoogleもしくはTwitter、Facebook、anonymous）
+ @param type 認証情報のtype（googleもしくはtwitter、facebook、anonymous）
  @return 引数で指定したtypeの会員情報が含まれている場合はYESを返す
  */
 - (BOOL)isLinkedWith:(NSString *)type{
@@ -1007,7 +1007,7 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  会員情報から、引数で指定したtypeの認証情報を削除する
- @param type 認証情報のType（GoogleもしくはTwitter、Facebook、anonymous）
+ @param type 認証情報のtype（googleもしくはtwitter、facebook、anonymous）
  @param block エラー情報を返却するblock エラーがあればエラーのポインタが、なければnilが渡される。
  */
 - (void)unlink:(NSString *)type withBlock:(NCMBErrorResultBlock)block{
