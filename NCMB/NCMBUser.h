@@ -316,12 +316,28 @@
 /** @name link */
 
 /**
- 他の認証方法でログイン中のcurrentUserに、googleの認証情報を紐付ける
+ ログイン中のユーザー情報に、googleの認証情報を紐付ける
  @param googleInfo googleの認証情報（idとaccess_token）
  @param block 既存のauthDataのgoogle情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
  */
 - (void)linkWithGoogleToken:(NSDictionary *)googleInfo
                   withBlock:(NCMBErrorResultBlock)block;
+
+/**
+ ログイン中のユーザー情報に、twitterの認証情報を紐付ける
+ @param twitterInfo twitterの認証情報
+ @param block 既存のauthDataのtwitter情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
+ */
+- (void)linkWithTwitterToken:(NSDictionary *)twitterInfo
+                   withBlock:(NCMBErrorResultBlock)block;
+
+/**
+ ログイン中のユーザー情報に、facebookの認証情報を紐付ける
+ @param facebookInfo facebookの認証情報
+ @param block 既存のauthDataのfacebook情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
+ */
+- (void)linkWithFacebookToken:(NSDictionary *)facebookInfo
+                    withBlock:(NCMBErrorResultBlock)block;
 
 /**
  会員情報に、引数で指定したtypeの認証情報が含まれているか確認する
