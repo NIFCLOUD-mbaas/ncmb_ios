@@ -26,9 +26,6 @@
 		8AB2CE8A1CE315F800F27481 /* NCMBFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE161CE315F800F27481 /* NCMBFile.m */; };
 		8AB2CE8B1CE315F800F27481 /* NCMBGeoPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE171CE315F800F27481 /* NCMBGeoPoint.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CE8C1CE315F800F27481 /* NCMBGeoPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE181CE315F800F27481 /* NCMBGeoPoint.m */; };
-		8AB2CE8D1CE315F800F27481 /* NCMBGoogleUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE191CE315F800F27481 /* NCMBGoogleUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CE8E1CE315F800F27481 /* NCMBGoogleUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE1A1CE315F800F27481 /* NCMBGoogleUtils.m */; };
-		8AB2CE8F1CE315F800F27481 /* NCMBGoogleUtils+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE1B1CE315F800F27481 /* NCMBGoogleUtils+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CE901CE315F800F27481 /* NCMBInstallation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE1C1CE315F800F27481 /* NCMBInstallation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CE911CE315F800F27481 /* NCMBInstallation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE1D1CE315F800F27481 /* NCMBInstallation.m */; };
 		8AB2CE921CE315F800F27481 /* NCMBObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE1E1CE315F800F27481 /* NCMBObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -135,9 +132,6 @@
 		8AB2CE161CE315F800F27481 /* NCMBFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBFile.m; sourceTree = "<group>"; };
 		8AB2CE171CE315F800F27481 /* NCMBGeoPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBGeoPoint.h; sourceTree = "<group>"; };
 		8AB2CE181CE315F800F27481 /* NCMBGeoPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBGeoPoint.m; sourceTree = "<group>"; };
-		8AB2CE191CE315F800F27481 /* NCMBGoogleUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBGoogleUtils.h; sourceTree = "<group>"; };
-		8AB2CE1A1CE315F800F27481 /* NCMBGoogleUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBGoogleUtils.m; sourceTree = "<group>"; };
-		8AB2CE1B1CE315F800F27481 /* NCMBGoogleUtils+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NCMBGoogleUtils+Private.h"; sourceTree = "<group>"; };
 		8AB2CE1C1CE315F800F27481 /* NCMBInstallation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBInstallation.h; sourceTree = "<group>"; };
 		8AB2CE1D1CE315F800F27481 /* NCMBInstallation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBInstallation.m; sourceTree = "<group>"; };
 		8AB2CE1E1CE315F800F27481 /* NCMBObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBObject.h; sourceTree = "<group>"; };
@@ -274,9 +268,6 @@
 				8AB2CE161CE315F800F27481 /* NCMBFile.m */,
 				8AB2CE171CE315F800F27481 /* NCMBGeoPoint.h */,
 				8AB2CE181CE315F800F27481 /* NCMBGeoPoint.m */,
-				8AB2CE191CE315F800F27481 /* NCMBGoogleUtils.h */,
-				8AB2CE1A1CE315F800F27481 /* NCMBGoogleUtils.m */,
-				8AB2CE1B1CE315F800F27481 /* NCMBGoogleUtils+Private.h */,
 				8AB2CE1C1CE315F800F27481 /* NCMBInstallation.h */,
 				8AB2CE1D1CE315F800F27481 /* NCMBInstallation.m */,
 				8AB2CE1E1CE315F800F27481 /* NCMBObject.h */,
@@ -507,7 +498,6 @@
 				8AB2CEBF1CE315F800F27481 /* NCMBOAServiceTicket.h in Headers */,
 				8AB2CEA71CE315F800F27481 /* NCMBSubclassing.h in Headers */,
 				8AB2CE801CE315F800F27481 /* NCMBAnalytics.h in Headers */,
-				8AB2CE8F1CE315F800F27481 /* NCMBGoogleUtils+Private.h in Headers */,
 				8AB2CE991CE315F800F27481 /* NCMBReachability.h in Headers */,
 				8AB2CE8B1CE315F800F27481 /* NCMBGeoPoint.h in Headers */,
 				8AB2CEB41CE315F800F27481 /* sha1.h in Headers */,
@@ -529,7 +519,6 @@
 				8AB2CEB21CE315F800F27481 /* hmac.h in Headers */,
 				8AB2CEDE1CE315F800F27481 /* NCMBQuery+Private.h in Headers */,
 				8AB2CEA31CE315F800F27481 /* NCMBScript.h in Headers */,
-				8AB2CE8D1CE315F800F27481 /* NCMBGoogleUtils.h in Headers */,
 				8AB2CEB71CE315F800F27481 /* NCMBOADataFetcher.h in Headers */,
 				8AB2CE7E1CE315F800F27481 /* NCMBACL.h in Headers */,
 				8AB2CEA51CE315F800F27481 /* NCMBScriptService.h in Headers */,
@@ -644,7 +633,6 @@
 				8AB2CEAE1CE315F800F27481 /* NSURLBase.m in Sources */,
 				8AB2CEC91CE315F800F27481 /* NCMBURLConnection.m in Sources */,
 				8AB2CEAF1CE315F800F27481 /* Base64Transcoder.c in Sources */,
-				8AB2CE8E1CE315F800F27481 /* NCMBGoogleUtils.m in Sources */,
 				8AB2CE931CE315F800F27481 /* NCMBObject.m in Sources */,
 				8AB2CEB11CE315F800F27481 /* hmac.c in Sources */,
 				8AB2CEE21CE315F800F27481 /* SubClassHandler.m in Sources */,
@@ -697,7 +685,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -739,7 +727,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
