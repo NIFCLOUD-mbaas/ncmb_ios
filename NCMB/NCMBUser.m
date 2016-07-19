@@ -944,24 +944,25 @@ static BOOL isEnableAutomaticUser = NO;
 #pragma mark - link
 
 /**
- ログイン中のユーザー情報に、googleの認証情報を紐付ける
- @param googleInfo googleの認証情報（idとaccess_token）
- @param block 既存のauthDataのgoogle情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
+ ログイン中のユーザー情報に、snsの認証情報を紐付ける
+ @param snsInfo snsの認証情報
+ @param type 認証情報のtype
+ @param block 既存のauthDataのtype情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
  */
-- (void)linkWithGoogleToken:(NSDictionary *)googleInfo withBlock:(NCMBErrorResultBlock)block{
+- (void)linkWithToken:(NSDictionary *)snsInfo withType:(NSString *)type withBlock:(NCMBErrorResultBlock)block{
     // ローカルデータを取得
     NSMutableDictionary *localAuthData = [NSMutableDictionary dictionary];
     if([[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
         localAuthData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
     }
-    //既存のauthDataのgoogle情報のみ更新する
+    //既存のauthDataのtype情報のみ更新する
     NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
-    [userAuthData setObject:googleInfo forKey:AUTH_TYPE_GOOGLE];
+    [userAuthData setObject:snsInfo forKey:type];
     [self setObject:userAuthData forKey:@"authData"];
     [self saveInBackgroundWithBlock:^(NSError *error) {
         if (!error){
-            // ローカルデータから既にあるauthDataを取得してgoogleInfoをマージ
-            [localAuthData setObject:googleInfo forKey:AUTH_TYPE_GOOGLE];
+            // ローカルデータから既にあるauthDataを取得して認証情報をマージ
+            [localAuthData setObject:snsInfo forKey:type];
         }
         [estimatedData setObject:localAuthData forKey:@"authData"];
         // ログインユーザーをファイルに保存する
@@ -970,6 +971,15 @@ static BOOL isEnableAutomaticUser = NO;
             block(error);
         }
     }];
+}
+
+/**
+ ログイン中のユーザー情報に、googleの認証情報を紐付ける
+ @param googleInfo googleの認証情報（idとaccess_token）
+ @param block 既存のauthDataのgoogle情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
+ */
+- (void)linkWithGoogleToken:(NSDictionary *)googleInfo withBlock:(NCMBErrorResultBlock)block{
+    [self linkWithToken:googleInfo withType:AUTH_TYPE_GOOGLE withBlock:block];
 }
 
 /**
@@ -978,27 +988,7 @@ static BOOL isEnableAutomaticUser = NO;
  @param block 既存のauthDataのtwitter情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
  */
 - (void)linkWithTwitterToken:(NSDictionary *)twitterInfo withBlock:(NCMBErrorResultBlock)block{
-    // ローカルデータを取得
-    NSMutableDictionary *localAuthData = [NSMutableDictionary dictionary];
-    if([[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
-        localAuthData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
-    }
-    //既存のauthDataのtwitter情報のみ更新する
-    NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
-    [userAuthData setObject:twitterInfo forKey:AUTH_TYPE_TWITTER];
-    [self setObject:userAuthData forKey:@"authData"];
-    [self saveInBackgroundWithBlock:^(NSError *error) {
-        if (!error){
-            // ローカルデータから既にあるauthDataを取得してtwitterInfoをマージ
-            [localAuthData setObject:twitterInfo forKey:AUTH_TYPE_TWITTER];
-        }
-        [estimatedData setObject:localAuthData forKey:@"authData"];
-        // ログインユーザーをファイルに保存する
-        [NCMBUser saveToFileCurrentUser:self];
-        if(block){
-            block(error);
-        }
-    }];
+    [self linkWithToken:twitterInfo withType:AUTH_TYPE_TWITTER withBlock:block];
 }
 
 /**
@@ -1007,27 +997,7 @@ static BOOL isEnableAutomaticUser = NO;
  @param block 既存のauthDataのfacebook情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
  */
 - (void)linkWithFacebookToken:(NSDictionary *)facebookInfo withBlock:(NCMBErrorResultBlock)block{
-    // ローカルデータを取得
-    NSMutableDictionary *localAuthData = [NSMutableDictionary dictionary];
-    if([[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
-        localAuthData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
-    }
-    //既存のauthDataのfacebook情報のみ更新する
-    NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
-    [userAuthData setObject:facebookInfo forKey:AUTH_TYPE_FACEBOOK];
-    [self setObject:userAuthData forKey:@"authData"];
-    [self saveInBackgroundWithBlock:^(NSError *error) {
-        if (!error){
-            // ローカルデータから既にあるauthDataを取得してfacebookInfoをマージ
-            [localAuthData setObject:facebookInfo forKey:AUTH_TYPE_FACEBOOK];
-        }
-        [estimatedData setObject:localAuthData forKey:@"authData"];
-        // ログインユーザーをファイルに保存する
-        [NCMBUser saveToFileCurrentUser:self];
-        if(block){
-            block(error);
-        }
-    }];
+    [self linkWithToken:facebookInfo withType:AUTH_TYPE_FACEBOOK withBlock:block];
 }
 
 /**
