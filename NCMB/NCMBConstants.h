@@ -37,6 +37,7 @@ typedef void (^NCMBArrayResultBlock)(NSArray *objects, NSError *error);
 typedef void (^NCMBSetResultBlock)(NSSet *channels, NSError *error);
 typedef void (^NCMBUserResultBlock)(NCMBUser *user, NSError *error);
 typedef void (^NCMBErrorResultBlock) (NSError *error);
+typedef void (^NCMBAnyObjectResultBlock)(id object, NSError *error);
 
 typedef void (^NCMBDataResultBlock)(NSData *data, NSError *error);
 typedef void (^NCMBDataStreamResultBlock)(NSInputStream *stream, NSError *error);
