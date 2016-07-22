@@ -338,4 +338,13 @@
 - (void)unlink:(NSString *)type
      withBlock:(NCMBErrorResultBlock)block;
 
+#pragma mark - mailAddressConfirm
+/** @name mailAddressConfirm */
+
+/**
+ メールアドレスが確認済みのものかを把握する
+ @return メールアドレスが確認済みの場合はYESを返す
+ */
+- (BOOL)isMailAddressConfirm;
+
 @end

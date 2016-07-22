@@ -1059,4 +1059,15 @@ static BOOL isEnableAutomaticUser = NO;
     }
 }
 
+#pragma mark - mailAddressConfirm
+
+/**
+ メールアドレスが確認済みのものかを把握する
+ @return メールアドレスが確認済みの場合はYESを返す
+ */
+- (BOOL)isMailAddressConfirm{
+    
+    return [self objectForKey:@"mailAddressConfirm"]!= [NSNull null] && [[self objectForKey:@"mailAddressConfirm"]boolValue] ? YES : NO;
+}
+
 @end
