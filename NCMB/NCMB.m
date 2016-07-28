@@ -95,5 +95,25 @@ static BOOL responseValidationFlag = false;
     }
 }
 
+/**
+ プッシュ通知アラート
+ */
++(void)showConfirmPushNotification {
+    if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1){
+        UIUserNotificationType type = UIUserNotificationTypeAlert |
+        UIUserNotificationTypeBadge |
+        UIUserNotificationTypeSound;
+        UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:type
+                                                                                categories:nil];
+        [[UIApplication sharedApplication] registerUserNotificationSettings:setting];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+    } else {
+        #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+         (UIRemoteNotificationTypeAlert |
+          UIRemoteNotificationTypeBadge |
+          UIRemoteNotificationTypeSound)];
+    }
+}
 
 @end
