@@ -29,15 +29,7 @@
 #import "NCMBObject.h"
 #import "NCMBUser.h"
 #import "NCMBFile.h"
-#import "NCMBTwitterUtils.h"
 #import "NCMBScript.h"
-
-
-#if defined(__has_include)
-#if __has_include(<FacebookSDK/FacebookSDK.h>) || __has_include(<FBSDKLoginKit/FBSDKLoginKit.h>)
-#import "NCMBFacebookUtils.h"
-#endif
-#endif
 
 #ifdef NCMBTEST
 #define NCMBDEBUGLOG(...) NSLog(__VA_ARGS__)

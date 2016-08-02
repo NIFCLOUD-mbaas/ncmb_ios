@@ -93,13 +93,8 @@ describe(@"NCMBUser", ^{
         [mock linkWithGoogleToken:googleInfo withBlock:^(NSError *error) {
             expect(error).beNil();
             if(!error) {
-                for (id key in [[mock objectForKey:@"authData"]keyEnumerator]) {
-                    if([key isEqualToString:@"google"]) {
-                        expect([[mock objectForKey:@"authData"]objectForKey:key]).to.equal(googleInfo);
-                    } else if ([key isEqualToString:@"twitter"]) {
-                        expect([[mock objectForKey:@"authData"]objectForKey:key]).to.equal(twitterInfo);
-                    }
-                }
+                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
+                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
             }
         }];
     });
@@ -184,6 +179,224 @@ describe(@"NCMBUser", ^{
         }];
     });
     
+    
+    
+    it(@"should link with twitter token", ^{
+        
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+        
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            block(nil);
+        };
+        
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        [mock linkWithTwitterToken:twitterInfo withBlock:^(NSError *error) {
+            expect(error).beNil();
+            if(!error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+            }
+        }];
+        
+    });
+    
+    it(@"should link with twitter token if already other token", ^{
+        
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+
+        NSDictionary *facebookInfo = @{@"id" : @"facebookId",
+                                       @"access_token" : @"facebookToken",
+                                       @"expiration_date":@{@"__type" : @"Date",@"iso" : @"2016-09-06T05:41:33.466Z"}
+                                       };
+        
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+        
+        NSMutableDictionary *facebookAuth = [NSMutableDictionary dictionary];
+        [facebookAuth setObject:facebookInfo forKey:@"facebook"];
+        [mock setObject:facebookAuth forKey:@"authData"];
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            block(nil);
+        };
+        
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        [mock linkWithTwitterToken:twitterInfo withBlock:^(NSError *error) {
+            expect(error).beNil();
+            if(!error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+                expect([[mock objectForKey:@"authData"]objectForKey:@"facebook"]).to.equal(facebookInfo);
+            }
+        }];
+    });
+    
+    it(@"should case of network error are not link with twitter token and return existing token", ^{
+        
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+        
+        NSDictionary *facebookInfo = @{@"id" : @"facebookId",
+                                       @"access_token" : @"facebookToken",
+                                       @"expiration_date":@{@"__type" : @"Date",@"iso" : @"2016-09-06T05:41:33.466Z"}
+                                       };
+        
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+        
+        NSMutableDictionary *facebookAuth = [NSMutableDictionary dictionary];
+        [facebookAuth setObject:facebookInfo forKey:@"facebook"];
+        [mock setObject:facebookAuth forKey:@"authData"];
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                             code:-1
+                                         userInfo:nil];
+            block(e);
+        };
+        
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        [mock linkWithTwitterToken:twitterInfo withBlock:^(NSError *error) {
+            expect(error).to.beTruthy();
+            if(error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.beNil();
+                expect([[mock objectForKey:@"authData"]objectForKey:@"facebook"]).to.equal(facebookInfo);
+            }
+        }];
+    });
+    
+    
+    
+    
+    it(@"should link with facebook token", ^{
+        
+        NSDictionary *facebookInfo = @{@"id" : @"facebookId",
+                                       @"access_token" : @"facebookToken",
+                                       @"expiration_date":@{@"__type" : @"Date",@"iso" : @"2016-09-06T05:41:33.466Z"}
+                                       };
+        
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            block(nil);
+        };
+        
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        [mock linkWithFacebookToken:facebookInfo withBlock:^(NSError *error) {
+            expect(error).beNil();
+            if(!error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"facebook"]).to.equal(facebookInfo);
+            }
+        }];
+        
+    });
+    
+    it(@"should link with facebook token if already other token", ^{
+        
+        NSDictionary *facebookInfo = @{@"id" : @"facebookId",
+                                       @"access_token" : @"facebookToken",
+                                       @"expiration_date":@{@"__type" : @"Date",@"iso" : @"2016-09-06T05:41:33.466Z"}
+                                       };
+        
+        NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                     @"access_token" : @"googleAccessToken"
+                                     };
+        
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+        
+        NSMutableDictionary *googleAuth = [NSMutableDictionary dictionary];
+        [googleAuth setObject:googleInfo forKey:@"google"];
+        [mock setObject:googleAuth forKey:@"authData"];
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            block(nil);
+        };
+        
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        [mock linkWithFacebookToken:facebookInfo withBlock:^(NSError *error) {
+            expect(error).beNil();
+            if(!error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"facebook"]).to.equal(facebookInfo);
+                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
+            }
+        }];
+    });
+    
+    it(@"should case of network error are not link with facebook token and return existing token", ^{
+        
+        NSDictionary *facebookInfo = @{@"id" : @"facebookId",
+                                       @"access_token" : @"facebookToken",
+                                       @"expiration_date":@{@"__type" : @"Date",@"iso" : @"2016-09-06T05:41:33.466Z"}
+                                       };
+        
+        NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                     @"access_token" : @"googleAccessToken"
+                                     };
+        
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+        
+        NSMutableDictionary *googleAuth = [NSMutableDictionary dictionary];
+        [googleAuth setObject:googleInfo forKey:@"google"];
+        [mock setObject:googleAuth forKey:@"authData"];
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                             code:-1
+                                         userInfo:nil];
+            block(e);
+        };
+        
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        [mock linkWithFacebookToken:facebookInfo withBlock:^(NSError *error) {
+            expect(error).to.beTruthy();
+            if(error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"facebook"]).to.beNil();
+                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
+            }
+        }];
+    });
+
+    
+    
     it(@"should is linked google token with user", ^{
         
         NSDictionary *googleInfo = @{@"id" : @"googleId",
@@ -214,51 +427,6 @@ describe(@"NCMBUser", ^{
         
         expect([user isLinkedWith:@"twitter"]).to.beFalsy();
         
-    });
-
-    it(@"should unlink google token with user", ^{
-        
-        NSDictionary *googleInfo = @{@"id" : @"googleId",
-                                     @"access_token" : @"googleAccessToken"
-                                     };
-        
-        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
-                                      @"id" : @"twitterId",
-                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
-                                      @"oauth_token" : @"twitterOauthToken",
-                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
-                                      @"screen_name" : @"NCMBSupport"
-                                      };
-        
-        NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
-        [userAuthData setObject:googleInfo forKey:@"google"];
-        [userAuthData setObject:twitterInfo forKey:@"twitter"];
-        
-        NCMBUser *user = [NCMBUser user];
-        [user setObject:userAuthData forKey:@"authData"];
-        
-        id mock = OCMPartialMock(user);
-        
-        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
-            __unsafe_unretained void (^block) (NSError *error);
-            [invocation getArgument:&block atIndex:2];
-            if(block){
-                block(nil);
-            }
-        };
-        
-        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
-        
-        expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
-        expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
-        
-        [mock unlink:@"google" withBlock:^(NSError *error) {
-            expect(error).beNil();
-            if(!error) {
-                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.beNil();
-                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
-            }
-        }];
     });
     
     it(@"should unlink google token with user 'other token type error' ", ^{
@@ -319,6 +487,51 @@ describe(@"NCMBUser", ^{
         }];
     });
     
+    it(@"should unlink google token with user", ^{
+        
+        NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                     @"access_token" : @"googleAccessToken"
+                                     };
+        
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+        
+        NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
+        [userAuthData setObject:googleInfo forKey:@"google"];
+        [userAuthData setObject:twitterInfo forKey:@"twitter"];
+        
+        NCMBUser *user = [NCMBUser user];
+        [user setObject:userAuthData forKey:@"authData"];
+        
+        id mock = OCMPartialMock(user);
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            if(block){
+                block(nil);
+            }
+        };
+        
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
+        expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+        
+        [mock unlink:@"google" withBlock:^(NSError *error) {
+            expect(error).beNil();
+            if(!error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.beNil();
+                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+            }
+        }];
+    });
+    
     it(@"should case of network error are not unlink with google token and return existing token", ^{
         
         NSDictionary *googleInfo = @{@"id" : @"googleId",
@@ -361,6 +574,184 @@ describe(@"NCMBUser", ^{
             if(error) {
                 expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
                 expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+            }
+        }];
+    });
+    
+    it(@"should unlink twitter token with user", ^{
+        
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+        
+        NSDictionary *facebookInfo = @{@"id" : @"facebookId",
+                                       @"access_token" : @"facebookToken",
+                                       @"expiration_date":@{@"__type" : @"Date",@"iso" : @"2016-09-06T05:41:33.466Z"}
+                                       };
+        
+        NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
+        [userAuthData setObject:twitterInfo forKey:@"twitter"];
+        [userAuthData setObject:facebookInfo forKey:@"facebook"];
+        
+        NCMBUser *user = [NCMBUser user];
+        [user setObject:userAuthData forKey:@"authData"];
+        
+        id mock = OCMPartialMock(user);
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            if(block){
+                block(nil);
+            }
+        };
+        
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+        expect([[mock objectForKey:@"authData"]objectForKey:@"facebook"]).to.equal(facebookInfo);
+        
+        [mock unlink:@"twitter" withBlock:^(NSError *error) {
+            expect(error).beNil();
+            if(!error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.beNil();
+                expect([[mock objectForKey:@"authData"]objectForKey:@"facebook"]).to.equal(facebookInfo);
+            }
+        }];
+    });
+    
+    it(@"should case of network error are not unlink with twitter token and return existing token", ^{
+        
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+        
+        NSDictionary *facebookInfo = @{@"id" : @"facebookId",
+                                       @"access_token" : @"facebookToken",
+                                       @"expiration_date":@{@"__type" : @"Date",@"iso" : @"2016-09-06T05:41:33.466Z"}
+                                       };
+        
+        NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
+        [userAuthData setObject:twitterInfo forKey:@"twitter"];
+        [userAuthData setObject:facebookInfo forKey:@"facebook"];
+        
+        NCMBUser *user = [NCMBUser user];
+        [user setObject:userAuthData forKey:@"authData"];
+        
+        id mock = OCMPartialMock(user);
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                             code:-1
+                                         userInfo:nil];
+            block(e);
+        };
+        
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+        expect([[mock objectForKey:@"authData"]objectForKey:@"facebook"]).to.equal(facebookInfo);
+        
+        [mock unlink:@"twitter" withBlock:^(NSError *error) {
+            expect(error).to.beTruthy();
+            if(error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+                expect([[mock objectForKey:@"authData"]objectForKey:@"facebook"]).to.equal(facebookInfo);
+            }
+        }];
+    });
+        
+    it(@"should unlink facebook token with user", ^{
+        
+        NSDictionary *facebookInfo = @{@"id" : @"facebookId",
+                                       @"access_token" : @"facebookToken",
+                                       @"expiration_date":@{@"__type" : @"Date",@"iso" : @"2016-09-06T05:41:33.466Z"}
+                                       };
+        
+        NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                     @"access_token" : @"googleAccessToken"
+                                     };
+        
+        NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
+        [userAuthData setObject:facebookInfo forKey:@"facebook"];
+        [userAuthData setObject:googleInfo forKey:@"google"];
+        
+        NCMBUser *user = [NCMBUser user];
+        [user setObject:userAuthData forKey:@"authData"];
+        
+        id mock = OCMPartialMock(user);
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            if(block){
+                block(nil);
+            }
+        };
+        
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        expect([[mock objectForKey:@"authData"]objectForKey:@"facebook"]).to.equal(facebookInfo);
+        expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
+        
+        [mock unlink:@"facebook" withBlock:^(NSError *error) {
+            expect(error).beNil();
+            if(!error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"facebook"]).to.beNil();
+                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
+            }
+        }];
+    });
+    
+    it(@"should case of network error are not unlink with facebook token and return existing token", ^{
+        
+        NSDictionary *facebookInfo = @{@"id" : @"facebookId",
+                                       @"access_token" : @"facebookToken",
+                                       @"expiration_date":@{@"__type" : @"Date",@"iso" : @"2016-09-06T05:41:33.466Z"}
+                                       };
+        
+        NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                     @"access_token" : @"googleAccessToken"
+                                     };
+        
+        NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
+        [userAuthData setObject:facebookInfo forKey:@"facebook"];
+        [userAuthData setObject:googleInfo forKey:@"google"];
+        
+        NCMBUser *user = [NCMBUser user];
+        [user setObject:userAuthData forKey:@"authData"];
+        
+        id mock = OCMPartialMock(user);
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                             code:-1
+                                         userInfo:nil];
+            block(e);
+        };
+        
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        expect([[mock objectForKey:@"authData"]objectForKey:@"facebook"]).to.equal(facebookInfo);
+        expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
+        
+        [mock unlink:@"facebook" withBlock:^(NSError *error) {
+            expect(error).to.beTruthy();
+            if(error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"facebook"]).to.equal(facebookInfo);
+                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
             }
         }];
     });
