@@ -365,7 +365,7 @@ describe(@"NCMBUser", ^{
         }];
     });
     
-    it(@"should is mail address confirm", ^{
+    it(@"should return YES when mail address confirm is setting YES", ^{
         
         NCMBUser *user = [NCMBUser user];
         
@@ -375,7 +375,7 @@ describe(@"NCMBUser", ^{
         
     });
     
-    it(@"should is not mail address confirm", ^{
+    it(@"should return NO when mail address confirm is setting invalid params", ^{
         
         NCMBUser *user = [NCMBUser user];
         
