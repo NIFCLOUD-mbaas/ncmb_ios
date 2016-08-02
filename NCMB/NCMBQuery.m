@@ -410,7 +410,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 
 
 
-- (void)getFirstObjectInBackgroundWithBlock:(NCMBObjectResultBlock)block{
+- (void)getFirstObjectInBackgroundWithBlock:(NCMBAnyObjectResultBlock)block{
     //NCMBURLConnectionを用意
     _connection = [self createConnectionForSearch:_query countEnableFlag:NO getFirst:YES];
     
