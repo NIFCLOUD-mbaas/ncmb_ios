@@ -365,6 +365,34 @@ describe(@"NCMBUser", ^{
         }];
     });
     
+    it(@"should return YES when mail address confirm is setting YES", ^{
+        
+        NCMBUser *user = [NCMBUser user];
+        
+        [user setObject:[NSNumber numberWithBool:YES] forKey:@"mailAddressConfirm"];
+        
+        expect([user isMailAddressConfirm]).to.beTruthy();
+        
+    });
+    
+    it(@"should return NO when mail address confirm is setting invalid params", ^{
+        
+        NCMBUser *user = [NCMBUser user];
+        
+        [user setObject:[NSNumber numberWithBool:NO] forKey:@"mailAddressConfirm"];
+        expect([user isMailAddressConfirm]).toNot.beTruthy();
+        
+        [user setObject:@"" forKey:@"mailAddressConfirm"];
+        expect([user isMailAddressConfirm]).toNot.beTruthy();
+        
+        [user setObject:@"aaa" forKey:@"mailAddressConfirm"];
+        expect([user isMailAddressConfirm]).toNot.beTruthy();
+        
+        [user setObject:[NSNull null] forKey:@"mailAddressConfirm"];
+        expect([user isMailAddressConfirm]).toNot.beTruthy();
+        
+    });
+    
     afterEach(^{
         
     });
