@@ -784,6 +784,89 @@ describe(@"NCMBUser", ^{
         
     });
     
+    it(@"should signUp with google token", ^{
+        
+        NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                     @"access_token" : @"googleAccessToken"
+                                     };
+        
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            block(nil);
+        };
+        
+        OCMStub([mock signUpInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        [mock signUpWithGoogleToken:googleInfo withBlock:^(NSError *error) {
+            expect(error).beNil();
+            if(!error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
+            }
+        }];
+        
+    });
+    
+    it(@"should signUp with twitter token", ^{
+        
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+        
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            block(nil);
+        };
+        
+        OCMStub([mock signUpInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        [mock signUpWithTwitterToken:twitterInfo withBlock:^(NSError *error) {
+            expect(error).beNil();
+            if(!error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+            }
+        }];
+        
+    });
+    
+    it(@"should signUp with facebook token", ^{
+        
+        NSDictionary *facebookInfo = @{@"id" : @"facebookId",
+                                       @"access_token" : @"facebookToken",
+                                       @"expiration_date":@{@"__type" : @"Date",@"iso" : @"2016-09-06T05:41:33.466Z"}
+                                       };
+        
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+        
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            block(nil);
+        };
+        
+        OCMStub([mock signUpInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        
+        [mock signUpWithFacebookToken:facebookInfo withBlock:^(NSError *error) {
+            expect(error).beNil();
+            if(!error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"facebook"]).to.equal(facebookInfo);
+            }
+        }];
+        
+    });
+    
     afterEach(^{
         
     });
