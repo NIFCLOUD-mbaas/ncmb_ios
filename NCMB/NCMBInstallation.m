@@ -160,7 +160,6 @@
     if ([response objectForKey:@"timeZone"]){
         _timeZone = [response objectForKey:@"timeZone"];
     }
-    [self saveInstallationToFile];
 }
 
 - (void)afterDelete{
