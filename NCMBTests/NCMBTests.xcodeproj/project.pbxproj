@@ -13,6 +13,7 @@
 		9D84FFDD1D3F5DC300CD37D0 /* NCMBQuerySpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D84FFDC1D3F5DC300CD37D0 /* NCMBQuerySpec.m */; };
 		9D8D7DAD1D0A4FBF00963745 /* NCMBUserSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D8D7DAC1D0A4FBF00963745 /* NCMBUserSpec.m */; };
 		9DA4F0FF1D0FDCFB0090AD5B /* NCMBRoleSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DA4F0FE1D0FDCFB0090AD5B /* NCMBRoleSpec.m */; };
+		9DF11BDD1DD415B900290F6E /* NCMBInstallationSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF11BDC1DD415B900290F6E /* NCMBInstallationSpec.m */; };
 		DA4A60A010626E247AF35325 /* libPods-NCMBTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B70F2F83AA3F5861F40A1CE /* libPods-NCMBTests.a */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +28,7 @@
 		9D84FFDC1D3F5DC300CD37D0 /* NCMBQuerySpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBQuerySpec.m; sourceTree = "<group>"; };
 		9D8D7DAC1D0A4FBF00963745 /* NCMBUserSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBUserSpec.m; sourceTree = "<group>"; };
 		9DA4F0FE1D0FDCFB0090AD5B /* NCMBRoleSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBRoleSpec.m; sourceTree = "<group>"; };
+		9DF11BDC1DD415B900290F6E /* NCMBInstallationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBInstallationSpec.m; sourceTree = "<group>"; };
 		A9A51BAA7673E88272305FBD /* Pods-NCMBTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NCMBTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NCMBTests/Pods-NCMBTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -79,6 +81,7 @@
 				9DA4F0FE1D0FDCFB0090AD5B /* NCMBRoleSpec.m */,
 				9D8D7DAC1D0A4FBF00963745 /* NCMBUserSpec.m */,
 				9D84FFDC1D3F5DC300CD37D0 /* NCMBQuerySpec.m */,
+				9DF11BDC1DD415B900290F6E /* NCMBInstallationSpec.m */,
 			);
 			path = NCMBTests;
 			sourceTree = "<group>";
@@ -210,6 +213,7 @@
 				5DAF49AE1C5080DC0012F4DA /* NCMBScriptSpec.m in Sources */,
 				5D69FBAA1C55D9FD00526E87 /* NCMBScriptServiceSpec.m in Sources */,
 				9D84FFDD1D3F5DC300CD37D0 /* NCMBQuerySpec.m in Sources */,
+				9DF11BDD1DD415B900290F6E /* NCMBInstallationSpec.m in Sources */,
 				5D40F2941C578B6D00358E63 /* NCMBRequestSpec.m in Sources */,
 				9DA4F0FF1D0FDCFB0090AD5B /* NCMBRoleSpec.m in Sources */,
 				9D8D7DAD1D0A4FBF00963745 /* NCMBUserSpec.m in Sources */,
