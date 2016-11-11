@@ -105,7 +105,7 @@ describe(@"NCMBInstallation", ^{
         
     });
     
-    it(@"should get currentInstallation a local file if appVersion and sdkVersion are null", ^{
+    it(@"should be able to get currentInstallation from a local file, if appVersion and sdkVersion are null", ^{
         
         NSDictionary *dic = @{
                               @"timeZone" : @"Asia/Tokyo",
