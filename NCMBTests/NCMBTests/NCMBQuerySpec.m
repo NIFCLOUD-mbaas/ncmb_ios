@@ -25,6 +25,7 @@
 @property (nonatomic) NCMBURLConnection *connection;
 @property (nonatomic) NSMutableDictionary *query;
 - (NCMBURLConnection*)createConnectionForSearch:(NSMutableDictionary*)queryDic countEnableFlag:(BOOL)countEnableFlag getFirst:(BOOL)getFirstFlag;
+- (void)setCondition:(id)object forKey:(NSString*)key operand:(NSString*)operand;
 @end
 
 SpecBegin(NCMBQuery)
@@ -79,6 +80,24 @@ describe(@"NCMBQuery", ^{
         
     });
     
+    it(@"should work normally in ContainedIn method", ^{
+        
+        NCMBQuery *query = [NCMBQuery queryWithClassName:@"test"];
+        NCMBQuery *query2 = [NCMBQuery queryWithClassName:@"test"];
+        
+        [query whereKey:@"key" containedInArrayTo:@[@"value"]];
+        [query2 setCondition:@[@"value"] forKey:@"key" operand:@"$inArray"];
+        
+        [query whereKey:@"key" notContainedInArrayTo:@[@"value"]];
+        [query2 setCondition:@[@"value"] forKey:@"key" operand:@"$ninArray"];
+        
+        [query whereKey:@"key" containsAllObjectsInArrayTo:@[@"value"]];
+        [query2 setCondition:@[@"value"] forKey:@"key" operand:@"$all"];
+        
+        expect(query.query).to.equal(query2.query);
+        
+    });
+       
     afterEach(^{
         
     });
