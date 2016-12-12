@@ -162,15 +162,15 @@
     [self setCondition:array forKey:key operand:@"$nin"];
 }
 
-- (void)whereKey:(NSString *)key containedInArray:(NSArray *)array{
+- (void)whereKey:(NSString *)key containedInArrayTo:(NSArray *)array{
     [self setCondition:array forKey:key operand:@"$inArray"];
 }
 
-- (void)whereKey:(NSString *)key notContainedInArray:(NSArray *)array{
+- (void)whereKey:(NSString *)key notContainedInArrayTo:(NSArray *)array{
     [self setCondition:array forKey:key operand:@"$ninArray"];
 }
 
-- (void)whereKey:(NSString *)key containsAllObjectsInArray:(NSArray *)array{
+- (void)whereKey:(NSString *)key containsAllObjectsInArrayTo:(NSArray *)array{
     [self setCondition:array forKey:key operand:@"$all"];
 }
 
