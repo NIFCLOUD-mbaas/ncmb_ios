@@ -18,6 +18,7 @@
 #import <Expecta/Expecta.h>
 #import <OCMock/OCMock.h>
 #import <NCMB/NCMB.h>
+#import <OHHTTPStubs/OHHTTPStubs.h>
 
 SpecBegin(NCMBUser)
 
@@ -791,23 +792,41 @@ describe(@"NCMBUser", ^{
                                      };
         
         NCMBUser *user = [NCMBUser user];
-        id mock = OCMPartialMock(user);
         
-        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
-            __unsafe_unretained void (^block) (NSError *error);
-            [invocation getArgument:&block atIndex:2];
-            block(nil);
-        };
-        
-        OCMStub([mock signUpInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
-        
-        [mock signUpWithGoogleToken:googleInfo withBlock:^(NSError *error) {
-            expect(error).beNil();
-            if(!error) {
-                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.equal(googleInfo);
-            }
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+           
+            NSMutableDictionary *responseDic = [@{
+                @"createDate" : @"2017-01-31T04:13:03.065Z",
+                @"objectId" : @"e4YWYnYtcptTIV23",
+                @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                @"userName" : @"kBv218vmi0"
+                } mutableCopy];
+            
+            NSMutableDictionary *authData = [NSMutableDictionary dictionary];
+            [authData setObject:googleInfo forKey:@"google"];
+            [responseDic setObject:authData forKey:@"authData"];
+            
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+            
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
         
+        waitUntil(^(DoneCallback done) {
+            // Async example blocks need to invoke done() callback.
+            done();
+            [user signUpWithGoogleToken:googleInfo withBlock:^(NSError *error) {
+                expect(error).beNil();
+                if(!error) {
+                    NCMBUser *currentUser = [NCMBUser currentUser];
+                    expect(currentUser.sessionToken).beTruthy();
+                }
+            }];
+        });
     });
     
     it(@"should signUp with twitter token", ^{
@@ -821,25 +840,43 @@ describe(@"NCMBUser", ^{
                                       };
         
         NCMBUser *user = [NCMBUser user];
-        id mock = OCMPartialMock(user);
         
-        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
-            __unsafe_unretained void (^block) (NSError *error);
-            [invocation getArgument:&block atIndex:2];
-            block(nil);
-        };
-        
-        OCMStub([mock signUpInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
-        
-        [mock signUpWithTwitterToken:twitterInfo withBlock:^(NSError *error) {
-            expect(error).beNil();
-            if(!error) {
-                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
-            }
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            
+            NSMutableDictionary *responseDic = [@{
+                                                  @"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                  @"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                  @"userName" : @"kBv218vmi0"
+                                                  } mutableCopy];
+            
+            NSMutableDictionary *authData = [NSMutableDictionary dictionary];
+            [authData setObject:twitterInfo forKey:@"twitter"];
+            [responseDic setObject:authData forKey:@"authData"];
+            
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+            
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
         
+        waitUntil(^(DoneCallback done) {
+            // Async example blocks need to invoke done() callback.
+            done();
+            [user signUpWithTwitterToken:twitterInfo withBlock:^(NSError *error) {
+                expect(error).beNil();
+                if(!error) {
+                    NCMBUser *currentUser = [NCMBUser currentUser];
+                    expect(currentUser.sessionToken).beTruthy();
+                }
+            }];
+        });
     });
-    
+
     it(@"should signUp with facebook token", ^{
         
         NSDictionary *facebookInfo = @{@"id" : @"facebookId",
@@ -848,22 +885,41 @@ describe(@"NCMBUser", ^{
                                        };
         
         NCMBUser *user = [NCMBUser user];
-        id mock = OCMPartialMock(user);
         
-        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
-            __unsafe_unretained void (^block) (NSError *error);
-            [invocation getArgument:&block atIndex:2];
-            block(nil);
-        };
-        
-        OCMStub([mock signUpInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
-        
-        [mock signUpWithFacebookToken:facebookInfo withBlock:^(NSError *error) {
-            expect(error).beNil();
-            if(!error) {
-                expect([[mock objectForKey:@"authData"]objectForKey:@"facebook"]).to.equal(facebookInfo);
-            }
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            
+            NSMutableDictionary *responseDic = [@{
+                                                  @"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                  @"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                  @"userName" : @"kBv218vmi0"
+                                                  } mutableCopy];
+            
+            NSMutableDictionary *authData = [NSMutableDictionary dictionary];
+            [authData setObject:facebookInfo forKey:@"facebook"];
+            [responseDic setObject:authData forKey:@"authData"];
+            
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+            
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
+        
+        waitUntil(^(DoneCallback done) {
+            // Async example blocks need to invoke done() callback.
+            done();
+            [user signUpWithFacebookToken:facebookInfo withBlock:^(NSError *error) {
+                expect(error).beNil();
+                if(!error) {
+                    NCMBUser *currentUser = [NCMBUser currentUser];
+                    expect(currentUser.sessionToken).beTruthy();
+                }
+            }];
+        });
         
     });
     
