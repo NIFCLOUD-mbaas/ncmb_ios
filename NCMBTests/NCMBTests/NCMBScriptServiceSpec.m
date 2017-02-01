@@ -75,7 +75,7 @@ describe(@"NCMBScriptService", ^{
         expect(service.request.HTTPBody).to.beNil;
     });
     
-    it (@"should create request with specified query string", ^{
+    it (@"should create get method request with specified query string", ^{
         NCMBScriptService *service = [[NCMBScriptService alloc] init];
         
         [service executeScript:@"testScript.js"
@@ -95,14 +95,62 @@ describe(@"NCMBScriptService", ^{
                                NCMBScriptServicePath,
                                @"testScript.js",
                                @"array=%5B%22typeA%22%2C%22typeB%22%5D&bool=1&dictionary=%7B%22key%22%3A%22value%22%7D&number=12345&string=test"];
+        
         expect(service.request.URL.absoluteString).to.equal(expectStr);
     });
     
-    it (@"should create post method request with specified query string", ^{
+    it (@"should create delete method request with specified query string", ^{
+        NCMBScriptService *service = [[NCMBScriptService alloc] init];
+        
+        [service executeScript:@"testScript.js"
+                        method:NCMBExecuteWithDeleteMethod
+                        header:nil
+                          body:nil
+                         query:@{@"number":@12345,
+                                 @"string":@"test",
+                                 @"array":@[@"typeA",@"typeB"],
+                                 @"dictionary":@{@"key":@"value"},
+                                 @"bool":@YES}
+                     withBlock:nil];
+        
+        NSString *expectStr = [NSString stringWithFormat:@"%@/%@/%@/%@?%@",
+                               NCMBScriptServiceDefaultEndPoint,
+                               NCMBScriptServiceApiVersion,
+                               NCMBScriptServicePath,
+                               @"testScript.js",
+                               @"array=%5B%22typeA%22%2C%22typeB%22%5D&bool=1&dictionary=%7B%22key%22%3A%22value%22%7D&number=12345&string=test"];
+        
+        expect(service.request.URL.absoluteString).to.equal(expectStr);
+    });
+    
+    it (@"should not create post method request with specified query string", ^{
         NCMBScriptService *service = [[NCMBScriptService alloc] init];
         
         [service executeScript:@"testScript.js"
                         method:NCMBExecuteWithPostMethod
+                        header:nil
+                          body:nil
+                         query:@{@"number":@12345,
+                                 @"string":@"test",
+                                 @"array":@[@"typeA",@"typeB"],
+                                 @"dictionary":@{@"key":@"value"},
+                                 @"bool":@YES}
+                     withBlock:nil];
+        
+        NSString *expectStr = [NSString stringWithFormat:@"%@/%@/%@/%@",
+                               NCMBScriptServiceDefaultEndPoint,
+                               NCMBScriptServiceApiVersion,
+                               NCMBScriptServicePath,
+                               @"testScript.js"];
+        
+        expect(service.request.URL.absoluteString).to.equal(expectStr);
+    });
+    
+    it (@"should not create put method request with specified query string", ^{
+        NCMBScriptService *service = [[NCMBScriptService alloc] init];
+        
+        [service executeScript:@"testScript.js"
+                        method:NCMBExecuteWithPutMethod
                         header:nil
                           body:nil
                          query:@{@"number":@12345,
