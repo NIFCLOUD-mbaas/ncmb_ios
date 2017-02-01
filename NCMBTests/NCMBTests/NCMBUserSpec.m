@@ -798,11 +798,11 @@ describe(@"NCMBUser", ^{
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
            
             NSMutableDictionary *responseDic = [@{
-                @"createDate" : @"2017-01-31T04:13:03.065Z",
-                @"objectId" : @"e4YWYnYtcptTIV23",
-                @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
-                @"userName" : @"kBv218vmi0"
-                } mutableCopy];
+                                                  @"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                  @"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                  @"userName" : @"kBv218vmi0"
+                                                  } mutableCopy];
             
             NSMutableDictionary *authData = [NSMutableDictionary dictionary];
             [authData setObject:googleInfo forKey:@"google"];
@@ -818,12 +818,12 @@ describe(@"NCMBUser", ^{
         
         waitUntil(^(DoneCallback done) {
             // Async example blocks need to invoke done() callback.
-            done();
             [user signUpWithGoogleToken:googleInfo withBlock:^(NSError *error) {
                 expect(error).beNil();
                 if(!error) {
                     NCMBUser *currentUser = [NCMBUser currentUser];
                     expect(currentUser.sessionToken).beTruthy();
+                    done();
                 }
             }];
         });
@@ -866,12 +866,12 @@ describe(@"NCMBUser", ^{
         
         waitUntil(^(DoneCallback done) {
             // Async example blocks need to invoke done() callback.
-            done();
             [user signUpWithTwitterToken:twitterInfo withBlock:^(NSError *error) {
                 expect(error).beNil();
                 if(!error) {
                     NCMBUser *currentUser = [NCMBUser currentUser];
                     expect(currentUser.sessionToken).beTruthy();
+                    done();
                 }
             }];
         });
@@ -911,16 +911,15 @@ describe(@"NCMBUser", ^{
         
         waitUntil(^(DoneCallback done) {
             // Async example blocks need to invoke done() callback.
-            done();
             [user signUpWithFacebookToken:facebookInfo withBlock:^(NSError *error) {
                 expect(error).beNil();
                 if(!error) {
                     NCMBUser *currentUser = [NCMBUser currentUser];
                     expect(currentUser.sessionToken).beTruthy();
+                    done();
                 }
             }];
         });
-        
     });
     
     afterEach(^{
