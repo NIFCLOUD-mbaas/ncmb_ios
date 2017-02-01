@@ -44,13 +44,13 @@ NSString *const NCMBScriptServicePath = @"script";
     return nil;
 }
 
-- (NSURL *)createUrlFromScriptName:(NSString *)scriptName query:(NSDictionary *)queryDic {
+- (NSURL *)createUrlFromScriptName:(NSString *)scriptName query:(NSDictionary *)queryDic method:(NCMBScriptRequestMethod)method {
     NSString *url = [NSString stringWithFormat:@"%@/%@/%@/%@",
                      _endpoint,
                      NCMBScriptServiceApiVersion,
                      NCMBScriptServicePath,
                      scriptName];
-    if(queryDic != nil && [queryDic count] > 0) {
+    if((method == NCMBExecuteWithGetMethod || method == NCMBExecuteWithDeleteMethod) && queryDic != nil && [queryDic count] > 0) {
         url = [url stringByAppendingString:@"?"];
         for (NSString *key in [[queryDic allKeys] sortedArrayUsingSelector:@selector(compare:)]) {
             NSString *encodedStr = nil;
@@ -117,7 +117,7 @@ NSString *const NCMBScriptServicePath = @"script";
                      body:(NSDictionary *)body
                     query:(NSDictionary *)query
                     error:(NSError **)error {
-    _request = [self createRequest:[self createUrlFromScriptName:name query:query]
+    _request = [self createRequest:[self createUrlFromScriptName:name query:query method:method]
                             method:method
                             header:header
                               body:body];
@@ -176,7 +176,7 @@ NSString *const NCMBScriptServicePath = @"script";
                 query:(NSDictionary *)query
             withBlock:(NCMBScriptExecuteCallback)callback
 {
-    _request = [self createRequest:[self createUrlFromScriptName:name query:query]
+    _request = [self createRequest:[self createUrlFromScriptName:name query:query method:method]
                             method:method
                             header:header
                               body:body];
