@@ -45,6 +45,8 @@
               }
           }];
     
+    [NCMB showConfirmPushNotification];
+    
     return YES;
 }
 
