@@ -26,13 +26,6 @@
 #import "NCMBObject+Subclass.h"
 #import "NCMBRelation+Private.h"
 
-#if defined(__has_include)
-#if __has_include(<FacebookSDK/FacebookSDK.h>) || __has_include(<FBSDKLoginKit/FBSDKLoginKit.h>)
-#import "NCMBFacebookUtils+Private.h"
-#endif
-#endif
-
-
 @implementation NCMBUser
 #define DATA_MAIN_PATH [NSHomeDirectory() stringByAppendingPathComponent:@"Library/"]
 #define DATA_CURRENTUSER_PATH [NSString stringWithFormat:@"%@/Private Documents/NCMB/currentUser", DATA_MAIN_PATH]
@@ -253,21 +246,25 @@ static BOOL isEnableAutomaticUser = NO;
     [self saveInBackgroundWithTarget:target selector:selector];
 }
 
-- (void)signUpWithFacebookToken:(NSDictionary *)facebookInfo block:(NCMBErrorResultBlock)block{
-    
-    NSMutableDictionary *newAuthData = nil;
-    NSDictionary *authData = [self objectForKey:@"authData"];
-    if (authData && [authData isKindOfClass:[NSDictionary class]]){
-        newAuthData = [NSMutableDictionary dictionaryWithDictionary:authData];
-        if ([facebookInfo isKindOfClass:[NSDictionary class]]){
-            [newAuthData addEntriesFromDictionary:facebookInfo];
-        }
-    } else {
-        newAuthData = [NSMutableDictionary dictionaryWithDictionary:facebookInfo];
+/**
+ typeで指定したsns情報のauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ @param snsInfo snsの認証に必要なauthData
+ @param type 認証情報のtype
+ @param block サインアップ後に実行されるblock
+ */
+- (void)signUpWithToken:(NSDictionary *)snsInfo withType:(NSString *)type withBlock:(NCMBErrorResultBlock)block{
+    //既存のauthDataのtype情報のみ更新する
+    NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
+    if([[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
+        userAuthData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
     }
-    
-    [self setObject:newAuthData forKey:@"authData"];
-    [self saveInBackgroundWithBlock:block];
+    [userAuthData setObject:snsInfo forKey:type];
+    [self setObject:userAuthData forKey:@"authData"];
+    [self signUpInBackgroundWithBlock:^(NSError *error) {
+        if(block){
+            block(error);
+        }
+    }];
 }
 
 /**
@@ -275,19 +272,26 @@ static BOOL isEnableAutomaticUser = NO;
  @param googleInfo google認証に必要なauthData
  @param block サインアップ後に実行されるblock
  */
-- (void)signUpWithGoogleToken:(NSDictionary*)googleInfo block:(NCMBErrorResultBlock)block{
-    //既存のauthDataのgoogle情報のみ更新する
-    NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
-    if([[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
-        userAuthData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
-    }
-    [userAuthData setObject:googleInfo forKey:@"google"];
-    [self setObject:userAuthData forKey:@"authData"];
-    [self signUpInBackgroundWithBlock:^(NSError *error) {
-        if(block){
-            block(error);
-        }
-    }];
+- (void)signUpWithGoogleToken:(NSDictionary *)googleInfo withBlock:(NCMBErrorResultBlock)block{
+    [self signUpWithToken:googleInfo withType:AUTH_TYPE_GOOGLE withBlock:block];
+}
+
+/**
+ twitterのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ @param twitterInfo twitter認証に必要なauthData
+ @param block サインアップ後に実行されるblock
+ */
+- (void)signUpWithTwitterToken:(NSDictionary *)twitterInfo withBlock:(NCMBErrorResultBlock)block{
+    [self signUpWithToken:twitterInfo withType:AUTH_TYPE_TWITTER withBlock:block];
+}
+
+/**
+ facebookのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ @param facebookInfo facebook認証に必要なauthData
+ @param block サインアップ後に実行されるblock
+ */
+- (void)signUpWithFacebookToken:(NSDictionary *)facebookInfo withBlock:(NCMBErrorResultBlock)block{
+    [self signUpWithToken:facebookInfo withType:AUTH_TYPE_FACEBOOK withBlock:block];
 }
 
 #pragma mark - signUpAnonymous
@@ -771,11 +775,7 @@ static BOOL isEnableAutomaticUser = NO;
         currentUser.sessionToken = nil;
         currentUser = nil;
     }
-#if __has_include(<FacebookSDK/FacebookSDK.h>) || __has_include(<FBSDKLoginKit/FBSDKLoginKit.h>)
-    
-    //Facebookのセッションを削除
-    [NCMBFacebookUtils clearFacebookSession];
-#endif
+
     if ([[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTUSER_PATH isDirectory:nil]) {
         [[NSFileManager defaultManager] removeItemAtPath:DATA_CURRENTUSER_PATH error:nil];
     }
@@ -955,24 +955,25 @@ static BOOL isEnableAutomaticUser = NO;
 #pragma mark - link
 
 /**
- 他の認証方法でログイン中のcurrentUserに、googleの認証情報を紐付ける
- @param googleInfo googleの認証情報（idとaccess_token）
- @param block 既存のauthDataのgoogle情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
+ ログイン中のユーザー情報に、snsの認証情報を紐付ける
+ @param snsInfo snsの認証情報
+ @param type 認証情報のtype
+ @param block 既存のauthDataのtype情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
  */
-- (void)linkWithGoogleToken:(NSDictionary *)googleInfo withBlock:(NCMBErrorResultBlock)block{
+- (void)linkWithToken:(NSDictionary *)snsInfo withType:(NSString *)type withBlock:(NCMBErrorResultBlock)block{
     // ローカルデータを取得
     NSMutableDictionary *localAuthData = [NSMutableDictionary dictionary];
     if([[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
         localAuthData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
     }
-    //既存のauthDataのgoogle情報のみ更新する
+    //既存のauthDataのtype情報のみ更新する
     NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
-    [userAuthData setObject:googleInfo forKey:AUTH_TYPE_GOOGLE];
+    [userAuthData setObject:snsInfo forKey:type];
     [self setObject:userAuthData forKey:@"authData"];
     [self saveInBackgroundWithBlock:^(NSError *error) {
         if (!error){
-            // ローカルデータから既にあるauthDataを取得してgoogleInfoをマージ
-            [localAuthData setObject:googleInfo forKey:AUTH_TYPE_GOOGLE];
+            // ローカルデータから既にあるauthDataを取得して認証情報をマージ
+            [localAuthData setObject:snsInfo forKey:type];
         }
         [estimatedData setObject:localAuthData forKey:@"authData"];
         // ログインユーザーをファイルに保存する
@@ -981,6 +982,33 @@ static BOOL isEnableAutomaticUser = NO;
             block(error);
         }
     }];
+}
+
+/**
+ ログイン中のユーザー情報に、googleの認証情報を紐付ける
+ @param googleInfo googleの認証情報（idとaccess_token）
+ @param block 既存のauthDataのgoogle情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
+ */
+- (void)linkWithGoogleToken:(NSDictionary *)googleInfo withBlock:(NCMBErrorResultBlock)block{
+    [self linkWithToken:googleInfo withType:AUTH_TYPE_GOOGLE withBlock:block];
+}
+
+/**
+ ログイン中のユーザー情報に、twitterの認証情報を紐付ける
+ @param twitterInfo twitterの認証情報
+ @param block 既存のauthDataのtwitter情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
+ */
+- (void)linkWithTwitterToken:(NSDictionary *)twitterInfo withBlock:(NCMBErrorResultBlock)block{
+    [self linkWithToken:twitterInfo withType:AUTH_TYPE_TWITTER withBlock:block];
+}
+
+/**
+ ログイン中のユーザー情報に、facebookの認証情報を紐付ける
+ @param facebookInfo facebookの認証情報
+ @param block 既存のauthDataのfacebook情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
+ */
+- (void)linkWithFacebookToken:(NSDictionary *)facebookInfo withBlock:(NCMBErrorResultBlock)block{
+    [self linkWithToken:facebookInfo withType:AUTH_TYPE_FACEBOOK withBlock:block];
 }
 
 /**
@@ -1029,7 +1057,7 @@ static BOOL isEnableAutomaticUser = NO;
             [self setObject:authData forKey:@"authData"];
             [self saveInBackgroundWithBlock:^(NSError *error) {
                 if (!error){
-                    // ローカルデータから既にあるauthDataを取得してgoogleInfoをマージ
+                    // ローカルデータから既にあるauthDataを取得して引数で指定した認証情報を削除してマージ
                     [localAuthData removeObjectForKey:type];
                 }
                 [estimatedData setObject:localAuthData forKey:@"authData"];
@@ -1057,6 +1085,17 @@ static BOOL isEnableAutomaticUser = NO;
             block(error);
         }
     }
+}
+
+#pragma mark - mailAddressConfirm
+
+/**
+ メールアドレスが確認済みのものかを把握する
+ @return メールアドレスが確認済みの場合はYESを返す
+ */
+- (BOOL)isMailAddressConfirm{
+    
+    return [self objectForKey:@"mailAddressConfirm"]!= [NSNull null] && [[self objectForKey:@"mailAddressConfirm"]boolValue] ? YES : NO;
 }
 
 @end

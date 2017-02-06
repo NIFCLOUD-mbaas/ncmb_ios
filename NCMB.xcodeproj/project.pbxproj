@@ -20,8 +20,6 @@
 		8AB2CE841CE315F800F27481 /* NCMBConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE101CE315F800F27481 /* NCMBConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CE851CE315F800F27481 /* NCMBError.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE111CE315F800F27481 /* NCMBError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CE861CE315F800F27481 /* NCMBError.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE121CE315F800F27481 /* NCMBError.m */; };
-		8AB2CE871CE315F800F27481 /* NCMBFacebookUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE131CE315F800F27481 /* NCMBFacebookUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CE881CE315F800F27481 /* NCMBFacebookUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE141CE315F800F27481 /* NCMBFacebookUtils.m */; };
 		8AB2CE891CE315F800F27481 /* NCMBFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE151CE315F800F27481 /* NCMBFile.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CE8A1CE315F800F27481 /* NCMBFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE161CE315F800F27481 /* NCMBFile.m */; };
 		8AB2CE8B1CE315F800F27481 /* NCMBGeoPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE171CE315F800F27481 /* NCMBGeoPoint.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -50,38 +48,6 @@
 		8AB2CEA51CE315F800F27481 /* NCMBScriptService.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE341CE315F800F27481 /* NCMBScriptService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CEA61CE315F800F27481 /* NCMBScriptService.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE351CE315F800F27481 /* NCMBScriptService.m */; };
 		8AB2CEA71CE315F800F27481 /* NCMBSubclassing.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE361CE315F800F27481 /* NCMBSubclassing.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEA81CE315F800F27481 /* NCMB_Twitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE381CE315F800F27481 /* NCMB_Twitter.m */; };
-		8AB2CEA91CE315F800F27481 /* NSMutableURLRequestParameters.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE3B1CE315F800F27481 /* NSMutableURLRequestParameters.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEAA1CE315F800F27481 /* NSMutableURLRequestParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE3C1CE315F800F27481 /* NSMutableURLRequestParameters.m */; };
-		8AB2CEAB1CE315F800F27481 /* NSStringURLEncoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE3D1CE315F800F27481 /* NSStringURLEncoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEAC1CE315F800F27481 /* NSStringURLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE3E1CE315F800F27481 /* NSStringURLEncoding.m */; };
-		8AB2CEAD1CE315F800F27481 /* NSURLBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE3F1CE315F800F27481 /* NSURLBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEAE1CE315F800F27481 /* NSURLBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE401CE315F800F27481 /* NSURLBase.m */; };
-		8AB2CEAF1CE315F800F27481 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE421CE315F800F27481 /* Base64Transcoder.c */; };
-		8AB2CEB01CE315F800F27481 /* Base64Transcoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE431CE315F800F27481 /* Base64Transcoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEB11CE315F800F27481 /* hmac.c in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE441CE315F800F27481 /* hmac.c */; };
-		8AB2CEB21CE315F800F27481 /* hmac.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE451CE315F800F27481 /* hmac.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEB31CE315F800F27481 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE461CE315F800F27481 /* sha1.c */; };
-		8AB2CEB41CE315F800F27481 /* sha1.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE471CE315F800F27481 /* sha1.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEB51CE315F800F27481 /* NCMBOAConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE481CE315F800F27481 /* NCMBOAConsumer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEB61CE315F800F27481 /* NCMBOAConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE491CE315F800F27481 /* NCMBOAConsumer.m */; };
-		8AB2CEB71CE315F800F27481 /* NCMBOADataFetcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE4A1CE315F800F27481 /* NCMBOADataFetcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEB81CE315F800F27481 /* NCMBOADataFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE4B1CE315F800F27481 /* NCMBOADataFetcher.m */; };
-		8AB2CEB91CE315F800F27481 /* NCMBOAHMAC_SHA1SignatureProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE4C1CE315F800F27481 /* NCMBOAHMAC_SHA1SignatureProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEBA1CE315F800F27481 /* NCMBOAHMAC_SHA1SignatureProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE4D1CE315F800F27481 /* NCMBOAHMAC_SHA1SignatureProvider.m */; };
-		8AB2CEBB1CE315F800F27481 /* NCMBOAMutableURLRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE4E1CE315F800F27481 /* NCMBOAMutableURLRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEBC1CE315F800F27481 /* NCMBOAMutableURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE4F1CE315F800F27481 /* NCMBOAMutableURLRequest.m */; };
-		8AB2CEBD1CE315F800F27481 /* NCMBOARequestParameter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE501CE315F800F27481 /* NCMBOARequestParameter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEBE1CE315F800F27481 /* NCMBOARequestParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE511CE315F800F27481 /* NCMBOARequestParameter.m */; };
-		8AB2CEBF1CE315F800F27481 /* NCMBOAServiceTicket.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE521CE315F800F27481 /* NCMBOAServiceTicket.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEC01CE315F800F27481 /* NCMBOAServiceTicket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE531CE315F800F27481 /* NCMBOAServiceTicket.m */; };
-		8AB2CEC11CE315F800F27481 /* NCMBOASignatureProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE541CE315F800F27481 /* NCMBOASignatureProviding.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEC21CE315F800F27481 /* NCMBOAToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE551CE315F800F27481 /* NCMBOAToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEC31CE315F800F27481 /* NCMBOAToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE561CE315F800F27481 /* NCMBOAToken.m */; };
-		8AB2CEC41CE315F800F27481 /* NCMBTwitterLoginView.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE571CE315F800F27481 /* NCMBTwitterLoginView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEC51CE315F800F27481 /* NCMBTwitterLoginView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE581CE315F800F27481 /* NCMBTwitterLoginView.m */; };
-		8AB2CEC61CE315F800F27481 /* NCMBTwitterUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE591CE315F800F27481 /* NCMBTwitterUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEC71CE315F800F27481 /* NCMBTwitterUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE5A1CE315F800F27481 /* NCMBTwitterUtils.m */; };
 		8AB2CEC81CE315F800F27481 /* NCMBURLConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE5C1CE315F800F27481 /* NCMBURLConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CEC91CE315F800F27481 /* NCMBURLConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE5D1CE315F800F27481 /* NCMBURLConnection.m */; };
 		8AB2CECA1CE315F800F27481 /* NCMBUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE5E1CE315F800F27481 /* NCMBUser.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -102,7 +68,6 @@
 		8AB2CED91CE315F800F27481 /* NCMBRemoveOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE6F1CE315F800F27481 /* NCMBRemoveOperation.m */; };
 		8AB2CEDA1CE315F800F27481 /* NCMBSetOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE701CE315F800F27481 /* NCMBSetOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CEDB1CE315F800F27481 /* NCMBSetOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE711CE315F800F27481 /* NCMBSetOperation.m */; };
-		8AB2CEDC1CE315F800F27481 /* NCMBFacebookUtils+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE731CE315F800F27481 /* NCMBFacebookUtils+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CEDD1CE315F800F27481 /* NCMBObject+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE741CE315F800F27481 /* NCMBObject+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CEDE1CE315F800F27481 /* NCMBQuery+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE751CE315F800F27481 /* NCMBQuery+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CEDF1CE315F800F27481 /* NCMBRelation+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE761CE315F800F27481 /* NCMBRelation+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -126,8 +91,6 @@
 		8AB2CE101CE315F800F27481 /* NCMBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBConstants.h; sourceTree = "<group>"; };
 		8AB2CE111CE315F800F27481 /* NCMBError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBError.h; sourceTree = "<group>"; };
 		8AB2CE121CE315F800F27481 /* NCMBError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBError.m; sourceTree = "<group>"; };
-		8AB2CE131CE315F800F27481 /* NCMBFacebookUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBFacebookUtils.h; sourceTree = "<group>"; };
-		8AB2CE141CE315F800F27481 /* NCMBFacebookUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBFacebookUtils.m; sourceTree = "<group>"; };
 		8AB2CE151CE315F800F27481 /* NCMBFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBFile.h; sourceTree = "<group>"; };
 		8AB2CE161CE315F800F27481 /* NCMBFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBFile.m; sourceTree = "<group>"; };
 		8AB2CE171CE315F800F27481 /* NCMBGeoPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBGeoPoint.h; sourceTree = "<group>"; };
@@ -156,38 +119,6 @@
 		8AB2CE341CE315F800F27481 /* NCMBScriptService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBScriptService.h; sourceTree = "<group>"; };
 		8AB2CE351CE315F800F27481 /* NCMBScriptService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBScriptService.m; sourceTree = "<group>"; };
 		8AB2CE361CE315F800F27481 /* NCMBSubclassing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBSubclassing.h; sourceTree = "<group>"; };
-		8AB2CE381CE315F800F27481 /* NCMB_Twitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMB_Twitter.m; sourceTree = "<group>"; };
-		8AB2CE3B1CE315F800F27481 /* NSMutableURLRequestParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSMutableURLRequestParameters.h; sourceTree = "<group>"; };
-		8AB2CE3C1CE315F800F27481 /* NSMutableURLRequestParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMutableURLRequestParameters.m; sourceTree = "<group>"; };
-		8AB2CE3D1CE315F800F27481 /* NSStringURLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStringURLEncoding.h; sourceTree = "<group>"; };
-		8AB2CE3E1CE315F800F27481 /* NSStringURLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStringURLEncoding.m; sourceTree = "<group>"; };
-		8AB2CE3F1CE315F800F27481 /* NSURLBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURLBase.h; sourceTree = "<group>"; };
-		8AB2CE401CE315F800F27481 /* NSURLBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLBase.m; sourceTree = "<group>"; };
-		8AB2CE421CE315F800F27481 /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
-		8AB2CE431CE315F800F27481 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
-		8AB2CE441CE315F800F27481 /* hmac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hmac.c; sourceTree = "<group>"; };
-		8AB2CE451CE315F800F27481 /* hmac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hmac.h; sourceTree = "<group>"; };
-		8AB2CE461CE315F800F27481 /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha1.c; sourceTree = "<group>"; };
-		8AB2CE471CE315F800F27481 /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
-		8AB2CE481CE315F800F27481 /* NCMBOAConsumer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBOAConsumer.h; sourceTree = "<group>"; };
-		8AB2CE491CE315F800F27481 /* NCMBOAConsumer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBOAConsumer.m; sourceTree = "<group>"; };
-		8AB2CE4A1CE315F800F27481 /* NCMBOADataFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBOADataFetcher.h; sourceTree = "<group>"; };
-		8AB2CE4B1CE315F800F27481 /* NCMBOADataFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBOADataFetcher.m; sourceTree = "<group>"; };
-		8AB2CE4C1CE315F800F27481 /* NCMBOAHMAC_SHA1SignatureProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBOAHMAC_SHA1SignatureProvider.h; sourceTree = "<group>"; };
-		8AB2CE4D1CE315F800F27481 /* NCMBOAHMAC_SHA1SignatureProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBOAHMAC_SHA1SignatureProvider.m; sourceTree = "<group>"; };
-		8AB2CE4E1CE315F800F27481 /* NCMBOAMutableURLRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBOAMutableURLRequest.h; sourceTree = "<group>"; };
-		8AB2CE4F1CE315F800F27481 /* NCMBOAMutableURLRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBOAMutableURLRequest.m; sourceTree = "<group>"; };
-		8AB2CE501CE315F800F27481 /* NCMBOARequestParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBOARequestParameter.h; sourceTree = "<group>"; };
-		8AB2CE511CE315F800F27481 /* NCMBOARequestParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBOARequestParameter.m; sourceTree = "<group>"; };
-		8AB2CE521CE315F800F27481 /* NCMBOAServiceTicket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBOAServiceTicket.h; sourceTree = "<group>"; };
-		8AB2CE531CE315F800F27481 /* NCMBOAServiceTicket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBOAServiceTicket.m; sourceTree = "<group>"; };
-		8AB2CE541CE315F800F27481 /* NCMBOASignatureProviding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBOASignatureProviding.h; sourceTree = "<group>"; };
-		8AB2CE551CE315F800F27481 /* NCMBOAToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBOAToken.h; sourceTree = "<group>"; };
-		8AB2CE561CE315F800F27481 /* NCMBOAToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBOAToken.m; sourceTree = "<group>"; };
-		8AB2CE571CE315F800F27481 /* NCMBTwitterLoginView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBTwitterLoginView.h; sourceTree = "<group>"; };
-		8AB2CE581CE315F800F27481 /* NCMBTwitterLoginView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBTwitterLoginView.m; sourceTree = "<group>"; };
-		8AB2CE591CE315F800F27481 /* NCMBTwitterUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBTwitterUtils.h; sourceTree = "<group>"; };
-		8AB2CE5A1CE315F800F27481 /* NCMBTwitterUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBTwitterUtils.m; sourceTree = "<group>"; };
 		8AB2CE5C1CE315F800F27481 /* NCMBURLConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBURLConnection.h; sourceTree = "<group>"; };
 		8AB2CE5D1CE315F800F27481 /* NCMBURLConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBURLConnection.m; sourceTree = "<group>"; };
 		8AB2CE5E1CE315F800F27481 /* NCMBUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBUser.h; sourceTree = "<group>"; };
@@ -208,7 +139,6 @@
 		8AB2CE6F1CE315F800F27481 /* NCMBRemoveOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBRemoveOperation.m; sourceTree = "<group>"; };
 		8AB2CE701CE315F800F27481 /* NCMBSetOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBSetOperation.h; sourceTree = "<group>"; };
 		8AB2CE711CE315F800F27481 /* NCMBSetOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBSetOperation.m; sourceTree = "<group>"; };
-		8AB2CE731CE315F800F27481 /* NCMBFacebookUtils+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NCMBFacebookUtils+Private.h"; sourceTree = "<group>"; };
 		8AB2CE741CE315F800F27481 /* NCMBObject+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NCMBObject+Private.h"; sourceTree = "<group>"; };
 		8AB2CE751CE315F800F27481 /* NCMBQuery+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NCMBQuery+Private.h"; sourceTree = "<group>"; };
 		8AB2CE761CE315F800F27481 /* NCMBRelation+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NCMBRelation+Private.h"; sourceTree = "<group>"; };
@@ -262,8 +192,6 @@
 				8AB2CE101CE315F800F27481 /* NCMBConstants.h */,
 				8AB2CE111CE315F800F27481 /* NCMBError.h */,
 				8AB2CE121CE315F800F27481 /* NCMBError.m */,
-				8AB2CE131CE315F800F27481 /* NCMBFacebookUtils.h */,
-				8AB2CE141CE315F800F27481 /* NCMBFacebookUtils.m */,
 				8AB2CE151CE315F800F27481 /* NCMBFile.h */,
 				8AB2CE161CE315F800F27481 /* NCMBFile.m */,
 				8AB2CE171CE315F800F27481 /* NCMBGeoPoint.h */,
@@ -288,9 +216,6 @@
 				8AB2CE321CE315F800F27481 /* NCMBScript.m */,
 				8AB2CE331CE315F800F27481 /* NCMBScriptService */,
 				8AB2CE361CE315F800F27481 /* NCMBSubclassing.h */,
-				8AB2CE371CE315F800F27481 /* NCMBTwitter */,
-				8AB2CE591CE315F800F27481 /* NCMBTwitterUtils.h */,
-				8AB2CE5A1CE315F800F27481 /* NCMBTwitterUtils.m */,
 				8AB2CE5B1CE315F800F27481 /* NCMBURLConnection */,
 				8AB2CE5E1CE315F800F27481 /* NCMBUser.h */,
 				8AB2CE5F1CE315F800F27481 /* NCMBUser.m */,
@@ -340,67 +265,6 @@
 			path = NCMBScriptService;
 			sourceTree = "<group>";
 		};
-		8AB2CE371CE315F800F27481 /* NCMBTwitter */ = {
-			isa = PBXGroup;
-			children = (
-				8AB2CE381CE315F800F27481 /* NCMB_Twitter.m */,
-				8AB2CE391CE315F800F27481 /* NCMBOAConsumer */,
-				8AB2CE571CE315F800F27481 /* NCMBTwitterLoginView.h */,
-				8AB2CE581CE315F800F27481 /* NCMBTwitterLoginView.m */,
-			);
-			path = NCMBTwitter;
-			sourceTree = "<group>";
-		};
-		8AB2CE391CE315F800F27481 /* NCMBOAConsumer */ = {
-			isa = PBXGroup;
-			children = (
-				8AB2CE3A1CE315F800F27481 /* Categories */,
-				8AB2CE411CE315F800F27481 /* Crypto */,
-				8AB2CE481CE315F800F27481 /* NCMBOAConsumer.h */,
-				8AB2CE491CE315F800F27481 /* NCMBOAConsumer.m */,
-				8AB2CE4A1CE315F800F27481 /* NCMBOADataFetcher.h */,
-				8AB2CE4B1CE315F800F27481 /* NCMBOADataFetcher.m */,
-				8AB2CE4C1CE315F800F27481 /* NCMBOAHMAC_SHA1SignatureProvider.h */,
-				8AB2CE4D1CE315F800F27481 /* NCMBOAHMAC_SHA1SignatureProvider.m */,
-				8AB2CE4E1CE315F800F27481 /* NCMBOAMutableURLRequest.h */,
-				8AB2CE4F1CE315F800F27481 /* NCMBOAMutableURLRequest.m */,
-				8AB2CE501CE315F800F27481 /* NCMBOARequestParameter.h */,
-				8AB2CE511CE315F800F27481 /* NCMBOARequestParameter.m */,
-				8AB2CE521CE315F800F27481 /* NCMBOAServiceTicket.h */,
-				8AB2CE531CE315F800F27481 /* NCMBOAServiceTicket.m */,
-				8AB2CE541CE315F800F27481 /* NCMBOASignatureProviding.h */,
-				8AB2CE551CE315F800F27481 /* NCMBOAToken.h */,
-				8AB2CE561CE315F800F27481 /* NCMBOAToken.m */,
-			);
-			path = NCMBOAConsumer;
-			sourceTree = "<group>";
-		};
-		8AB2CE3A1CE315F800F27481 /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				8AB2CE3B1CE315F800F27481 /* NSMutableURLRequestParameters.h */,
-				8AB2CE3C1CE315F800F27481 /* NSMutableURLRequestParameters.m */,
-				8AB2CE3D1CE315F800F27481 /* NSStringURLEncoding.h */,
-				8AB2CE3E1CE315F800F27481 /* NSStringURLEncoding.m */,
-				8AB2CE3F1CE315F800F27481 /* NSURLBase.h */,
-				8AB2CE401CE315F800F27481 /* NSURLBase.m */,
-			);
-			path = Categories;
-			sourceTree = "<group>";
-		};
-		8AB2CE411CE315F800F27481 /* Crypto */ = {
-			isa = PBXGroup;
-			children = (
-				8AB2CE421CE315F800F27481 /* Base64Transcoder.c */,
-				8AB2CE431CE315F800F27481 /* Base64Transcoder.h */,
-				8AB2CE441CE315F800F27481 /* hmac.c */,
-				8AB2CE451CE315F800F27481 /* hmac.h */,
-				8AB2CE461CE315F800F27481 /* sha1.c */,
-				8AB2CE471CE315F800F27481 /* sha1.h */,
-			);
-			path = Crypto;
-			sourceTree = "<group>";
-		};
 		8AB2CE5B1CE315F800F27481 /* NCMBURLConnection */ = {
 			isa = PBXGroup;
 			children = (
@@ -443,7 +307,6 @@
 		8AB2CE721CE315F800F27481 /* PrivateHeaders */ = {
 			isa = PBXGroup;
 			children = (
-				8AB2CE731CE315F800F27481 /* NCMBFacebookUtils+Private.h */,
 				8AB2CE741CE315F800F27481 /* NCMBObject+Private.h */,
 				8AB2CE751CE315F800F27481 /* NCMBQuery+Private.h */,
 				8AB2CE761CE315F800F27481 /* NCMBRelation+Private.h */,
@@ -468,58 +331,40 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8AB2CEC11CE315F800F27481 /* NCMBOASignatureProviding.h in Headers */,
-				8AB2CEBD1CE315F800F27481 /* NCMBOARequestParameter.h in Headers */,
-				8AB2CEAD1CE315F800F27481 /* NSURLBase.h in Headers */,
-				8AB2CEC61CE315F800F27481 /* NCMBTwitterUtils.h in Headers */,
-				8AB2CEBB1CE315F800F27481 /* NCMBOAMutableURLRequest.h in Headers */,
 				8AB2CEE01CE315F800F27481 /* NCMBUser+Private.h in Headers */,
 				8AB2CE9B1CE315F800F27481 /* NCMBRelation.h in Headers */,
 				8AB2CED81CE315F800F27481 /* NCMBRemoveOperation.h in Headers */,
 				8AB2CECE1CE315F800F27481 /* NCMBAddOperation.h in Headers */,
-				8AB2CEB51CE315F800F27481 /* NCMBOAConsumer.h in Headers */,
-				8AB2CEAB1CE315F800F27481 /* NSStringURLEncoding.h in Headers */,
 				8AB2CEDA1CE315F800F27481 /* NCMBSetOperation.h in Headers */,
 				8AB2CED01CE315F800F27481 /* NCMBAddUniqueOperation.h in Headers */,
 				8AB2CE951CE315F800F27481 /* NCMBPush.h in Headers */,
-				8AB2CEC21CE315F800F27481 /* NCMBOAToken.h in Headers */,
 				8AB2CE841CE315F800F27481 /* NCMBConstants.h in Headers */,
 				8AB2CED21CE315F800F27481 /* NCMBDeleteOperation.h in Headers */,
-				8AB2CEB91CE315F800F27481 /* NCMBOAHMAC_SHA1SignatureProvider.h in Headers */,
 				8AB2CECA1CE315F800F27481 /* NCMBUser.h in Headers */,
-				8AB2CEDC1CE315F800F27481 /* NCMBFacebookUtils+Private.h in Headers */,
-				8AB2CEC41CE315F800F27481 /* NCMBTwitterLoginView.h in Headers */,
 				8AB2CE941CE315F800F27481 /* NCMBObject+Subclass.h in Headers */,
 				8AB2CED61CE315F800F27481 /* NCMBRelationOperation.h in Headers */,
 				8AB2CE971CE315F800F27481 /* NCMBQuery.h in Headers */,
 				8AB2CE7B1CE315F800F27481 /* NCMBRequest.h in Headers */,
 				8AB2CEDF1CE315F800F27481 /* NCMBRelation+Private.h in Headers */,
-				8AB2CEB01CE315F800F27481 /* Base64Transcoder.h in Headers */,
-				8AB2CEBF1CE315F800F27481 /* NCMBOAServiceTicket.h in Headers */,
 				8AB2CEA71CE315F800F27481 /* NCMBSubclassing.h in Headers */,
 				8AB2CE801CE315F800F27481 /* NCMBAnalytics.h in Headers */,
 				8AB2CE991CE315F800F27481 /* NCMBReachability.h in Headers */,
 				8AB2CE8B1CE315F800F27481 /* NCMBGeoPoint.h in Headers */,
-				8AB2CEB41CE315F800F27481 /* sha1.h in Headers */,
 				8AB2CE821CE315F800F27481 /* NCMBAnonymousUtils.h in Headers */,
 				8AB2CE9F1CE315F800F27481 /* NCMBRichPushView.h in Headers */,
-				8AB2CE871CE315F800F27481 /* NCMBFacebookUtils.h in Headers */,
 				8AB2CE891CE315F800F27481 /* NCMBFile.h in Headers */,
 				8AB2CEC81CE315F800F27481 /* NCMBURLConnection.h in Headers */,
 				8AB2CEA11CE315F800F27481 /* NCMBRole.h in Headers */,
 				8AB2CE851CE315F800F27481 /* NCMBError.h in Headers */,
 				8AB2CE9D1CE315F800F27481 /* NCMBCloseImageView.h in Headers */,
 				8AB2CED41CE315F800F27481 /* NCMBIncrementOperation.h in Headers */,
-				8AB2CEA91CE315F800F27481 /* NSMutableURLRequestParameters.h in Headers */,
 				8AB2CE921CE315F800F27481 /* NCMBObject.h in Headers */,
 				8AB2CDFF1CE3153F00F27481 /* NCMB.h in Headers */,
 				8AB2CECC1CE315F800F27481 /* NSDataBase64Encode.h in Headers */,
 				8AB2CE901CE315F800F27481 /* NCMBInstallation.h in Headers */,
 				8AB2CEE11CE315F800F27481 /* SubClassHandler.h in Headers */,
-				8AB2CEB21CE315F800F27481 /* hmac.h in Headers */,
 				8AB2CEDE1CE315F800F27481 /* NCMBQuery+Private.h in Headers */,
 				8AB2CEA31CE315F800F27481 /* NCMBScript.h in Headers */,
-				8AB2CEB71CE315F800F27481 /* NCMBOADataFetcher.h in Headers */,
 				8AB2CE7E1CE315F800F27481 /* NCMBACL.h in Headers */,
 				8AB2CEA51CE315F800F27481 /* NCMBScriptService.h in Headers */,
 				8AB2CEDD1CE315F800F27481 /* NCMBObject+Private.h in Headers */,
@@ -595,46 +440,29 @@
 			buildActionMask = 2147483647;
 			files = (
 				8AB2CEA01CE315F800F27481 /* NCMBRichPushView.m in Sources */,
-				8AB2CEB61CE315F800F27481 /* NCMBOAConsumer.m in Sources */,
 				8AB2CE7C1CE315F800F27481 /* NCMBRequest.m in Sources */,
 				8AB2CE7D1CE315F800F27481 /* NCMB.m in Sources */,
-				8AB2CE881CE315F800F27481 /* NCMBFacebookUtils.m in Sources */,
-				8AB2CEB31CE315F800F27481 /* sha1.c in Sources */,
 				8AB2CEA41CE315F800F27481 /* NCMBScript.m in Sources */,
 				8AB2CED91CE315F800F27481 /* NCMBRemoveOperation.m in Sources */,
-				8AB2CEC31CE315F800F27481 /* NCMBOAToken.m in Sources */,
-				8AB2CEC01CE315F800F27481 /* NCMBOAServiceTicket.m in Sources */,
-				8AB2CEBE1CE315F800F27481 /* NCMBOARequestParameter.m in Sources */,
 				8AB2CEA61CE315F800F27481 /* NCMBScriptService.m in Sources */,
 				8AB2CE831CE315F800F27481 /* NCMBAnonymousUtils.m in Sources */,
-				8AB2CEC51CE315F800F27481 /* NCMBTwitterLoginView.m in Sources */,
 				8AB2CE811CE315F800F27481 /* NCMBAnalytics.m in Sources */,
 				8AB2CED71CE315F800F27481 /* NCMBRelationOperation.m in Sources */,
 				8AB2CEDB1CE315F800F27481 /* NCMBSetOperation.m in Sources */,
 				8AB2CED11CE315F800F27481 /* NCMBAddUniqueOperation.m in Sources */,
-				8AB2CEBC1CE315F800F27481 /* NCMBOAMutableURLRequest.m in Sources */,
 				8AB2CE9A1CE315F800F27481 /* NCMBReachability.m in Sources */,
 				8AB2CE8A1CE315F800F27481 /* NCMBFile.m in Sources */,
-				8AB2CEBA1CE315F800F27481 /* NCMBOAHMAC_SHA1SignatureProvider.m in Sources */,
 				8AB2CECB1CE315F800F27481 /* NCMBUser.m in Sources */,
-				8AB2CEAC1CE315F800F27481 /* NSStringURLEncoding.m in Sources */,
-				8AB2CEC71CE315F800F27481 /* NCMBTwitterUtils.m in Sources */,
 				8AB2CE9C1CE315F800F27481 /* NCMBRelation.m in Sources */,
 				8AB2CE9E1CE315F800F27481 /* NCMBCloseImageView.m in Sources */,
-				8AB2CEAA1CE315F800F27481 /* NSMutableURLRequestParameters.m in Sources */,
 				8AB2CE861CE315F800F27481 /* NCMBError.m in Sources */,
 				8AB2CE961CE315F800F27481 /* NCMBPush.m in Sources */,
 				8AB2CE981CE315F800F27481 /* NCMBQuery.m in Sources */,
 				8AB2CE8C1CE315F800F27481 /* NCMBGeoPoint.m in Sources */,
 				8AB2CED51CE315F800F27481 /* NCMBIncrementOperation.m in Sources */,
 				8AB2CE911CE315F800F27481 /* NCMBInstallation.m in Sources */,
-				8AB2CEB81CE315F800F27481 /* NCMBOADataFetcher.m in Sources */,
-				8AB2CEA81CE315F800F27481 /* NCMB_Twitter.m in Sources */,
-				8AB2CEAE1CE315F800F27481 /* NSURLBase.m in Sources */,
 				8AB2CEC91CE315F800F27481 /* NCMBURLConnection.m in Sources */,
-				8AB2CEAF1CE315F800F27481 /* Base64Transcoder.c in Sources */,
 				8AB2CE931CE315F800F27481 /* NCMBObject.m in Sources */,
-				8AB2CEB11CE315F800F27481 /* hmac.c in Sources */,
 				8AB2CEE21CE315F800F27481 /* SubClassHandler.m in Sources */,
 				8AB2CED31CE315F800F27481 /* NCMBDeleteOperation.m in Sources */,
 				8AB2CECD1CE315F800F27481 /* NSDataBase64Encode.m in Sources */,
