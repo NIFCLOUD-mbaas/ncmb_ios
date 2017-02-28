@@ -46,5 +46,4 @@ typedef void (^NCMBProgressBlock)(int percentDone);
 //typedef void (^NCMBFetchResultBlock)(BOOL succeeded, NSError *error);
 //typedef void (^NCMBSaveResultBlock)(BOOL succeeded, NSError *error);
 //typedef void (^NCMBDeleteResultBlock)(BOOL succeeded, NSError *error);
-typedef void (^NCMBSaveAllResultBlock)(NSArray *results, NSError *error);
 typedef void (^NCMBFetchAllResultBlock)(NSArray *results, NSError *error);
