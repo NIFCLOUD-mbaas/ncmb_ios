@@ -243,43 +243,10 @@ enum{
 
 # pragma webview delegate
 
-- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    switch (buttonIndex) {
-        case 0:
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:actionSheet.title]];
-            break;
-            
-        default:
-            break;
-    }
-}
-
 - (BOOL) webView:(UIWebView*) webView
 shouldStartLoadWithRequest:(NSURLRequest*) request
   navigationType:(UIWebViewNavigationType) navigationType
 {
-        /* リッチプッシュ通知の仕様変更でシンプルになった
-    NSString* urlStr = [self.wv stringByEvaluatingJavaScriptFromString:@"document.URL"];
-    NSURL *homeUrl = [NSURL URLWithString:urlStr];
-    if (navigationType == UIWebViewNavigationTypeLinkClicked){
-
-        if (![request.URL.host isEqualToString:homeUrl.host]){
-            //UIWindow* window = [UIApplication sharedApplication].windows[0];
-            
-            UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
-            actionSheet.delegate = self;
-            actionSheet.title = [[request URL] absoluteString];
-            [actionSheet addButtonWithTitle:@"Safariで開く"];
-            [actionSheet addButtonWithTitle:@"キャンセル"];
-            actionSheet.cancelButtonIndex = 1;
-            
-            [actionSheet showInView:self.wv];
-            
-            return NO;
-        }
-    }
-     */
     [self startWebViewLoading];
     
     return YES;
