@@ -292,7 +292,7 @@ shouldStartLoadWithRequest:(NSURLRequest*) request
 
         NSString *html = @"<html><body><h1>ページを開けません。</h1></body></html>";
         NSData *bodyData = [html dataUsingEncoding:NSUTF8StringEncoding];
-        [self.wv loadData:bodyData MIMEType:@"text/html" textEncodingName:@"utf-8" baseURL:nil];
+        [self.wv loadData:bodyData MIMEType:@"text/html" textEncodingName:@"utf-8" baseURL:[[NSURL alloc]init]];
     }
 }
 
