@@ -360,8 +360,13 @@ static NSMutableData *resultData = nil;
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     [df setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"US"]];
     NSTimeZone *zone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
-    NSCalendar *calender = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    [calender setTimeZone:zone];
+    NSCalendar *calendar = nil;
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0){
+        calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    } else {
+        calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    }
+    [calendar setTimeZone:zone];
     [df setDateFormat:@"yyyyMMddHHmmssSSSS"];
     NSString *str = [df stringFromDate:[NSDate date]];
     return str;

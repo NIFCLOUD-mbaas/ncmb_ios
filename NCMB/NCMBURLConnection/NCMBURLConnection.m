@@ -189,7 +189,12 @@ typedef enum : NSInteger {
     NSDateFormatter *df = [[NSDateFormatter alloc]init];
     [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
     //和暦表示と12時間表示対策
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSCalendar *calendar = nil;
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0){
+        calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    } else {
+        calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    }
     [df setCalendar:calendar];
     [df setLocale:[NSLocale systemLocale]];
     NSString *timeStamp = [df stringFromDate:[NSDate date]];
