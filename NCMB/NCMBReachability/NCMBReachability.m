@@ -37,25 +37,6 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target,
     [[NCMBReachability sharedInstance] reachabilityChanged];
 }
 
-
-static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char* comment)
-{
-    
-    NSLog(@"Reachability Flag Status: %c%c %c%c%c%c%c%c%c %s\n",
-          (flags & kSCNetworkReachabilityFlagsIsWWAN)               ? 'W' : '-',
-          (flags & kSCNetworkReachabilityFlagsReachable)            ? 'R' : '-',
-          
-          (flags & kSCNetworkReachabilityFlagsTransientConnection)  ? 't' : '-',
-          (flags & kSCNetworkReachabilityFlagsConnectionRequired)   ? 'c' : '-',
-          (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic)  ? 'C' : '-',
-          (flags & kSCNetworkReachabilityFlagsInterventionRequired) ? 'i' : '-',
-          (flags & kSCNetworkReachabilityFlagsConnectionOnDemand)   ? 'D' : '-',
-          (flags & kSCNetworkReachabilityFlagsIsLocalAddress)       ? 'l' : '-',
-          (flags & kSCNetworkReachabilityFlagsIsDirect)             ? 'd' : '-',
-          comment
-          );
-}
-
 @implementation NCMBReachability {
     SCNetworkReachabilityRef internetReachabilityRef;
     SCNetworkReachabilityFlags internetReachabilityFlags;
