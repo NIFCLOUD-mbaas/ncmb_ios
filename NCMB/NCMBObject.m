@@ -1420,12 +1420,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     NSData *localData = [NSKeyedArchiver archivedDataWithRootObject:localDic];
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-    NSCalendar *calendar = nil;
-    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0){
-        calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    } else {
-        calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    }
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     [dateFormatter setCalendar:calendar];
     [dateFormatter setLocale:[NSLocale systemLocale]];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
@@ -1730,12 +1725,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 -(NSDateFormatter*)createNCMBDateFormatter{
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     //和暦表示と12時間表示対策
-    NSCalendar *calendar = nil;
-    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0){
-        calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    } else {
-        calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    }
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     [dateFormatter setCalendar:calendar];
     [dateFormatter setLocale:[NSLocale systemLocale]];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
