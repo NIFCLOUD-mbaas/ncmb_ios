@@ -715,10 +715,9 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 
 /**
  saveAll実行後の処理を行う
- @param objects リクエストされたNCMBObjectの配列
+ @param object リクエストされたNCMBObjectの配列
  @param operation 各オブジェクトに対する操作履歴
- @param response 各オブジェクトに対するレスポンス
- @param
+ @param responseDic 各オブジェクトに対するレスポンス
  **/
 + (void)afterSaveAll:(id)object
            operation:(NSMutableDictionary*)operation
@@ -847,7 +846,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 /**
  mobile backendからobjectIdをキーにしてデータを取得する
  @param error エラーを保持するポインタ
- @return 通信を行った場合にはYESを返却する
  */
 - (void)fetch:(NSError **)error{
     if (_objectId){
@@ -1026,8 +1024,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 /**
  リクエストURLを受け取ってsave処理を実行する
  @param url リクエストURL
- @param エラーを保持するポインタ
- @return 通信が行われたかを真偽値で返却する
+ @param error エラーを保持するポインタ
  */
 - (void)save:(NSString*)url error:(NSError **)error{
     
@@ -1069,7 +1066,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 /**
  mobile backendにオブジェクトを保存する
  @param error エラーを保持するポインタ
- @return result 通信が実行されたらYESを返す
  */
 - (void)save:(NSError **)error{
     NSString *url = [self returnBaseUrl:_ncmbClassName objectId:_objectId];
@@ -1080,7 +1076,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 /**
  リクエストURLを受け取ってmobile backendにオブジェクトを保存する。非同期通信を行う。
  @param url リクエストURL
- @param block 通信後に実行されるblock。引数にNSError *errorを持つ。
+ @param userBlock 通信後に実行されるblock。引数にNSError *errorを持つ。
  */
 - (void)saveInBackgroundWithBlock:(NSString *)url block:(NCMBErrorResultBlock)userBlock{
     dispatch_queue_t sub_queue = dispatch_queue_create("saveInBackgroundWithBlock", NULL);
@@ -1125,7 +1121,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 
 /**
  mobile backendにオブジェクトを保存する。非同期通信を行う。
- @param block 通信後に実行されるblock。引数にNSError *errorを持つ。
+ @param userBlock 通信後に実行されるblock。引数にNSError *errorを持つ。
  */
 - (void)saveInBackgroundWithBlock:(NCMBErrorResultBlock)userBlock{
     NSString *url = [self returnBaseUrl:_ncmbClassName objectId:_objectId];
@@ -1497,7 +1493,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 /**
  リクエストURLを受け取ってdeleteを実行する。非同期通信を行う。
  @param url リクエストURL
- @param block
+ @param userBlock 削除後に実行されるblock
  */
 - (void)deleteInBackgroundWithBlock:(NSString *)url block:(NCMBErrorResultBlock)userBlock{
     dispatch_queue_t sub_queue = dispatch_queue_create("saveInBackgroundWithBlock", NULL);
@@ -1524,7 +1520,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 
 /**
  オブジェクトをmobile backendとローカル上から削除する。非同期通信を行う。
- @param error block 通信後に実行されるblock。引数にNSError *errorを持つ。
+ @param userBlock 通信後に実行されるblock。引数にNSError *errorを持つ。
  */
 - (void)deleteInBackgroundWithBlock:(NCMBErrorResultBlock)userBlock{
     if (_objectId){
@@ -1809,8 +1805,8 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 
 /**
  引数の配列とクラス名からサブクラスor既定クラスorその他のインスタンスを作成する
- @param NSMutableDictionary *result オブジェクトのデータ
- @param NSString *ncmbClassName mobile backend上のクラス名
+ @param result オブジェクトのデータ
+ @param ncmbClassName mobile backend上のクラス名
  */
 + (id)convertClass:(NSMutableDictionary*)result
      ncmbClassName:(NSString*)ncmbClassName{

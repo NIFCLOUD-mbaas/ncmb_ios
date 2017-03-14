@@ -476,8 +476,8 @@ typedef enum : NSInteger {
  @param response 現在の通信のレスポンス
  @param contentsData 現在の通信の受信データ
  @param connectionError 現在の通信のエラー
- @param connection 現在の通信のリクエスト
- @param connection 各機能クラスに返すコールバック
+ @param request 現在の通信のリクエスト
+ @param block 各機能クラスに返すコールバック
 
  */
 - (void)connectionDidFinished:(NSURLResponse*)response contentsData:(NSData *)contentsData connectionError:(NSError *)connectionError request:(NSURLRequest*)request block:(NCMBResultBlock)block{
@@ -575,7 +575,7 @@ typedef enum : NSInteger {
 
 /**
  エラーレスポンスのJSONをNSErrorに変換する
- @param response エラーが含まれているJSON
+ @param contents エラーが含まれているJSON
  @param error エラーを保持するポインタ
  */
 - (void)convertErrorFromJSON:(NSData*)contents error:(NSError**)error {
