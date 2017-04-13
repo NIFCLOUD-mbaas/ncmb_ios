@@ -21,7 +21,6 @@ framework module NCMB {
   header "NCMBScript.h"
   header "NCMBScriptService.h"
   header "NCMBSubclassing.h"
-  header "NSMutableURLRequestParameters.h"
   header "NSStringURLEncoding.h"
   header "NSURLBase.h"
   header "Base64Transcoder.h"
