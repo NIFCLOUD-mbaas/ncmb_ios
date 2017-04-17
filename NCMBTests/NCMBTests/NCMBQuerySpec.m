@@ -19,7 +19,7 @@
 #import <NCMB/NCMB.h>
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
-#import "NCMBURLConnection.h"
+#import <NCMB/NCMBURLConnection.h>
 
 @interface NCMBQuery (Private)
 @property (nonatomic) NCMBURLConnection *connection;

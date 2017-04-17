@@ -19,7 +19,6 @@
 #import <NCMB/NCMB.h>
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
-#import "NCMBURLConnection.h"
 
 @interface NCMBInstallation (Private)
 - (void)afterFetch:(NSMutableDictionary*)response isRefresh:(BOOL)isRefresh;
