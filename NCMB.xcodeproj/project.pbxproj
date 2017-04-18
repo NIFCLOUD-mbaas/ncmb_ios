@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D9927101EA5FB21008F4319 /* NCMB_umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D99270F1EA5FB21008F4319 /* NCMB_umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CDFF1CE3153F00F27481 /* NCMB.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CDFE1CE3153F00F27481 /* NCMB.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CE7B1CE315F800F27481 /* NCMBRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE071CE315F800F27481 /* NCMBRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CE7C1CE315F800F27481 /* NCMBRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE081CE315F800F27481 /* NCMBRequest.m */; };
@@ -77,6 +78,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5D99270F1EA5FB21008F4319 /* NCMB_umbrella.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NCMB_umbrella.h; path = NCMB/NCMB_umbrella.h; sourceTree = "<group>"; };
 		8AB2CDFB1CE3153F00F27481 /* NCMB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NCMB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AB2CDFE1CE3153F00F27481 /* NCMB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NCMB.h; sourceTree = "<group>"; };
 		8AB2CE071CE315F800F27481 /* NCMBRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBRequest.h; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 		8AB2CDF11CE3153F00F27481 = {
 			isa = PBXGroup;
 			children = (
+				5D99270F1EA5FB21008F4319 /* NCMB_umbrella.h */,
 				9D305C6C1CEDAC990066BFE7 /* module.modulemap */,
 				8AB2CDFD1CE3153F00F27481 /* NCMB */,
 				8AB2CDFC1CE3153F00F27481 /* Products */,
@@ -368,6 +371,7 @@
 				8AB2CE7E1CE315F800F27481 /* NCMBACL.h in Headers */,
 				8AB2CEA51CE315F800F27481 /* NCMBScriptService.h in Headers */,
 				8AB2CEDD1CE315F800F27481 /* NCMBObject+Private.h in Headers */,
+				5D9927101EA5FB21008F4319 /* NCMB_umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
