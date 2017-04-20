@@ -329,6 +329,9 @@ static NSMutableData *resultData = nil;
                         self.file = responseData;
                     }
                     if(resultBlock){
+                        if (![responseData isKindOfClass:[NSData class]]) {
+                            responseData = nil;
+                        }
                         resultBlock(responseData,errorBlock);
                     }
                 }];
