@@ -29,7 +29,7 @@
 		8AB2CE911CE315F800F27481 /* NCMBInstallation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE1D1CE315F800F27481 /* NCMBInstallation.m */; };
 		8AB2CE921CE315F800F27481 /* NCMBObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE1E1CE315F800F27481 /* NCMBObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CE931CE315F800F27481 /* NCMBObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE1F1CE315F800F27481 /* NCMBObject.m */; };
-		8AB2CE941CE315F800F27481 /* NCMBObject+Subclass.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE201CE315F800F27481 /* NCMBObject+Subclass.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8AB2CE941CE315F800F27481 /* NCMBObject+Subclass.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE201CE315F800F27481 /* NCMBObject+Subclass.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CE951CE315F800F27481 /* NCMBPush.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE211CE315F800F27481 /* NCMBPush.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CE961CE315F800F27481 /* NCMBPush.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE221CE315F800F27481 /* NCMBPush.m */; };
 		8AB2CE971CE315F800F27481 /* NCMBQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE231CE315F800F27481 /* NCMBQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -38,9 +38,9 @@
 		8AB2CE9A1CE315F800F27481 /* NCMBReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE271CE315F800F27481 /* NCMBReachability.m */; };
 		8AB2CE9B1CE315F800F27481 /* NCMBRelation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE281CE315F800F27481 /* NCMBRelation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CE9C1CE315F800F27481 /* NCMBRelation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE291CE315F800F27481 /* NCMBRelation.m */; };
-		8AB2CE9D1CE315F800F27481 /* NCMBCloseImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE2B1CE315F800F27481 /* NCMBCloseImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8AB2CE9D1CE315F800F27481 /* NCMBCloseImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE2B1CE315F800F27481 /* NCMBCloseImageView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CE9E1CE315F800F27481 /* NCMBCloseImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE2C1CE315F800F27481 /* NCMBCloseImageView.m */; };
-		8AB2CE9F1CE315F800F27481 /* NCMBRichPushView.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE2D1CE315F800F27481 /* NCMBRichPushView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8AB2CE9F1CE315F800F27481 /* NCMBRichPushView.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE2D1CE315F800F27481 /* NCMBRichPushView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CEA01CE315F800F27481 /* NCMBRichPushView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE2E1CE315F800F27481 /* NCMBRichPushView.m */; };
 		8AB2CEA11CE315F800F27481 /* NCMBRole.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE2F1CE315F800F27481 /* NCMBRole.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CEA21CE315F800F27481 /* NCMBRole.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE301CE315F800F27481 /* NCMBRole.m */; };
@@ -49,31 +49,31 @@
 		8AB2CEA51CE315F800F27481 /* NCMBScriptService.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE341CE315F800F27481 /* NCMBScriptService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CEA61CE315F800F27481 /* NCMBScriptService.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE351CE315F800F27481 /* NCMBScriptService.m */; };
 		8AB2CEA71CE315F800F27481 /* NCMBSubclassing.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE361CE315F800F27481 /* NCMBSubclassing.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEC81CE315F800F27481 /* NCMBURLConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE5C1CE315F800F27481 /* NCMBURLConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8AB2CEC81CE315F800F27481 /* NCMBURLConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE5C1CE315F800F27481 /* NCMBURLConnection.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CEC91CE315F800F27481 /* NCMBURLConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE5D1CE315F800F27481 /* NCMBURLConnection.m */; };
 		8AB2CECA1CE315F800F27481 /* NCMBUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE5E1CE315F800F27481 /* NCMBUser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CECB1CE315F800F27481 /* NCMBUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE5F1CE315F800F27481 /* NCMBUser.m */; };
-		8AB2CECC1CE315F800F27481 /* NSDataBase64Encode.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE611CE315F800F27481 /* NSDataBase64Encode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8AB2CECC1CE315F800F27481 /* NSDataBase64Encode.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE611CE315F800F27481 /* NSDataBase64Encode.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CECD1CE315F800F27481 /* NSDataBase64Encode.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE621CE315F800F27481 /* NSDataBase64Encode.m */; };
-		8AB2CECE1CE315F800F27481 /* NCMBAddOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE641CE315F800F27481 /* NCMBAddOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8AB2CECE1CE315F800F27481 /* NCMBAddOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE641CE315F800F27481 /* NCMBAddOperation.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CECF1CE315F800F27481 /* NCMBAddOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE651CE315F800F27481 /* NCMBAddOperation.m */; };
-		8AB2CED01CE315F800F27481 /* NCMBAddUniqueOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE661CE315F800F27481 /* NCMBAddUniqueOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8AB2CED01CE315F800F27481 /* NCMBAddUniqueOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE661CE315F800F27481 /* NCMBAddUniqueOperation.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CED11CE315F800F27481 /* NCMBAddUniqueOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE671CE315F800F27481 /* NCMBAddUniqueOperation.m */; };
-		8AB2CED21CE315F800F27481 /* NCMBDeleteOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE681CE315F800F27481 /* NCMBDeleteOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8AB2CED21CE315F800F27481 /* NCMBDeleteOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE681CE315F800F27481 /* NCMBDeleteOperation.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CED31CE315F800F27481 /* NCMBDeleteOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE691CE315F800F27481 /* NCMBDeleteOperation.m */; };
-		8AB2CED41CE315F800F27481 /* NCMBIncrementOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE6A1CE315F800F27481 /* NCMBIncrementOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8AB2CED41CE315F800F27481 /* NCMBIncrementOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE6A1CE315F800F27481 /* NCMBIncrementOperation.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CED51CE315F800F27481 /* NCMBIncrementOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE6B1CE315F800F27481 /* NCMBIncrementOperation.m */; };
-		8AB2CED61CE315F800F27481 /* NCMBRelationOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE6C1CE315F800F27481 /* NCMBRelationOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8AB2CED61CE315F800F27481 /* NCMBRelationOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE6C1CE315F800F27481 /* NCMBRelationOperation.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CED71CE315F800F27481 /* NCMBRelationOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE6D1CE315F800F27481 /* NCMBRelationOperation.m */; };
-		8AB2CED81CE315F800F27481 /* NCMBRemoveOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE6E1CE315F800F27481 /* NCMBRemoveOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8AB2CED81CE315F800F27481 /* NCMBRemoveOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE6E1CE315F800F27481 /* NCMBRemoveOperation.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CED91CE315F800F27481 /* NCMBRemoveOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE6F1CE315F800F27481 /* NCMBRemoveOperation.m */; };
-		8AB2CEDA1CE315F800F27481 /* NCMBSetOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE701CE315F800F27481 /* NCMBSetOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8AB2CEDA1CE315F800F27481 /* NCMBSetOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE701CE315F800F27481 /* NCMBSetOperation.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CEDB1CE315F800F27481 /* NCMBSetOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE711CE315F800F27481 /* NCMBSetOperation.m */; };
-		8AB2CEDD1CE315F800F27481 /* NCMBObject+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE741CE315F800F27481 /* NCMBObject+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEDE1CE315F800F27481 /* NCMBQuery+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE751CE315F800F27481 /* NCMBQuery+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEDF1CE315F800F27481 /* NCMBRelation+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE761CE315F800F27481 /* NCMBRelation+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEE01CE315F800F27481 /* NCMBUser+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE771CE315F800F27481 /* NCMBUser+Private.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEE11CE315F800F27481 /* SubClassHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE791CE315F800F27481 /* SubClassHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8AB2CEDD1CE315F800F27481 /* NCMBObject+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE741CE315F800F27481 /* NCMBObject+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		8AB2CEDE1CE315F800F27481 /* NCMBQuery+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE751CE315F800F27481 /* NCMBQuery+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		8AB2CEDF1CE315F800F27481 /* NCMBRelation+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE761CE315F800F27481 /* NCMBRelation+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		8AB2CEE01CE315F800F27481 /* NCMBUser+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE771CE315F800F27481 /* NCMBUser+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		8AB2CEE11CE315F800F27481 /* SubClassHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE791CE315F800F27481 /* SubClassHandler.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CEE21CE315F800F27481 /* SubClassHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE7A1CE315F800F27481 /* SubClassHandler.m */; };
 /* End PBXBuildFile section */
 
@@ -334,44 +334,44 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8AB2CEE01CE315F800F27481 /* NCMBUser+Private.h in Headers */,
 				8AB2CE9B1CE315F800F27481 /* NCMBRelation.h in Headers */,
-				8AB2CED81CE315F800F27481 /* NCMBRemoveOperation.h in Headers */,
-				8AB2CECE1CE315F800F27481 /* NCMBAddOperation.h in Headers */,
-				8AB2CEDA1CE315F800F27481 /* NCMBSetOperation.h in Headers */,
-				8AB2CED01CE315F800F27481 /* NCMBAddUniqueOperation.h in Headers */,
 				8AB2CE951CE315F800F27481 /* NCMBPush.h in Headers */,
 				8AB2CE841CE315F800F27481 /* NCMBConstants.h in Headers */,
-				8AB2CED21CE315F800F27481 /* NCMBDeleteOperation.h in Headers */,
 				8AB2CECA1CE315F800F27481 /* NCMBUser.h in Headers */,
-				8AB2CE941CE315F800F27481 /* NCMBObject+Subclass.h in Headers */,
-				8AB2CED61CE315F800F27481 /* NCMBRelationOperation.h in Headers */,
 				8AB2CE971CE315F800F27481 /* NCMBQuery.h in Headers */,
 				8AB2CE7B1CE315F800F27481 /* NCMBRequest.h in Headers */,
-				8AB2CEDF1CE315F800F27481 /* NCMBRelation+Private.h in Headers */,
 				8AB2CEA71CE315F800F27481 /* NCMBSubclassing.h in Headers */,
 				8AB2CE801CE315F800F27481 /* NCMBAnalytics.h in Headers */,
 				8AB2CE991CE315F800F27481 /* NCMBReachability.h in Headers */,
 				8AB2CE8B1CE315F800F27481 /* NCMBGeoPoint.h in Headers */,
 				8AB2CE821CE315F800F27481 /* NCMBAnonymousUtils.h in Headers */,
-				8AB2CE9F1CE315F800F27481 /* NCMBRichPushView.h in Headers */,
 				8AB2CE891CE315F800F27481 /* NCMBFile.h in Headers */,
-				8AB2CEC81CE315F800F27481 /* NCMBURLConnection.h in Headers */,
 				8AB2CEA11CE315F800F27481 /* NCMBRole.h in Headers */,
 				8AB2CE851CE315F800F27481 /* NCMBError.h in Headers */,
-				8AB2CE9D1CE315F800F27481 /* NCMBCloseImageView.h in Headers */,
-				8AB2CED41CE315F800F27481 /* NCMBIncrementOperation.h in Headers */,
 				8AB2CE921CE315F800F27481 /* NCMBObject.h in Headers */,
 				8AB2CDFF1CE3153F00F27481 /* NCMB.h in Headers */,
-				8AB2CECC1CE315F800F27481 /* NSDataBase64Encode.h in Headers */,
 				8AB2CE901CE315F800F27481 /* NCMBInstallation.h in Headers */,
-				8AB2CEE11CE315F800F27481 /* SubClassHandler.h in Headers */,
-				8AB2CEDE1CE315F800F27481 /* NCMBQuery+Private.h in Headers */,
 				8AB2CEA31CE315F800F27481 /* NCMBScript.h in Headers */,
 				8AB2CE7E1CE315F800F27481 /* NCMBACL.h in Headers */,
 				8AB2CEA51CE315F800F27481 /* NCMBScriptService.h in Headers */,
-				8AB2CEDD1CE315F800F27481 /* NCMBObject+Private.h in Headers */,
 				5D9927101EA5FB21008F4319 /* NCMB_umbrella.h in Headers */,
+				8AB2CE9F1CE315F800F27481 /* NCMBRichPushView.h in Headers */,
+				8AB2CEDE1CE315F800F27481 /* NCMBQuery+Private.h in Headers */,
+				8AB2CEDA1CE315F800F27481 /* NCMBSetOperation.h in Headers */,
+				8AB2CECE1CE315F800F27481 /* NCMBAddOperation.h in Headers */,
+				8AB2CED41CE315F800F27481 /* NCMBIncrementOperation.h in Headers */,
+				8AB2CE941CE315F800F27481 /* NCMBObject+Subclass.h in Headers */,
+				8AB2CE9D1CE315F800F27481 /* NCMBCloseImageView.h in Headers */,
+				8AB2CED81CE315F800F27481 /* NCMBRemoveOperation.h in Headers */,
+				8AB2CED01CE315F800F27481 /* NCMBAddUniqueOperation.h in Headers */,
+				8AB2CED61CE315F800F27481 /* NCMBRelationOperation.h in Headers */,
+				8AB2CED21CE315F800F27481 /* NCMBDeleteOperation.h in Headers */,
+				8AB2CEC81CE315F800F27481 /* NCMBURLConnection.h in Headers */,
+				8AB2CEDF1CE315F800F27481 /* NCMBRelation+Private.h in Headers */,
+				8AB2CECC1CE315F800F27481 /* NSDataBase64Encode.h in Headers */,
+				8AB2CEE11CE315F800F27481 /* SubClassHandler.h in Headers */,
+				8AB2CEDD1CE315F800F27481 /* NCMBObject+Private.h in Headers */,
+				8AB2CEE01CE315F800F27481 /* NCMBUser+Private.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
