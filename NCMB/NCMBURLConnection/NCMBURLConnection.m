@@ -323,13 +323,9 @@ typedef enum : NSInteger {
             return contents;
         }
         
-        if([self.path isEqualToString:[NSString stringWithFormat:@"/%@/%@", kAPIVersion, @"batch"]]) {
-            //バッチ処理の場合は配列が返却される
-            responseDic = [NSDictionary dictionaryWithObject:[self convertResponseToArr:contents error:error] forKey:@"result"];
-        } else {
-            //削除の場合は空、それ以外はNSDictionaryが返却される
-            responseDic = [self convertResponseToDic:contents error:error];
-        }
+        //削除の場合は空、それ以外はNSDictionaryが返却される
+        responseDic = [self convertResponseToDic:contents error:error];
+        
         [self signatureCheck:response contentsData:contents error:error];
         
         return responseDic;
