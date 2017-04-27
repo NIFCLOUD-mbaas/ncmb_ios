@@ -25,6 +25,7 @@
 @property (nonatomic) NCMBURLConnection *connection;
 @property (nonatomic) NSMutableDictionary *query;
 - (NCMBURLConnection*)createConnectionForSearch:(NSMutableDictionary*)queryDic countEnableFlag:(BOOL)countEnableFlag getFirst:(BOOL)getFirstFlag;
+-(NSDateFormatter*)createNCMBDateFormatter;
 @end
 
 SpecBegin(NCMBQuery)
@@ -76,6 +77,17 @@ describe(@"NCMBQuery", ^{
                 expect([object class]).to.equal([NCMBRole class]);
             }
         }];
+        
+    });
+    
+    it(@"should get create date formatter", ^{
+        
+        NCMBQuery *query = [NCMBQuery queryWithClassName:@"test"];
+        NSDateFormatter *dateFormatter = [query createNCMBDateFormatter];
+        NSString *dateStr = [dateFormatter stringFromDate:[NSDate date]];
+        
+        expect(dateStr).notTo.beNil();
+        expect(dateStr).notTo.equal(@"");
         
     });
     
