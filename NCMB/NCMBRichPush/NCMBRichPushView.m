@@ -127,9 +127,9 @@ enum{
     self.wv.delegate = self;
     
     //add subview to main view
-    [window addSubview:self.cv];
+    [window.rootViewController.view addSubview:self.cv];
     [self.uv addSubview:self.wv];
-    [window addSubview:self.uv];
+    [window.rootViewController.view addSubview:self.uv];
     
     [UIView animateWithDuration:0.4f animations:^{
         self.uv.alpha = 1.0f;
