@@ -69,13 +69,11 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
 }
 
 +(NSString *)returnTimeStamp{
-    NSDateFormatter *df = [[NSDateFormatter alloc]init];
-    [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
     //和暦表示と12時間表示対策
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    [df setCalendar:calendar];
-    [df setLocale:[NSLocale systemLocale]];
-    return [df stringFromDate:[NSDate date]];
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
+    return [dateFormatter stringFromDate:[NSDate date]];
 }
 
 +(NSString *)returnSessionToken {

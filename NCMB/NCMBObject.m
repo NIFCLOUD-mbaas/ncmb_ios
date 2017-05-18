@@ -1420,9 +1420,8 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     NSData *localData = [NSKeyedArchiver archivedDataWithRootObject:localDic];
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    [dateFormatter setCalendar:calendar];
-    [dateFormatter setLocale:[NSLocale systemLocale]];
+    //和暦表示と12時間表示対策
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
     [dateFormatter setDateFormat:@"yyyyMMddHHmmssSSSS"];
     //ファイル名はタイムスタンプ_オペレーションのアドレス
@@ -1725,13 +1724,9 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 -(NSDateFormatter*)createNCMBDateFormatter{
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     //和暦表示と12時間表示対策
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    [dateFormatter setCalendar:calendar];
-    [dateFormatter setLocale:[NSLocale systemLocale]];
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-    
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
-    
     return dateFormatter;
 }
 

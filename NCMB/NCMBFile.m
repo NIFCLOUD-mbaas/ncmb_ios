@@ -357,13 +357,12 @@ static NSMutableData *resultData = nil;
  @return NSString型 タイムスタンプ
  */
 +(NSString*) getTimeStamp{
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    [df setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"US"]];
-    NSTimeZone *zone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    [calendar setTimeZone:zone];
-    [df setDateFormat:@"yyyyMMddHHmmssSSSS"];
-    NSString *str = [df stringFromDate:[NSDate date]];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    //和暦表示と12時間表示対策
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+    [dateFormatter setDateFormat:@"yyyyMMddHHmmssSSSS"];
+    NSString *str = [dateFormatter stringFromDate:[NSDate date]];
     return str;
 }
 

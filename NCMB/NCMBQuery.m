@@ -652,13 +652,9 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 -(NSDateFormatter*)createNCMBDateFormatter{
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     //和暦表示と12時間表示対策
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    [dateFormatter setCalendar:calendar];
-    [dateFormatter setLocale:[NSLocale systemLocale]];
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-    
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
-    
     return dateFormatter;
 }
 

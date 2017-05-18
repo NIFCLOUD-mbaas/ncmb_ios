@@ -186,13 +186,11 @@ typedef enum : NSInteger {
     NSArray *splitedEndPoint = [endpointStr componentsSeparatedByString:@"/"];
     NSString *fqdn = splitedEndPoint[2];
     
-    NSDateFormatter *df = [[NSDateFormatter alloc]init];
-    [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
     //和暦表示と12時間表示対策
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    [df setCalendar:calendar];
-    [df setLocale:[NSLocale systemLocale]];
-    NSString *timeStamp = [df stringFromDate:[NSDate date]];
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
+    NSString *timeStamp = [dateFormatter stringFromDate:[NSDate date]];
     self.timeStamp = timeStamp;
     
     //2013-09-01/〜以降のPathの取得
