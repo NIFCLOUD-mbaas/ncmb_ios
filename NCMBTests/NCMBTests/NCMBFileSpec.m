@@ -41,11 +41,15 @@ describe(@"NCMBFile", ^{
         
     });
     
-    it(@"should get time stamp", ^{
-        NSString *timeStamp = [NCMBFile getTimeStamp];
+    it(@"should get time stamp with a string of specification format", ^{
+        id dateMock = OCMClassMock([NSDate class]);
+        NSString *mockTimeStamp = @"1494925200"; //2017-05-16 09:00:00 in UTC
+        OCMStub([dateMock date]).andReturn([NSDate dateWithTimeIntervalSince1970:[mockTimeStamp intValue]]);
+        
+        NSString *timeStamp = [NCMBFile getTimeStamp]; //DateFormat @"yyyyMMddHHmmssSSSS"
         
         expect(timeStamp).notTo.beNil();
-        expect(timeStamp).notTo.equal(@"");
+        expect(timeStamp).equal(@"201705160900000000");
     });
     
     afterEach(^{

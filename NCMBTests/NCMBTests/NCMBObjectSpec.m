@@ -43,7 +43,12 @@ describe(@"NCMBObject", ^{
         
     });
     
-    it(@"should save command to file", ^{
+    it(@"should save command to file with the file path of date string of specification format", ^{
+        
+        id dateMock = OCMClassMock([NSDate class]);
+        NSString *mockTimeStamp = @"1494925200"; //2017-05-16 09:00:00 in UTC
+        OCMStub([dateMock date]).andReturn([NSDate dateWithTimeIntervalSince1970:[mockTimeStamp intValue]]);
+        
         NSDictionary *saveDic = @{
                                   @"method":@"POST",
                                   @"path":@"classes/test",
@@ -54,7 +59,7 @@ describe(@"NCMBObject", ^{
         NCMBObject *object = [NCMBObject objectWithClassName:@"test"];
         
         NSError *error = nil;
-        [object saveCommandToFile:saveDic error:&error];
+        [object saveCommandToFile:saveDic error:&error]; // DateFormat @"yyyyMMddHHmmssSSSS"
         
         // get local file
         NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -67,6 +72,8 @@ describe(@"NCMBObject", ^{
         NSDictionary *dictForEventually = [NSKeyedUnarchiver unarchiveObjectWithData:data];
         
         expect(saveDic).to.equal(dictForEventually);
+        NSString *pathString = [[contents firstObject] substringWithRange:NSMakeRange(0,18)];
+        expect(pathString).equal(@"201705160900000000");
         
         [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, [contents firstObject]] error:nil];
     });

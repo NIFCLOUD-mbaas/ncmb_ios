@@ -80,14 +80,15 @@ describe(@"NCMBQuery", ^{
         
     });
     
-    it(@"should get create date formatter", ^{
+    it(@"should create date formatter with a specification format", ^{
         
         NCMBQuery *query = [NCMBQuery queryWithClassName:@"test"];
-        NSDateFormatter *dateFormatter = [query createNCMBDateFormatter];
-        NSString *dateStr = [dateFormatter stringFromDate:[NSDate date]];
+        NSDateFormatter *dateFormatter = [query createNCMBDateFormatter]; // DateFormat @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        NSString *timeStamp = @"1494925200"; //2017-05-16 09:00:00 in UTC
+        NSString *dateStr = [dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:[timeStamp intValue]]];
         
         expect(dateStr).notTo.beNil();
-        expect(dateStr).notTo.equal(@"");
+        expect(dateStr).equal(@"2017-05-16T09:00:00.000Z");
         
     });
     
