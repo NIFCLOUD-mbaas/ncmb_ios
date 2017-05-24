@@ -28,6 +28,7 @@
 
 #import "SubClassHandler.h"
 #import <objc/runtime.h>
+#import "NCMBDateFormat.h"
 
 
 #pragma mark - getter
@@ -1418,14 +1419,9 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 - (void)saveCommandToFile:(NSDictionary*)localDic error:(NSError**)error{
     //ファイルに保存処理を書き出す
     NSData *localData = [NSKeyedArchiver archivedDataWithRootObject:localDic];
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-    //和暦表示と12時間表示対策
-    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
-    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-    [dateFormatter setDateFormat:@"yyyyMMddHHmmssSSSS"];
+
     //ファイル名はタイムスタンプ_オペレーションのアドレス
-    NSString *path = [NSString stringWithFormat:@"%@%@_%p", COMMAND_CACHE_FOLDER_PATH, [dateFormatter stringFromDate:[NSDate date]], localDic];
+    NSString *path = [NSString stringWithFormat:@"%@%@_%p", COMMAND_CACHE_FOLDER_PATH, [[NCMBDateFormat getFileNameDateFormat] stringFromDate:[NSDate date]], localDic];
     [localData writeToFile:path options:NSDataWritingAtomic error:error];
 }
 
@@ -1722,12 +1718,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  NCMB形式の日付型NSDateFormatterオブジェクトを返す
  */
 -(NSDateFormatter*)createNCMBDateFormatter{
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    //和暦表示と12時間表示対策
-    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
-    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
-    return dateFormatter;
+    return [NCMBDateFormat getIso8601DateFormat];
 }
 
 /**

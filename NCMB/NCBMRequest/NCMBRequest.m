@@ -18,6 +18,7 @@
 #import "NCMBRequest.h"
 #import "NCMBUser+Private.h"
 #import <CommonCrypto/CommonCrypto.h>
+#import "NCMBDateFormat.h"
 
 static NSString *const appKeyField       = @"X-NCMB-Application-Key";
 static NSString *const timestampField    = @"X-NCMB-Timestamp";
@@ -69,11 +70,7 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
 }
 
 +(NSString *)returnTimeStamp{
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-    //和暦表示と12時間表示対策
-    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
-    return [dateFormatter stringFromDate:[NSDate date]];
+    return [[NCMBDateFormat getIso8601DateFormat] stringFromDate:[NSDate date]];
 }
 
 +(NSString *)returnSessionToken {

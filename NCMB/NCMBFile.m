@@ -20,6 +20,7 @@
 #import "NSDataBase64Encode.h"
 #import "NCMBQuery.h"
 #import "NCMBURLConnection.h"
+#import "NCMBDateFormat.h"
 
 #pragma mark - url
 #define URL_FILE @"files"
@@ -357,13 +358,7 @@ static NSMutableData *resultData = nil;
  @return NSString型 タイムスタンプ
  */
 +(NSString*) getTimeStamp{
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    //和暦表示と12時間表示対策
-    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
-    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-    [dateFormatter setDateFormat:@"yyyyMMddHHmmssSSSS"];
-    NSString *str = [dateFormatter stringFromDate:[NSDate date]];
-    return str;
+    return [[NCMBDateFormat getFileNameDateFormat] stringFromDate:[NSDate date]];
 }
 
 /**

@@ -21,6 +21,7 @@
 #import "NCMBError.h"
 #import "NCMBConstants.h"
 #import <CommonCrypto/CommonCrypto.h>
+#import "NCMBDateFormat.h"
 
 static NSString *const kEndPoint            = @"https://mb.api.cloud.nifty.com";
 static NSString *const kAPIVersion          = @"2013-09-01";
@@ -185,12 +186,8 @@ typedef enum : NSInteger {
     NSString *endpointStr = [self returnEndPoint];
     NSArray *splitedEndPoint = [endpointStr componentsSeparatedByString:@"/"];
     NSString *fqdn = splitedEndPoint[2];
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-    //和暦表示と12時間表示対策
-    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
-    NSString *timeStamp = [dateFormatter stringFromDate:[NSDate date]];
+
+    NSString *timeStamp = [[NCMBDateFormat getIso8601DateFormat] stringFromDate:[NSDate date]];
     self.timeStamp = timeStamp;
     
     //2013-09-01/〜以降のPathの取得
