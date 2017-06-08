@@ -66,7 +66,7 @@
     installation.channels = [NSMutableArray array];
     [installation setObject:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]
                      forKey:@"applicationName"];
-    [installation setObject:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]
+    [installation setObject:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]
                      forKey:@"appVersion"];
     [installation setObject:SDK_VERSION forKey:@"sdkVersion"];
     [installation setObject:@"ios" forKey:@"deviceType"];
@@ -93,7 +93,7 @@
         NSString *sdkVer = [dic objectForKey:@"sdkVersion"];
         NSString *appVer = [dic objectForKey:@"appVersion"];
         NSString *newSdkVer = SDK_VERSION;
-        NSString *newAppVer = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+        NSString *newAppVer = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
         //SDKバージョンとアプリバージョンの更新
         if (![newSdkVer isEqualToString:sdkVer]){
             [dic setObject:newSdkVer
