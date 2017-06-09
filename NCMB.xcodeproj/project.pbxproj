@@ -75,6 +75,8 @@
 		8AB2CEE01CE315F800F27481 /* NCMBUser+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE771CE315F800F27481 /* NCMBUser+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CEE11CE315F800F27481 /* SubClassHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE791CE315F800F27481 /* SubClassHandler.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CEE21CE315F800F27481 /* SubClassHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE7A1CE315F800F27481 /* SubClassHandler.m */; };
+		9D4B643D1ED42873008B015B /* NCMBDateFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D4B643B1ED42873008B015B /* NCMBDateFormat.m */; };
+		9D4B643F1ED432B9008B015B /* NCMBDateFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D4B643A1ED42873008B015B /* NCMBDateFormat.h */; settings = {ATTRIBUTES = (Private, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -149,6 +151,8 @@
 		8AB2CE7A1CE315F800F27481 /* SubClassHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubClassHandler.m; sourceTree = "<group>"; };
 		8AB2CF1C1CE32C1000F27481 /* NCMB_Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = NCMB_Info.plist; sourceTree = "<group>"; };
 		9D305C6C1CEDAC990066BFE7 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		9D4B643A1ED42873008B015B /* NCMBDateFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBDateFormat.h; sourceTree = "<group>"; };
+		9D4B643B1ED42873008B015B /* NCMBDateFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBDateFormat.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,6 +230,8 @@
 				8AB2CE631CE315F800F27481 /* Operations */,
 				8AB2CE721CE315F800F27481 /* PrivateHeaders */,
 				8AB2CE781CE315F800F27481 /* SubClassHandler */,
+				9D4B643A1ED42873008B015B /* NCMBDateFormat.h */,
+				9D4B643B1ED42873008B015B /* NCMBDateFormat.m */,
 			);
 			path = NCMB;
 			sourceTree = "<group>";
@@ -372,6 +378,7 @@
 				8AB2CEE11CE315F800F27481 /* SubClassHandler.h in Headers */,
 				8AB2CEDD1CE315F800F27481 /* NCMBObject+Private.h in Headers */,
 				8AB2CEE01CE315F800F27481 /* NCMBUser+Private.h in Headers */,
+				9D4B643F1ED432B9008B015B /* NCMBDateFormat.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,7 +414,6 @@
 				TargetAttributes = {
 					8AB2CDFA1CE3153F00F27481 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = 6P88524DUG;
 					};
 				};
 			};
@@ -443,6 +449,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D4B643D1ED42873008B015B /* NCMBDateFormat.m in Sources */,
 				8AB2CEA01CE315F800F27481 /* NCMBRichPushView.m in Sources */,
 				8AB2CE7C1CE315F800F27481 /* NCMBRequest.m in Sources */,
 				8AB2CE7D1CE315F800F27481 /* NCMB.m in Sources */,
@@ -579,7 +586,7 @@
 				INFOPLIST_FILE = NCMB/NCMB_Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "$(SRCROOT)/module.modulemap";
+				MODULEMAP_FILE = "$(SRCROOT)/NCMB.modulemap";
 				MODULEMAP_PRIVATE_FILE = "";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nifty.cloud.mb.NCMB;
@@ -598,7 +605,7 @@
 				INFOPLIST_FILE = NCMB/NCMB_Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "$(SRCROOT)/module.modulemap";
+				MODULEMAP_FILE = "$(SRCROOT)/NCMB.modulemap";
 				MODULEMAP_PRIVATE_FILE = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.nifty.cloud.mb.NCMB;
 				PRODUCT_NAME = "$(TARGET_NAME)";

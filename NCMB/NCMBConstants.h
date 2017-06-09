@@ -22,7 +22,7 @@
 
 #pragma mark - error
 #define ERRORDOMAIN @"NCMBErrorDomain"
-#define SDK_VERSION @"2.3.5"
+#define SDK_VERSION @"2.3.6"
 
 #define DATA_MAIN_PATH [NSHomeDirectory() stringByAppendingPathComponent:@"Library/"]
 #define COMMAND_CACHE_FOLDER_PATH [NSString stringWithFormat:@"%@/Private Documents/NCMB/Command Cache/", DATA_MAIN_PATH]
@@ -42,9 +42,3 @@ typedef void (^NCMBAnyObjectResultBlock)(id object, NSError *error);
 typedef void (^NCMBDataResultBlock)(NSData *data, NSError *error);
 typedef void (^NCMBDataStreamResultBlock)(NSInputStream *stream, NSError *error);
 typedef void (^NCMBProgressBlock)(int percentDone);
-
-//typedef void (^NCMBFetchResultBlock)(BOOL succeeded, NSError *error);
-//typedef void (^NCMBSaveResultBlock)(BOOL succeeded, NSError *error);
-//typedef void (^NCMBDeleteResultBlock)(BOOL succeeded, NSError *error);
-typedef void (^NCMBSaveAllResultBlock)(NSArray *results, NSError *error);
-typedef void (^NCMBFetchAllResultBlock)(NSArray *results, NSError *error);
