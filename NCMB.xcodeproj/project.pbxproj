@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		5D9927101EA5FB21008F4319 /* NCMB_umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D99270F1EA5FB21008F4319 /* NCMB_umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CDFF1CE3153F00F27481 /* NCMB.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CDFE1CE3153F00F27481 /* NCMB.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CE7B1CE315F800F27481 /* NCMBRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE071CE315F800F27481 /* NCMBRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CE7C1CE315F800F27481 /* NCMBRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE081CE315F800F27481 /* NCMBRequest.m */; };
 		8AB2CE7D1CE315F800F27481 /* NCMB.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE091CE315F800F27481 /* NCMB.m */; };
 		8AB2CE7E1CE315F800F27481 /* NCMBACL.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE0A1CE315F800F27481 /* NCMBACL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CE7F1CE315F800F27481 /* NCMBACL.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE0B1CE315F800F27481 /* NCMBACL.m */; };
@@ -77,14 +75,14 @@
 		8AB2CEE21CE315F800F27481 /* SubClassHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE7A1CE315F800F27481 /* SubClassHandler.m */; };
 		9D4B643D1ED42873008B015B /* NCMBDateFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D4B643B1ED42873008B015B /* NCMBDateFormat.m */; };
 		9D4B643F1ED432B9008B015B /* NCMBDateFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D4B643A1ED42873008B015B /* NCMBDateFormat.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		9DB041451EFCDD6E00BDEFFC /* NCMBRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DB041431EFCDD6E00BDEFFC /* NCMBRequest.h */; };
+		9DB041461EFCDD6E00BDEFFC /* NCMBRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DB041441EFCDD6E00BDEFFC /* NCMBRequest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5D99270F1EA5FB21008F4319 /* NCMB_umbrella.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NCMB_umbrella.h; path = NCMB/NCMB_umbrella.h; sourceTree = "<group>"; };
 		8AB2CDFB1CE3153F00F27481 /* NCMB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NCMB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AB2CDFE1CE3153F00F27481 /* NCMB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NCMB.h; sourceTree = "<group>"; };
-		8AB2CE071CE315F800F27481 /* NCMBRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBRequest.h; sourceTree = "<group>"; };
-		8AB2CE081CE315F800F27481 /* NCMBRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBRequest.m; sourceTree = "<group>"; };
 		8AB2CE091CE315F800F27481 /* NCMB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMB.m; sourceTree = "<group>"; };
 		8AB2CE0A1CE315F800F27481 /* NCMBACL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBACL.h; sourceTree = "<group>"; };
 		8AB2CE0B1CE315F800F27481 /* NCMBACL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBACL.m; sourceTree = "<group>"; };
@@ -153,6 +151,8 @@
 		9D305C6C1CEDAC990066BFE7 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		9D4B643A1ED42873008B015B /* NCMBDateFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBDateFormat.h; sourceTree = "<group>"; };
 		9D4B643B1ED42873008B015B /* NCMBDateFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBDateFormat.m; sourceTree = "<group>"; };
+		9DB041431EFCDD6E00BDEFFC /* NCMBRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBRequest.h; sourceTree = "<group>"; };
+		9DB041441EFCDD6E00BDEFFC /* NCMBRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBRequest.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,7 +187,7 @@
 		8AB2CDFD1CE3153F00F27481 /* NCMB */ = {
 			isa = PBXGroup;
 			children = (
-				8AB2CE061CE315F800F27481 /* NCBMRequest */,
+				9DB041421EFCDD6E00BDEFFC /* NCMBRequest */,
 				8AB2CDFE1CE3153F00F27481 /* NCMB.h */,
 				8AB2CE091CE315F800F27481 /* NCMB.m */,
 				8AB2CE0A1CE315F800F27481 /* NCMBACL.h */,
@@ -234,15 +234,6 @@
 				9D4B643B1ED42873008B015B /* NCMBDateFormat.m */,
 			);
 			path = NCMB;
-			sourceTree = "<group>";
-		};
-		8AB2CE061CE315F800F27481 /* NCBMRequest */ = {
-			isa = PBXGroup;
-			children = (
-				8AB2CE071CE315F800F27481 /* NCMBRequest.h */,
-				8AB2CE081CE315F800F27481 /* NCMBRequest.m */,
-			);
-			path = NCBMRequest;
 			sourceTree = "<group>";
 		};
 		8AB2CE251CE315F800F27481 /* NCMBReachability */ = {
@@ -333,6 +324,15 @@
 			path = SubClassHandler;
 			sourceTree = "<group>";
 		};
+		9DB041421EFCDD6E00BDEFFC /* NCMBRequest */ = {
+			isa = PBXGroup;
+			children = (
+				9DB041431EFCDD6E00BDEFFC /* NCMBRequest.h */,
+				9DB041441EFCDD6E00BDEFFC /* NCMBRequest.m */,
+			);
+			path = NCMBRequest;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -345,7 +345,6 @@
 				8AB2CE841CE315F800F27481 /* NCMBConstants.h in Headers */,
 				8AB2CECA1CE315F800F27481 /* NCMBUser.h in Headers */,
 				8AB2CE971CE315F800F27481 /* NCMBQuery.h in Headers */,
-				8AB2CE7B1CE315F800F27481 /* NCMBRequest.h in Headers */,
 				8AB2CEA71CE315F800F27481 /* NCMBSubclassing.h in Headers */,
 				8AB2CE801CE315F800F27481 /* NCMBAnalytics.h in Headers */,
 				8AB2CE991CE315F800F27481 /* NCMBReachability.h in Headers */,
@@ -364,6 +363,7 @@
 				8AB2CE9F1CE315F800F27481 /* NCMBRichPushView.h in Headers */,
 				8AB2CEDE1CE315F800F27481 /* NCMBQuery+Private.h in Headers */,
 				8AB2CEDA1CE315F800F27481 /* NCMBSetOperation.h in Headers */,
+				9DB041451EFCDD6E00BDEFFC /* NCMBRequest.h in Headers */,
 				8AB2CECE1CE315F800F27481 /* NCMBAddOperation.h in Headers */,
 				8AB2CED41CE315F800F27481 /* NCMBIncrementOperation.h in Headers */,
 				8AB2CE941CE315F800F27481 /* NCMBObject+Subclass.h in Headers */,
@@ -451,7 +451,6 @@
 			files = (
 				9D4B643D1ED42873008B015B /* NCMBDateFormat.m in Sources */,
 				8AB2CEA01CE315F800F27481 /* NCMBRichPushView.m in Sources */,
-				8AB2CE7C1CE315F800F27481 /* NCMBRequest.m in Sources */,
 				8AB2CE7D1CE315F800F27481 /* NCMB.m in Sources */,
 				8AB2CEA41CE315F800F27481 /* NCMBScript.m in Sources */,
 				8AB2CED91CE315F800F27481 /* NCMBRemoveOperation.m in Sources */,
@@ -468,6 +467,7 @@
 				8AB2CE9E1CE315F800F27481 /* NCMBCloseImageView.m in Sources */,
 				8AB2CE861CE315F800F27481 /* NCMBError.m in Sources */,
 				8AB2CE961CE315F800F27481 /* NCMBPush.m in Sources */,
+				9DB041461EFCDD6E00BDEFFC /* NCMBRequest.m in Sources */,
 				8AB2CE981CE315F800F27481 /* NCMBQuery.m in Sources */,
 				8AB2CE8C1CE315F800F27481 /* NCMBGeoPoint.m in Sources */,
 				8AB2CED51CE315F800F27481 /* NCMBIncrementOperation.m in Sources */,
