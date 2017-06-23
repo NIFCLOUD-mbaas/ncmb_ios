@@ -25,6 +25,7 @@
 @property (nonatomic) NCMBURLConnection *connection;
 @property (nonatomic) NSMutableDictionary *query;
 - (NCMBURLConnection*)createConnectionForSearch:(NSMutableDictionary*)queryDic countEnableFlag:(BOOL)countEnableFlag getFirst:(BOOL)getFirstFlag;
+-(NSDateFormatter*)createNCMBDateFormatter;
 @end
 
 SpecBegin(NCMBQuery)
@@ -76,6 +77,18 @@ describe(@"NCMBQuery", ^{
                 expect([object class]).to.equal([NCMBRole class]);
             }
         }];
+        
+    });
+    
+    it(@"should create date formatter with a specification format", ^{
+        
+        NCMBQuery *query = [NCMBQuery queryWithClassName:@"test"];
+        NSDateFormatter *dateFormatter = [query createNCMBDateFormatter]; // DateFormat @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        NSString *timeStamp = @"1494925200"; //2017-05-16 09:00:00 in UTC
+        NSString *dateStr = [dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:[timeStamp intValue]]];
+        
+        expect(dateStr).notTo.beNil();
+        expect(dateStr).equal(@"2017-05-16T09:00:00.000Z");
         
     });
     

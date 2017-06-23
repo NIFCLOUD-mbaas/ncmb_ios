@@ -16,17 +16,21 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NCMBAddOperation : NSObject
+/**
+ NCMB内で使用するNSDateFormatterを管理するクラスです。
+ */
+@interface NCMBDateFormat : NSObject
 
-@property (nonatomic,strong)NSMutableArray *objects;
+/**
+ ISO 8601形式の時刻表記でDateFormatを作成します。
+ @return ISO 8601形式のNSDateFormatter
+ */
++ (NSDateFormatter *) getIso8601DateFormat;
 
-- (NCMBAddOperation *)initWithClassName:(id)newValue;
-
-- (NSMutableDictionary *)encode;
-
-- (id)mergeWithPrevious:(id)previous;
-
-- (id)apply:(id)oldValue NCMBObject:(id)object forkey:(NSString *)key;
-
+/**
+ ファイル名に使用されるDateFormatを作成します。
+ @return ファイル名用のNSDateFormatter
+ */
++ (NSDateFormatter *) getFileNameDateFormat;
 
 @end

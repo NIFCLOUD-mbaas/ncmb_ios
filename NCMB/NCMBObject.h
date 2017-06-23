@@ -1,5 +1,5 @@
 /*
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -188,29 +188,6 @@
  @param selector APIリクエスト後に実行するセレクタ
  */
 - (void)saveInBackgroundWithTarget:(id)target selector:(SEL)selector;
-
-/**
- objectsにあるNCMBObjectを継承した全てのオブジェクトを保存する。
- @param objects 保存するNCMBObjectが含まれる配列
- @param error APIリクエストについてのエラー
- @return 実行結果の配列を返却する
- */
-+ (NSArray*)saveAll:(NSArray*)objects error:(NSError**)error;
-
-/**
- objectsにある、NCMBObjectを継承した全てのオブジェクトを非同期通信で保存する。通信後は渡されたblockを実行する
- @param objects 保存するNCMBObjectが含まれる配列
- @param userBlock 通信後に実行されるblock。引数にNSError *errorを持つ
- */
-+ (void)saveAllInBackground:(NSArray*)objects withBlock:(NCMBSaveAllResultBlock)userBlock;
-
-/**
- objectsにある、NCMBObjectを継承した全てのオブジェクトを非同期通信で保存する。通信後は指定されたセレクタを実行する
- @param objects 保存するNCMBObjectが含まれる配列
- @param target APIリクエスト後に実行するターゲット
- @param selector APIリクエスト後に実行するセレクタ
- */
-+ (void)saveAllInBackground:(NSArray*)objects withTarget:(id)target selector:(SEL)selector;
 
 /**
  電波状況を見てmobile backendにオブジェクトを保存する。
