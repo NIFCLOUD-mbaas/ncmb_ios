@@ -1,5 +1,5 @@
 /*
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -351,10 +351,10 @@
 
 /**
  設定されている検索条件に当てはまるオブジェクト一件を非同期で取得。取得し終わったら与えられたblockを呼び出す。
- @param block 通信後に実行されるblock。blockは次の引数のシグネチャを持つ必要がある（NCMBObject *object, NSError *error）
+ @param block 通信後に実行されるblock。blockは次の引数のシグネチャを持つ必要がある（id object, NSError *error）
  objectには取得したオブジェクトが渡される。errorにはエラーがなければnilが渡される。
  */
-- (void)getFirstObjectInBackgroundWithBlock:(NCMBObjectResultBlock)block;
+- (void)getFirstObjectInBackgroundWithBlock:(NCMBAnyObjectResultBlock)block;
 
 /**
  設定されている検索条件に当てはまるオブジェクト一件を非同期で取得。取得し終わったら指定されたコールバックを呼び出す。

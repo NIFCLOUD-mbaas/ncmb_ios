@@ -1,5 +1,5 @@
 /*
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -95,11 +95,11 @@
         NSString *newSdkVer = SDK_VERSION;
         NSString *newAppVer = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
         //SDKバージョンとアプリバージョンの更新
-        if (![sdkVer isEqualToString:newSdkVer]){
+        if (![newSdkVer isEqualToString:sdkVer]){
             [dic setObject:newSdkVer
                                             forKey:@"sdkVersion"];
         }
-        if (![appVer isEqualToString:newAppVer]){
+        if (![newAppVer isEqualToString:appVer]){
             [dic setObject:newAppVer forKey:@"appVersion"];
         }
         NCMBInstallation *installation = [NCMBInstallation installation];
@@ -160,7 +160,6 @@
     if ([response objectForKey:@"timeZone"]){
         _timeZone = [response objectForKey:@"timeZone"];
     }
-    [self saveInstallationToFile];
 }
 
 - (void)afterDelete{
