@@ -107,17 +107,6 @@ typedef enum : NSInteger {
     return self;
 }
 
-- (NSString*)percentEscape:(NSString*)str{
-    CFStringRef escapedStrRef = CFURLCreateStringByAddingPercentEscapes(
-                                                                   NULL,
-                                                                   (__bridge CFStringRef)str,
-                                                                   NULL,
-                                                                   (__bridge CFStringRef)@"!*();@+,%#\"",
-                                                                   kCFStringEncodingUTF8 );
-    NSString *escapedStr = CFBridgingRelease(escapedStrRef);
-    return escapedStr;
-}
-
 
 #pragma mark request
 
