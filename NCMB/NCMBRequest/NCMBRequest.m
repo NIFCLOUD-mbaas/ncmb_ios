@@ -78,7 +78,7 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
 }
 
 +(NSString *)returnEncodedString:(NSString *)originalString {
-    NSString * escapedStr = [originalString stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@":/?#[]@!$&'()*+,;=\"<>\^`{|}"] invertedSet]];
+    NSString *escapedStr = [originalString stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@":/?#[]@!$&'()*+,;=\"<>\^`{|}"] invertedSet]];
     return escapedStr;
 }
 
