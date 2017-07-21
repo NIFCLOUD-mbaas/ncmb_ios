@@ -20,6 +20,7 @@
 #import <NCMB/NCMB.h>
 #import "NCMBRequest.h"
 
+#import "NCMBURLConnection.h"
 
 SpecBegin(NCMBRequest)
 
@@ -35,6 +36,18 @@ describe(@"NCMBRequest", ^{
     
     beforeEach(^{
 
+    });
+    
+    it(@"should create connection with query string and path have special symbols inside", ^{
+        
+        NCMBURLConnection *connection = [[NCMBURLConnection alloc] init];
+        [connection setQuery:@"/2013-09-01/classes?limit=1&where={\"name\":null}"];
+        [connection setPath:@"classes/<MyCl@ass>"];
+        [connection syncConnection:nil];
+        
+        expect(connection.query).to.equal(@"/2013-09-01/classes?limit=1&where=%7B%22name%22:null%7D");
+        expect(connection.path).to.equal(@"classes/%3CMyCl%40ass%3E");
+        
     });
     
     it(@"should set required HTTP request Headers", ^{

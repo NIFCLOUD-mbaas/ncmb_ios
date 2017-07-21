@@ -130,9 +130,9 @@ typedef enum : NSInteger {
  @return NSMutableURLRequest型リクエスト
  */
 - (NSMutableURLRequest *)createRequest {
-    self.query = [self.query stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    self.query = [self.query stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@"#[]@!()*+,;\"<>\\%^`{|} \b\t\n\a\r"] invertedSet]];
     [self createSignature];
-    self.path = [self.path stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]];
+    self.path = [self.path stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@"#[]@!()*+,;\"<>\\%^`{|} \b\t\n\a\r"] invertedSet]];
     
     //url生成
     NSString *endPointStr = [self returnEndPoint];
