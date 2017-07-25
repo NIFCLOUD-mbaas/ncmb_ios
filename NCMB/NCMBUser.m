@@ -918,7 +918,6 @@ static BOOL isEnableAutomaticUser = NO;
 -(void)afterSave:(NSDictionary*)response operations:(NSMutableDictionary *)operations{
     [super afterSave:response operations:operations];
     BOOL isHasTokenKey = NO;
-    BOOL isSNSLogin = NO;
     if ([response objectForKey:@"sessionToken"]){
         [self setSessionToken:[response objectForKey:@"sessionToken"]];
         isHasTokenKey = YES;
@@ -950,11 +949,10 @@ static BOOL isEnableAutomaticUser = NO;
                               forKey:key];
             }
             [estimatedData setObject:converted forKey:@"authData"];
-            isSNSLogin = YES;
         }
     }
     
-    if([self isEqual:[NCMBUser currentUser]] || (isHasTokenKey && [NCMBUser currentUser] == nil) || isSNSLogin){
+    if([self isEqual:[NCMBUser currentUser]] || isHasTokenKey){
         [NCMBUser saveToFileCurrentUser:self];
     }
 }
