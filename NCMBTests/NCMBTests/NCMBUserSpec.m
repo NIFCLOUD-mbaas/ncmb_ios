@@ -1047,14 +1047,14 @@ describe(@"NCMBUser", ^{
                 // 2.登録したユーザーがカレントユーザーになります
                 expect(error).beNil();
                 expect(currentUser).notTo.beNil();
-                expect(currentUser.userName).equal(user.userName);
+                expect(currentUser).equal(user);
                 
                 done();
             }];
         });
     });
     
-    it(@"after logged in should not change current user when regist new user", ^{
+    it(@"after logged in should change to current user when regist new user", ^{
         
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
             return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
@@ -1106,9 +1106,9 @@ describe(@"NCMBUser", ^{
                 [regisUser signUpInBackgroundWithBlock:^(NSError *error) {
                     
                     NCMBUser *currentUser = [NCMBUser currentUser];
-                    // 3.ログイン中のでカレントユーザーがさっきログインしたユーザーのままです
+                    // 3.登録したユーザーがカレントユーザーになります
                     expect(error).beNil();
-                    expect(currentUser.userName).notTo.equal(regisUser.userName);
+                    expect(currentUser).equal(regisUser);
                     
                     done();
                 }];
