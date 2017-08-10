@@ -19,6 +19,7 @@
 #import <NCMB/NCMB.h>
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
+#import <OHHTTPStubs/OHHTTPStubs.h>
 
 @interface NCMBFile (Private)
 +(NSString*) getTimeStamp;
@@ -50,6 +51,61 @@ describe(@"NCMBFile", ^{
         
         expect(timeStamp).notTo.beNil();
         expect(timeStamp).equal(@"201705160900000000");
+    });
+    
+    it(@"data should be nil if response of getDataInBackgroundWithBlock is error", ^{
+        
+        NCMBFile *fileData = [NCMBFile fileWithName:@"test.png" data:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            
+            NSDictionary *responseDic = @{
+                                          @"code" : @"E404001",
+                                          @"error" : @"No data available."
+                                          };
+            
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+            
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:404 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            // Async example blocks need to invoke done() callback.
+            [fileData getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                expect(data).beNil();
+                expect(error).beTruthy();
+                done();
+            }];
+        });
+    });
+    
+    it(@"data should not be nil if response of getDataInBackgroundWithBlock is successful", ^{
+        
+        NSData *responseData = [@"NIFTY Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
+        
+        NCMBFile *fileData = [NCMBFile fileWithName:@"ncmb.txt" data:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"text/plain;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            // Async example blocks need to invoke done() callback.
+            [fileData getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                expect(data).beTruthy();
+                expect(data).equal(responseData);
+                expect(error).beNil();
+                done();
+            }];
+        });
     });
     
     afterEach(^{

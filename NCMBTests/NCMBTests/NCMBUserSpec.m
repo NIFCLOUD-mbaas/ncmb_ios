@@ -21,6 +21,8 @@
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
 SpecBegin(NCMBUser)
+#define DATA_MAIN_PATH [NSHomeDirectory() stringByAppendingPathComponent:@"Library/"]
+#define DATA_CURRENTUSER_PATH [NSString stringWithFormat:@"%@/Private Documents/NCMB/currentUser", DATA_MAIN_PATH]
 
 describe(@"NCMBUser", ^{
     
@@ -918,6 +920,265 @@ describe(@"NCMBUser", ^{
                     expect(currentUser.sessionToken).beTruthy();
                     done();
                 }
+            }];
+        });
+    });
+    
+    it(@"after logged in should not change current user when update another user", ^{
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            
+            NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                  @"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                  @"userName" : @"admin"
+                                                  } mutableCopy];
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+            
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            // 1.ログインする
+            [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+                
+                expect(error).beNil();
+                expect([NCMBUser currentUser]).notTo.beNil();
+                
+                [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                    return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+                } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                    
+                    NSMutableDictionary *responseDic = [@{@"updateDate" : @"2017-07-10T02:37:54.917Z"
+                                                          } mutableCopy];
+                    
+                    NSError *convertErr = nil;
+                    NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                           options:0
+                                                                             error:&convertErr];
+                    
+                    return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                }];
+                
+                // 2.別のユーザーを変更する
+                NCMBUser *updateUser = [[NCMBUser alloc] init];
+                updateUser.objectId = @"e4YWYnYtcptTIV23";
+                updateUser.userName = @"user001";
+                
+                [updateUser saveInBackgroundWithBlock:^(NSError *error) {
+                    NCMBUser *currentUser = [NCMBUser currentUser];
+                    
+                    // 3.カレントユーザーは変更したユーザーにならない
+                    expect(error).beNil();
+                    expect(currentUser).notTo.beNil();
+                    expect(currentUser).notTo.equal(updateUser);
+                    
+                    done();
+                }];
+            }];
+        });
+    });
+    
+    it(@"even not logged in should not become current user when update any user", ^{
+        // 1.念のためログアウトする
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            
+            NSData *responseData = [[NSData alloc]init];
+            
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        [NCMBUser logOut];
+        
+        // 2.新規ユーザー登録
+        NCMBUser *updateUser = [[NCMBUser alloc] init];
+        updateUser.objectId = @"e4YWYnYtcptTIV23";
+        updateUser.userName = @"user001";
+        
+        waitUntil(^(DoneCallback done) {
+            [updateUser saveInBackgroundWithBlock:^(NSError *error) {
+                NCMBUser *currentUser = [NCMBUser currentUser];
+                
+                // 3.ログインしていなくても変更したユーザーにならない
+                expect(error).beNil();
+                expect(currentUser).beNil();
+                
+                done();
+            }];
+        });
+    });
+    
+    it(@"should become current user when regist new user", ^{
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            
+            NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                  @"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                  @"userName" : @"user1"
+                                                  } mutableCopy];
+            
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+            
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        // 1.新規ユーザー登録
+        NCMBUser *user = [NCMBUser user];
+        
+        user.userName = @"user1";
+        user.password = @"password1";
+        
+        waitUntil(^(DoneCallback done) {
+            [user signUpInBackgroundWithBlock:^(NSError *error) {
+                NCMBUser *currentUser = [NCMBUser currentUser];
+                // 2.登録したユーザーがカレントユーザーになります
+                expect(error).beNil();
+                expect(currentUser).notTo.beNil();
+                expect(currentUser).equal(user);
+                
+                done();
+            }];
+        });
+    });
+    
+    it(@"after logged in should change to current user when regist new user", ^{
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            
+            NSMutableDictionary *responseDic = [@{@"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                  @"userName" : @"admin"
+                                                  } mutableCopy];
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+            
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            // 1.ログインする
+            [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+                
+                expect(error).beNil();
+                expect([NCMBUser currentUser]).notTo.beNil();
+                
+                [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                    return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+                } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                    
+                    NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                          @"objectId" : @"e4YWYnYtcptTIV23",
+                                                          @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                          @"userName" : @"user1"
+                                                          } mutableCopy];
+                    
+                    NSError *convertErr = nil;
+                    NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                           options:0
+                                                                             error:&convertErr];
+                    
+                    return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                }];
+                
+                // 2.新規ユーザー登録
+                NCMBUser *regisUser = [NCMBUser user];
+                
+                regisUser.userName = @"user1";
+                regisUser.password = @"password1";
+                
+                [regisUser signUpInBackgroundWithBlock:^(NSError *error) {
+                    
+                    NCMBUser *currentUser = [NCMBUser currentUser];
+                    // 3.登録したユーザーがカレントユーザーになります
+                    expect(error).beNil();
+                    expect(currentUser).equal(regisUser);
+                    
+                    done();
+                }];
+                
+            }];
+        });
+    });
+    
+    it(@"should update data local when update current user", ^{
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            
+            NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                  @"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                  @"userName" : @"admin"
+                                                  } mutableCopy];
+            
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+            
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            // 1.ログインする
+            [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+                
+                expect(error).beNil();
+                NCMBUser *currentUser = [NCMBUser currentUser];
+                expect(currentUser).notTo.beNil();
+                
+                [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                    return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+                } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                    
+                    NSMutableDictionary *responseDic = [@{
+                                                          @"updateDate" : @"2017-07-10T02:37:54.917Z",
+                                                          } mutableCopy];
+                    NSError *convertErr = nil;
+                    NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                           options:0
+                                                                             error:&convertErr];
+                    
+                    return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                }];
+                
+                currentUser.userName = @"updateUserName";
+                // 2.カレントユーザーが変更する
+                [currentUser saveInBackgroundWithBlock:^(NSError *error) {
+                    
+                    NSError *error1 = nil;
+                    NSString *str = [[NSString alloc] initWithContentsOfFile:DATA_CURRENTUSER_PATH encoding:NSUTF8StringEncoding error:&error];
+                    NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
+                    NSMutableDictionary *dicData = [NSMutableDictionary dictionary];
+                    
+                    if ([data isKindOfClass:[NSData class]] && [data length] != 0){
+                        dicData = [NSJSONSerialization JSONObjectWithData:data
+                                                                  options:NSJSONReadingAllowFragments
+                                                                    error:&error1];
+                    }
+                    // 3.変更したデータをローカルに保存があります
+                    expect([dicData objectForKey:@"userName"]).equal(currentUser.userName);
+                    
+                    done();
+                }];
             }];
         });
     });

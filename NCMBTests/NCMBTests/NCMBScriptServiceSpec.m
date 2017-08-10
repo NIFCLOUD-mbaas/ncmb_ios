@@ -98,6 +98,29 @@ describe(@"NCMBScriptService", ^{
         expect(service.request.URL.absoluteString).to.equal(expectStr);
     });
     
+    it (@"should create request with specified query string with special symbols", ^{
+        NCMBScriptService *service = [[NCMBScriptService alloc] init];
+        
+        [service executeScript:@"testScript.js"
+                        method:NCMBExecuteWithGetMethod
+                        header:nil
+                          body:nil
+                         query:@{@"number":@12345,
+                                 @"string":@"start:/?#[]@!$&'()*+,;=\"<>\\%^`{|}   \n\r%@€™ŽĶ¶¹end",
+                                 @"array":@[@"value#1>",@"?value#2["],
+                                 @"dictionary":@{@"key":@"value"},
+                                 @"bool":@YES}
+                     withBlock:nil];
+        
+        NSString *expectStr = [NSString stringWithFormat:@"%@/%@/%@/%@?%@",
+                               NCMBScriptServiceDefaultEndPoint,
+                               NCMBScriptServiceApiVersion,
+                               NCMBScriptServicePath,
+                               @"testScript.js",
+                               @"array=%5B%22value%231%3E%22%2C%22%3Fvalue%232%5B%22%5D&bool=1&dictionary=%7B%22key%22%3A%22value%22%7D&number=12345&string=start%3A%2F%3F%23%5B%5D%40%21%24%26%27%28%29%2A%2B%2C%3B%3D%22%3C%3E%5C%25%5E%60%7B%7C%7D%20%20%20%0A%0D%25%40%E2%82%AC%E2%84%A2%C5%BD%C4%B6%C2%B6%C2%B9end"];
+        expect(service.request.URL.absoluteString).to.equal(expectStr);
+    });
+    
     it(@"should run callback response of execute asynchronously script", ^{
         waitUntil(^(DoneCallback done) {
             
