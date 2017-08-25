@@ -20,7 +20,7 @@
 #import <NCMB/NCMB.h>
 #import "NCMBRequest.h"
 
-#import "NCMBURLConnection.h"
+#import "NCMBURLSession.h"
 
 SpecBegin(NCMBRequest)
 
@@ -35,23 +35,11 @@ describe(@"NCMBRequest", ^{
     });
     
     beforeEach(^{
-
-    });
-    
-    it(@"should create connection with query string and path have special symbols inside", ^{
-        
-        NCMBURLConnection *connection = [[NCMBURLConnection alloc] init];
-        [connection setQuery:@"/2013-09-01/classes?limit=1&where={\"name\":null}"];
-        [connection setPath:@"classes/<MyCl@ass>"];
-        [connection syncConnection:nil];
-        
-        expect(connection.query).to.equal(@"/2013-09-01/classes?limit=1&where=%7B%22name%22:null%7D");
-        expect(connection.path).to.equal(@"classes/%3CMyCl%40ass%3E");
         
     });
     
     it(@"should set required HTTP request Headers", ^{
-
+        
         NSString *urlStr = @"https://mb.api.cloud.nifty.com/2013-09-01/classes/TestClass?where=%7B%22testKey%22%3A%22testValue%22%7D";
         NSURL *url = [NSURL URLWithString:urlStr];
         
@@ -62,10 +50,10 @@ describe(@"NCMBRequest", ^{
         NSString *expectSessionToken = @"testSessionToken";
         OCMStub([requestMock returnSessionToken]).andReturn(expectSessionToken);
         
-        NCMBRequest *request = [NCMBRequest requestWithURL:url
-                                                    method:@"GET"
-                                                    header:nil
-                                                      body:nil];
+        NCMBRequest *request = [[NCMBRequest alloc] initWithURL:url
+                                                         method:@"GET"
+                                                         header:nil
+                                                       bodyData:nil];
         
         NSDictionary *headers = [request allHTTPHeaderFields];
         expect([headers objectForKey:@"X-NCMB-Application-Key"]).to.equal(applicationKey);
@@ -82,11 +70,11 @@ describe(@"NCMBRequest", ^{
     });
     
     afterEach(^{
-
+        
     });
     
     afterAll(^{
-
+        
     });
 });
 
