@@ -35,9 +35,6 @@ describe(@"NCMBObject", ^{
     NSString *applicationKey = @"6145f91061916580c742f806bab67649d10f45920246ff459404c46f00ff3e56";
     NSString *clientKey = @"1343d198b510a0315db1c03f3aa0e32418b7a743f8e4b47cbff670601345cf75";
     
-    //    NSString *applicationKey = @"d55786e0bd4263018ca04ac9af7cbad153d757879d8cd296a9c3075a482ad845";
-    //    NSString *clientKey = @"ba82f3ca775edf2c39b53bc7ecaa40eb2a7dd35f4724f489b067ec93895e21de";
-    //
     beforeAll(^{
         [NCMB setApplicationKey:applicationKey
                       clientKey:clientKey];

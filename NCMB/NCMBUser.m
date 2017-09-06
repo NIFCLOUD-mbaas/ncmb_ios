@@ -818,15 +818,6 @@ static BOOL isEnableAutomaticUser = NO;
         currentUser.sessionToken = nil;
         currentUser = nil;
     }
-#if __has_include(<FacebookSDK/FacebookSDK.h>) || __has_include(<FBSDKLoginKit/FBSDKLoginKit.h>)
-    
-    //Facebookのセッションを削除
-    [NCMBFacebookUtils clearFacebookSession];
-#endif
-#if __has_include(<GoogleSignIn/GoogleSignIn.h>)
-    //Googleのセッションを削除
-    [NCMBGoogleUtils clearGoogleSession];
-#endif
     if ([[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTUSER_PATH isDirectory:nil]) {
         [[NSFileManager defaultManager] removeItemAtPath:DATA_CURRENTUSER_PATH error:nil];
     }

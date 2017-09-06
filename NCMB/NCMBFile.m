@@ -19,7 +19,6 @@
 #import "NCMBACL.h"
 #import "NSDataBase64Encode.h"
 #import "NCMBQuery.h"
-#import "NCMBRequest.h"
 #import "NCMBURLSession.h"
 #import "NCMBDateFormat.h"
 

@@ -18,7 +18,6 @@
 #import <Expecta/Expecta.h>
 #import <OCMock/OCMock.h>
 #import <NCMB/NCMB.h>
-#import "NCMBRequest.h"
 
 #import "NCMBURLSession.h"
 

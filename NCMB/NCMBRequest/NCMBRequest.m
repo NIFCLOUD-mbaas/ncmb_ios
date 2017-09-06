@@ -55,14 +55,13 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
     [self setValue:[NCMBRequest returnSessionToken] forHTTPHeaderField:sessionTokenField];
     [self setValue:[self returnSignature:url
                                   method:method
-                               timestamp:timestampStr]
-forHTTPHeaderField:signatureField];
+                               timestamp:timestampStr] forHTTPHeaderField:signatureField];
     
     NSRange range = [url.description rangeOfString:@"script.mb.api.cloud.nifty.com"];
     if(![headers objectForKey:@"Content-Type"] || range.location != NSNotFound){
-      [self setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        [self setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     }
-
+    
     // ボディデータ設定
     if ([method isEqualToString:@"POST"] || [method isEqualToString:@"PUT"]) {
         self.HTTPBody = bodyData;
@@ -71,9 +70,9 @@ forHTTPHeaderField:signatureField];
 }
 
 -(instancetype)initWithURLString:(NSString *)urlString
-                    method:(NSString *)method
-                    header:(NSDictionary *)headers
-                      body:(NSDictionary *)body
+                          method:(NSString *)method
+                          header:(NSDictionary *)headers
+                            body:(NSDictionary *)body
 {
     NSString *path = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@"#[]@!()*+,;\"<>\\%^`{|} \b\t\n\a\r"] invertedSet]];
     
@@ -150,14 +149,8 @@ forHTTPHeaderField:signatureField];
     NSData *HMAC = [[NSData alloc] initWithBytes:cHMAC
                                           length:sizeof(cHMAC)];
     
-    NSString *signature = nil;
-    
-    //7.0からbase64EncodedStringWithOptionsが利用可能で、それ以前でもbase64Encodingが使えるようになった
-    if ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0){
-        signature = [HMAC base64EncodedStringWithOptions:kNilOptions];
-    } else {
-        signature = [HMAC base64Encoding];
-    }
+    NSString *signature = [HMAC base64EncodedStringWithOptions:kNilOptions];
+
     return signature;
 }
 

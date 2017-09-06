@@ -17,7 +17,6 @@
 #import "NCMBReachability.h"
 #import "NCMBURLSession.h"
 #import "NCMBConstants.h"
-#import "NCMBRequest.h"
 
 #import <objc/runtime.h>
 #import <arpa/inet.h>
