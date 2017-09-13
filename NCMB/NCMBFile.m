@@ -1,5 +1,5 @@
 /*
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 #import "NSDataBase64Encode.h"
 #import "NCMBQuery.h"
 #import "NCMBURLConnection.h"
+#import "NCMBDateFormat.h"
 
 #pragma mark - url
 #define URL_FILE @"files"
@@ -329,7 +330,7 @@ static NSMutableData *resultData = nil;
                         self.file = responseData;
                     }
                     if(resultBlock){
-                        resultBlock(responseData,errorBlock);
+                        resultBlock(self.file,errorBlock);
                     }
                 }];
             }else{
@@ -357,14 +358,7 @@ static NSMutableData *resultData = nil;
  @return NSString型 タイムスタンプ
  */
 +(NSString*) getTimeStamp{
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    [df setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"US"]];
-    NSTimeZone *zone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
-    NSCalendar *calender = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    [calender setTimeZone:zone];
-    [df setDateFormat:@"yyyyMMddHHmmssSSSS"];
-    NSString *str = [df stringFromDate:[NSDate date]];
-    return str;
+    return [[NCMBDateFormat getFileNameDateFormat] stringFromDate:[NSDate date]];
 }
 
 /**

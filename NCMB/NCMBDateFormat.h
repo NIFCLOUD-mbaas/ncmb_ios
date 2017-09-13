@@ -1,5 +1,5 @@
 /*
- Copyright 2016 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -15,21 +15,22 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 
-@interface NCMBRequest : NSMutableURLRequest
+/**
+ NCMB内で使用するNSDateFormatterを管理するクラスです。
+ */
+@interface NCMBDateFormat : NSObject
 
-+(instancetype)requestWithURL:(NSURL *)url
-                       method:(NSString *)method
-                       header:(NSDictionary *)headers
-                         body:(NSDictionary *)body;
+/**
+ ISO 8601形式の時刻表記でDateFormatを作成します。
+ @return ISO 8601形式のNSDateFormatter
+ */
++ (NSDateFormatter *) getIso8601DateFormat;
 
-+(NSString *)returnTimeStamp;
-
-+(NSString *)returnSessionToken;
-
-+ (NSString *)returnSignature:(NSURL *)url method:(NSString *)method timestamp:(NSString *)timestamp;
-
-+(NSString *)returnEncodedString:(NSString *)originalString;
+/**
+ ファイル名に使用されるDateFormatを作成します。
+ @return ファイル名用のNSDateFormatter
+ */
++ (NSDateFormatter *) getFileNameDateFormat;
 
 @end

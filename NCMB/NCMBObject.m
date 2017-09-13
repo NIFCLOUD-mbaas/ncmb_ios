@@ -1,5 +1,5 @@
 /*
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@
 
 #import "SubClassHandler.h"
 #import <objc/runtime.h>
+#import "NCMBDateFormat.h"
 
 
 #pragma mark - getter
@@ -714,42 +715,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 }
 
 /**
- saveAll実行後の処理を行う
- @param objects リクエストされたNCMBObjectの配列
- @param operation 各オブジェクトに対する操作履歴
- @param response 各オブジェクトに対するレスポンス
- @param
- **/
-+ (void)afterSaveAll:(id)object
-           operation:(NSMutableDictionary*)operation
-            response:(NSMutableDictionary*)responseDic
-{
-    if ([[responseDic allKeys] containsObject:@"error"]){
-        //各オブジェクトがエラーだった場合の処理
-        NCMBObject *obj = object;
-        [obj mergePreviousOperation:operation];
-    } else {
-        NSDictionary *response = [responseDic objectForKey:@"success"];
-        if([object isKindOfClass:[NCMBObject class]]){
-            NCMBObject *obj = object;
-            [obj afterSave:response operations:operation];
-        } else if ([object isKindOfClass:[NCMBUser class]]){
-            NCMBUser *user = object;
-            [user afterSave:response operations:operation];
-        } else if ([object isKindOfClass:[NCMBRole class]]){
-            NCMBRole *role = object;
-            [role afterSave:response operations:operation];
-        } else if ([object isKindOfClass:[NCMBPush class]]){
-            NCMBPush *push = object;
-            [push afterSave:response operations:operation];
-        } else if ([object isKindOfClass:[NCMBInstallation class]]){
-            NCMBInstallation *installation = object;
-            [installation afterSave:response operations:operation];
-        }
-    }
-}
-
-/**
  mobile backendからエラーが返ってきたときに最新の操作履歴と通信中の操作履歴をマージする
  @param operations 最新の操作履歴
  */
@@ -1153,119 +1118,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 }
 
 /**
- objectsにあるNCMBObjectを継承した全てのオブジェクトを保存する。
- @param objects 保存するNCMBObjectが含まれる配列
- @param error APIリクエストについてのエラー
- @return 実行結果の配列を返却する
- */
-+ (NSArray*)saveAll:(NSArray*)objects error:(NSError**)error{
-    NSMutableArray *requestArray = [NSMutableArray array];
-    //配列にあるNCMBObjectをJSONに変換
-    NSMutableArray *operationArray = [NSMutableArray array];
-    for (id obj in [objects objectEnumerator]){
-        if ([obj isKindOfClass:[NCMBObject class]]){
-            NSMutableDictionary *operation = [obj beforeConnection];
-            [operationArray addObject:operation];
-            //リクエスト用のNSDictionaryを作成
-            [requestArray addObject:[obj returnRequestDictionaryForSaveAll:obj operation:operation]];
-        }
-    }
-    
-    NCMBURLConnection *connect = [NCMBObject createConnectionForbatchAPI:requestArray];
-    if (connect == nil){
-        return nil;
-    }
-    
-    //通信を行う
-    NSDictionary *response = [connect syncConnection:error];
-    NSArray *responseArray = [response objectForKey:@"result"];
-    
-    //それぞれのNCMBObjectのafterSaveを実行する
-    NSEnumerator *responseEnumerator = [responseArray objectEnumerator];
-    NSEnumerator *operationEnumerator = [operationArray objectEnumerator];
-    if (error != nil && *error){
-        //通信エラー(そもそものmbエラーも含む)があった場合
-        for (NCMBObject *obj in objects){
-            [obj mergePreviousOperation:[operationEnumerator nextObject]];
-        }
-    } else {
-        for (id obj in objects){
-            [NCMBObject afterSaveAll:obj
-                           operation:[operationEnumerator nextObject]
-                            response:[responseEnumerator nextObject]];
-        }
-    }
-    //Dictionaryを返却するけど、objectIdはセットされている状態
-    return responseArray;
-}
-
-/**
- objectsにある、NCMBObjectを継承した全てのオブジェクトを非同期通信で保存する。通信後は渡されたblockを実行する
- @param objects 保存するNCMBObjectが含まれる配列
- @param error APIリクエストについてのエラー
- */
-+ (void)saveAllInBackground:(NSArray*)objects withBlock:(NCMBSaveAllResultBlock)userBlock{
-    NSMutableArray *requestArray = [NSMutableArray array];
-    //配列にあるNCMBObjectをJSONに変換
-    NSMutableArray *operationArray = [NSMutableArray array];
-    for (id obj in [objects objectEnumerator]){
-        if ([obj isKindOfClass:[NCMBObject class]]){
-            NSMutableDictionary *operation = [obj beforeConnection];
-            [operationArray addObject:operation];
-            //リクエスト用のNSDictionaryを作成
-            [requestArray addObject:[obj returnRequestDictionaryForSaveAll:obj operation:operation]];
-        }
-    }
-    
-    NCMBURLConnection *connect = [NCMBObject createConnectionForbatchAPI:requestArray];
-    if (connect == nil){
-        userBlock(nil, nil);
-    }
-    NCMBResultBlock block = ^(NSDictionary *responseDic, NSError *error){
-        NSArray *responseArray = [responseDic objectForKey:@"result"];
-        NSEnumerator *responseEnumerator = [responseArray objectEnumerator];
-        NSEnumerator *operationEnumerator = [operationArray objectEnumerator];
-        if (error){
-            //通信エラー(そもそものmbエラーも含む)があった場合
-            for (NCMBObject *obj in objects){
-                [obj mergePreviousOperation:[operationEnumerator nextObject]];
-            }
-        } else {
-            //各オブジェクトのレスポンスがエラーだった場合
-            for (id obj in objects){
-                [NCMBObject afterSaveAll:obj
-                               operation:[operationEnumerator nextObject]
-                                response:[responseEnumerator nextObject]];
-            }
-        }
-        userBlock(responseArray, error);
-    };
-    [connect asyncConnectionWithBlock:block];
-}
-
-/**
- objectsにある、NCMBObjectを継承した全てのオブジェクトを非同期通信で保存する。通信後は指定されたセレクタを実行する
- @param objects 保存するNCMBObjectが含まれる配列
- @param target 呼び出すセレクタのターゲット
- @param selector 実行するセレクタ
- */
-+ (void)saveAllInBackground:(NSArray*)objects withTarget:(id)target selector:(SEL)selector{
-    if (!target || !selector){
-        [NSException raise:@"NCMBInvalidValueException" format:@"target or selector must not nil."];
-    }
-    NSMethodSignature *signature = [target methodSignatureForSelector:selector];
-    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:signature];
-    [invocation setTarget:target];
-    [invocation setSelector:selector];
-    [NCMBObject saveAllInBackground:objects withBlock:^(NSArray *results, NSError *error) {
-        [invocation retainArguments];
-        [invocation setArgument:&results atIndex:2];
-        [invocation setArgument:&error atIndex:3];
-        [invocation invoke];
-    }];
-}
-
-/**
  save用のNCMBConnectionを作成する
  @param url APIリクエストするURL
  @param operation オブジェクトの操作履歴
@@ -1299,59 +1151,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     }
     NCMBURLConnection *connect = [[NCMBURLConnection new] initWithPath:url method:method data:json];
     return connect;
-}
-
-/**
- saveAll用のNCMBURLConnectionを作成する
- @param requestArray リクエストするオブジェクトをJSONに変換した配列
- @return saveAll用のNCBURLConnection
- */
-+ (NCMBURLConnection*)createConnectionForbatchAPI:(NSMutableArray*)requestArray{
-    //request配列を作成
-    NSDictionary *requestDic = [NSDictionary dictionaryWithObject:requestArray forKey:@"requests"];
-    NSError *convertError = nil;
-    NSData *json = [NSJSONSerialization dataWithJSONObject:requestDic options:kNilOptions error:&convertError];
-    if (convertError){
-        return nil;
-    }
-    //NCMBConnectionを作成
-    
-    NSString *path = @"batch";
-    NSString *method = @"POST";
-    
-    NCMBURLConnection *connect = [[NCMBURLConnection new] initWithPath:path method:method data:json];
-    return connect;
-}
-
-/**
- saveAll用のリクエスト配列を作成する
- @param obj リクエストに追加するNCMBObject
- @param operation リクエストに追加するオブジェクトの操作履歴
- @return ncmbDic リクエスト用のNSDictionary
- */
-- (NSDictionary*)returnRequestDictionaryForSaveAll:(NCMBObject*)obj operation:(NSMutableDictionary*)operation {
-    NSMutableDictionary *operationDic = [obj convertToJSONDicFromOperation:operation];
-    NSMutableDictionary *ncmbDic = [NSMutableDictionary dictionaryWithObject:[obj convertToJSONFromNCMBObject:operationDic] forKey:@"body"];
-    if (obj.objectId == nil){
-        [ncmbDic setObject:@"POST" forKey:@"method"];
-    } else {
-        [ncmbDic setObject:@"PUT" forKey:@"method"];
-    }
-    [ncmbDic setObject:[self returnRequestUrlForBatchAPI:obj.ncmbClassName objectId:obj.objectId]
-                forKey:@"path"];
-    return ncmbDic;
-}
-
-/**
- クラス名とobjectIdを受け取ってバッチ用APIリクエストURLを作成する
- @param ncmbClassName クラス名
- @param objectId オブジェクトID
- @return バッチ用APIリクエストURL
- */
-- (NSString*)returnRequestUrlForBatchAPI:(NSString*)ncmbClassName objectId:(NSString*)objectId{
-    //ベースのURLを作成
-    NSString *baseUrl = [self returnBaseUrl:ncmbClassName objectId:objectId];
-    return [NSString stringWithFormat:@"%@/%@", API_VERSION_V1, baseUrl];
 }
 
 /**
@@ -1418,15 +1217,9 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 - (void)saveCommandToFile:(NSDictionary*)localDic error:(NSError**)error{
     //ファイルに保存処理を書き出す
     NSData *localData = [NSKeyedArchiver archivedDataWithRootObject:localDic];
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    [dateFormatter setCalendar:calendar];
-    [dateFormatter setLocale:[NSLocale systemLocale]];
-    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-    [dateFormatter setDateFormat:@"yyyyMMddHHmmssSSSS"];
+
     //ファイル名はタイムスタンプ_オペレーションのアドレス
-    NSString *path = [NSString stringWithFormat:@"%@%@_%p", COMMAND_CACHE_FOLDER_PATH, [dateFormatter stringFromDate:[NSDate date]], localDic];
+    NSString *path = [NSString stringWithFormat:@"%@%@_%p", COMMAND_CACHE_FOLDER_PATH, [[NCMBDateFormat getFileNameDateFormat] stringFromDate:[NSDate date]], localDic];
     [localData writeToFile:path options:NSDataWritingAtomic error:error];
 }
 
@@ -1723,16 +1516,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  NCMB形式の日付型NSDateFormatterオブジェクトを返す
  */
 -(NSDateFormatter*)createNCMBDateFormatter{
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    //和暦表示と12時間表示対策
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    [dateFormatter setCalendar:calendar];
-    [dateFormatter setLocale:[NSLocale systemLocale]];
-    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-    
-    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
-    
-    return dateFormatter;
+    return [NCMBDateFormat getIso8601DateFormat];
 }
 
 /**

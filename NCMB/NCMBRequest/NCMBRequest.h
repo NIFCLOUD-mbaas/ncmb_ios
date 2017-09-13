@@ -15,18 +15,21 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface NCMBAddOperation : NSObject
+@interface NCMBRequest : NSMutableURLRequest
 
-@property (nonatomic,strong)NSMutableArray *objects;
++(instancetype)requestWithURL:(NSURL *)url
+                       method:(NSString *)method
+                       header:(NSDictionary *)headers
+                         body:(NSDictionary *)body;
 
-- (NCMBAddOperation *)initWithClassName:(id)newValue;
++(NSString *)returnTimeStamp;
 
-- (NSMutableDictionary *)encode;
++(NSString *)returnSessionToken;
 
-- (id)mergeWithPrevious:(id)previous;
++ (NSString *)returnSignature:(NSURL *)url method:(NSString *)method timestamp:(NSString *)timestamp;
 
-- (id)apply:(id)oldValue NCMBObject:(id)object forkey:(NSString *)key;
-
++(NSString *)returnEncodedString:(NSString *)originalString;
 
 @end

@@ -1,5 +1,5 @@
 /*
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -122,18 +122,25 @@
 - (void)signUpInBackgroundWithTarget:(id)target selector:(SEL)selector;
 
 /**
- facebookのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
- @param facebookInfo Facebook認証に必要なauthData
- @param block サインアップ後に実行されるblock
- */
-- (void)signUpWithFacebookToken:(NSDictionary*)facebookInfo block:(NCMBErrorResultBlock)block;
-
-/**
  googleのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
  @param googleInfo google認証に必要なauthData
  @param block サインアップ後に実行されるblock
  */
-- (void)signUpWithGoogleToken:(NSDictionary*)googleInfo block:(NCMBErrorResultBlock)block;
+- (void)signUpWithGoogleToken:(NSDictionary *)googleInfo withBlock:(NCMBErrorResultBlock)block;
+
+/**
+ twitterのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ @param twitterInfo twitter認証に必要なauthData
+ @param block サインアップ後に実行されるblock
+ */
+- (void)signUpWithTwitterToken:(NSDictionary *)twitterInfo withBlock:(NCMBErrorResultBlock)block;
+
+/**
+ facebookのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ @param facebookInfo facebook認証に必要なauthData
+ @param block サインアップ後に実行されるblock
+ */
+- (void)signUpWithFacebookToken:(NSDictionary *)facebookInfo withBlock:(NCMBErrorResultBlock)block;
 
 #pragma mark requestAuthenticationMail
 /** @name requestAuthenticationMail */

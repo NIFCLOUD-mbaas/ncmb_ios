@@ -1,5 +1,5 @@
 /*
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -65,6 +65,15 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
 
 static NCMBReachability *ncmbReachability = nil;
 
+static NSObject*_objForLock = nil;
+
++ (NSObject *)objForLock {
+    if (_objForLock == nil) {
+        _objForLock = [[NSObject alloc] init];
+    }
+    return _objForLock;
+}
+
 /**
  APIのエンドポイントを指定して、インターネット接続確認用のリファレンスを作成
  */
@@ -77,7 +86,7 @@ static NCMBReachability *ncmbReachability = nil;
  シングルトンクラスのインスタンスを返す
  */
 +(NCMBReachability*)sharedInstance{
-    @synchronized(self){
+    @synchronized(NCMBReachability.objForLock){
         if (!ncmbReachability){
             ncmbReachability = [[NCMBReachability alloc] init];
             [ncmbReachability reachabilityWithHostName:kHostName];
@@ -104,7 +113,9 @@ static NCMBReachability *ncmbReachability = nil;
  電波状況を更新
  */
 +(void)updateFlags:(SCNetworkReachabilityFlags)flags{
-    [NCMBReachability sharedInstance]->reachabilityFlags = flags;
+    @synchronized(NCMBReachability.objForLock){
+        [NCMBReachability sharedInstance]->reachabilityFlags = flags;
+    }
 }
 
 /**
@@ -119,7 +130,9 @@ static NCMBReachability *ncmbReachability = nil;
                                                              error: NULL];
         //ファイルが無い場合は監視を終了
         if ([contents count] == 0){
-            ncmbReachability = nil;
+            @synchronized(NCMBReachability.objForLock){
+                ncmbReachability = nil;
+            }
         } else {
             for (NSString *fileName in contents){
                 [self executeCommand:fileName];
