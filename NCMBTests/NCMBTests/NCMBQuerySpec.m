@@ -19,12 +19,10 @@
 #import <NCMB/NCMB.h>
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
-#import "NCMBURLConnection.h"
+#import "NCMBURLSession.h"
+#import <OHHTTPStubs/OHHTTPStubs.h>
 
 @interface NCMBQuery (Private)
-@property (nonatomic) NCMBURLConnection *connection;
-@property (nonatomic) NSMutableDictionary *query;
-- (NCMBURLConnection*)createConnectionForSearch:(NSMutableDictionary*)queryDic countEnableFlag:(BOOL)countEnableFlag getFirst:(BOOL)getFirstFlag;
 -(NSDateFormatter*)createNCMBDateFormatter;
 @end
 
@@ -39,6 +37,7 @@ describe(@"NCMBQuery", ^{
     beforeAll(^{
         [NCMB setApplicationKey:applicationKey
                       clientKey:clientKey];
+        
     });
     
     beforeEach(^{
@@ -46,37 +45,30 @@ describe(@"NCMBQuery", ^{
     });
     
     it(@"should get first object in background call back any object", ^{
-
-        NCMBQuery *query = [NCMBRole query];
-        NCMBQuery *queryMock = OCMPartialMock(query);
+        NSDictionary *responseDic = @{ @"results" : @[ @{ @"objectId" : @"objectId1",
+                                                          @"createDate" : @"2016-06-17T05:55:17.778Z"},
+                                                       @{ @"objectId" : @"objectId2",
+                                                          @"createDate" : @"2016-06-18T05:55:17.778Z"} ]};
         
-        NCMBURLConnection * connectionMock = OCMPartialMock([queryMock createConnectionForSearch:query.query countEnableFlag:NO getFirst:YES]);
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
         
-        queryMock.connection = connectionMock;
-
-        OCMStub([queryMock createConnectionForSearch:OCMOCK_ANY countEnableFlag:NO getFirst:YES]).andReturn(connectionMock);
-        
-        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
-            __unsafe_unretained void (^block) (id response, NSError *error);
-            [invocation getArgument:&block atIndex:2];
-            NSDictionary *responseDic = @{@"results":@[
-                                                  @{@"objectId":@"objectId1",
-                                                    @"createDate":@"2016-06-17T05:55:17.778Z"},
-                                                  @{@"objectId":@"objectId2",
-                                                    @"createDate":@"2016-06-18T05:55:17.778Z"},
-                                                  ]
-                                          };
-            block(responseDic,nil);
-        };
-        
-        OCMStub([connectionMock asyncConnectionWithBlock:OCMOCK_ANY]).andDo(invocation);
-        
-        [queryMock getFirstObjectInBackgroundWithBlock:^(id object, NSError *error) {
-            expect(error).beNil();
-            if (!error){
-                expect([object class]).to.equal([NCMBRole class]);
-            }
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBQuery *query = [NCMBRole query];
+            [query getFirstObjectInBackgroundWithBlock:^(id object, NSError *error) {
+                expect(error).beNil();
+                if (!error){
+                    expect([object class]).to.equal([NCMBRole class]);
+                }
+                done();
+            }];
+        });
+        
         
     });
     
@@ -90,6 +82,405 @@ describe(@"NCMBQuery", ^{
         expect(dateStr).notTo.beNil();
         expect(dateStr).equal(@"2017-05-16T09:00:00.000Z");
         
+    });
+    
+    it(@"findObjectsInBackgroundWithBlock system test", ^{
+        NSDictionary *responseDic = @{ @"results":@[
+                                               @{ @"objectId" : @"8FgKqFlH8dZRDrBJ",
+                                                  @"createDate" : @"2013-08-09T07:37:54.869Z",
+                                                  @"updateDate" : @"2013-08-09T07:37:54.869Z",
+                                                  @"key" : @"obj1" },
+                                               @{ @"objectId" : @"wMhDqUcnIam6QoaJ",
+                                                  @"createDate" : @"2013-08-09T07:40:55.108Z",
+                                                  @"updateDate" : @"2013-08-09T07:40:55.108Z",
+                                                  @"key" : @"obj2" }
+                                               ]};
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBQuery *query = [NCMBQuery queryWithClassName:@"Post"];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                expect(error).beNil();
+                expect(objects.count).to.equal(2);
+                NCMBObject *object = objects[0];
+                expect(object.objectId).to.equal(@"8FgKqFlH8dZRDrBJ");
+                expect([object objectForKey:@"key"]).to.equal(@"obj1");
+                done();
+            }];
+        });
+    });
+    
+    it(@"findObjectsInBackgroundWithBlock error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBQuery *query = [NCMBQuery queryWithClassName:@"Post"];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                expect(objects.count).to.equal(0);
+                expect(error).beTruthy();
+                expect(error.code).to.equal(@400000);
+                expect([error localizedDescription]).to.equal(@"Bad Request.");
+                done();
+            }];
+        });
+    });
+    
+    it(@"findObjects system test", ^{
+        NSDictionary *responseDic = @{ @"results":@[
+                                               @{ @"objectId" : @"8FgKqFlH8dZRDrBJ",
+                                                  @"createDate" : @"2013-08-09T07:37:54.869Z",
+                                                  @"updateDate" : @"2013-08-09T07:37:54.869Z",
+                                                  @"key" : @"obj1" },
+                                               @{ @"objectId" : @"wMhDqUcnIam6QoaJ",
+                                                  @"createDate" : @"2013-08-09T07:40:55.108Z",
+                                                  @"updateDate" : @"2013-08-09T07:40:55.108Z",
+                                                  @"key" : @"obj2" }
+                                               ]};
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NCMBQuery *query = [NCMBQuery queryWithClassName:@"Post"];
+        NSError *error = nil;
+        NSArray *objects = [query findObjects:&error];
+        expect(error).beNil();
+        expect(objects.count).to.equal(2);
+        NCMBObject *object = objects[0];
+        expect(object.objectId).to.equal(@"8FgKqFlH8dZRDrBJ");
+        expect([object objectForKey:@"key"]).to.equal(@"obj1");
+    });
+    
+    it(@"findObjects error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NCMBQuery *query = [NCMBQuery queryWithClassName:@"Post"];
+        NSError *error = nil;
+        NSArray *objects = [query findObjects:&error];
+        expect(objects.count).to.equal(0);
+        expect(error).beTruthy();
+        expect(error.code).to.equal(@400000);
+        expect([error localizedDescription]).to.equal(@"Bad Request.");
+    });
+    
+    it(@"getFirstObjectInBackgroundWithBlock system test", ^{
+        NSDictionary *responseDic = @{ @"results":@[
+                                               @{ @"objectId" : @"8FgKqFlH8dZRDrBJ",
+                                                  @"createDate" : @"2013-08-09T07:37:54.869Z",
+                                                  @"updateDate" : @"2013-08-09T07:37:54.869Z",
+                                                  @"key" : @"obj1" }
+                                               ]};
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBQuery *query = [NCMBQuery queryWithClassName:@"Post"];
+            [query getFirstObjectInBackgroundWithBlock:^(id object, NSError *error) {
+                expect(error).beNil();
+                expect(((NCMBObject*)object).objectId).to.equal(@"8FgKqFlH8dZRDrBJ");
+                expect([(NCMBObject*)object objectForKey:@"key"]).to.equal(@"obj1");
+                done();
+            }];
+        });
+    });
+    
+    it(@"getFirstObjectInBackgroundWithBlock error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBQuery *query = [NCMBQuery queryWithClassName:@"Post"];
+            [query getFirstObjectInBackgroundWithBlock:^(id object, NSError *error) {
+                expect(object).beNil();
+                expect(error).beTruthy();
+                expect(error.code).to.equal(@400000);
+                expect([error localizedDescription]).to.equal(@"Bad Request.");
+                done();
+            }];
+        });
+    });
+    
+    it(@"getFirstObject system test", ^{
+        NSDictionary *responseDic = @{ @"results":@[
+                                               @{ @"objectId" : @"8FgKqFlH8dZRDrBJ",
+                                                  @"createDate" : @"2013-08-09T07:37:54.869Z",
+                                                  @"updateDate" : @"2013-08-09T07:37:54.869Z",
+                                                  @"key" : @"obj1" }
+                                               ]};
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NCMBQuery *query = [NCMBQuery queryWithClassName:@"Post"];
+        NSError *error = nil;
+        NCMBObject *object = (NCMBObject *)[query getFirstObject:&error];
+        expect(error).beNil();
+        expect(object.objectId).to.equal(@"8FgKqFlH8dZRDrBJ");
+        expect([object objectForKey:@"key"]).to.equal(@"obj1");
+    });
+    
+    it(@"getFirstObject error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NCMBQuery *query = [NCMBQuery queryWithClassName:@"Post"];
+        NSError *error = nil;
+        NCMBObject *object = (NCMBObject *)[query getFirstObject:&error];
+        expect(object).beNil();
+        expect(error).beTruthy();
+        expect(error.code).to.equal(@400000);
+        expect([error localizedDescription]).to.equal(@"Bad Request.");
+    });
+    
+    it(@"getObjectInBackgroundWithId system test", ^{
+        NSDictionary *responseDic = @{ @"results":@[
+                                               @{ @"objectId" : @"8FgKqFlH8dZRDrBJ",
+                                                  @"createDate" : @"2013-08-09T07:37:54.869Z",
+                                                  @"updateDate" : @"2013-08-09T07:37:54.869Z",
+                                                  @"key" : @"obj1" }
+                                               ]};
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBQuery *query = [NCMBQuery queryWithClassName:@"Post"];
+            [query getObjectInBackgroundWithId:@"8FgKqFlH8dZRDrBJ" block:^(NCMBObject *object, NSError *error) {
+                expect(error).beNil();
+                expect(object.objectId).to.equal(@"8FgKqFlH8dZRDrBJ");
+                expect([object objectForKey:@"key"]).to.equal(@"obj1");
+                done();
+            }];
+            
+        });
+    });
+    
+    it(@"getObjectInBackgroundWithId error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBQuery *query = [NCMBQuery queryWithClassName:@"Post"];
+            [query getObjectInBackgroundWithId:@"8FgKqFlH8dZRDrBJ" block:^(NCMBObject *object, NSError *error) {
+                expect(object).beNil();
+                expect(error).beTruthy();
+                expect(error.code).to.equal(@400000);
+                expect([error localizedDescription]).to.equal(@"Bad Request.");
+                done();
+            }];
+        });
+    });
+    
+    it(@"getObjectWithId system test", ^{
+        NSDictionary *responseDic = @{ @"results":@[
+                                               @{ @"objectId" : @"8FgKqFlH8dZRDrBJ",
+                                                  @"createDate" : @"2013-08-09T07:37:54.869Z",
+                                                  @"updateDate" : @"2013-08-09T07:37:54.869Z",
+                                                  @"key" : @"obj1" }
+                                               ]};
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NCMBQuery *query = [NCMBQuery queryWithClassName:@"Post"];
+        NSError *error = nil;
+        NCMBObject *object = [query getObjectWithId:@"8FgKqFlH8dZRDrBJ" error:&error];
+        expect(error).beNil();
+        expect(object.objectId).to.equal(@"8FgKqFlH8dZRDrBJ");
+        expect([object objectForKey:@"key"]).to.equal(@"obj1");
+    });
+    
+    it(@"getObjectWithId error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NCMBQuery *query = [NCMBQuery queryWithClassName:@"Post"];
+        NSError *error = nil;
+        NCMBObject *object = [query getObjectWithId:@"8FgKqFlH8dZRDrBJ" error:&error];
+        expect(object).beNil();
+        expect(error).beTruthy();
+        expect(error.code).to.equal(@400000);
+        expect([error localizedDescription]).to.equal(@"Bad Request.");
+    });
+    
+    it(@"countObjectsInBackgroundWithBlock system test", ^{
+        NSDictionary *responseDic = @{ @"count" : @1,
+                                       @"results": @[
+                                               @{ @"objectId" : @"8FgKqFlH8dZRDrBJ",
+                                                  @"createDate" : @"2013-08-09T07:37:54.869Z",
+                                                  @"updateDate" : @"2013-08-09T07:37:54.869Z",
+                                                  @"key" : @"obj1" }
+                                               ]};
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBQuery *query = [NCMBQuery queryWithClassName:@"Post"];
+            [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+                expect(error).beNil();
+                expect(number).to.equal(@1);
+                done();
+            }];
+            
+            
+        });
+    });
+    
+    it(@"countObjectsInBackgroundWithBlock error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBQuery *query = [NCMBQuery queryWithClassName:@"Post"];
+            [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+                expect(number).to.equal(0);
+                expect(error).beTruthy();
+                expect(error.code).to.equal(@400000);
+                expect([error localizedDescription]).to.equal(@"Bad Request.");
+                done();
+            }];
+        });
+    });
+    
+    it(@"countObjects system test", ^{
+        NSDictionary *responseDic = @{ @"count" : @1,
+                                       @"results": @[
+                                               @{ @"objectId" : @"8FgKqFlH8dZRDrBJ",
+                                                  @"createDate" : @"2013-08-09T07:37:54.869Z",
+                                                  @"updateDate" : @"2013-08-09T07:37:54.869Z",
+                                                  @"key" : @"obj1" }
+                                               ]};
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NCMBQuery *query = [NCMBQuery queryWithClassName:@"Post"];
+        NSError *error = nil;
+        NSInteger number = [query countObjects:&error];
+        expect(error).beNil();
+        expect(number).to.equal(@1);
+    });
+    
+    it(@"countObjects error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NCMBQuery *query = [NCMBQuery queryWithClassName:@"Post"];
+        NSError *error = nil;
+        NSInteger number = [query countObjects:&error];
+        expect(number).to.equal(0);
+        expect(error).beTruthy();
+        expect(error.code).to.equal(@400000);
+        expect([error localizedDescription]).to.equal(@"Bad Request.");
     });
     
     afterEach(^{

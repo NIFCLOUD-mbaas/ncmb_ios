@@ -16,7 +16,7 @@
 
 #import "NCMB.h"
 
-#import "NCMBURLConnection.h"
+#import "NCMBURLSession.h"
 #import "NCMBReachability.h"
 
 #import "NCMBSetOperation.h"
@@ -30,6 +30,10 @@
 #import <objc/runtime.h>
 #import "NCMBDateFormat.h"
 
+@interface NCMBObject(){
+    dispatch_semaphore_t semaphore;
+}
+@end
 
 #pragma mark - getter
 //プロパティの型ごとに設定
@@ -166,7 +170,9 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     [self setObject:num forKey:name];
 }
 
+
 @implementation NCMBObject
+
 
 #pragma mark - Subclass
 + (id)object{
@@ -196,7 +202,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         NSArray *k = [[NSString stringWithUTF8String:attrs] componentsSeparatedByString:@","];
         //@dynamic修飾子のチェック
         if ([k containsObject:@"D"]){
-
+            
             const char *propName = property_getName(property);
             if(propName) {
                 NSString *propertyName = [NSString stringWithUTF8String:propName];
@@ -798,14 +804,33 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  @param error エラーを保持するポインタ
  */
 - (BOOL)fetch:(NSString*)url error:(NSError **)error isRefresh:(BOOL)isRefresh{
-    NCMBURLConnection *connect = [[NCMBURLConnection alloc]initWithPath:url method:@"GET" data:nil];
-    BOOL result = NO;
-    //同期通信を実行
-    //NSError __autoreleasing *fetchError = nil;
-    NSDictionary *response = [connect syncConnection:error];
-        //データ取得後にestimatedDataとマージする
-    [self afterFetch:[NSMutableDictionary dictionaryWithDictionary:response] isRefresh:isRefresh];
-    result = YES;
+    semaphore = dispatch_semaphore_create(0);
+    
+    //リクエストを作成
+    NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:url
+                                                           method:@"GET"
+                                                           header:nil
+                                                             body:nil];
+    // 通信
+    BOOL __block result = NO;
+    NSError __block *sessionError = nil;
+    NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestSync:request];
+    [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
+        if (requestError){
+            //通信エラー or mbエラー
+            sessionError = requestError;
+        } else {
+            [self afterFetch:[NSMutableDictionary dictionaryWithDictionary:responseData] isRefresh:isRefresh];
+            result = YES;
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    dispatch_release(semaphore);
+    if(error){
+        *error = sessionError;
+    }
     return result;
 }
 
@@ -838,26 +863,20 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
                              block:(NCMBErrorResultBlock)userBlock
                          isRefresh:(BOOL)isRefresh
 {
-    dispatch_queue_t sub_queue = dispatch_queue_create("fetchInBackgroundWithBlock", NULL);
-    dispatch_async(sub_queue, ^{
-        //リクエストを作成
-        NCMBURLConnection *connect = [[NCMBURLConnection alloc] initWithPath:url method:@"GET" data:nil];
-        
-        //非同期通信を実行
-        NCMBResultBlock block = ^(NSDictionary *response, NSError *error){
-            if (userBlock){
-                if (error){
-                    userBlock(error);
-                } else {
-                    //データ取得後にestimatedDataとマージする
-                    [self afterFetch:[NSMutableDictionary dictionaryWithDictionary:response] isRefresh:isRefresh];
-                    userBlock(nil);
-                }
-            }
-        };
-        [connect asyncConnectionWithBlock:block];
-        
-    });
+    
+    //リクエストを作成
+    NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:url
+                                                           method:@"GET"
+                                                           header:nil
+                                                             body:nil];
+    
+    NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestAsync:request];
+    [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
+        if (!requestError){
+            [self afterFetch:[NSMutableDictionary dictionaryWithDictionary:responseData] isRefresh:isRefresh];
+        }
+        [self executeUserCallback:userBlock error:requestError];
+    }];
 }
 
 /**
@@ -995,39 +1014,48 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  @return 通信が行われたかを真偽値で返却する
  */
 - (void)save:(NSString*)url error:(NSError **)error{
-    
-    //ポインタ先オブジェクトは事前に保存してから、connectionを作成
+    semaphore = dispatch_semaphore_create(0);
+    //ポインタ先オブジェクトは事前に保存する
     NSError *pointerObjectSaveError = nil;
     NSMutableDictionary *operation = [self beforeConnection];
     [self savePointerObjectBeforehand:operation
                                 error:&pointerObjectSaveError];
     if (pointerObjectSaveError){
-        if (error){
+        if(error){
             *error = pointerObjectSaveError;
         }
-    } else {
-        NSError *connectionError = nil;
-        NCMBURLConnection *connect = [self createConnectionForSave:url
-                                                         operation:operation
-                                                             error:&connectionError];
-        
-        //同期通信を実行
-        if (connectionError){
-            if (error){
-                *error = connectionError;
-            }
-        } else {
-            NSError *saveError = nil;
-            NSDictionary *response = [connect syncConnection:&saveError];
-            if (saveError){
-                if (error){
-                    *error = saveError;
-                }
-                [self mergePreviousOperation:operation];
-            } else {
-                [self afterSave:response operations:operation];
-            }
+        return;
+    }
+    
+    NSError *connectionError = nil;
+    NCMBRequest *request = [self createRequestForSave:url
+                                            operation:operation
+                                                error:&connectionError];
+    if (connectionError){
+        if(error){
+            *error = connectionError;
         }
+        return;
+    }
+    
+    // 通信
+    NSError __block *sessionError = nil;
+    NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestSync:request];
+    [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
+        if (requestError){
+            //通信エラー or mbエラー
+            [self mergePreviousOperation:operation];
+            sessionError = requestError;
+        } else {
+            [self afterSave:responseData operations:operation];
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    dispatch_release(semaphore);
+    if(error){
+        *error = sessionError;
     }
 }
 
@@ -1038,7 +1066,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  */
 - (void)save:(NSError **)error{
     NSString *url = [self returnBaseUrl:_ncmbClassName objectId:_objectId];
-    //NSString *url = [NSString stringWithFormat:@"classes/%@", self.ncmbClassName];
     [self save:url error:error];
 }
 
@@ -1048,44 +1075,37 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  @param block 通信後に実行されるblock。引数にNSError *errorを持つ。
  */
 - (void)saveInBackgroundWithBlock:(NSString *)url block:(NCMBErrorResultBlock)userBlock{
-    dispatch_queue_t sub_queue = dispatch_queue_create("saveInBackgroundWithBlock", NULL);
-    dispatch_async(sub_queue, ^{
-        
-        //ポインタ先オブジェクトは事前に保存してから、connectionを作成
-        NSError *e = nil;
-        NSMutableDictionary *operation = [self beforeConnection];
-        [self savePointerObjectBeforehand:operation error:&e];
-        if (e){
-            if (userBlock){
-                userBlock(e);
-            }
+    // ポインタ先オブジェクトは事前に保存する
+    NSError *e = nil;
+    NSMutableDictionary *operation = [self beforeConnection];
+    [self savePointerObjectBeforehand:operation error:&e];
+    if (e){
+        [self executeUserCallback:userBlock error:e];
+        return;
+    }
+    
+    // リクエスト作成
+    NSError *connectionError = nil;
+    NCMBRequest *request = [self createRequestForSave:url
+                                            operation:operation
+                                                error:&connectionError];
+    // リクエストが作成できなかった場合のエラーを返却
+    if (connectionError != nil){
+        [self executeUserCallback:userBlock error:connectionError];
+        return;
+    }
+    // 通信
+    NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestAsync:request];
+    [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
+        if (requestError){
+            //通信エラー or mbエラー
+            [self mergePreviousOperation:operation];
         } else {
-            NSError *connectionError = nil;
-            NCMBURLConnection *connect = [self createConnectionForSave:url
-                                                             operation:operation
-                                                                 error:&connectionError];
-            //コネクションが作成できなかった場合のエラーを返却
-            if (connectionError != nil){
-                if (userBlock){
-                    userBlock(connectionError);
-                }
-            } else {
-                //非同期通信を実行
-                NCMBResultBlock block = ^(NSDictionary *responseDic, NSError *error){
-                    if (error){
-                        [self mergePreviousOperation:operation];
-                    } else {
-                        [self afterSave:responseDic operations:operation];
-                        
-                    }
-                    if (userBlock){
-                        userBlock(error);
-                    }
-                };
-                [connect asyncConnectionWithBlock:block];
-            }
+            [self afterSave:responseData operations:operation];
         }
-    });
+        
+        [self executeUserCallback:userBlock error:requestError];
+    }];
 }
 
 /**
@@ -1123,34 +1143,59 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  @param operation オブジェクトの操作履歴
  @return save用のNCMBConnection
  */
-- (NCMBURLConnection*)createConnectionForSave:(NSString*)url operation:(NSMutableDictionary*)operation error:(NSError**)error {
-    NSData *json = [[NSData alloc] init];
+- (NCMBRequest*)createRequestForSave:(NSString*)url operation:(NSMutableDictionary*)operation error:(NSError**)error {
+    NSMutableDictionary *jsonDic = [NSMutableDictionary dictionary];
     if ([operation count] != 0){
         NSMutableDictionary *ncmbDic = [self convertToJSONDicFromOperation:operation];
         //プロパティのACLを更新された場合がOperationQueueで管理されないのでここで追加
         if (_ACL != nil && _ACL.isDirty){
             [ncmbDic setObject:_ACL.dicACL forKey:@"acl"];
         }
-        NSMutableDictionary *jsonDic = [self convertToJSONFromNCMBObject:ncmbDic];
-        NSError *convertError = nil;
-        json = [NSJSONSerialization dataWithJSONObject:jsonDic options:kNilOptions error:&convertError];
-        if (convertError){
-            if (error){
-                *error = convertError;
-            }
-        }
-    } else {
-        json = nil;
+        jsonDic = [self convertToJSONFromNCMBObject:ncmbDic];
     }
-
+    
     NSString *method = nil;
     if (!self.objectId){
         method = @"POST";
     } else {
         method = @"PUT";
     }
-    NCMBURLConnection *connect = [[NCMBURLConnection new] initWithPath:url method:method data:json];
-    return connect;
+    NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:url
+                                                     method:method
+                                                     header:nil
+                                                       body:jsonDic];
+    return request;
+}
+
+/**
+ saveAll用のリクエスト配列を作成する
+ @param obj リクエストに追加するNCMBObject
+ @param operation リクエストに追加するオブジェクトの操作履歴
+ @return ncmbDic リクエスト用のNSDictionary
+ */
+- (NSDictionary*)returnRequestDictionaryForSaveAll:(NCMBObject*)obj operation:(NSMutableDictionary*)operation {
+    NSMutableDictionary *operationDic = [obj convertToJSONDicFromOperation:operation];
+    NSMutableDictionary *ncmbDic = [NSMutableDictionary dictionaryWithObject:[obj convertToJSONFromNCMBObject:operationDic] forKey:@"body"];
+    if (obj.objectId == nil){
+        [ncmbDic setObject:@"POST" forKey:@"method"];
+    } else {
+        [ncmbDic setObject:@"PUT" forKey:@"method"];
+    }
+    [ncmbDic setObject:[self returnRequestUrlForBatchAPI:obj.ncmbClassName objectId:obj.objectId]
+                forKey:@"path"];
+    return ncmbDic;
+}
+
+/**
+ クラス名とobjectIdを受け取ってバッチ用APIリクエストURLを作成する
+ @param ncmbClassName クラス名
+ @param objectId オブジェクトID
+ @return バッチ用APIリクエストURL
+ */
+- (NSString*)returnRequestUrlForBatchAPI:(NSString*)ncmbClassName objectId:(NSString*)objectId{
+    //ベースのURLを作成
+    NSString *baseUrl = [self returnBaseUrl:ncmbClassName objectId:objectId];
+    return [NSString stringWithFormat:@"%@/%@", API_VERSION_V1, baseUrl];
 }
 
 /**
@@ -1217,7 +1262,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 - (void)saveCommandToFile:(NSDictionary*)localDic error:(NSError**)error{
     //ファイルに保存処理を書き出す
     NSData *localData = [NSKeyedArchiver archivedDataWithRootObject:localDic];
-
+    
     //ファイル名はタイムスタンプ_オペレーションのアドレス
     NSString *path = [NSString stringWithFormat:@"%@%@_%p", COMMAND_CACHE_FOLDER_PATH, [[NCMBDateFormat getFileNameDateFormat] stringFromDate:[NSDate date]], localDic];
     [localData writeToFile:path options:NSDataWritingAtomic error:error];
@@ -1256,15 +1301,26 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  @param error エラーを保持するポインタ
  */
 - (void)delete:(NSString *)url error:(NSError **)error{
-    NCMBURLConnection *connect = [[NCMBURLConnection alloc]initWithPath:url
-                                                                 method:@"DELETE"
-                                                                   data:nil];
+    // 非同期を同期にする
+    semaphore = dispatch_semaphore_create(0);
     
-    //同期通信を実行
-    [connect syncConnection:error];
-    
-    if (error == nil || !*error){
-        [self afterDelete];
+    // リクエスト作成
+    NCMBRequest *request = [[NCMBRequest alloc]initWithURLString:url method:@"DELETE" header:nil body:nil];
+    NCMBURLSession *session = [[NCMBURLSession alloc]initWithRequestSync:request];
+    NSError __block *sessionError = nil;
+    // 通信
+    [session dataAsyncConnectionWithBlock:^(id response, NSError *e) {
+        if (e){
+            sessionError = e;
+        }else{
+            [self afterDelete];
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    dispatch_release(semaphore);
+    if(error){
+        *error = sessionError;
     }
 }
 
@@ -1293,26 +1349,18 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
  @param block
  */
 - (void)deleteInBackgroundWithBlock:(NSString *)url block:(NCMBErrorResultBlock)userBlock{
-    dispatch_queue_t sub_queue = dispatch_queue_create("saveInBackgroundWithBlock", NULL);
-    dispatch_async(sub_queue, ^{
-        //リクエストを作成
-        NCMBURLConnection *connect = [[NCMBURLConnection alloc]initWithPath:url
-                                                                     method:@"DELETE"
-                                                                       data:nil];
-        
-        //非同期通信を実行
-        NCMBResultBlock block = ^(NSDictionary *responseDic, NSError *error){
-            if (userBlock){
-                if (error){
-                    userBlock(error);
-                } else {
-                    [self afterDelete];
-                    userBlock(nil);
-                }
-            }
-        };
-        [connect asyncConnectionWithBlock:block];
-    });
+    //リクエストを作成
+    NCMBRequest *request = [[NCMBRequest alloc]initWithURLString:url method:@"DELETE" header:nil body:nil];
+    NCMBURLSession *session = [[NCMBURLSession alloc]initWithRequestAsync:request];
+    
+    //非同期通信を実行
+    [session dataAsyncConnectionWithBlock:^(id responseData, NSError *error) {
+        if (!error){
+            [self afterDelete];
+        }
+        // コールバック実行
+        [self executeUserCallback:userBlock error:error];
+    }];
 }
 
 /**
@@ -1474,7 +1522,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
                 //objがポインタだったら
                 id obj = [NCMBObject convertClass:jsonData ncmbClassName:[jsonData objectForKey:@"className"]];
                 return obj;
-
+                
             } else if ([typeStr isEqualToString:@"Relation"]){
                 //objがリレーションだったら
                 NCMBRelation *relation = [[NCMBRelation alloc] initWithClassName:self key:convertKey];
@@ -1483,7 +1531,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
             } else if ([typeStr isEqualToString:@"Object"]){
                 id obj = [NCMBObject convertClass:jsonData ncmbClassName:[jsonData objectForKey:@"className"]];
                 return obj;
-
+                
             }
         } else if ([jsonData objectForKey:@"acl"]){
             //objがACLだったら
@@ -1632,6 +1680,13 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         NCMBObject *obj = [NCMBObject objectWithClassName:ncmbClassName];
         [obj afterFetch:result isRefresh:YES];
         return obj;
+    }
+}
+
+// コールバック実行
+- (void)executeUserCallback:(NCMBErrorResultBlock)userCallback error:(NSError*)error{
+    if(userCallback){
+        userCallback(error);
     }
 }
 

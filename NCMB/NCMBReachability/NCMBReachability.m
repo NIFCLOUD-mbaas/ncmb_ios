@@ -15,7 +15,7 @@
  */
 
 #import "NCMBReachability.h"
-#import "NCMBURLConnection.h"
+#import "NCMBURLSession.h"
 #import "NCMBConstants.h"
 
 #import <objc/runtime.h>
@@ -159,30 +159,36 @@ static NSObject*_objForLock = nil;
             
             NSString *url = [dictForEventually objectForKey:@"path"];
             NSString *method = [dictForEventually objectForKey:@"method"];
-            NSData *saveData = nil;
+            NSDictionary *saveDic = nil;
             if ([[dictForEventually allKeys] containsObject:@"saveData"]){
-                NSDictionary *saveDic = [dictForEventually objectForKey:@"saveData"];
-                NSError *error = nil;
-                saveData = [NSJSONSerialization dataWithJSONObject:saveDic
-                                                           options:kNilOptions
-                                                             error:&error];
+                saveDic = [dictForEventually objectForKey:@"saveData"];
             }
             
             //ファイルを削除する
             [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, fileName] error:nil];
             
-            //APIリクエスト用コネクションを作成
-            NCMBURLConnection *connect = [[NCMBURLConnection new] initWithPath:url method:method data:saveData];
+            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
             
-            //同期通信を実行
-            NSError *error = nil;
-            [connect syncConnection:&error] ;
-            if (error){
-                if (error.code == NSURLErrorNotConnectedToInternet || error.code == NSURLErrorNetworkConnectionLost){
+            NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:url
+                                                                   method:method
+                                                                   header:nil
+                                                                     body:saveDic];
+            // 通信
+            NSError __block *sessionError = nil;
+            NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestSync:request];
+            [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
+                if (requestError){
+                    sessionError = requestError;
+                }
+                dispatch_semaphore_signal(semaphore);
+            }];
+            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+            dispatch_release(semaphore);
+            if(sessionError){
+                if (sessionError.code == NSURLErrorNotConnectedToInternet || sessionError.code == NSURLErrorNetworkConnectionLost){
                     //オフライン時はファイルを復元する
                     [data writeToFile:[NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, fileName] options:NSDataWritingAtomic error:nil];
                 }
-                
             }
         }
     }
@@ -256,5 +262,5 @@ static NSObject*_objForLock = nil;
     
     return NO;
 }
- 
+
 @end
