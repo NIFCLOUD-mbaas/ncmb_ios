@@ -23,9 +23,7 @@
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
 @interface NCMBQuery (Private)
-@property (nonatomic) NCMBURLConnection *connection;
 @property (nonatomic) NSMutableDictionary *query;
-- (NCMBURLConnection*)createConnectionForSearch:(NSMutableDictionary*)queryDic countEnableFlag:(BOOL)countEnableFlag getFirst:(BOOL)getFirstFlag;
 
 - (void)setCondition:(id)object forKey:(NSString*)key operand:(NSString*)operand;
 
