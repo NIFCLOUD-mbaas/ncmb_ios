@@ -19,7 +19,7 @@
 #import "NCMBACL.h"
 #import "NSDataBase64Encode.h"
 #import "NCMBQuery.h"
-#import "NCMBURLConnection.h"
+#import "NCMBURLSession.h"
 #import "NCMBDateFormat.h"
 
 #pragma mark - url
@@ -27,8 +27,8 @@
 #define URL_PATH @"https://mb.api.cloud.nifty.com/2013-09-01/"
 
 @interface NCMBFile(){
-    NSURLConnection *connectionLocal;
-    BOOL isCancel;
+    NCMBURLSession *session;
+    dispatch_semaphore_t semaphore;
 }
 
 @property (nonatomic,strong) NSData *file;
@@ -189,54 +189,25 @@ static NSMutableData *resultData = nil;
  */
 - (void)saveInBackgroundWithBlock:(NCMBErrorResultBlock)block
                     progressBlock:(NCMBProgressBlock)progressBlock{
-    dispatch_queue_t main=dispatch_get_main_queue();
-    dispatch_queue_t sub=dispatch_queue_create("getDataInBackgroundWithBlock", NULL);
-    dispatch_async(sub, ^{
-        isCancel = NO;
-        //プログレス作成
-        id proBlock = ^(NSNumber *progress){
-            if (progressBlock) {
-                int progressInt = [progress floatValue]*100;
-                progressBlock(progressInt);
-            }
-        };
-        //リクエスト作成
-        NSError *e = nil;
-        NSMutableDictionary *operation = [self beforeConnection];
-        NCMBURLConnection *request = [self createConnectionForSave:URL_FILE
-                                                         operation:operation
-                                                          progress:proBlock
-                                                             error:&e];
-        if (request == nil && e != nil){
-            if (block){
-                block(e);
-            }
+    
+    //リクエスト作成
+    NSError *e = nil;
+    NSMutableDictionary *operation = [self beforeConnection];
+    NCMBRequest *request = [self createRequest:operation error:&e];
+    
+    // 通信
+    session = [[NCMBURLSession alloc] initWithProgress:request progress:progressBlock];
+    [session fileUploadAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
+        if (requestError){
+            [self mergePreviousOperation:operation];
+        } else {
+            [self afterSave:responseData operations:operation];
         }
-        dispatch_async(main, ^{
-            //非同期通信
-            if (!isCancel) {
-                connectionLocal = [request fileAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
-                    if (connectionLocal) {
-                        connectionLocal = nil;
-                    }
-                    //通信エラーだった場合はNOを返す
-                    if (requestError){
-                        //通信エラー or mbエラー
-                        [self mergePreviousOperation:operation];
-                    } else {
-                        [self afterSave:responseData operations:operation];
-                    }
-                    if(block){
-                        block(requestError);
-                    }
-                }];
-            }else{
-                connectionLocal = nil;
-            }
-            isCancel = NO;
-        });
-    });
-    //dispatch_release(sub);
+        
+        // コールバック実行
+        [self executeUserCallback:block error:requestError];
+        
+    }];
 }
 
 
@@ -249,22 +220,28 @@ static NSMutableData *resultData = nil;
  @return NSData型 取得データ
  */
 - (NSData *)getData:(NSError **)error{
-    isCancel = NO;
-    //リクエスト作成
-    NCMBURLConnection *request = [[NCMBURLConnection new] initWithPath:[NSString stringWithFormat:@"%@/%@", URL_FILE, self.name] method:@"GET" data:nil];
+    semaphore = dispatch_semaphore_create(0);
+    NSError __block *sessionError = nil;
+    NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:[NSString stringWithFormat:@"%@/%@",URL_FILE,self.name]
+                                                           method:@"GET"
+                                                           header:nil
+                                                             body:nil];
     
-    NSError *errorLocal = nil;
-    if (!isCancel) {
-        //同期通信
-        NSData * responseData = [request syncConnection:&errorLocal];
-        
-        if (errorLocal) {
-            *error = errorLocal;
+    session = [[NCMBURLSession alloc] initWithRequestSync:request];
+    [session fileDownloadAsyncConnectionWithBlock:^(NSData *responseData, NSError *requestError){
+        if (requestError){
+            sessionError = requestError;
         }else{
             self.file = responseData;
+            [self privateSetIsDirty:NO];
         }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    dispatch_release(semaphore);
+    if(error){
+        *error = sessionError;
     }
-    isCancel = NO;
     return self.file;
 }
 
@@ -302,44 +279,24 @@ static NSMutableData *resultData = nil;
  */
 - (void)getDataInBackgroundWithBlock:(NCMBDataResultBlock)resultBlock
                        progressBlock:(NCMBProgressBlock)progressBlock{
-    dispatch_queue_t main=dispatch_get_main_queue();
-    dispatch_queue_t sub=dispatch_queue_create("getDataInBackgroundWithBlock", NULL);
-    dispatch_async(sub, ^{
-        isCancel = NO;
-        //プログレス作成
-        id block = ^(NSNumber *progress){
-            if (progressBlock) {
-                int progressInt = [progress floatValue]*100;
-                progressBlock(progressInt);
-            }
-        };
+    
+    NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:[NSString stringWithFormat:@"%@/%@",URL_FILE,self.name]
+                                                           method:@"GET"
+                                                           header:nil
+                                                             body:nil];
+    
+    session = [[NCMBURLSession alloc] initWithProgress:request progress:progressBlock];
+    [session fileDownloadAsyncConnectionWithBlock:^(NSData *responseData, NSError *requestError){
+        if (!requestError){
+            self.file = responseData;
+            [self privateSetIsDirty:NO];
+        }
         
-        //リクエスト作成
-        NCMBURLConnection *request = [[NCMBURLConnection new] initWithProgress:[NSString stringWithFormat:@"%@/%@", URL_FILE, self.name] method:@"GET" data:nil progress:block];
-        
-        dispatch_async(main, ^{
-            if (!isCancel) {
-                //非同期通信
-                connectionLocal = [request fileAsyncConnectionWithBlock:^(NSData *responseData, NSError *errorBlock){
-                    //isCancel = NO;
-                    if (connectionLocal) {
-                        connectionLocal = nil;
-                    }
-                    
-                    if (!errorBlock){
-                        self.file = responseData;
-                    }
-                    if(resultBlock){
-                        resultBlock(self.file,errorBlock);
-                    }
-                }];
-            }else{
-                connectionLocal = nil;
-            }
-            isCancel = NO;
-        });
-    });
-    //dispatch_release(sub);
+        // コールバック実行
+        if(resultBlock){
+            resultBlock(self.file,requestError);
+        }
+    }];
 }
 
 #pragma mark - create
@@ -372,32 +329,20 @@ static NSMutableData *resultData = nil;
     return uuidString;
 }
 
-/**
- file用のNCMBConnectionを生成する
- @param url APIリクエストするURL
- @param operation オブジェクトの操作履歴
- @param progress プログレス
- @return save用のNCMBConnection
- */
-- (NCMBURLConnection*)createConnectionForSave:(NSString*)url
-                                    operation:(NSMutableDictionary*)operation
-                                     progress:(void (^)(NSNumber *progress))progress
-                                        error:(NSError**)error
-{
+- (NSMutableData*)createBody:(NSMutableDictionary*)operation
+                       error:(NSError**)error{
     NSMutableDictionary *ncmbDic = [self convertToJSONDicFromOperation:operation];
     //fileは履歴管理していないため直接設定する
     if(self.file){
         [ncmbDic setObject:self.file forKey:@"file"];
     }
     
-    NSString *path = [url stringByAppendingString:[NSString stringWithFormat:@"/%@", self.name]];
-    NCMBURLConnection *connect = nil;
+    NSMutableData *body = [[NSMutableData alloc] init];
     NSError *convertError = nil;
     
     //未保存の場合は登録、保存済みの場合は更新処理を行う
     if (self.isDirty){
         //POSTはmultipart/form-dataの形で通信を行う
-        NSString *method = @"POST";
         NSMutableDictionary *jsonDic = [self convertToJSONFromNCMBObject:ncmbDic];
         
         //ファイル名、mimeTypeの作成
@@ -408,47 +353,44 @@ static NSMutableData *resultData = nil;
         [jsonDic removeObjectForKey:@"fileName"];
         
         NSString *boundary = @"_NCMBProjectBoundary";
-        NSMutableData* result = [[NSMutableData alloc] init];
         //aclのform-dataを作成
         if ([[jsonDic allKeys] count]>0) {
             for (NSString *key in [jsonDic allKeys]) {
-                [result appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-                [result appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n\r\n", key,key] dataUsingEncoding:NSUTF8StringEncoding]];
-                [result appendData:[NSJSONSerialization dataWithJSONObject:[jsonDic objectForKey:key] options:kNilOptions error:&convertError]];
+                [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+                [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n\r\n", key,key] dataUsingEncoding:NSUTF8StringEncoding]];
+                [body appendData:[NSJSONSerialization dataWithJSONObject:[jsonDic objectForKey:key] options:kNilOptions error:&convertError]];
                 if (convertError){
                     return nil;
                 }
-                [result appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+                [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
             }
         }
         //fileのform-dataを作成
-        [result appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [result appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", @"file",fileName] dataUsingEncoding:NSUTF8StringEncoding]];
-        [result appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n",mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
-        [result appendData:data];
-        [result appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-        [result appendData:[[NSString stringWithFormat:@"--%@--\r\n\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", @"file",fileName] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n",mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:data];
+        [body appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         if (convertError){
             return nil;
         }
-        connect = [[NCMBURLConnection new] initWithProgress:path method:method data:result progress:progress];
     } else {
         //PUTはapplication/jsonなのでaclのみ取り出し、通常の通信と同様に更新する
-        NSString *method = @"PUT";
         NSMutableDictionary *aclDic = [NSMutableDictionary dictionary];
         if([ncmbDic objectForKey:@"acl"]){
             [aclDic setObject:[ncmbDic objectForKey:@"acl"] forKey:@"acl"];
         }
         
         NSMutableDictionary *jsonDic = [self convertToJSONFromNCMBObject:aclDic];
-        NSData *json = [NSJSONSerialization dataWithJSONObject:jsonDic options:kNilOptions error:&convertError];
+        body = (NSMutableData*)[NSJSONSerialization dataWithJSONObject:jsonDic options:kNilOptions error:&convertError];
         if (convertError){
             return nil;
         }
-        connect = [[NCMBURLConnection new] initWithProgress:path method:method data:json progress:progress];
     }
-    return connect;
+    return body;
 }
+
 
 /**
  拡張子に合わせてmineTypeを生成する
@@ -485,17 +427,13 @@ static NSMutableData *resultData = nil;
 
 #pragma mark - cancel
 /**
- 通信のキャンセルを行う
+ 通信が行われていた場合に通信のキャンセルを行う
  */
 - (void)cancel{
-    if (connectionLocal) {
-        if ([connectionLocal isKindOfClass:[NSURLConnection class]]) {
-            [connectionLocal cancel];
-        }
-        connectionLocal = nil;
-        isCancel = NO;
-    }else{
-        isCancel = YES;
+    if (session.uploadTask !=nil && session.uploadTask.state == NSURLSessionTaskStateRunning) {
+        [session.uploadTask cancel];
+    } else if (session.downloadTask !=nil && session.downloadTask.state == NSURLSessionTaskStateRunning){
+        [session.downloadTask cancel];
     }
 }
 
@@ -513,34 +451,36 @@ static NSMutableData *resultData = nil;
  @param error エラーを保持するポインタ
  */
 - (void)save:(NSError **)error{
-    isCancel = NO;
-    NSMutableDictionary *operation = [self beforeConnection];
+    semaphore = dispatch_semaphore_create(0);
     
-    NSError *connectionError = nil;
-    NCMBURLConnection *connect = [self createConnectionForSave:URL_FILE
-                                                     operation:operation
-                                                      progress:nil
-                                                         error:&connectionError];
-    if (connect == nil && connectionError != nil){
-        if (error){
-            *error = connectionError;
+    //リクエスト作成
+    NSError __block *sessionError = nil;
+    NSMutableDictionary *operation = [self beforeConnection];
+    NCMBRequest *request = [self createRequest:operation error:&sessionError];
+    if(sessionError){
+        if(error){
+            *error = sessionError;
         }
+        return;
     }
-    if (!isCancel) {
-        NSError *requestError = nil;
-        NSDictionary *response = [connect syncConnection:&requestError];
-        //通信エラーだった場合はNOを返す
+    
+    // 通信
+    session = [[NCMBURLSession alloc] initWithRequestSync:request];
+    [session fileUploadAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
         if (requestError){
-            if (error){
-                *error = requestError;
-            }
             //通信エラー or mbエラー
             [self mergePreviousOperation:operation];
+            sessionError = requestError;
         } else {
-            [self afterSave:response operations:operation];
+            [self afterSave:responseData operations:operation];
         }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    dispatch_release(semaphore);
+    if(error){
+        *error = sessionError;
     }
-    isCancel = NO;
 }
 
 /**
@@ -568,7 +508,6 @@ static NSMutableData *resultData = nil;
             *error = localError;
         }
     }
-    
 }
 
 /**
@@ -589,7 +528,6 @@ static NSMutableData *resultData = nil;
         }
     }
 }
-
 
 +(id)object{
     return [[NCMBFile alloc] init];
@@ -626,5 +564,29 @@ static NSMutableData *resultData = nil;
     }
     [super afterFetch:response isRefresh:isRefresh];
     _isDirty = NO;
+}
+
+- (NCMBRequest *)createRequest:(NSMutableDictionary*)operation error:(NSError**)error{
+    //リクエスト作成
+    NSMutableData *body = [self createBody:operation error:error];
+    NSString *method = @"POST";
+    NSMutableDictionary *header = [NSMutableDictionary dictionary];
+    if(self.isDirty){
+        // POST時
+        [header setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=_NCMBProjectBoundary"]  forKey:@"Content-Type"];
+        NSString *postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[body length]];
+        [header setValue:postLength forKey:@"Content-Length"];
+    }else{
+        // PUT時
+        method = @"PUT";
+    }
+    // 日本語ファイル名の場合エンコーディング必須
+    NSString *fileName = [NCMBRequest returnEncodedString:self.name];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/%@", URL_PATH,URL_FILE,fileName]];
+    NCMBRequest *request = [[NCMBRequest alloc] initWithURL:url
+                                                     method:method
+                                                     header:header
+                                                   bodyData:body];
+    return request;
 }
 @end

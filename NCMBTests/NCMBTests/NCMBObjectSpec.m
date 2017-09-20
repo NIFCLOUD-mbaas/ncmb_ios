@@ -19,6 +19,7 @@
 #import <NCMB/NCMB.h>
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
+#import <OHHTTPStubs/OHHTTPStubs.h>
 
 @interface NCMBObject (Private)
 - (void)saveCommandToFile:(NSDictionary*)localDic error:(NSError**)error;
@@ -67,7 +68,7 @@ describe(@"NCMBObject", ^{
                                                              error: NULL];
         
         NSString *filePath = [NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, [contents firstObject]];
-
+        
         NSData *data = [NSData dataWithContentsOfFile:filePath];
         NSDictionary *dictForEventually = [NSKeyedUnarchiver unarchiveObjectWithData:data];
         
@@ -78,13 +79,293 @@ describe(@"NCMBObject", ^{
         [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, [contents firstObject]] error:nil];
     });
     
-    afterEach(^{
+    
+    it(@"saveInBackgroundWithBlock system test", ^{
+        NSDictionary *responseDic = @{ @"objectId" : @"U6TztFwTDrGSD88N",
+                                       @"createDate" : @"2013-08-28T03:02:29.970Z"} ;
         
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBObject *object = [NCMBObject objectWithClassName:@"test"];
+            [object setObject:@"value" forKey:@"key"];
+            [object saveInBackgroundWithBlock:^(NSError *error) {
+                expect(error).beNil();
+                expect(object.objectId).to.equal(@"U6TztFwTDrGSD88N");
+                expect([object objectForKey:@"key"]).to.equal(@"value");
+                done();
+            }];
+        });
     });
     
-    afterAll(^{
+    it(@"saveInBackgroundWithBlock error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E403001",
+                                       @"error" : @"No access with ACL."} ;
         
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBObject *object = [NCMBObject objectWithClassName:@"test"];
+            [object setObject:@"value" forKey:@"key"];
+            [object saveInBackgroundWithBlock:^(NSError *error) {
+                expect(error).beTruthy();
+                expect(error.code).to.equal(@403001);
+                expect([error localizedDescription]).to.equal(@"No access with ACL.");
+                done();
+            }];
+        });
     });
+    
+    it(@"save system test", ^{
+        NSDictionary *responseDic = @{ @"objectId" : @"U6TztFwTDrGSD88N",
+                                       @"createDate" : @"2013-08-28T03:02:29.970Z"} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NCMBObject *object = [NCMBObject objectWithClassName:@"test"];
+        [object setObject:@"value" forKey:@"key"];
+        NSError *error = nil;
+        [object save:&error];
+        expect(error).beNil();
+        expect(object.objectId).to.equal(@"U6TztFwTDrGSD88N");
+        expect([object objectForKey:@"key"]).to.equal(@"value");
+    });
+    
+    it(@"save error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E403001",
+                                       @"error" : @"No access with ACL."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        
+        NCMBObject *object = [NCMBObject objectWithClassName:@"test"];
+        [object setObject:@"value" forKey:@"key"];
+        NSError *error = nil;
+        [object save:&error];
+        expect(error).beTruthy();
+        expect(error.code).to.equal(@403001);
+        expect([error localizedDescription]).to.equal(@"No access with ACL.");
+    });
+    
+    it(@"fetchInBackgroundWithBlock system test", ^{
+        NSDictionary *responseDic = @{ @"objectId" : @"7FrmPTBKSNtVjajm",
+                                       @"createDate" : @"2014-06-03T11:28:30.348Z",
+                                       @"updateDate" : @"2014-06-03T11:28:30.348Z",
+                                       @"key" : @"value",
+                                       @"acl" : @{@"*":@{@"read":@true,@"write":@true}}} ;
+       
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBObject *object = [NCMBObject objectWithClassName:@"test"];
+            object.objectId = @"7FrmPTBKSNtVjajm";
+            [object fetchInBackgroundWithBlock:^(NSError *error) {
+                expect(error).beNil();
+                expect(object.objectId).to.equal(@"7FrmPTBKSNtVjajm");
+                expect([object objectForKey:@"key"]).to.equal(@"value");
+                done();
+            }];
+        });
+    });
+    
+    it(@"fetchInBackgroundWithBlock error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E403001",
+                                       @"error" : @"No access with ACL."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBObject *object = [NCMBObject objectWithClassName:@"test"];
+            object.objectId = @"7FrmPTBKSNtVjajm";
+            [object fetchInBackgroundWithBlock:^(NSError *error) {
+                expect(error).beTruthy();
+                expect(error.code).to.equal(@403001);
+                expect([error localizedDescription]).to.equal(@"No access with ACL.");
+                done();
+            }];
+        });
+    });
+    
+    it(@"fetch system test", ^{
+        NSDictionary *responseDic = @{ @"objectId" : @"7FrmPTBKSNtVjajm",
+                                       @"createDate" : @"2014-06-03T11:28:30.348Z",
+                                       @"updateDate" : @"2014-06-03T11:28:30.348Z",
+                                       @"key" : @"value",
+                                       @"acl" : @{@"*":@{@"read":@true,@"write":@true}}} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NCMBObject *object = [NCMBObject objectWithClassName:@"test"];
+        object.objectId = @"7FrmPTBKSNtVjajm";
+        NSError *error = nil;
+        [object fetch:&error];
+        expect(error).beNil();
+        expect(object.objectId).to.equal(@"7FrmPTBKSNtVjajm");
+        expect([object objectForKey:@"key"]).to.equal(@"value");
+    });
+    
+    it(@"fetch error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E403001",
+                                       @"error" : @"No access with ACL."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        
+        NCMBObject *object = [NCMBObject objectWithClassName:@"test"];
+        object.objectId = @"7FrmPTBKSNtVjajm";
+        NSError *error = nil;
+        [object fetch:&error];
+        expect(error).beTruthy();
+        expect(error.code).to.equal(@403001);
+        expect([error localizedDescription]).to.equal(@"No access with ACL.");
+    });
+    
+    it(@"deleteInBackgroundWithBlock system test", ^{
+        NSDictionary *responseDic = @{} ;
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBObject *object = [NCMBObject objectWithClassName:@"test"];
+            object.objectId = @"7FrmPTBKSNtVjajm";
+            [object deleteInBackgroundWithBlock:^(NSError *error) {
+                expect(error).beNil();
+                expect(object.objectId).beNil();
+                expect([object objectForKey:@"key"]).beNil;
+                done();
+            }];
+        });
+    });
+    
+    it(@"deleteInBackgroundWithBlock error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E403001",
+                                       @"error" : @"No access with ACL."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBObject *object = [NCMBObject objectWithClassName:@"test"];
+            object.objectId = @"7FrmPTBKSNtVjajm";
+            [object deleteInBackgroundWithBlock:^(NSError *error) {
+                expect(error).beTruthy();
+                expect(object.objectId).beTruthy();
+                expect(error.code).to.equal(@403001);
+                expect([error localizedDescription]).to.equal(@"No access with ACL.");
+                done();
+            }];
+        });
+    });
+    
+    it(@"delete system test", ^{
+        NSDictionary *responseDic = @{} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NCMBObject *object = [NCMBObject objectWithClassName:@"test"];
+        object.objectId = @"7FrmPTBKSNtVjajm";
+        NSError *error = nil;
+        [object delete:&error];
+        expect(error).beNil();
+        expect(object.objectId).beNil();
+        expect([object objectForKey:@"key"]).beNil;
+    });
+    
+    it(@"delete error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E403001",
+                                       @"error" : @"No access with ACL."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        
+        NCMBObject *object = [NCMBObject objectWithClassName:@"test"];
+        object.objectId = @"7FrmPTBKSNtVjajm";
+        NSError *error = nil;
+        [object delete:&error];
+        expect(error).beTruthy();
+        expect(object.objectId).beTruthy();
+        expect(error.code).to.equal(@403001);
+        expect([error localizedDescription]).to.equal(@"No access with ACL.");
+    });
+    
+});
+
+afterEach(^{
+    
+});
+
+afterAll(^{
+    
 });
 
 SpecEnd

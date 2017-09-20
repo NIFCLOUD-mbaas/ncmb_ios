@@ -16,6 +16,9 @@
 
 #import "NCMBError.h"
 
+
+NSErrorDomain const kNCMBErrorDomain = @"com.nifty.cloud.mb";
+
 NSInteger const NCMBErrorFacebookLoginCancelled = 401004;
 
 NSString const *kNCMBErrorInvalidJson = @"E400001";

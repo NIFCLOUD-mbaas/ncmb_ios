@@ -17,6 +17,8 @@
 
 #import <Foundation/Foundation.h>
 
+/*! @abstract ncmb error domain */
+extern NSErrorDomain const kNCMBErrorDomain;
 
 extern NSInteger const NCMBErrorFacebookLoginCancelled;
 
