@@ -23,6 +23,10 @@
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
 @interface NCMBQuery (Private)
+@property (nonatomic) NSMutableDictionary *query;
+
+- (void)setCondition:(id)object forKey:(NSString*)key operand:(NSString*)operand;
+
 -(NSDateFormatter*)createNCMBDateFormatter;
 @end
 
@@ -72,6 +76,24 @@ describe(@"NCMBQuery", ^{
         
     });
     
+    it(@"should work normally in ContainedIn method", ^{
+        
+        NCMBQuery *query = [NCMBQuery queryWithClassName:@"test"];
+        NCMBQuery *query2 = [NCMBQuery queryWithClassName:@"test"];
+        
+        [query whereKey:@"key" containedInArrayTo:@[@"value"]];
+        [query2 setCondition:@[@"value"] forKey:@"key" operand:@"$inArray"];
+        
+        [query whereKey:@"key" notContainedInArrayTo:@[@"value"]];
+        [query2 setCondition:@[@"value"] forKey:@"key" operand:@"$ninArray"];
+        
+        [query whereKey:@"key" containsAllObjectsInArrayTo:@[@"value"]];
+        [query2 setCondition:@[@"value"] forKey:@"key" operand:@"$all"];
+        
+        expect(query.query).to.equal(query2.query);
+        
+    });
+       
     it(@"should create date formatter with a specification format", ^{
         
         NCMBQuery *query = [NCMBQuery queryWithClassName:@"test"];
