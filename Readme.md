@@ -23,8 +23,8 @@
 
 ## 動作環境
 
-- iOS 5.1 ～ iOS 10.x
-- Xcode6.x ～ Xcode8.x
+- iOS 9.x ～ iOS 11.x
+- Xcode7.x ～ Xcode9.x
 - armv7, armv7s, arm64アーキテクチャ
 - iOS/Xcodeのバージョンに依って対応が必要となる可能性があります。詳細はニフティクラウドmobile backendの[ドキュメント](http://mb.cloud.nifty.com/doc/current/)をご覧ください。
 
