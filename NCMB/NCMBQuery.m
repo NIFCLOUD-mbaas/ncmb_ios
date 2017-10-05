@@ -16,7 +16,7 @@
 
 #import "NCMB.h"
 
-#import "NCMBURLConnection.h"
+#import "NCMBURLSession.h"
 
 #import "NCMBObject+Private.h"
 #import "NCMBObject+Subclass.h"
@@ -26,11 +26,16 @@
 #import <objc/runtime.h>
 #import "NCMBDateFormat.h"
 
+@interface NCMBQuery(){
+    dispatch_semaphore_t semaphore;
+}
+@end
+
 @interface NCMBQuery ()
 
 @property (nonatomic)NSMutableDictionary *query;
 @property (nonatomic)NSMutableArray *orderFieldsAry;
-@property (nonatomic)NCMBURLConnection *connection;
+@property (nonatomic)NCMBURLSession *session;
 @property (nonatomic)NSURLRequestCachePolicy cachePolicy;
 
 @end
@@ -163,15 +168,15 @@
     [self setCondition:array forKey:key operand:@"$nin"];
 }
 
-- (void)whereKey:(NSString *)key containedInArray:(NSArray *)array{
+- (void)whereKey:(NSString *)key containedInArrayTo:(NSArray *)array{
     [self setCondition:array forKey:key operand:@"$inArray"];
 }
 
-- (void)whereKey:(NSString *)key notContainedInArray:(NSArray *)array{
+- (void)whereKey:(NSString *)key notContainedInArrayTo:(NSArray *)array{
     [self setCondition:array forKey:key operand:@"$ninArray"];
 }
 
-- (void)whereKey:(NSString *)key containsAllObjectsInArray:(NSArray *)array{
+- (void)whereKey:(NSString *)key containsAllObjectsInArrayTo:(NSArray *)array{
     [self setCondition:array forKey:key operand:@"$all"];
 }
 
@@ -321,32 +326,50 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
  @return 検索結果をNSArray型で返却する
  */
 - (NSArray*)findObjects:(NSError**)error{
-    //NCMBURLConnectionを用意
-    NCMBURLConnection *connect = [self createConnectionForSearch:_query countEnableFlag:NO getFirst:NO];
+    semaphore = dispatch_semaphore_create(0);
     
-    //同期通信を実行
-    NSDictionary *response = [connect syncConnection:error];
-    NSMutableArray *results = [NSMutableArray arrayWithArray:[response objectForKey:@"results"]];
-    NSMutableArray *objects = [NSMutableArray array];
-    for (NSDictionary *jsonObj in [results objectEnumerator]){
-        [objects addObject:[NCMBObject convertClass:[NSMutableDictionary dictionaryWithDictionary:jsonObj] ncmbClassName:_ncmbClassName]];
+    NCMBRequest *request = [self createRequestForSearch:_query countEnableFlag:NO getFirst:NO];
+    NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestSync:request];
+    
+    // 通信
+    NSError __block *sessionError = nil;
+    NSMutableArray __block *objects = [NSMutableArray array];
+    [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
+        if (requestError){
+            sessionError = requestError;
+        } else {
+            NSMutableArray *results = [NSMutableArray arrayWithArray:[responseData objectForKey:@"results"]];
+            for (NSDictionary *jsonObj in [results objectEnumerator]){
+                [objects addObject:[NCMBObject convertClass:[NSMutableDictionary dictionaryWithDictionary:jsonObj] ncmbClassName:_ncmbClassName]];
+            }
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    dispatch_release(semaphore);
+    if(error){
+        *error = sessionError;
     }
+    
     return objects;
 }
 
 - (void)findObjectsInBackgroundWithBlock:(NCMBArrayResultBlock)block{
-    _connection = [self createConnectionForSearch:_query countEnableFlag:NO getFirst:NO];
+    NCMBRequest *request = [self createRequestForSearch:_query countEnableFlag:NO getFirst:NO];
+    _session = [[NCMBURLSession alloc] initWithRequestAsync:request];
     
-    [_connection asyncConnectionWithBlock:^(id response, NSError *error) {
-        NSDictionary *responseDic = response;
+    //非同期通信を実行
+    [_session dataAsyncConnectionWithBlock:^(id responseData, NSError *error) {
+        NSDictionary *responseDic = responseData;
         NSMutableArray *results = [NSMutableArray arrayWithArray:[responseDic objectForKey:@"results"]];
         NSMutableArray *objects = [NSMutableArray array];
         for (NSDictionary *jsonObj in [results objectEnumerator]){
             [objects addObject:[NCMBObject convertClass:[NSMutableDictionary dictionaryWithDictionary:jsonObj] ncmbClassName:_ncmbClassName]];
         }
-        if (block){
-            block(objects, error);
-        }
+        
+        // コールバック実行
+        [self executeUserCallback:block array:objects error:error];
     }];
 }
 
@@ -366,7 +389,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
     }];
 }
 
-- (NCMBURLConnection*)createConnectionForSearch:(NSMutableDictionary*)queryDic countEnableFlag:(BOOL)countEnableFlag getFirst:(BOOL)getFirstFlag{
+- (NCMBRequest*)createRequestForSearch:(NSMutableDictionary*)queryDic countEnableFlag:(BOOL)countEnableFlag getFirst:(BOOL)getFirstFlag{
     NSDictionary *endpoint = @{@"user":@"users",
                                @"role":@"roles",
                                @"installation":@"installations",
@@ -389,18 +412,43 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
             queryStr = [queryStr stringByAppendingString:[NSString stringWithFormat:@"&%@",queryArray[i]]];
         }
     }
+    
     [baseUrl appendString:[NSString stringWithFormat:@"?%@", queryStr]];
-    return [[NCMBURLConnection alloc] initWithPath:baseUrl method:@"GET" data:[queryStr dataUsingEncoding:NSUTF8StringEncoding] cachePolicy:_cachePolicy];
+    
+    NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:baseUrl
+                                                           method:@"GET"
+                                                           header:nil
+                                                             body:nil];
+
+    return request;
 }
 
 #pragma mark - getFirstObject
 
 - (id)getFirstObject:(NSError **)error{
-    //NCMBURLConnectionを用意
-    NCMBURLConnection *connect = [self createConnectionForSearch:_query countEnableFlag:NO getFirst:YES];
-    //同期通信を実行
-    NSDictionary *response = [connect syncConnection:error];
-    NSMutableArray *results = [NSMutableArray arrayWithArray:[response objectForKey:@"results"]];
+    semaphore = dispatch_semaphore_create(0);
+    
+    NCMBRequest *request = [self createRequestForSearch:_query countEnableFlag:NO getFirst:NO];
+    NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestSync:request];
+    
+    // 通信
+    NSError __block *sessionError = nil;
+    NSMutableArray __block *results = nil;
+    [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
+        if (requestError){
+            sessionError = requestError;
+        } else {
+            NSDictionary *responseDic = responseData;
+            results = [NSMutableArray arrayWithArray:[responseDic objectForKey:@"results"]];
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    dispatch_release(semaphore);
+    if(error){
+        *error = sessionError;
+    }
     
     if ([results count] == 0){
         return nil;
@@ -412,18 +460,18 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 
 
 - (void)getFirstObjectInBackgroundWithBlock:(NCMBAnyObjectResultBlock)block{
-    //NCMBURLConnectionを用意
-    _connection = [self createConnectionForSearch:_query countEnableFlag:NO getFirst:YES];
-    
-    [_connection asyncConnectionWithBlock:^(id response, NSError *error) {
-        NSDictionary *responseDic = response;
-        NSMutableArray *results = [NSMutableArray arrayWithArray:[responseDic objectForKey:@"results"]];
-        if (block){
-            if ([results count] == 0){
-                block(nil, error);
-            } else {
-                block([NCMBObject convertClass:results[0] ncmbClassName:_ncmbClassName], error);
+    NCMBRequest *request = [self createRequestForSearch:_query countEnableFlag:NO getFirst:YES];
+    _session = [[NCMBURLSession alloc] initWithRequestAsync:request];
+    //非同期通信を実行
+    [_session dataAsyncConnectionWithBlock:^(id responseData, NSError *error) {
+        if(block){
+            NSDictionary *responseDic = responseData;
+            NSMutableArray *results = [NSMutableArray arrayWithArray:[responseDic objectForKey:@"results"]];
+            NCMBObject *obj = nil;
+            if ([results count] != 0){
+                obj = [NCMBObject convertClass:results[0] ncmbClassName:_ncmbClassName];
             }
+            block(obj,error);
         }
     }];
 }
@@ -447,11 +495,27 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 #pragma mark - countObject
 
 - (NSInteger)countObjects:(NSError **)error{
-    //NCMBURLConnectionを用意
-    NCMBURLConnection *connect = [self createConnectionForSearch:_query countEnableFlag:YES getFirst:NO];
+    semaphore = dispatch_semaphore_create(0);
+    NCMBRequest *request = [self createRequestForSearch:_query countEnableFlag:YES getFirst:NO];
+    NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestSync:request];
     
-    //同期通信を実行
-    NSDictionary *response = [connect syncConnection:error];
+    // 通信
+    NSError __block *sessionError = nil;
+    NSDictionary __block *response = nil;
+    [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
+        if (requestError){
+            sessionError = requestError;
+        } else {
+            response = responseData;
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    dispatch_release(semaphore);
+    
+    if(error){
+        *error = sessionError;
+    }
     if ([[response allKeys] containsObject:@"count"]){
         return [[response objectForKey:@"count"] intValue];
     }
@@ -459,13 +523,15 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 }
 
 - (void)countObjectsInBackgroundWithBlock:(NCMBIntegerResultBlock)block{
-    //NCMBURLConnectionを用意
-    _connection = [self createConnectionForSearch:_query countEnableFlag:YES getFirst:NO];
+    NCMBRequest *request = [self createRequestForSearch:_query countEnableFlag:YES getFirst:NO];
+    _session = [[NCMBURLSession alloc] initWithRequestSync:request];
     
-    [_connection asyncConnectionWithBlock:^(id response, NSError *error) {
+    [_session dataAsyncConnectionWithBlock:^(id response, NSError *error) {
         NSDictionary *responseDic = response;
         if ([[responseDic allKeys] containsObject:@"count"]){
             block([[response objectForKey:@"count"] intValue], error);
+        }else{
+            block(0, error);
         }
     }];
 }
@@ -489,12 +555,30 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 #pragma mark - getObjectWithId
 
 -(NCMBObject*)getObjectWithId:(NSString *)objectId error:(NSError **)error{
+    semaphore = dispatch_semaphore_create(0);
     NSMutableDictionary *queryDic = [NSMutableDictionary dictionaryWithDictionary:@{@"objectId":objectId}];
-    NCMBURLConnection *connect = [self createConnectionForSearch:queryDic countEnableFlag:NO getFirst:YES];
     
-    //同期通信を実行
-    NSDictionary *response = [connect syncConnection:error];
-    NSMutableArray *results = [NSMutableArray arrayWithArray:[response objectForKey:@"results"]];
+    NCMBRequest *request = [self createRequestForSearch:queryDic countEnableFlag:NO getFirst:YES];
+    NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestSync:request];
+    
+    // 通信
+    NSError __block *sessionError = nil;
+    NSMutableArray __block *results = nil;
+    [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
+        if (requestError){
+            sessionError = requestError;
+        } else {
+            results = [NSMutableArray arrayWithArray:[responseData objectForKey:@"results"]];
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    dispatch_release(semaphore);
+    
+    if(error){
+        *error = sessionError;
+    }
+    
     if ([results count] == 0){
         return nil;
     } else {
@@ -504,9 +588,11 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 
 - (void)getObjectInBackgroundWithId:(NSString *)objectId block:(NCMBObjectResultBlock)block{
     NSMutableDictionary *queryDic = [NSMutableDictionary dictionaryWithDictionary:@{@"objectId":objectId}];
-    _connection = [self createConnectionForSearch:queryDic countEnableFlag:NO getFirst:YES];
+
+    NCMBRequest *request = [self createRequestForSearch:queryDic countEnableFlag:NO getFirst:YES];
+    _session = [[NCMBURLSession alloc] initWithRequestSync:request];
     
-    [_connection asyncConnectionWithBlock:^(id response, NSError *error) {
+    [_session dataAsyncConnectionWithBlock:^(id response, NSError *error) {
         NSDictionary *responseDic = response;
         NSMutableArray *results = [NSMutableArray arrayWithArray:[responseDic objectForKey:@"results"]];
         if (block){
@@ -561,8 +647,10 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 #pragma mark - cancel
 
 - (void)cancel{
-    [_connection cancel];
-    _connection = nil;
+    if (_session.dataTask !=nil && _session.dataTask.state == NSURLSessionTaskStateRunning) {
+        [_session.dataTask cancel];
+        _session = nil;
+    }
 }
 
 #pragma mark - Cache Configuration
@@ -579,14 +667,16 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 }
 
 - (void)clearCachedResult{
-    NCMBURLConnection *connection = [self createConnectionForSearch:_query countEnableFlag:NO getFirst:NO];
-    [[NSURLCache sharedURLCache] removeCachedResponseForRequest:connection.request];
+    NCMBRequest *request = [self createRequestForSearch:_query countEnableFlag:NO getFirst:NO];
+    NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestAsync:request];
+    [[NSURLCache sharedURLCache] removeCachedResponseForRequest:session.request];
 }
 
 -(BOOL)hasCachedResult{
     BOOL result = NO;
-    NCMBURLConnection *connection = [self createConnectionForSearch:_query countEnableFlag:NO getFirst:NO];
-    if([[NSURLCache sharedURLCache] cachedResponseForRequest:connection.request] != nil){
+    NCMBRequest *request = [self createRequestForSearch:_query countEnableFlag:NO getFirst:NO];
+    NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestAsync:request];
+    if([[NSURLCache sharedURLCache] cachedResponseForRequest:session.request] != nil){
         result = YES;
     }
     return result;
@@ -842,6 +932,13 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
 - (NSDictionary*)getQueryDictionary{
     //return [self checkQueryDictionary:_query];
     return _query;
+}
+
+// コールバック実行
+- (void)executeUserCallback:(NCMBArrayResultBlock)userCallback array:(NSArray*)array error:(NSError*)error{
+    if(userCallback){
+        userCallback(array,error);
+    }
 }
 
 @end

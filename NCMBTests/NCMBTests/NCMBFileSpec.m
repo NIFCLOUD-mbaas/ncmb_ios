@@ -108,6 +108,133 @@ describe(@"NCMBFile", ^{
         });
     });
     
+    it(@"getData system test", ^{
+        NSData *responseData = [@"NIFTY Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
+        
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"text/plain;charset=UTF-8"}];
+        }];
+        
+        NCMBFile *file = [NCMBFile fileWithName:@"ncmb.txt" data:nil];
+        NSError *error = nil;
+        NSData *data = [file getData:&error];
+        expect(error).beNil();
+        expect(data).beTruthy();
+        expect(data).to.equal(responseData);
+    });
+    
+    it(@"getData error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E403001",
+                                       @"error" : @"No access with ACL."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        
+        NCMBFile *file = [NCMBFile fileWithName:@"ncmb.txt" data:nil];
+        NSError *error = nil;
+        NSData *data = [file getData:&error];
+        expect(data).beNil();
+        expect(error).beTruthy();
+        expect(error.code).to.equal(@403001);
+        expect([error localizedDescription]).to.equal(@"No access with ACL.");
+    });
+    
+    it(@"saveInBackgroundWithBlock system test", ^{
+        NSDictionary *responseDic = @{ @"fileName" : @"ncmb.txt",
+                                       @"createDate" : @"2013-08-28T03:02:29.970Z"} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NSData *fileData = [@"NIFTY Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
+            NCMBFile *file = [NCMBFile fileWithName:@"ncmb.txt" data:fileData];
+            [file saveInBackgroundWithBlock:^(NSError *error) {
+                expect(error).beNil();
+                expect(file.name).to.equal(@"ncmb.txt");
+                done();
+            }];
+        });
+    });
+    
+    it(@"saveInBackgroundWithBlock error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E403001",
+                                       @"error" : @"No access with ACL."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NSData *fileData = [@"NIFTY Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
+            NCMBFile *file = [NCMBFile fileWithName:@"ncmb.txt" data:fileData];
+            [file saveInBackgroundWithBlock:^(NSError *error) {
+                expect(error).beTruthy();
+                expect(error.code).to.equal(@403001);
+                expect([error localizedDescription]).to.equal(@"No access with ACL.");
+                done();
+            }];
+        });
+    });
+    
+    it(@"save system test", ^{
+        NSDictionary *responseDic = @{ @"objectId" : @"U6TztFwTDrGSD88N",
+                                       @"createDate" : @"2013-08-28T03:02:29.970Z"} ;
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NSData *fileData = [@"NIFTY Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
+        NCMBFile *file = [NCMBFile fileWithName:@"ncmb.txt" data:fileData];
+        NSError *error = nil;
+        [file save:&error];
+        expect(error).beNil();
+        expect(file.name).to.equal(@"ncmb.txt");
+    });
+    
+    it(@"save error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E403001",
+                                       @"error" : @"No access with ACL."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NSData *fileData = [@"NIFTY Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
+        NCMBFile *file = [NCMBFile fileWithName:@"ncmb.txt" data:fileData];
+        NSError *error = nil;
+        [file save:&error];
+        expect(error).beTruthy();
+        expect(error.code).to.equal(@403001);
+        expect([error localizedDescription]).to.equal(@"No access with ACL.");
+    });
+    
     afterEach(^{
         
     });

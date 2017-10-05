@@ -17,8 +17,8 @@
 #import <UIKit/UIKit.h>
 #import "NCMBAnalytics.h"
 #import "NCMBPush.h"
-#import "NCMBURLConnection.h"
 #import "NCMBInstallation.h"
+#import "NCMBURLSession.h"
 
 @implementation NCMBAnalytics
 
@@ -35,14 +35,15 @@
         NSDictionary *requestData = @{@"deviceType":installation.deviceType,
                                      @"deviceToken":installation.deviceToken
                                      };
-        NSError *error = nil;
-        NSData *json = [NSJSONSerialization dataWithJSONObject:requestData
-                                                       options:kNilOptions
-                                                         error:&error];
+ 
         NSString *url = [NSString stringWithFormat:@"push/%@/openNumber", pushId];
-        NCMBURLConnection *connect = [[NCMBURLConnection alloc] initWithPath:url
-                                                                      method:@"POST" data:json];
-        [connect asyncConnectionWithBlock:nil];
+        NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:url
+                                                               method:@"POST"
+                                                               header:nil
+                                                                 body:requestData];
+        
+        NCMBURLSession *session = [[NCMBURLSession alloc] initWithProgress:request progress:nil];
+        [session dataAsyncConnectionWithBlock:nil];
         [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     }
 }

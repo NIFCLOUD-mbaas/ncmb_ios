@@ -19,7 +19,6 @@
 #import <NCMB/NCMB.h>
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
-#import "NCMBURLConnection.h"
 
 @interface NCMBInstallation (Private)
 - (void)afterFetch:(NSMutableDictionary*)response isRefresh:(BOOL)isRefresh;
@@ -53,7 +52,7 @@ describe(@"NCMBInstallation", ^{
                                                        },
                                                @"applicationName" : @"aaaa",
                                                @"objectId" : @"EVMu2ne7bjzZhOW2",
-                                               @"sdkVersion" : @"2.3.7"
+                                               @"sdkVersion" : @"2.4.0"
                                                };
     
     NSDictionary *responseInstallation = @{@"channels" : @[

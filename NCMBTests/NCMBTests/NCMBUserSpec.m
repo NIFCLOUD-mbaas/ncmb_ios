@@ -127,8 +127,8 @@ describe(@"NCMBUser", ^{
             __unsafe_unretained void (^block) (NSError *error);
             [invocation getArgument:&block atIndex:2];
             NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
-                                                 code:-1
-                                             userInfo:nil];
+                                             code:-1
+                                         userInfo:nil];
             block(e);
         };
         
@@ -223,7 +223,7 @@ describe(@"NCMBUser", ^{
                                       @"oauth_token_secret" : @"twitterOauthTokenSecret",
                                       @"screen_name" : @"NCMBSupport"
                                       };
-
+        
         NSDictionary *facebookInfo = @{@"id" : @"facebookId",
                                        @"access_token" : @"facebookToken",
                                        @"expiration_date":@{@"__type" : @"Date",@"iso" : @"2016-09-06T05:41:33.466Z"}
@@ -397,7 +397,7 @@ describe(@"NCMBUser", ^{
             }
         }];
     });
-
+    
     
     
     it(@"should is linked google token with user", ^{
@@ -483,8 +483,8 @@ describe(@"NCMBUser", ^{
         [mock unlink:@"google" withBlock:^(NSError *error) {
             
             NSError *tokenError = [NSError errorWithDomain:ERRORDOMAIN
-                                                 code:404003
-                                             userInfo:@{NSLocalizedDescriptionKey:@"token not found"}];
+                                                      code:404003
+                                                  userInfo:@{NSLocalizedDescriptionKey:@"token not found"}];
             
             expect(error).to.equal(tokenError);
         }];
@@ -673,7 +673,7 @@ describe(@"NCMBUser", ^{
             }
         }];
     });
-        
+    
     it(@"should unlink facebook token with user", ^{
         
         NSDictionary *facebookInfo = @{@"id" : @"facebookId",
@@ -798,7 +798,7 @@ describe(@"NCMBUser", ^{
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
             return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
-           
+            
             NSMutableDictionary *responseDic = [@{
                                                   @"createDate" : @"2017-01-31T04:13:03.065Z",
                                                   @"objectId" : @"e4YWYnYtcptTIV23",
@@ -878,7 +878,7 @@ describe(@"NCMBUser", ^{
             }];
         });
     });
-
+    
     it(@"should signUp with facebook token", ^{
         
         NSDictionary *facebookInfo = @{@"id" : @"facebookId",
@@ -1181,6 +1181,430 @@ describe(@"NCMBUser", ^{
                 }];
             }];
         });
+    });
+    
+    it(@"signUpInBackgroundWithBlock system test", ^{
+        NSDictionary *responseDic = @{ @"objectId" : @"epaKcaYZqsREdSMY",
+                                       @"sessionToken" : @"iXDIelJRY3ULBdms281VTmc5O",
+                                       @"userName" : @"NCMBUser",
+                                       @"createDate" : @"2013-08-28T11:27:16.446Z"} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBUser *user = [NCMBUser user];
+            user.userName = @"NCMBUser";
+            user.password = @"password";
+            [user setObject:@"value" forKey:@"key"];
+            [user signUpInBackgroundWithBlock:^(NSError *error) {
+                expect(error).beNil();
+                NCMBUser *currentUser = NCMBUser.currentUser;
+                expect(currentUser.objectId).to.equal(@"epaKcaYZqsREdSMY");
+                expect(currentUser.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
+                expect(currentUser.userName).to.equal(@"NCMBUser");
+                expect([currentUser objectForKey:@"key"]).to.equal(@"value");
+                done();
+            }];
+        });
+    });
+    
+    it(@"signUpInBackgroundWithBlock error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            NCMBUser *user = [NCMBUser user];
+            user.userName = @"NCMBUser";
+            user.password = @"password";
+            [user setObject:@"value" forKey:@"key"];
+            [user signUpInBackgroundWithBlock:^(NSError *error) {
+                expect(error).beTruthy();
+                expect(error.code).to.equal(@400000);
+                expect([error localizedDescription]).to.equal(@"Bad Request.");
+                done();
+            }];
+        });
+    });
+    
+    it(@"signUp system test", ^{
+        NSDictionary *responseDic = @{ @"objectId" : @"epaKcaYZqsREdSMY",
+                                       @"sessionToken" : @"iXDIelJRY3ULBdms281VTmc5O",
+                                       @"userName" : @"NCMBUser",
+                                       @"createDate" : @"2013-08-28T11:27:16.446Z"} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NCMBUser *user = [NCMBUser user];
+        user.userName = @"NCMBUser";
+        user.password = @"password";
+        [user setObject:@"value" forKey:@"key"];
+        NSError *error = nil;
+        [user signUp:&error];
+        expect(error).beNil();
+        NCMBUser *currentUser = NCMBUser.currentUser;
+        expect(currentUser.objectId).to.equal(@"epaKcaYZqsREdSMY");
+        expect(currentUser.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
+        expect(currentUser.userName).to.equal(@"NCMBUser");
+        expect([currentUser objectForKey:@"key"]).to.equal(@"value");
+    });
+    
+    it(@"signUp error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        
+        NCMBUser *user = [NCMBUser user];
+        user.userName = @"NCMBUser";
+        user.password = @"password";
+        [user setObject:@"value" forKey:@"key"];
+        NSError *error = nil;
+        [user save:&error];
+        expect(error).beTruthy();
+        expect(error.code).to.equal(@400000);
+        expect([error localizedDescription]).to.equal(@"Bad Request.");
+    });
+    
+    it(@"logInWithUsernameInBackground system test", ^{
+        NSDictionary *responseDic = @{ @"objectId" : @"09Mp23m4bEOInUqT",
+                                       @"mailAddress" : [NSNull null],
+                                       @"mailAddressConfirm" : [NSNull null],
+                                       @"sessionToken" : @"iXDIelJRY3ULBdms281VTmc5O",
+                                       @"updateDate" : @"2013-08-30T05:32:03.868Z",
+                                       @"userName" : @"NCMBUser",
+                                       @"key":@"value",
+                                       @"createDate" : @"2013-08-28T07:46:09.801Z"} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            [NCMBUser logInWithUsernameInBackground:@"NCMBUser" password:@"password" block:^(NCMBUser *user, NSError *error) {
+                expect(error).beNil();
+                expect(user.objectId).to.equal(@"09Mp23m4bEOInUqT");
+                expect(user.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
+                expect(user.userName).to.equal(@"NCMBUser");
+                expect([user objectForKey:@"key"]).to.equal(@"value");
+                
+                NCMBUser *currentUser = NCMBUser.currentUser;
+                expect(currentUser.objectId).to.equal(@"09Mp23m4bEOInUqT");
+                expect(currentUser.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
+                expect(currentUser.userName).to.equal(@"NCMBUser");
+                expect([currentUser objectForKey:@"key"]).to.equal(@"value");
+                done();
+            }];
+        });
+    });
+    
+    it(@"logInWithUsernameInBackground error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            [NCMBUser logInWithUsernameInBackground:@"NCMBUser" password:@"password" block:^(NCMBUser *user, NSError *error) {
+                expect(user).beNil();
+                expect(error).beTruthy();
+                expect(error.code).to.equal(@400000);
+                expect([error localizedDescription]).to.equal(@"Bad Request.");
+                done();
+            }];
+        });
+    });
+    
+    it(@"logInWithUsername system test", ^{
+        NSDictionary *responseDic = @{ @"objectId" : @"09Mp23m4bEOInUqT",
+                                       @"mailAddress" : [NSNull null],
+                                       @"mailAddressConfirm" : [NSNull null],
+                                       @"sessionToken" : @"iXDIelJRY3ULBdms281VTmc5O",
+                                       @"updateDate" : @"2013-08-30T05:32:03.868Z",
+                                       @"userName" : @"NCMBUser",
+                                       @"key" : @"value",
+                                       @"createDate" : @"2013-08-28T07:46:09.801Z"} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NSError *error = nil;
+        NCMBUser *user = [NCMBUser logInWithUsername:@"NCMBUser" password:@"password" error:&error];
+        expect(error).beNil();
+        expect(user.objectId).to.equal(@"09Mp23m4bEOInUqT");
+        expect(user.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
+        expect(user.userName).to.equal(@"NCMBUser");
+        expect([user objectForKey:@"key"]).to.equal(@"value");
+        
+        NCMBUser *currentUser = NCMBUser.currentUser;
+        expect(currentUser.objectId).to.equal(@"09Mp23m4bEOInUqT");
+        expect(currentUser.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
+        expect(currentUser.userName).to.equal(@"NCMBUser");
+        expect([currentUser objectForKey:@"key"]).to.equal(@"value");
+        
+    });
+    
+    it(@"logInWithUsername error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NSError *error = nil;
+        NCMBUser *user = [NCMBUser logInWithUsername:@"NCMBUser" password:@"password" error:&error];
+        expect(user).beNil();
+        expect(error).beTruthy();
+        expect(error.code).to.equal(@400000);
+        expect([error localizedDescription]).to.equal(@"Bad Request.");
+    });
+    
+    it(@"logOutInBackgroundWithBlock system test", ^{
+        NSDictionary *responseDic = @{} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            [NCMBUser logOutInBackgroundWithBlock:^(NSError *error) {
+                expect(error).beNil();
+                NCMBUser *user = NCMBUser.currentUser;
+                expect(user.objectId).beNil();
+                expect(user.sessionToken).beNil();
+                expect(user.userName).beNil();
+                done();
+            }];
+        });
+    });
+    
+    it(@"logOutInBackgroundWithBlock error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            [NCMBUser logOutInBackgroundWithBlock:^( NSError *error) {
+                expect(error).beTruthy();
+                expect(error.code).to.equal(@400000);
+                expect([error localizedDescription]).to.equal(@"Bad Request.");
+                
+                NCMBUser *user = NCMBUser.currentUser;
+                expect(user.objectId).beNil();
+                expect(user.sessionToken).beNil();
+                expect(user.userName).beNil();
+                done();
+            }];
+        });
+    });
+    
+    it(@"requestAuthenticationMailInBackground system test", ^{
+        NSDictionary *responseDic = @{ @"createDate" : @"2013-09-04T04:31:43.371Z"} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            [NCMBUser requestAuthenticationMailInBackground:@"your.mailaddress@example.com" block:^(NSError *error) {
+                expect(error).beNil();
+                done();
+            }];
+        });
+    });
+    
+    it(@"requestAuthenticationMailInBackground error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            [NCMBUser requestAuthenticationMailInBackground:@"your.mailaddress@example.com" block:^(NSError *error) {
+                expect(error).beTruthy();
+                expect(error.code).to.equal(@400000);
+                expect([error localizedDescription]).to.equal(@"Bad Request.");
+                done();
+            }];
+        });
+    });
+    
+    it(@"requestAuthenticationMail system test", ^{
+        NSDictionary *responseDic = @{ @"createDate" : @"2013-09-04T04:31:43.371Z"} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NSError *error = nil;
+        [NCMBUser requestAuthenticationMail:@"your.mailaddress@example.com" error:&error];
+        expect(error).beNil();
+    });
+    
+    it(@"requestAuthenticationMail error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NSError *error = nil;
+        [NCMBUser requestAuthenticationMail:@"your.mailaddress@example.com" error:&error];
+        expect(error).beTruthy();
+        expect(error.code).to.equal(@400000);
+        expect([error localizedDescription]).to.equal(@"Bad Request.");
+    });
+    
+    it(@"requestPasswordResetForEmailInBackground system test", ^{
+        NSDictionary *responseDic = @{ @"createDate" : @"2013-09-04T04:31:43.371Z"} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            [NCMBUser requestPasswordResetForEmailInBackground:@"your.mailaddress@example.com" block:^(NSError *error) {
+                expect(error).beNil();
+                done();
+            }];
+        });
+    });
+    
+    it(@"requestPasswordResetForEmailInBackground error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            [NCMBUser requestPasswordResetForEmailInBackground:@"your.mailaddress@example.com" block:^(NSError *error) {
+                expect(error).beTruthy();
+                expect(error.code).to.equal(@400000);
+                expect([error localizedDescription]).to.equal(@"Bad Request.");
+                done();
+            }];
+        });
+    });
+    
+    it(@"requestPasswordResetForEmail system test", ^{
+        NSDictionary *responseDic = @{ @"createDate" : @"2013-09-04T04:31:43.371Z"} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NSError *error = nil;
+        [NCMBUser requestPasswordResetForEmail:@"your.mailaddress@example.com" error:&error];
+        expect(error).beNil();
+    });
+    
+    it(@"requestPasswordResetForEmail error test", ^{
+        NSDictionary *responseDic = @{ @"code" : @"E400000",
+                                       @"error" : @"Bad Request."} ;
+        
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        NSError *error = nil;
+        [NCMBUser requestPasswordResetForEmail:@"your.mailaddress@example.com" error:&error];
+        expect(error).beTruthy();
+        expect(error.code).to.equal(@400000);
+        expect([error localizedDescription]).to.equal(@"Bad Request.");
     });
     
     afterEach(^{
