@@ -47,8 +47,6 @@
 		8AB2CEA51CE315F800F27481 /* NCMBScriptService.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE341CE315F800F27481 /* NCMBScriptService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CEA61CE315F800F27481 /* NCMBScriptService.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE351CE315F800F27481 /* NCMBScriptService.m */; };
 		8AB2CEA71CE315F800F27481 /* NCMBSubclassing.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE361CE315F800F27481 /* NCMBSubclassing.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8AB2CEC81CE315F800F27481 /* NCMBURLConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE5C1CE315F800F27481 /* NCMBURLConnection.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		8AB2CEC91CE315F800F27481 /* NCMBURLConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE5D1CE315F800F27481 /* NCMBURLConnection.m */; };
 		8AB2CECA1CE315F800F27481 /* NCMBUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE5E1CE315F800F27481 /* NCMBUser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CECB1CE315F800F27481 /* NCMBUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE5F1CE315F800F27481 /* NCMBUser.m */; };
 		8AB2CECC1CE315F800F27481 /* NSDataBase64Encode.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE611CE315F800F27481 /* NSDataBase64Encode.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -73,9 +71,11 @@
 		8AB2CEE01CE315F800F27481 /* NCMBUser+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE771CE315F800F27481 /* NCMBUser+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CEE11CE315F800F27481 /* SubClassHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CE791CE315F800F27481 /* SubClassHandler.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8AB2CEE21CE315F800F27481 /* SubClassHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE7A1CE315F800F27481 /* SubClassHandler.m */; };
+		99AE1ACD1F94B854005EA065 /* NCMBURLSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 99AE1ACB1F94B854005EA065 /* NCMBURLSession.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		99AE1ACE1F94B854005EA065 /* NCMBURLSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 99AE1ACC1F94B854005EA065 /* NCMBURLSession.m */; };
 		9D4B643D1ED42873008B015B /* NCMBDateFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D4B643B1ED42873008B015B /* NCMBDateFormat.m */; };
 		9D4B643F1ED432B9008B015B /* NCMBDateFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D4B643A1ED42873008B015B /* NCMBDateFormat.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		9DB041451EFCDD6E00BDEFFC /* NCMBRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DB041431EFCDD6E00BDEFFC /* NCMBRequest.h */; };
+		9DB041451EFCDD6E00BDEFFC /* NCMBRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DB041431EFCDD6E00BDEFFC /* NCMBRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DB041461EFCDD6E00BDEFFC /* NCMBRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DB041441EFCDD6E00BDEFFC /* NCMBRequest.m */; };
 /* End PBXBuildFile section */
 
@@ -148,6 +148,8 @@
 		8AB2CE791CE315F800F27481 /* SubClassHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubClassHandler.h; sourceTree = "<group>"; };
 		8AB2CE7A1CE315F800F27481 /* SubClassHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubClassHandler.m; sourceTree = "<group>"; };
 		8AB2CF1C1CE32C1000F27481 /* NCMB_Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = NCMB_Info.plist; sourceTree = "<group>"; };
+		99AE1ACB1F94B854005EA065 /* NCMBURLSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NCMBURLSession.h; path = NCMBURLSession/NCMBURLSession.h; sourceTree = "<group>"; };
+		99AE1ACC1F94B854005EA065 /* NCMBURLSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NCMBURLSession.m; path = NCMBURLSession/NCMBURLSession.m; sourceTree = "<group>"; };
 		9D305C6C1CEDAC990066BFE7 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		9D4B643A1ED42873008B015B /* NCMBDateFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBDateFormat.h; sourceTree = "<group>"; };
 		9D4B643B1ED42873008B015B /* NCMBDateFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBDateFormat.m; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 		8AB2CDFD1CE3153F00F27481 /* NCMB */ = {
 			isa = PBXGroup;
 			children = (
+				99AE1AC91F94B82A005EA065 /* NCMBURLSession */,
 				9DB041421EFCDD6E00BDEFFC /* NCMBRequest */,
 				8AB2CDFE1CE3153F00F27481 /* NCMB.h */,
 				8AB2CE091CE315F800F27481 /* NCMB.m */,
@@ -324,6 +327,15 @@
 			path = SubClassHandler;
 			sourceTree = "<group>";
 		};
+		99AE1AC91F94B82A005EA065 /* NCMBURLSession */ = {
+			isa = PBXGroup;
+			children = (
+				99AE1ACB1F94B854005EA065 /* NCMBURLSession.h */,
+				99AE1ACC1F94B854005EA065 /* NCMBURLSession.m */,
+			);
+			name = NCMBURLSession;
+			sourceTree = "<group>";
+		};
 		9DB041421EFCDD6E00BDEFFC /* NCMBRequest */ = {
 			isa = PBXGroup;
 			children = (
@@ -360,10 +372,10 @@
 				8AB2CE7E1CE315F800F27481 /* NCMBACL.h in Headers */,
 				8AB2CEA51CE315F800F27481 /* NCMBScriptService.h in Headers */,
 				5D9927101EA5FB21008F4319 /* NCMB_umbrella.h in Headers */,
+				9DB041451EFCDD6E00BDEFFC /* NCMBRequest.h in Headers */,
 				8AB2CE9F1CE315F800F27481 /* NCMBRichPushView.h in Headers */,
 				8AB2CEDE1CE315F800F27481 /* NCMBQuery+Private.h in Headers */,
 				8AB2CEDA1CE315F800F27481 /* NCMBSetOperation.h in Headers */,
-				9DB041451EFCDD6E00BDEFFC /* NCMBRequest.h in Headers */,
 				8AB2CECE1CE315F800F27481 /* NCMBAddOperation.h in Headers */,
 				8AB2CED41CE315F800F27481 /* NCMBIncrementOperation.h in Headers */,
 				8AB2CE941CE315F800F27481 /* NCMBObject+Subclass.h in Headers */,
@@ -372,11 +384,11 @@
 				8AB2CED01CE315F800F27481 /* NCMBAddUniqueOperation.h in Headers */,
 				8AB2CED61CE315F800F27481 /* NCMBRelationOperation.h in Headers */,
 				8AB2CED21CE315F800F27481 /* NCMBDeleteOperation.h in Headers */,
-				8AB2CEC81CE315F800F27481 /* NCMBURLConnection.h in Headers */,
 				8AB2CEDF1CE315F800F27481 /* NCMBRelation+Private.h in Headers */,
 				8AB2CECC1CE315F800F27481 /* NSDataBase64Encode.h in Headers */,
 				8AB2CEE11CE315F800F27481 /* SubClassHandler.h in Headers */,
 				8AB2CEDD1CE315F800F27481 /* NCMBObject+Private.h in Headers */,
+				99AE1ACD1F94B854005EA065 /* NCMBURLSession.h in Headers */,
 				8AB2CEE01CE315F800F27481 /* NCMBUser+Private.h in Headers */,
 				9D4B643F1ED432B9008B015B /* NCMBDateFormat.h in Headers */,
 			);
@@ -472,7 +484,7 @@
 				8AB2CE8C1CE315F800F27481 /* NCMBGeoPoint.m in Sources */,
 				8AB2CED51CE315F800F27481 /* NCMBIncrementOperation.m in Sources */,
 				8AB2CE911CE315F800F27481 /* NCMBInstallation.m in Sources */,
-				8AB2CEC91CE315F800F27481 /* NCMBURLConnection.m in Sources */,
+				99AE1ACE1F94B854005EA065 /* NCMBURLSession.m in Sources */,
 				8AB2CE931CE315F800F27481 /* NCMBObject.m in Sources */,
 				8AB2CEE21CE315F800F27481 /* SubClassHandler.m in Sources */,
 				8AB2CED31CE315F800F27481 /* NCMBDeleteOperation.m in Sources */,

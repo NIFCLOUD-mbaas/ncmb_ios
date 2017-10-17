@@ -347,7 +347,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
     }];
     
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    dispatch_release(semaphore);
+    
     if(error){
         *error = sessionError;
     }
@@ -445,7 +445,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
     }];
     
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    dispatch_release(semaphore);
+    
     if(error){
         *error = sessionError;
     }
@@ -511,7 +511,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         dispatch_semaphore_signal(semaphore);
     }];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    dispatch_release(semaphore);
+    
     
     if(error){
         *error = sessionError;
@@ -573,7 +573,7 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         dispatch_semaphore_signal(semaphore);
     }];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    dispatch_release(semaphore);
+    
     
     if(error){
         *error = sessionError;

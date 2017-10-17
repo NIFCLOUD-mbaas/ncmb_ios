@@ -238,7 +238,7 @@ static NSMutableData *resultData = nil;
         dispatch_semaphore_signal(semaphore);
     }];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    dispatch_release(semaphore);
+    
     if(error){
         *error = sessionError;
     }
@@ -477,7 +477,7 @@ static NSMutableData *resultData = nil;
         dispatch_semaphore_signal(semaphore);
     }];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    dispatch_release(semaphore);
+    
     if(error){
         *error = sessionError;
     }

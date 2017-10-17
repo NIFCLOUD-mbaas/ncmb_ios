@@ -827,7 +827,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     }];
     
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    dispatch_release(semaphore);
+    
     if(error){
         *error = sessionError;
     }
@@ -1053,7 +1053,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
     }];
     
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    dispatch_release(semaphore);
+    
     if(error){
         *error = sessionError;
     }
@@ -1318,7 +1318,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
         dispatch_semaphore_signal(semaphore);
     }];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    dispatch_release(semaphore);
+    
     if(error){
         *error = sessionError;
     }

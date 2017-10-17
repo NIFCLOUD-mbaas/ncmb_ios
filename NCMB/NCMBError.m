@@ -17,7 +17,7 @@
 #import "NCMBError.h"
 
 
-NSErrorDomain const kNCMBErrorDomain = @"com.nifty.cloud.mb";
+NSString const *kNCMBErrorDomain = @"com.nifty.cloud.mb";
 
 NSInteger const NCMBErrorFacebookLoginCancelled = 401004;
 
