@@ -183,7 +183,7 @@ static NSObject*_objForLock = nil;
                 dispatch_semaphore_signal(semaphore);
             }];
             dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-            dispatch_release(semaphore);
+            
             if(sessionError){
                 if (sessionError.code == NSURLErrorNotConnectedToInternet || sessionError.code == NSURLErrorNetworkConnectionLost){
                     //オフライン時はファイルを復元する

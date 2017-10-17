@@ -488,7 +488,7 @@ static BOOL isEnableAutomaticUser = NO;
     }];
     
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    dispatch_release(semaphore);
+    
     bool isSuccess = YES;
     if (sessionError) {
         if(error){
@@ -710,7 +710,7 @@ static BOOL isEnableAutomaticUser = NO;
     }];
     
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    dispatch_release(semaphore);
+    
     if(error){
         *error = sessionError;
     }
@@ -780,7 +780,7 @@ static BOOL isEnableAutomaticUser = NO;
     }];
     
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    dispatch_release(semaphore);
+    
     if (sessionError==nil) {
         [self logOutEvent];
     }
