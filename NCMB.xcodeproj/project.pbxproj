@@ -75,7 +75,7 @@
 		99AE1ACE1F94B854005EA065 /* NCMBURLSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 99AE1ACC1F94B854005EA065 /* NCMBURLSession.m */; };
 		9D4B643D1ED42873008B015B /* NCMBDateFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D4B643B1ED42873008B015B /* NCMBDateFormat.m */; };
 		9D4B643F1ED432B9008B015B /* NCMBDateFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D4B643A1ED42873008B015B /* NCMBDateFormat.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		9DB041451EFCDD6E00BDEFFC /* NCMBRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DB041431EFCDD6E00BDEFFC /* NCMBRequest.h */; };
+		9DB041451EFCDD6E00BDEFFC /* NCMBRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DB041431EFCDD6E00BDEFFC /* NCMBRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DB041461EFCDD6E00BDEFFC /* NCMBRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DB041441EFCDD6E00BDEFFC /* NCMBRequest.m */; };
 /* End PBXBuildFile section */
 
@@ -372,10 +372,10 @@
 				8AB2CE7E1CE315F800F27481 /* NCMBACL.h in Headers */,
 				8AB2CEA51CE315F800F27481 /* NCMBScriptService.h in Headers */,
 				5D9927101EA5FB21008F4319 /* NCMB_umbrella.h in Headers */,
+				9DB041451EFCDD6E00BDEFFC /* NCMBRequest.h in Headers */,
 				8AB2CE9F1CE315F800F27481 /* NCMBRichPushView.h in Headers */,
 				8AB2CEDE1CE315F800F27481 /* NCMBQuery+Private.h in Headers */,
 				8AB2CEDA1CE315F800F27481 /* NCMBSetOperation.h in Headers */,
-				9DB041451EFCDD6E00BDEFFC /* NCMBRequest.h in Headers */,
 				8AB2CECE1CE315F800F27481 /* NCMBAddOperation.h in Headers */,
 				8AB2CED41CE315F800F27481 /* NCMBIncrementOperation.h in Headers */,
 				8AB2CE941CE315F800F27481 /* NCMBObject+Subclass.h in Headers */,
