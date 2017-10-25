@@ -22,7 +22,7 @@
 @class NCMBQuery;
 
 /**
- NCMBUserクラスは、ニフティクラウドmobile backend上に保存されたユーザデータを管理するクラスです。
+ NCMBUserクラスは、ニフクラ mobile backend上に保存されたユーザデータを管理するクラスです。
  ユーザの新規登録やログイン/ログアウト、会員情報の更新・取得・削除を行います。
  また、パスワードリセットやメールアドレス認証のリクエスト送信も行います。
  */
@@ -122,21 +122,21 @@
 - (void)signUpInBackgroundWithTarget:(id)target selector:(SEL)selector;
 
 /**
- googleのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ googleのauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う
  @param googleInfo google認証に必要なauthData
  @param block サインアップ後に実行されるblock
  */
 - (void)signUpWithGoogleToken:(NSDictionary *)googleInfo withBlock:(NCMBErrorResultBlock)block;
 
 /**
- twitterのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ twitterのauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う
  @param twitterInfo twitter認証に必要なauthData
  @param block サインアップ後に実行されるblock
  */
 - (void)signUpWithTwitterToken:(NSDictionary *)twitterInfo withBlock:(NCMBErrorResultBlock)block;
 
 /**
- facebookのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ facebookのauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う
  @param facebookInfo facebook認証に必要なauthData
  @param block サインアップ後に実行されるblock
  */
