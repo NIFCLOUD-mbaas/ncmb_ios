@@ -64,7 +64,11 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
     
     // ボディデータ設定
     if ([method isEqualToString:@"POST"] || [method isEqualToString:@"PUT"]) {
-        self.HTTPBody = bodyData;
+        if (bodyData != nil) {
+            self.HTTPBody = bodyData;
+        } else {
+            self.HTTPBody = [NSJSONSerialization dataWithJSONObject:@{} options:kNilOptions error:nil];
+        }
     }
     return self;
 }
