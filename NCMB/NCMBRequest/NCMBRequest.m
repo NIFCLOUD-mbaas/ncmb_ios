@@ -123,7 +123,7 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
                       [NSString stringWithFormat:@"%@=%@", appKeyField, self.applicationKey],
                       [NSString stringWithFormat:@"%@=%@", timestampField, timestamp]];
     if (components.percentEncodedQuery != nil) {
-        if ([@"GET" isEqualToString:method]) {
+        if ( [@"GET" isEqualToString:method] ) {
             self.signature = [self.signature stringByAppendingString:[NSString stringWithFormat:@"&%@", components.percentEncodedQuery]];
         }
     }
