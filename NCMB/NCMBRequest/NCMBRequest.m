@@ -123,7 +123,9 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
                       [NSString stringWithFormat:@"%@=%@", appKeyField, self.applicationKey],
                       [NSString stringWithFormat:@"%@=%@", timestampField, timestamp]];
     if (components.percentEncodedQuery != nil) {
-        self.signature = [self.signature stringByAppendingString:[NSString stringWithFormat:@"&%@", components.percentEncodedQuery]];
+        if ( [@"GET" isEqualToString:method] ) {
+            self.signature = [self.signature stringByAppendingString:[NSString stringWithFormat:@"&%@", components.percentEncodedQuery]];
+        }
     }
     
     return [NCMBRequest encodingSigneture:self.signature method:self];
