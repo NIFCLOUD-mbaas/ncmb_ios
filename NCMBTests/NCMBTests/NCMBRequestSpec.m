@@ -66,6 +66,19 @@ describe(@"NCMBRequest", ^{
         
         expect([headers objectForKey:@"Content-Type"]).to.equal(@"application/json");
         
+        
+    });
+    
+    it(@"test PUT request body data empty", ^{
+        
+        NSString *urlStr = @"https://mb.api.cloud.nifty.com/2013-09-01/classes/TestClass/mockObjectId";
+        NSURL *url = [NSURL URLWithString:urlStr];
+        NCMBRequest *request = [[NCMBRequest alloc] initWithURL:url
+                                                         method:@"PUT"
+                                                         header:nil
+                                                       bodyData:@{}.mutableCopy];
+        NSData *bodyData = [request HTTPBody];
+        expect(bodyData).to.equal(@{}.mutableCopy);
     });
     
     afterEach(^{
