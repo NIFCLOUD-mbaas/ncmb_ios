@@ -248,7 +248,7 @@ static BOOL isEnableAutomaticUser = NO;
 }
 
 /**
- typeで指定したsns情報のauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ typeで指定したsns情報のauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う
  @param snsInfo snsの認証に必要なauthData
  @param type 認証情報のtype
  @param block サインアップ後に実行されるblock
@@ -267,7 +267,7 @@ static BOOL isEnableAutomaticUser = NO;
 }
 
 /**
- googleのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ googleのauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う
  @param googleInfo google認証に必要なauthData
  @param block サインアップ後に実行されるblock
  */
@@ -276,7 +276,7 @@ static BOOL isEnableAutomaticUser = NO;
 }
 
 /**
- twitterのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ twitterのauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う
  @param twitterInfo twitter認証に必要なauthData
  @param block サインアップ後に実行されるblock
  */
@@ -285,7 +285,7 @@ static BOOL isEnableAutomaticUser = NO;
 }
 
 /**
- facebookのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ facebookのauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う
  @param facebookInfo facebook認証に必要なauthData
  @param block サインアップ後に実行されるblock
  */

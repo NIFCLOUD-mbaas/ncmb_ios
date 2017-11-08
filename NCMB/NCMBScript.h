@@ -18,7 +18,7 @@
 #import "NCMBScriptService.h"
 
 /**
- NCMBScriptクラスは、ニフティクラウド mobile backendに登録されているスクリプトを実行するためのクラスです。
+ NCMBScriptクラスは、ニフクラ mobile backendに登録されているスクリプトを実行するためのクラスです。
  */
 @interface NCMBScript : NSObject
 
