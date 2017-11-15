@@ -78,7 +78,7 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@",kEndPoint,kAPIVersion,path]];
     NSData *bodyData = nil;
-    if (body != nil && [body count] > 0) {
+    if (body != nil) {
         NSError *error = nil;
         bodyData = [NSJSONSerialization dataWithJSONObject:body
                                                    options:kNilOptions
