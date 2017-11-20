@@ -3,7 +3,7 @@
 //  ContainedInArraySample
 //
 //  Created by oono on 2016/12/12.
-//  Copyright © 2016年 Nifty. All rights reserved.
+//  Copyright © 2017年 FUJITSU CLOUD TECHNOLOGIES LIMITED. All rights reserved.
 //
 
 import UIKit
@@ -22,4 +22,3 @@ class ViewController: UIViewController {
 
 
 }
-

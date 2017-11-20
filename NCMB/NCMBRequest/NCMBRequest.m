@@ -78,7 +78,7 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@",kEndPoint,kAPIVersion,path]];
     NSData *bodyData = nil;
-    if (body != nil && [body count] > 0) {
+    if (body != nil) {
         NSError *error = nil;
         bodyData = [NSJSONSerialization dataWithJSONObject:body
                                                    options:kNilOptions
@@ -123,7 +123,9 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
                       [NSString stringWithFormat:@"%@=%@", appKeyField, self.applicationKey],
                       [NSString stringWithFormat:@"%@=%@", timestampField, timestamp]];
     if (components.percentEncodedQuery != nil) {
-        self.signature = [self.signature stringByAppendingString:[NSString stringWithFormat:@"&%@", components.percentEncodedQuery]];
+        if ([@"GET" isEqualToString:method]) {
+            self.signature = [self.signature stringByAppendingString:[NSString stringWithFormat:@"&%@", components.percentEncodedQuery]];
+        }
     }
     
     return [NCMBRequest encodingSigneture:self.signature method:self];

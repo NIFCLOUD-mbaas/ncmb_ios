@@ -24,7 +24,7 @@
 
 
 /**
- NCMBObjectクラスは、ニフティクラウドmobile backendとアプリ間のデータの送受信を管理するクラスです。 
+ NCMBObjectクラスは、ニフクラ mobile backendとアプリ間のデータの送受信を管理するクラスです。 
  アプリケーション内オブジェクトの取得・保存・削除などを管理するメインのクラスです。
  */
 @interface NCMBObject : NSObject{
@@ -51,7 +51,7 @@
 
 /** @name Object */
 
-/// objectId オブジェクトのobjectID（ニフティクラウドmobile backend上で自動的に生成）
+/// objectId オブジェクトのobjectID（ニフクラ mobile backend上で自動的に生成）
 @property (nonatomic) NSString *objectId;
 
 /// updatedAt オブジェクトの更新日時
