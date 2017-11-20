@@ -86,7 +86,7 @@ describe(@"NCMBFile", ^{
 
     it(@"data should not be nil if response of getDataInBackgroundWithBlock is successful", ^{
 
-        NSData *responseData = [@"NIFTY Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
+        NSData *responseData = [@"NIF Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
 
         NCMBFile *fileData = [NCMBFile fileWithName:@"ncmb.txt" data:nil];
 
@@ -109,7 +109,7 @@ describe(@"NCMBFile", ^{
     });
 
     it(@"getData system test", ^{
-        NSData *responseData = [@"NIFTY Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
+        NSData *responseData = [@"NIF Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
 
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
@@ -161,7 +161,7 @@ describe(@"NCMBFile", ^{
         }];
 
         waitUntil(^(DoneCallback done) {
-            NSData *fileData = [@"NIFTY Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
+            NSData *fileData = [@"NIF Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
             NCMBFile *file = [NCMBFile fileWithName:@"ncmb.txt" data:fileData];
             [file saveInBackgroundWithBlock:^(NSError *error) {
                 expect(error).beNil();
@@ -184,7 +184,7 @@ describe(@"NCMBFile", ^{
         }];
 
         waitUntil(^(DoneCallback done) {
-            NSData *fileData = [@"NIFTY Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
+            NSData *fileData = [@"NIF Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
             NCMBFile *file = [NCMBFile fileWithName:@"ncmb.txt" data:fileData];
             [file saveInBackgroundWithBlock:^(NSError *error) {
                 expect(error).beTruthy();
@@ -206,7 +206,7 @@ describe(@"NCMBFile", ^{
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
 
-        NSData *fileData = [@"NIFTY Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
+        NSData *fileData = [@"NIF Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
         NCMBFile *file = [NCMBFile fileWithName:@"ncmb.txt" data:fileData];
         NSError *error = nil;
         [file save:&error];
@@ -226,7 +226,7 @@ describe(@"NCMBFile", ^{
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
 
-        NSData *fileData = [@"NIFTY Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
+        NSData *fileData = [@"NIF Cloud mobile backend" dataUsingEncoding:NSUTF8StringEncoding];
         NCMBFile *file = [NCMBFile fileWithName:@"ncmb.txt" data:fileData];
         NSError *error = nil;
         [file save:&error];
