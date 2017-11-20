@@ -3,7 +3,7 @@
 //  ContainedInArraySample
 //
 //  Created by oono on 2016/12/12.
-//  Copyright © 2016年 Nifty. All rights reserved.
+//  Copyright © 2017年 FUJITSU CLOUD TECHNOLOGIES LIMITED. All rights reserved.
 //
 
 import UIKit
@@ -19,15 +19,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         NCMB.setApplicationKey("YOUR_APP_KEY",
                                clientKey: "YOUR_CLIENT_KEY")
-        
+
         let query = NCMBQuery.init(className: "test")
-        
+
         query?.whereKey("key", containedIn: ["value"])
         query?.whereKey("key", containedInArrayTo: ["value"])
         query?.whereKey("key", notContainedIn: ["value"])
         query?.whereKey("key", notContainedInArrayTo: ["value"])
         query?.whereKey("key", containsAllObjectsInArrayTo: ["value"])
-        
+
         return true
     }
 
@@ -55,4 +55,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
-
