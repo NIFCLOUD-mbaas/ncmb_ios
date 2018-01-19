@@ -127,9 +127,9 @@ enum{
     self.wv.delegate = self;
     
     //add subview to main view
-    [window addSubview:self.cv];
+    [window.rootViewController.view addSubview:self.cv];
     [self.uv addSubview:self.wv];
-    [window addSubview:self.uv];
+    [window.rootViewController.view addSubview:self.uv];
     
     [UIView animateWithDuration:0.4f animations:^{
         self.uv.alpha = 1.0f;
@@ -243,43 +243,10 @@ enum{
 
 # pragma webview delegate
 
-- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    switch (buttonIndex) {
-        case 0:
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:actionSheet.title]];
-            break;
-            
-        default:
-            break;
-    }
-}
-
 - (BOOL) webView:(UIWebView*) webView
 shouldStartLoadWithRequest:(NSURLRequest*) request
   navigationType:(UIWebViewNavigationType) navigationType
 {
-        /* リッチプッシュ通知の仕様変更でシンプルになった
-    NSString* urlStr = [self.wv stringByEvaluatingJavaScriptFromString:@"document.URL"];
-    NSURL *homeUrl = [NSURL URLWithString:urlStr];
-    if (navigationType == UIWebViewNavigationTypeLinkClicked){
-
-        if (![request.URL.host isEqualToString:homeUrl.host]){
-            //UIWindow* window = [UIApplication sharedApplication].windows[0];
-            
-            UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
-            actionSheet.delegate = self;
-            actionSheet.title = [[request URL] absoluteString];
-            [actionSheet addButtonWithTitle:@"Safariで開く"];
-            [actionSheet addButtonWithTitle:@"キャンセル"];
-            actionSheet.cancelButtonIndex = 1;
-            
-            [actionSheet showInView:self.wv];
-            
-            return NO;
-        }
-    }
-     */
     [self startWebViewLoading];
     
     return YES;
