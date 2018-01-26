@@ -1,5 +1,5 @@
 /*
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -18,14 +18,13 @@
 
 @interface NCMBObject (Private)
 
-/**
- 
- */
 + (id)object;
 
 - (NSDictionary*)getLocalData;
 
 + (NCMBObject *)objectWithClassName:(NSString*)className data:(NSMutableDictionary *)attrs;
+
+- (void)executeUserCallback:(NCMBErrorResultBlock)userCallback error:(NSError*)error;
 
 /**
  指定されたクラス名とobjectIdでNCMBObjectのインスタンスを作成する

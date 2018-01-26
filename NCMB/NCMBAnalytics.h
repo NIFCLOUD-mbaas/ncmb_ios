@@ -1,5 +1,5 @@
 /*
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 #import <Foundation/Foundation.h>
 
 /**
- NCMBAnalyticsクラスは、プッシュ通知の開封をニフティクラウドmobile backendに登録するクラスです。
+ NCMBAnalyticsクラスは、プッシュ通知の開封をニフクラ mobile backendに登録するクラスです。
  */
 @interface NCMBAnalytics : NSObject
 
