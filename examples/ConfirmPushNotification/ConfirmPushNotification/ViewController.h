@@ -14,22 +14,10 @@
  limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface NCMBRequest : NSMutableURLRequest
+@interface ViewController : UIViewController
 
-+(instancetype)requestWithURL:(NSURL *)url
-                       method:(NSString *)method
-                       header:(NSDictionary *)headers
-                         body:(NSDictionary *)body;
-
-+(NSString *)returnTimeStamp;
-
-+(NSString *)returnSessionToken;
-
-+ (NSString *)returnSignature:(NSURL *)url method:(NSString *)method timestamp:(NSString *)timestamp;
-
-+(NSString *)returnEncodedString:(NSString *)originalString;
 
 @end
+

@@ -1,5 +1,5 @@
 /*
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 #import "NCMBQuery.h"
 #import "NCMBACL.h"
 
-#import "NCMBURLConnection.h"
+#import "NCMBURLSession.h"
 
 #import "NCMBObject+Private.h"
 #import "NCMBObject+Subclass.h"
@@ -170,7 +170,9 @@ static BOOL isEnableAutomaticUser = NO;
 
 + (void)automaticCurrentUserWithBlock:(NCMBUserResultBlock)block{
     if ([self currentUser]) {
-        block([self currentUser], nil);
+        if(block){
+            block([self currentUser], nil);
+        }
     }
     //匿名ユーザーの自動生成がYESの時は匿名ユーザーでログインする
     else if (isEnableAutomaticUser) {
@@ -233,7 +235,6 @@ static BOOL isEnableAutomaticUser = NO;
     [self saveInBackgroundWithBlock:block];
 }
 
-
 /**
  target用ユーザの新規登録処理
  @param target 呼び出すセレクタのターゲット
@@ -244,7 +245,7 @@ static BOOL isEnableAutomaticUser = NO;
 }
 
 /**
- typeで指定したsns情報のauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ typeで指定したsns情報のauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う
  @param snsInfo snsの認証に必要なauthData
  @param type 認証情報のtype
  @param block サインアップ後に実行されるblock
@@ -258,14 +259,12 @@ static BOOL isEnableAutomaticUser = NO;
     [userAuthData setObject:snsInfo forKey:type];
     [self setObject:userAuthData forKey:@"authData"];
     [self signUpInBackgroundWithBlock:^(NSError *error) {
-        if(block){
-            block(error);
-        }
+        [self executeUserCallback:block error:error];
     }];
 }
 
 /**
- googleのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ googleのauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う
  @param googleInfo google認証に必要なauthData
  @param block サインアップ後に実行されるblock
  */
@@ -274,7 +273,7 @@ static BOOL isEnableAutomaticUser = NO;
 }
 
 /**
- twitterのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ twitterのauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う
  @param twitterInfo twitter認証に必要なauthData
  @param block サインアップ後に実行されるblock
  */
@@ -283,7 +282,7 @@ static BOOL isEnableAutomaticUser = NO;
 }
 
 /**
- facebookのauthDataをもとにニフティクラウドmobile backendへの会員登録(ログイン)を行う
+ facebookのauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う
  @param facebookInfo facebook認証に必要なauthData
  @param block サインアップ後に実行されるblock
  */
@@ -332,17 +331,13 @@ static BOOL isEnableAutomaticUser = NO;
         //新規ユーザー登録
         [signUpUser signUpInBackgroundWithBlock:^(NSError *error) {
             if(error){
-                if (block){
-                    block(error);
-                }
+                [self executeUserCallback:block error:error];
             }else{
                 //匿名ユーザー削除
                 currentUser = deleteUser;
                 [deleteUser deleteInBackgroundWithBlock:^(NSError *error) {
                     currentUser = signUpUser;
-                    if (block){
-                        block(error);
-                    }
+                    [self executeUserCallback:block error:error];
                 }];
             }
         }];
@@ -467,27 +462,39 @@ static BOOL isEnableAutomaticUser = NO;
  */
 + (BOOL)requestMailFromNCMB:(NSString *)path mail:(NSString *)email
                       error:(NSError **)error{
-    
     NCMBUser *user = [NCMBUser user];
     user.mailAddress = email;
     
-    NSError *errorLocal = nil;
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     NSMutableDictionary *operations = [user beforeConnection];
     NSMutableDictionary *ncmbDic = [user convertToJSONDicFromOperation:operations];
     NSMutableDictionary *jsonDic = [user convertToJSONFromNCMBObject:ncmbDic];
-    NSData *json = [NSJSONSerialization dataWithJSONObject:jsonDic options:kNilOptions error:&errorLocal];
     
     //通信開始
-    NCMBURLConnection *connect = [[NCMBURLConnection new] initWithPath:path method:@"POST" data:json];
-    [connect syncConnection:&errorLocal];
+    NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:path
+                                                           method:@"POST"
+                                                           header:nil
+                                                             body:jsonDic];
+    
+    // 通信
+    NSError __block *sessionError = nil;
+    NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestSync:request];
+    [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
+        if (requestError){
+            sessionError = requestError;
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
     bool isSuccess = YES;
-    if (errorLocal) {
+    if (sessionError) {
         if(error){
-            *error = errorLocal;
+            *error = sessionError;
         }
         isSuccess = NO;
-    }
-    return isSuccess;
+    }    return isSuccess;
 }
 
 /**
@@ -505,14 +512,18 @@ static BOOL isEnableAutomaticUser = NO;
     NSMutableDictionary *operations = [user beforeConnection];
     NSMutableDictionary *ncmbDic = [user convertToJSONDicFromOperation:operations];
     NSMutableDictionary *jsonDic = [user convertToJSONFromNCMBObject:ncmbDic];
-    NSData *json = [NSJSONSerialization dataWithJSONObject:jsonDic options:kNilOptions error:nil];
     
-    //リクエストを作成
-    NCMBURLConnection *request = [[NCMBURLConnection alloc] initWithPath:path method:@"POST" data:json];
-    //非同期通信を実行
-    [request asyncConnectionWithBlock:^(NSDictionary *responseData, NSError *error){
-        if (block) {
-            block(error);
+    // リクエスト作成
+    NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:path
+                                                           method:@"POST"
+                                                           header:nil
+                                                             body:jsonDic];
+    
+    // 通信
+    NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestAsync:request];
+    [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
+        if(block){
+            block(requestError);
         }
     }];
 }
@@ -629,11 +640,11 @@ static BOOL isEnableAutomaticUser = NO;
 }
 
 /**
- ログイン用のNCMBURLConnectionを返す
+ ログイン用のNCMBRequestを返す
  */
-+(NCMBURLConnection*)createConnectionForLogin:(NSString*)username
-                                   mailAddress:(NSString*)mailAddress
-                                      password:(NSString*)password{
++(NCMBRequest*)createConnectionForLogin:(NSString*)username
+                            mailAddress:(NSString*)mailAddress
+                               password:(NSString*)password{
     //ログインパラメーター文字列の作成
     NSMutableArray *queryArray = [NSMutableArray array];
     NSArray *sortedQueryArray = nil;
@@ -659,9 +670,12 @@ static BOOL isEnableAutomaticUser = NO;
             path = [path stringByAppendingString:[NSString stringWithFormat:@"&%@", sortedQueryArray[i]]];
         }
     }
-    NSData *strData = [path dataUsingEncoding:NSUTF8StringEncoding];
     NSString *url = [NSString stringWithFormat:@"login?%@", path];
-    return [[NCMBURLConnection alloc] initWithPath:url method:@"GET" data:strData];
+    NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:url
+                                                           method:@"GET"
+                                                           header:nil
+                                                             body:nil];
+    return request;
 }
 
 /**
@@ -675,20 +689,29 @@ static BOOL isEnableAutomaticUser = NO;
             mailAddress:(NSString *)email
                password:(NSString *)password
                   error:(NSError **)error{
-    
-    NSError *errorLocal = nil;
-
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     //通信開始
-    NCMBURLConnection *connect = [self createConnectionForLogin:username
-                                                    mailAddress:email
-                                                       password:password];
-    NSDictionary * responseData = [connect syncConnection:&errorLocal];
-    NCMBUser *loginUser = nil;
-    if (!errorLocal){
-        loginUser = [self responseLogIn:responseData];
-        [self saveToFileCurrentUser:loginUser];
-    } else {
-        *error = errorLocal;
+    NCMBRequest *request = [self createConnectionForLogin:username
+                                              mailAddress:email
+                                                 password:password];
+    // 通信
+    NCMBUser __block *loginUser = nil;
+    NSError __block *sessionError = nil;
+    NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestSync:request];
+    [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
+        if (!requestError){
+            loginUser = [self responseLogIn:responseData];
+            [self saveToFileCurrentUser:loginUser];
+        } else {
+            sessionError = requestError;
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    if(error){
+        *error = sessionError;
     }
     return loginUser;
 }
@@ -704,20 +727,21 @@ static BOOL isEnableAutomaticUser = NO;
                   mailAddress:(NSString *)email
                      password:(NSString *)password
                         block:(NCMBUserResultBlock)block{
-    
     //リクエストを作成
-    NCMBURLConnection *request = [self createConnectionForLogin:username
-                                                    mailAddress:email
-                                                       password:password];
-    //非同期通信を実行
-    [request asyncConnectionWithBlock:^(NSDictionary *responseData, NSError *error){
+    NCMBRequest *request = [self createConnectionForLogin:username
+                                              mailAddress:email
+                                                 password:password];
+    
+    // 通信
+    NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestAsync:request];
+    [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
         NCMBUser *loginUser = nil;
-        if (!error){
+        if (!requestError){
             loginUser = [self responseLogIn:responseData];
             [self saveToFileCurrentUser:loginUser];
         }
-        if (block) {
-            block(loginUser,error);
+        if(block){
+            block(loginUser,requestError);
         }
     }];
 }
@@ -742,10 +766,21 @@ static BOOL isEnableAutomaticUser = NO;
  同期でログアウトを行う
  */
 + (void)logOut{
-    NSError *errorLocal = nil;
-    NCMBURLConnection *connect = [[NCMBURLConnection new] initWithPath:URL_LOGOUT method:@"GET" data:nil];
-    [connect syncConnection:&errorLocal];
-    if (errorLocal==nil) {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    NSError *sessionError = nil;
+    NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:URL_LOGOUT
+                                                           method:@"GET"
+                                                           header:nil
+                                                             body:nil];
+    
+    NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestSync:request];
+    [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    if (sessionError==nil) {
         [self logOutEvent];
     }
 }
@@ -755,13 +790,21 @@ static BOOL isEnableAutomaticUser = NO;
  @param block ログアウトのリクエストをした後に実行されるblock
  */
 + (void)logOutInBackgroundWithBlock:(NCMBErrorResultBlock)block{
-    NCMBURLConnection *connect = [[NCMBURLConnection new] initWithPath:URL_LOGOUT method:@"GET" data:nil];
-    [connect asyncConnectionWithBlock:^(id response, NSError *error) {
-        if (!error) {
-            [self logOutEvent];
-            block(nil);
-        } else {
-            block(error);
+    //リクエストを作成
+    NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:URL_LOGOUT
+                                                           method:@"GET"
+                                                           header:nil
+                                                             body:nil];
+    // 通信
+    NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestAsync:request];
+    [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
+        if (!requestError){
+            if (!requestError) {
+                [self logOutEvent];
+            }
+        }
+        if(block){
+            block(requestError);
         }
     }];
 }
@@ -774,7 +817,6 @@ static BOOL isEnableAutomaticUser = NO;
         currentUser.sessionToken = nil;
         currentUser = nil;
     }
-
     if ([[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTUSER_PATH isDirectory:nil]) {
         [[NSFileManager defaultManager] removeItemAtPath:DATA_CURRENTUSER_PATH error:nil];
     }
@@ -916,8 +958,10 @@ static BOOL isEnableAutomaticUser = NO;
  */
 -(void)afterSave:(NSDictionary*)response operations:(NSMutableDictionary *)operations{
     [super afterSave:response operations:operations];
+    BOOL isHasTokenKey = NO;
     if ([response objectForKey:@"sessionToken"]){
         [self setSessionToken:[response objectForKey:@"sessionToken"]];
+        isHasTokenKey = YES;
     }
     //会員新規登録の有無
     //if ([response objectForKey:@"createDate"]&&![response objectForKey:@"updateDate"]){
@@ -948,7 +992,10 @@ static BOOL isEnableAutomaticUser = NO;
             [estimatedData setObject:converted forKey:@"authData"];
         }
     }
-    [NCMBUser saveToFileCurrentUser:self];
+    
+    if([self isEqual:[NCMBUser currentUser]] || isHasTokenKey){
+        [NCMBUser saveToFileCurrentUser:self];
+    }
 }
 
 #pragma mark - link
@@ -977,9 +1024,7 @@ static BOOL isEnableAutomaticUser = NO;
         [estimatedData setObject:localAuthData forKey:@"authData"];
         // ログインユーザーをファイルに保存する
         [NCMBUser saveToFileCurrentUser:self];
-        if(block){
-            block(error);
-        }
+        [self executeUserCallback:block error:error];
     }];
 }
 
@@ -1062,27 +1107,21 @@ static BOOL isEnableAutomaticUser = NO;
                 [estimatedData setObject:localAuthData forKey:@"authData"];
                 // ログインユーザーをファイルに保存する
                 [NCMBUser saveToFileCurrentUser:self];
-                if (block){
-                    block(error);
-                }
+                [self executeUserCallback:block error:error];
             }];
         } else {
             // 指定したtype以外の認証情報の場合はエラーを返す
-            if (block){
-                NSError *error = [NSError errorWithDomain:ERRORDOMAIN
-                                                     code:404003
-                                                 userInfo:@{NSLocalizedDescriptionKey:@"other token type"}];
-                block(error);
-            }
+            NSError *error = [NSError errorWithDomain:ERRORDOMAIN
+                                                 code:404003
+                                             userInfo:@{NSLocalizedDescriptionKey:@"other token type"}];
+            [self executeUserCallback:block error:error];
         }
     } else {
         // 認証情報がない場合エラーを返す
-        if (block){
-            NSError *error = [NSError errorWithDomain:ERRORDOMAIN
-                                                 code:404003
-                                             userInfo:@{NSLocalizedDescriptionKey:@"token not found"}];
-            block(error);
-        }
+        NSError *error = [NSError errorWithDomain:ERRORDOMAIN
+                                             code:404003
+                                         userInfo:@{NSLocalizedDescriptionKey:@"token not found"}];
+        [self executeUserCallback:block error:error];
     }
 }
 

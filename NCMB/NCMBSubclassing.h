@@ -1,5 +1,5 @@
 /*
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 
 /**
  NCMBSubclassingに準拠したNCMBObjectのサブクラスは、registerSubclassメソッドを呼び出すことで、
- ニフティクラウドmobile backendのオブジェクトとして、使用することができます。
+ ニフクラ mobile backendのオブジェクトとして、使用することができます。
  */
 @protocol NCMBSubclassing <NSObject>
 
