@@ -81,4 +81,9 @@
  */
 + (BOOL)getResponseValidationFlag;
 
+/**
+ プッシュ通知アラートを表示させる
+ */
++ (void)showConfirmPushNotification;
+
 @end

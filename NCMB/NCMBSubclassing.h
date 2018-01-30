@@ -20,7 +20,7 @@
 
 /**
  NCMBSubclassingに準拠したNCMBObjectのサブクラスは、registerSubclassメソッドを呼び出すことで、
- ニフティクラウドmobile backendのオブジェクトとして、使用することができます。
+ ニフクラ mobile backendのオブジェクトとして、使用することができます。
  */
 @protocol NCMBSubclassing <NSObject>
 

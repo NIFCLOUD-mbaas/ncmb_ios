@@ -18,14 +18,13 @@
 
 @interface NCMBObject (Private)
 
-/**
- 
- */
 + (id)object;
 
 - (NSDictionary*)getLocalData;
 
 + (NCMBObject *)objectWithClassName:(NSString*)className data:(NSMutableDictionary *)attrs;
+
+- (void)executeUserCallback:(NCMBErrorResultBlock)userCallback error:(NSError*)error;
 
 /**
  指定されたクラス名とobjectIdでNCMBObjectのインスタンスを作成する

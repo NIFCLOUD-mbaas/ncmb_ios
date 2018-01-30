@@ -15,21 +15,30 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 
 @interface NCMBRequest : NSMutableURLRequest
 
-+(instancetype)requestWithURL:(NSURL *)url
-                       method:(NSString *)method
-                       header:(NSDictionary *)headers
-                         body:(NSDictionary *)body;
+@property (nonatomic)NSString *signature;
+@property (nonatomic)NSString *applicationKey;
+@property (nonatomic)NSString *clientKey;
+
+-(instancetype)initWithURLString:(NSString *)urlString
+                    method:(NSString *)method
+                    header:(NSDictionary *)headers
+                      body:(NSDictionary *)body;
+
+-(instancetype)initWithURL:(NSURL *)url
+                    method:(NSString *)method
+                    header:(NSDictionary *)headers
+                  bodyData:(NSData *)bodyData;
 
 +(NSString *)returnTimeStamp;
 
 +(NSString *)returnSessionToken;
 
-+ (NSString *)returnSignature:(NSURL *)url method:(NSString *)method timestamp:(NSString *)timestamp;
+-(NSString *)returnSignature:(NSURL *)url method:(NSString *)method timestamp:(NSString *)timestamp;
 
 +(NSString *)returnEncodedString:(NSString *)originalString;
 
++(NSString *)encodingSigneture:(NSString *)strForSignature  method:(NCMBRequest *)request;
 @end
