@@ -30,7 +30,7 @@
 
 /**
  ログインユーザーをファイルに保存する
- @param NCMBUSer型ファイルに保存するユーザー
+ @param user NCMBUSer型ファイルに保存するユーザー
  */
 + (void) saveToFileCurrentUser:(NCMBUser *)user;
 

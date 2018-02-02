@@ -76,8 +76,8 @@
 - (id)convertToNCMBObjectFromJSON:(id)jsonData convertKey:(NSString*)convertKey;
 
 /**
- mobile backendにオブジェクトを保存する。非同期通信を行う。
- @param block 通信後に実行されるblock。引数にNSError *errorを持つ。
+ 操作履歴からDictionary作成
+ @param operations オブジェクトの操作履歴を保持するNSMutableDictionaryオブジェクト
  */
 -(NSMutableDictionary *)convertToJSONDicFromOperation:(NSMutableDictionary*)operations;
 
@@ -89,8 +89,8 @@
 
 /**
  引数の配列とクラス名からサブクラスor既定クラスorその他のインスタンスを作成する
- @param NSMutableDictionary *result オブジェクトのデータ
- @param NSString *ncmbClassName mobile backend上のクラス名
+ @param result オブジェクトのデータ
+ @param ncmbClassName mobile backend上のクラス名
  */
 + (id)convertClass:(NSMutableDictionary*)result
      ncmbClassName:(NSString*)ncmbClassName;
@@ -105,22 +105,21 @@
 /**
  リクエストURLを受け取ってdeleteを実行する。非同期通信を行う。
  @param url リクエストURL
- @param block
+ @param userBlock 通信後に実行されるblock。引数にNSError *errorを持つ。
  */
 - (void)deleteInBackgroundWithBlock:(NSString *)url block:(NCMBErrorResultBlock)userBlock;
 
 /**
  リクエストURLを受け取ってmobile backendにオブジェクトを保存する。非同期通信を行う。
  @param url リクエストURL
- @param block 通信後に実行されるblock。引数にNSError *errorを持つ。
+ @param userBlock 通信後に実行されるblock。引数にNSError *errorを持つ。
  */
 - (void)saveInBackgroundWithBlock:(NSString *)url block:(NCMBErrorResultBlock)userBlock;
 
 /**
  リクエストURLを受け取ってsave処理を実行する
  @param url リクエストURL
- @param エラーを保持するポインタ
- @return 通信が行われたかを真偽値で返却する
+ @param error エラーを保持するポインタ
  */
 - (void)save:(NSString*)url error:(NSError **)error;
 
@@ -135,7 +134,6 @@
  リクエストURLを受け取ってfetchを実行する。
  @param url リクエストURL
  @param error エラーを保持するポインタ
- @return 通信が成功した場合にはYESを返す
  */
 - (void)fetch:(NSString*)url error:(NSError **)error isRefresh:(BOOL)isRefresh;
 

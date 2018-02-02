@@ -94,7 +94,6 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  ユーザー名の取得
- @param userName ユーザー名
  @return NSString型ユーザー名
  */
 - (NSString *)userName{
@@ -119,7 +118,6 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  Eメールの取得
- @param mailAddress メールアドレス
  @return NSString型メールアドレス
  */
 - (NSString *)mailAddress{
@@ -128,7 +126,7 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  セッショントークンの設定
- @param ユーザーのセッショントークンを設定する
+ @param newSessionToken ユーザーのセッショントークンを設定する
  */
 - (void)setSessionToken:(NSString *)newSessionToken{
     _sessionToken = newSessionToken;
@@ -224,7 +222,6 @@ static BOOL isEnableAutomaticUser = NO;
 /**
  ユーザの新規登録。必要があればエラーをセットし、取得することもできる。
  @param error 処理中に起きたエラーのポインタ
- @return 新規登録の成功の有無
  */
 - (void)signUp:(NSError **)error{
     [self save:error];
@@ -232,7 +229,7 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  ユーザ の新規登録(非同期)
- @param block
+ @param block サインアップ後に実行されるblock
  */
 - (void)signUpInBackgroundWithBlock:(NCMBErrorResultBlock)block{
     [self saveInBackgroundWithBlock:block];
@@ -240,8 +237,8 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  target用ユーザの新規登録処理
- @param target
- @param selector
+ @param target 呼び出すセレクタのターゲット
+ @param selector 呼び出すセレクタ
  */
 - (void)signUpInBackgroundWithTarget:(id)target selector:(SEL)selector{
     [self saveInBackgroundWithTarget:target selector:selector];
@@ -349,8 +346,10 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  target用ユーザの新規登録処理
- @param target
- @param selector
+ @param userName ユーザーネーム
+ @param password パスワード
+ @param target 呼び出すセレクタのターゲット
+ @param selector 呼び出すセレクタ
  */
 - (void)signUpFromAnonymousInBackgroundWithTarget:(NSString *)userName password:(NSString *)password target:(id)target selector:(SEL)selector{
     NSMethodSignature* signature = [target methodSignatureForSelector: selector ];
@@ -396,7 +395,6 @@ static BOOL isEnableAutomaticUser = NO;
  同期で会員登録メールの要求を行う
  @param email メールアドレス
  @param error エラー
- @return BOOL型通信結果の有無
  */
 + (void)requestAuthenticationMail:(NSString *)email
                             error:(NSError **)error{
@@ -406,8 +404,8 @@ static BOOL isEnableAutomaticUser = NO;
 /**
  非同期で会員登録メールの要求を行う
  @param email メールアドレス
- @param target
- @param selector
+ @param target 呼び出すセレクタのターゲット
+ @param selector 呼び出すセレクタ
  */
 + (void)requestAuthenticationMailInBackground:(NSString *)email
                                        target:(id)target
@@ -418,7 +416,7 @@ static BOOL isEnableAutomaticUser = NO;
 /**
  非同期で会員登録メールの要求を行う
  @param email メールアドレス
- @param block
+ @param block 登録メールの要求後に実行されるblock
  */
 + (void)requestAuthenticationMailInBackground:(NSString *)email
                                         block:(NCMBErrorResultBlock)block{
@@ -430,9 +428,10 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  target用ログイン処理
- @param path　パス
+ @param path パス
  @param email メールアドレス
- @param error エラー
+ @param target 呼び出すセレクタのターゲット
+ @param selector 呼び出すセレクタ
  */
 + (void)requestMailFromNCMB:(NSString *)path
                        mail:(NSString *)email
@@ -457,7 +456,7 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  同期メアド要求処理
- @param path　パス
+ @param path パス
  @param email メールアドレス
  @param error エラー
  */
@@ -500,9 +499,9 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  非同期メアド要求処理
- @param path　パス
- @param email　メールアドレス
- @param block
+ @param path パス
+ @param email メールアドレス
+ @param block メアド要求後に実行されるblock
  */
 + (void)requestMailFromNCMB:(NSString *)path
                        mail:(NSString *)email
@@ -534,9 +533,9 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  同期でログイン(ユーザ名とパスワード)を行う
- @param username　ユーザー名
- @param password　パスワード
- @param error
+ @param username ユーザー名
+ @param password パスワード
+ @param error エラー
  */
 + (NCMBUser *)logInWithUsername:(NSString *)username
                        password:(NSString *)password
@@ -546,10 +545,10 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  非同期でログイン(ユーザ名とパスワード)を行う
- @param username　ユーザー名
- @param password　パスワード
- @param target
- @param selector
+ @param username ユーザー名
+ @param password パスワード
+ @param target 呼び出すセレクタのターゲット
+ @param selector 呼び出すセレクタ
  */
 + (void)logInWithUsernameInBackground:(NSString *)username
                              password:(NSString *)password
@@ -560,9 +559,9 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  非同期でログイン(ユーザ名とパスワード)を行う
- @param username　ユーザー名
- @param password　パスワード
- @param block
+ @param username ユーザー名
+ @param password パスワード
+ @param block ログイン後に実行されるblock
  */
 + (void)logInWithUsernameInBackground:(NSString *)username
                              password:(NSString *)password
@@ -574,9 +573,9 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  同期でログイン(メールアドレスとパスワード)を行う
- @param email　メールアドレス
- @param password　パスワード
- @param error
+ @param email メールアドレス
+ @param password パスワード
+ @param error エラー
  */
 + (NCMBUser *)logInWithMailAddress:(NSString *)email
                           password:(NSString *)password
@@ -586,10 +585,10 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  非同期でログイン(メールアドレスとパスワード)を行う
- @param email　メールアドレス
- @param password　パスワード
- @param target
- @param selector
+ @param email メールアドレス
+ @param password パスワード
+ @param target 呼び出すセレクタのターゲット
+ @param selector 呼び出すセレクタ
  */
 + (void)logInWithMailAddressInBackground:(NSString *)email
                                 password:(NSString *)password
@@ -601,9 +600,9 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  非同期でログイン(メールアドレスとパスワード)を行う
- @param email　メールアドレス
- @param password　パスワード
- @param block
+ @param email メールアドレス
+ @param password パスワード
+ @param block ログイン後に実行されるblock
  */
 + (void)logInWithMailAddressInBackground:(NSString *)email
                                 password:(NSString *)password
@@ -616,11 +615,11 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  targetログイン処理
- @param username　ユーザー名
- @param email　メールアドレス
- @param password　パスワード
- @param target
- @param selector
+ @param username ユーザー名
+ @param email メールアドレス
+ @param password パスワード
+ @param target 呼び出すセレクタのターゲット
+ @param selector 呼び出すセレクタ
  */
 + (void)ncmbLogInInBackground:(NSString *)username
                   mailAddress:(NSString *)email
@@ -681,9 +680,9 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  同期ログイン処理
- @param username　ユーザー名
- @param email　メールアドレス
- @param password　パスワード
+ @param username ユーザー名
+ @param email メールアドレス
+ @param password パスワード
  @param error エラー
  */
 + (NCMBUser *)ncmbLogIn:(NSString *)username
@@ -719,10 +718,10 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  非同期ログイン処理
- @param username　ユーザー名
- @param email　メールアドレス
- @param password　パスワード
- @param block
+ @param username ユーザー名
+ @param email メールアドレス
+ @param password パスワード
+ @param block ログイン後に実行されるblock
  */
 + (void)ncmbLogInInBackground:(NSString *)username
                   mailAddress:(NSString *)email
@@ -749,7 +748,7 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  ログイン系のレスポンス処理
- @param responseData　サーバーからのレスポンスデータ
+ @param responseData サーバーからのレスポンスデータ
  @return NCMBUser型サーバーのデータを反映させたユーザー
  */
 +(NCMBUser *)responseLogIn:(NSDictionary *)responseData{
@@ -827,7 +826,7 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  同期でパスワードリセット要求を行う。
- @param error
+ @param error エラー
  */
 + (void)requestPasswordResetForEmail:(NSString *)email
                                error:(NSError **)error{
@@ -836,8 +835,8 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  非同期でパスワードリセット要求を行う。
- @param target
- @param selector
+ @param target 呼び出すセレクタのターゲット
+ @param selector 呼び出すセレクタ
  */
 + (void)requestPasswordResetForEmailInBackground:(NSString *)email
                                           target:(id)target
@@ -848,7 +847,7 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  非同期でパスワードリセット要求を行う。
- @param block
+ @param block リセット要求後に実行されるblock
  */
 + (void)requestPasswordResetForEmailInBackground:(NSString *)email
                                            block:(NCMBErrorResultBlock)block{
@@ -884,7 +883,7 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  ログインユーザーをファイルに保存する
- @param NCMBUSer型ファイルに保存するユーザー
+ @param user NCMBUSer型ファイルに保存するユーザー
  */
 + (void) saveToFileCurrentUser:(NCMBUser *)user {
     NSError *e = nil;

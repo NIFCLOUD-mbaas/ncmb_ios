@@ -721,6 +721,41 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 }
 
 /**
+ saveAll実行後の処理を行う
+ @param object リクエストされたNCMBObjectの配列
+ @param operation 各オブジェクトに対する操作履歴
+ @param responseDic 各オブジェクトに対するレスポンス
+ **/
++ (void)afterSaveAll:(id)object
+           operation:(NSMutableDictionary*)operation
+            response:(NSMutableDictionary*)responseDic
+{
+    if ([[responseDic allKeys] containsObject:@"error"]){
+        //各オブジェクトがエラーだった場合の処理
+        NCMBObject *obj = object;
+        [obj mergePreviousOperation:operation];
+    } else {
+        NSDictionary *response = [responseDic objectForKey:@"success"];
+        if([object isKindOfClass:[NCMBObject class]]){
+            NCMBObject *obj = object;
+            [obj afterSave:response operations:operation];
+        } else if ([object isKindOfClass:[NCMBUser class]]){
+            NCMBUser *user = object;
+            [user afterSave:response operations:operation];
+        } else if ([object isKindOfClass:[NCMBRole class]]){
+            NCMBRole *role = object;
+            [role afterSave:response operations:operation];
+        } else if ([object isKindOfClass:[NCMBPush class]]){
+            NCMBPush *push = object;
+            [push afterSave:response operations:operation];
+        } else if ([object isKindOfClass:[NCMBInstallation class]]){
+            NCMBInstallation *installation = object;
+            [installation afterSave:response operations:operation];
+        }
+    }
+}
+
+/**
  mobile backendからエラーが返ってきたときに最新の操作履歴と通信中の操作履歴をマージする
  @param operations 最新の操作履歴
  */
@@ -837,7 +872,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 /**
  mobile backendからobjectIdをキーにしてデータを取得する
  @param error エラーを保持するポインタ
- @return 通信を行った場合にはYESを返却する
  */
 - (void)fetch:(NSError **)error{
     if (_objectId){
@@ -1010,8 +1044,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 /**
  リクエストURLを受け取ってsave処理を実行する
  @param url リクエストURL
- @param エラーを保持するポインタ
- @return 通信が行われたかを真偽値で返却する
+ @param error エラーを保持するポインタ
  */
 - (void)save:(NSString*)url error:(NSError **)error{
     semaphore = dispatch_semaphore_create(0);
@@ -1062,7 +1095,6 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 /**
  mobile backendにオブジェクトを保存する
  @param error エラーを保持するポインタ
- @return result 通信が実行されたらYESを返す
  */
 - (void)save:(NSError **)error{
     NSString *url = [self returnBaseUrl:_ncmbClassName objectId:_objectId];
@@ -1072,7 +1104,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 /**
  リクエストURLを受け取ってmobile backendにオブジェクトを保存する。非同期通信を行う。
  @param url リクエストURL
- @param block 通信後に実行されるblock。引数にNSError *errorを持つ。
+ @param userBlock 通信後に実行されるblock。引数にNSError *errorを持つ。
  */
 - (void)saveInBackgroundWithBlock:(NSString *)url block:(NCMBErrorResultBlock)userBlock{
     // ポインタ先オブジェクトは事前に保存する
@@ -1110,7 +1142,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 
 /**
  mobile backendにオブジェクトを保存する。非同期通信を行う。
- @param block 通信後に実行されるblock。引数にNSError *errorを持つ。
+ @param userBlock 通信後に実行されるblock。引数にNSError *errorを持つ。
  */
 - (void)saveInBackgroundWithBlock:(NCMBErrorResultBlock)userBlock{
     NSString *url = [self returnBaseUrl:_ncmbClassName objectId:_objectId];
@@ -1346,7 +1378,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 /**
  リクエストURLを受け取ってdeleteを実行する。非同期通信を行う。
  @param url リクエストURL
- @param block
+ @param userBlock 削除後に実行されるblock
  */
 - (void)deleteInBackgroundWithBlock:(NSString *)url block:(NCMBErrorResultBlock)userBlock{
     //リクエストを作成
@@ -1365,7 +1397,7 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 
 /**
  オブジェクトをmobile backendとローカル上から削除する。非同期通信を行う。
- @param error block 通信後に実行されるblock。引数にNSError *errorを持つ。
+ @param userBlock 通信後に実行されるblock。引数にNSError *errorを持つ。
  */
 - (void)deleteInBackgroundWithBlock:(NCMBErrorResultBlock)userBlock{
     if (_objectId){
@@ -1641,8 +1673,8 @@ static void dynamicSetterLongLong(id self, SEL _cmd, long long int value) {
 
 /**
  引数の配列とクラス名からサブクラスor既定クラスorその他のインスタンスを作成する
- @param NSMutableDictionary *result オブジェクトのデータ
- @param NSString *ncmbClassName mobile backend上のクラス名
+ @param result オブジェクトのデータ
+ @param ncmbClassName mobile backend上のクラス名
  */
 + (id)convertClass:(NSMutableDictionary*)result
      ncmbClassName:(NSString*)ncmbClassName{
