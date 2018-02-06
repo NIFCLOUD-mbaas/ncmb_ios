@@ -93,8 +93,7 @@ static BOOL responseValidationFlag = false;
     NSFileManager* fileManager = [NSFileManager defaultManager];
     BOOL isExist = [fileManager fileExistsAtPath:saveFileDirPath isDirectory:&isYES];
     if( isExist == false ) {
-        [fileManager changeCurrentDirectoryPath:dirName];
-        [fileManager createDirectoryAtPath:str withIntermediateDirectories:YES attributes:nil error:nil];
+        [fileManager createDirectoryAtPath:saveFileDirPath withIntermediateDirectories:YES attributes:nil error:nil];
     }
 }
 
