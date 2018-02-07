@@ -28,7 +28,6 @@
 		5DE7EB6A1C5075000082ED93 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		724CF6FBB40BF7A1421D5E2B /* Pods-NCMBTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NCMBTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NCMBTests/Pods-NCMBTests.release.xcconfig"; sourceTree = "<group>"; };
 		7B70F2F83AA3F5861F40A1CE /* libPods-NCMBTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NCMBTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-
 		9D84FFDC1D3F5DC300CD37D0 /* NCMBQuerySpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBQuerySpec.m; sourceTree = "<group>"; };
 		9D8713021EAF1A45005EF095 /* NCMBFileSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBFileSpec.m; sourceTree = "<group>"; };
 		9D8713051EAF1CCD005EF095 /* NCMBObjectSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBObjectSpec.m; sourceTree = "<group>"; };
@@ -228,7 +227,6 @@
 				9D8713061EAF1CCD005EF095 /* NCMBObjectSpec.m in Sources */,
 				9D8713031EAF1A45005EF095 /* NCMBFileSpec.m in Sources */,
 				5D40F2941C578B6D00358E63 /* NCMBRequestSpec.m in Sources */,
-				9D30383E1DF5550200787CDA /* NCMBObjectSpec.m in Sources */,
 				9DA4F0FF1D0FDCFB0090AD5B /* NCMBRoleSpec.m in Sources */,
 				9D8D7DAD1D0A4FBF00963745 /* NCMBUserSpec.m in Sources */,
 			);
