@@ -1,12 +1,12 @@
 /*
- Copyright 2016 NIFTY Corporation All Rights Reserved.
- 
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,10 +19,11 @@
 #import <NCMB/NCMB.h>
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
-#import "NCMBURLConnection.h"
 
 @interface NCMBInstallation (Private)
 - (void)afterFetch:(NSMutableDictionary*)response isRefresh:(BOOL)isRefresh;
+-(void)afterSave:(NSDictionary*)response operations:(NSMutableDictionary *)operations;
+-(NSMutableDictionary *)beforeConnection;
 @end
 
 #define DATA_CURRENTINSTALLATION_PATH [NSString stringWithFormat:@"%@/Private Documents/NCMB/currentInstallation", DATA_MAIN_PATH]
@@ -30,11 +31,11 @@
 SpecBegin(NCMBInstallation)
 
 describe(@"NCMBInstallation", ^{
-    
+
     //Dummy API key from mobile backend document
     NSString *applicationKey = @"6145f91061916580c742f806bab67649d10f45920246ff459404c46f00ff3e56";
     NSString *clientKey = @"1343d198b510a0315db1c03f3aa0e32418b7a743f8e4b47cbff670601345cf75";
-    
+
     NSDictionary *initialLocalInstallation = @{
                                                @"timeZone" : @"Asia/Tokyo",
                                                @"deviceToken" : @"7f9af3973668245167e8bb132a",
@@ -49,15 +50,15 @@ describe(@"NCMBInstallation", ^{
                                                        @"__type" : @"Date"
                                                        },
                                                @"acl" : @{
-                                                       
+
                                                        },
                                                @"applicationName" : @"aaaa",
                                                @"objectId" : @"EVMu2ne7bjzZhOW2",
-                                               @"sdkVersion" : @"2.3.4"
+                                               @"sdkVersion" : @"2.4.2"
                                                };
-    
+
     NSDictionary *responseInstallation = @{@"channels" : @[
-                                                   
+
                                                    ],
                                            @"timeZone" : @"Asia/Tokyo",
                                            @"applicationName" : [NSNull null],
@@ -81,18 +82,18 @@ describe(@"NCMBInstallation", ^{
                                                    @"iso" : @"2016-11-01T08:08:17.615Z",
                                                    @"__type" : @"Date"
                                                    }
-                                           
+
                                            };
-    
+
     beforeAll(^{
         [NCMB setApplicationKey:applicationKey
                       clientKey:clientKey];
     });
-    
+
     beforeEach(^{
         NSString *bundleVer = @"1";
         [[[NSBundle mainBundle] infoDictionary] setValue:bundleVer forKey:@"CFBundleVersion"];
-        
+
         // save local installation file
         NSMutableDictionary *saveDictionary = [NSMutableDictionary dictionary];
         [saveDictionary setObject:initialLocalInstallation forKey:@"data"];
@@ -102,11 +103,11 @@ describe(@"NCMBInstallation", ^{
                                                        options:kNilOptions
                                                          error:&error];
         [data writeToFile:DATA_CURRENTINSTALLATION_PATH atomically:YES];
-        
+
     });
-    
+
     it(@"should be able to get currentInstallation from a local file, if appVersion and sdkVersion are null", ^{
-        
+
         NSDictionary *dic = @{
                               @"timeZone" : @"Asia/Tokyo",
                               @"appVersion" : [NSNull null],
@@ -119,7 +120,7 @@ describe(@"NCMBInstallation", ^{
                               @"sdkVersion" : [NSNull null],
                               @"objectId" : @"iwQJ1mlfUa1fVF4R",
                               @"acl" : @{
-                                      
+
                                       },
                               @"createDate" : @{
                                       @"__type" : @"Date",
@@ -127,7 +128,7 @@ describe(@"NCMBInstallation", ^{
                                       },
                               @"deviceToken" : @"8fa36a7c2b490723388ebdcdd37cf1de47bf9ce15aa43c494f22bce68092cff1"
                               };
-        
+
         NSMutableDictionary *saveDictionary = [NSMutableDictionary dictionary];
         [saveDictionary setObject:dic forKey:@"data"];
         [saveDictionary setObject:@"installation" forKey:@"className"];
@@ -136,21 +137,21 @@ describe(@"NCMBInstallation", ^{
                                                        options:kNilOptions
                                                          error:&error];
         [data writeToFile:[NSString stringWithFormat:@"%@/Private Documents/NCMB/currentInstallation", DATA_MAIN_PATH] atomically:YES];
-        
+
         NCMBInstallation *installation = [NCMBInstallation currentInstallation];
-        
+
         expect(installation).notTo.beNil;
         expect([installation objectForKey:@"sdkVersion"]).to.equal(SDK_VERSION);
         expect([installation objectForKey:@"appVersion"]).to.equal([[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]);
-        
+
     });
-    
+
     it(@"should not be updated the local installation file, When afterFetch", ^{
-        
+
         NCMBInstallation *installation = [NCMBInstallation currentInstallation];
 
         [installation afterFetch:[NSMutableDictionary dictionaryWithDictionary:responseInstallation] isRefresh:NO];
-        
+
         // get local installation file
         NSError *fileError = nil;
         NSData *localData = [NSData dataWithContentsOfFile:DATA_CURRENTINSTALLATION_PATH
@@ -160,7 +161,7 @@ describe(@"NCMBInstallation", ^{
                                                                     options:kNilOptions
                                                                       error:&fileError];
         NSMutableDictionary *localFileDic = [NSMutableDictionary dictionaryWithDictionary:[json objectForKey:@"data"]];
-        
+
         expect([localFileDic objectForKey:@"sdkVersion"])
         .toNot.equal([responseInstallation objectForKey:@"sdkVersion"]);
         expect([localFileDic objectForKey:@"appVersion"])
@@ -169,12 +170,38 @@ describe(@"NCMBInstallation", ^{
         .toNot.equal([responseInstallation objectForKey:@"deviceToken"]);
     });
     
-    afterEach(^{
+    it(@"should be able to create local currentInstallation file when afterSave", ^{
+        
+        // remove currentInstallationFile
+        [[NSFileManager defaultManager] removeItemAtPath:DATA_CURRENTINSTALLATION_PATH error:nil];
+        
+        BOOL isCurrentInstallationFileExist = [[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTINSTALLATION_PATH isDirectory:nil];
+        expect(isCurrentInstallationFileExist).to.beFalsy();
+        
+        NSDictionary *responseDic = @{
+                                      @"updateDate" : @"2017-06-08T03:54:28.115Z"
+                                      };
+        
+        NSString *tokenId = @"d88757a988361805a2fb1f32837339f6390c7ed0b93d61a4d199b6e679d4ae61";
+        
+        NCMBInstallation *installation = [NCMBInstallation currentInstallation];
+        [installation setObject:tokenId forKey:@"deviceToken"];
+        
+        NSMutableDictionary *operation = [installation beforeConnection];
+        
+        [installation afterSave:responseDic operations:operation];
+        
+        isCurrentInstallationFileExist = [[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTINSTALLATION_PATH isDirectory:nil];
+        expect(isCurrentInstallationFileExist).to.beTruthy();
         
     });
     
+    afterEach(^{
+
+    });
+
     afterAll(^{
-        
+
     });
 });
 

@@ -1,5 +1,5 @@
 /*
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 #import "NCMBReachability.h"
-#import "NCMBURLConnection.h"
+#import "NCMBURLSession.h"
 #import "NCMBConstants.h"
 
 #import <objc/runtime.h>
@@ -37,25 +37,6 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target,
     [[NCMBReachability sharedInstance] reachabilityChanged];
 }
 
-
-static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char* comment)
-{
-    
-    NSLog(@"Reachability Flag Status: %c%c %c%c%c%c%c%c%c %s\n",
-          (flags & kSCNetworkReachabilityFlagsIsWWAN)               ? 'W' : '-',
-          (flags & kSCNetworkReachabilityFlagsReachable)            ? 'R' : '-',
-          
-          (flags & kSCNetworkReachabilityFlagsTransientConnection)  ? 't' : '-',
-          (flags & kSCNetworkReachabilityFlagsConnectionRequired)   ? 'c' : '-',
-          (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic)  ? 'C' : '-',
-          (flags & kSCNetworkReachabilityFlagsInterventionRequired) ? 'i' : '-',
-          (flags & kSCNetworkReachabilityFlagsConnectionOnDemand)   ? 'D' : '-',
-          (flags & kSCNetworkReachabilityFlagsIsLocalAddress)       ? 'l' : '-',
-          (flags & kSCNetworkReachabilityFlagsIsDirect)             ? 'd' : '-',
-          comment
-          );
-}
-
 @implementation NCMBReachability {
     SCNetworkReachabilityRef internetReachabilityRef;
     SCNetworkReachabilityFlags internetReachabilityFlags;
@@ -64,6 +45,15 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
 }
 
 static NCMBReachability *ncmbReachability = nil;
+
+static NSObject*_objForLock = nil;
+
++ (NSObject *)objForLock {
+    if (_objForLock == nil) {
+        _objForLock = [[NSObject alloc] init];
+    }
+    return _objForLock;
+}
 
 /**
  APIのエンドポイントを指定して、インターネット接続確認用のリファレンスを作成
@@ -77,7 +67,7 @@ static NCMBReachability *ncmbReachability = nil;
  シングルトンクラスのインスタンスを返す
  */
 +(NCMBReachability*)sharedInstance{
-    @synchronized(self){
+    @synchronized(NCMBReachability.objForLock){
         if (!ncmbReachability){
             ncmbReachability = [[NCMBReachability alloc] init];
             [ncmbReachability reachabilityWithHostName:kHostName];
@@ -104,7 +94,9 @@ static NCMBReachability *ncmbReachability = nil;
  電波状況を更新
  */
 +(void)updateFlags:(SCNetworkReachabilityFlags)flags{
-    [NCMBReachability sharedInstance]->reachabilityFlags = flags;
+    @synchronized(NCMBReachability.objForLock){
+        [NCMBReachability sharedInstance]->reachabilityFlags = flags;
+    }
 }
 
 /**
@@ -119,7 +111,9 @@ static NCMBReachability *ncmbReachability = nil;
                                                              error: NULL];
         //ファイルが無い場合は監視を終了
         if ([contents count] == 0){
-            ncmbReachability = nil;
+            @synchronized(NCMBReachability.objForLock){
+                ncmbReachability = nil;
+            }
         } else {
             for (NSString *fileName in contents){
                 [self executeCommand:fileName];
@@ -146,30 +140,36 @@ static NCMBReachability *ncmbReachability = nil;
             
             NSString *url = [dictForEventually objectForKey:@"path"];
             NSString *method = [dictForEventually objectForKey:@"method"];
-            NSData *saveData = nil;
+            NSDictionary *saveDic = nil;
             if ([[dictForEventually allKeys] containsObject:@"saveData"]){
-                NSDictionary *saveDic = [dictForEventually objectForKey:@"saveData"];
-                NSError *error = nil;
-                saveData = [NSJSONSerialization dataWithJSONObject:saveDic
-                                                           options:kNilOptions
-                                                             error:&error];
+                saveDic = [dictForEventually objectForKey:@"saveData"];
             }
             
             //ファイルを削除する
             [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, fileName] error:nil];
             
-            //APIリクエスト用コネクションを作成
-            NCMBURLConnection *connect = [[NCMBURLConnection new] initWithPath:url method:method data:saveData];
+            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
             
-            //同期通信を実行
-            NSError *error = nil;
-            [connect syncConnection:&error] ;
-            if (error){
-                if (error.code == NSURLErrorNotConnectedToInternet || error.code == NSURLErrorNetworkConnectionLost){
+            NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:url
+                                                                   method:method
+                                                                   header:nil
+                                                                     body:saveDic];
+            // 通信
+            NSError __block *sessionError = nil;
+            NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestSync:request];
+            [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
+                if (requestError){
+                    sessionError = requestError;
+                }
+                dispatch_semaphore_signal(semaphore);
+            }];
+            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+            
+            if(sessionError){
+                if (sessionError.code == NSURLErrorNotConnectedToInternet || sessionError.code == NSURLErrorNetworkConnectionLost){
                     //オフライン時はファイルを復元する
                     [data writeToFile:[NSString stringWithFormat:@"%@%@", COMMAND_CACHE_FOLDER_PATH, fileName] options:NSDataWritingAtomic error:nil];
                 }
-                
             }
         }
     }
@@ -243,5 +243,5 @@ static NCMBReachability *ncmbReachability = nil;
     
     return NO;
 }
- 
+
 @end

@@ -1,5 +1,5 @@
 /*
- Copyright 2014 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -185,7 +185,6 @@
  @param channel プッシュ先のチャネル
  @param message メッセージ内容
  @param error 処理中に起きたエラーのポインタ
- @return APIリクエストを実施した場合にYESを返す
  */
 + (void)sendPushMessageToChannel:(NSString *)channel
                      withMessage:(NSString *)message
@@ -221,7 +220,6 @@
  @param query 指定するクエリ
  @param message メッセージ内容
  @param error 処理中に起きたエラーのポインタ
- @return APIリクエストを実行するとYESを返す
  */
 + (void)sendPushMessageToQuery:(NCMBQuery *)query
                    withMessage:(NSString *)message
@@ -245,7 +243,6 @@
  @param channel プッシュ先のチャネル
  @param data プッシュ通知内容
  @param error 処理中に起きたエラーのポインタ
- @return APIリクエストを実行するとYESを返す
  */
 + (void)sendPushDataToChannel:(NSString *)channel
                      withData:(NSDictionary *)data
@@ -282,7 +279,6 @@
  @param query 指定するクエリ
  @param data プッシュ通知内容
  @param error 処理中に起きたエラーのポインタ
- @return APIリクエストを実行するとYESを返す
  */
 + (void)sendPushDataToQuery:(NCMBQuery *)query
                    withData:(NSDictionary *)data

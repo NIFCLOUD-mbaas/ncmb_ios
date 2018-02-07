@@ -1,5 +1,5 @@
 /*
- Copyright 2016 NIFTY Corporation All Rights Reserved.
+ Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -105,10 +105,21 @@ NSString *const NCMBScriptServicePath = @"script";
             break;
     }
     
-    return [NCMBRequest requestWithURL:url
-                                method:methodStr
-                                header:headerDic
-                                  body:body];
+    NSData *bodyData = nil;
+    if (body != nil && [body count] > 0) {
+        NSError *error = nil;
+        bodyData = [NSJSONSerialization dataWithJSONObject:body
+                                                   options:kNilOptions
+                                                     error:&error];
+        if (error) {
+            [NSException raise:NSInvalidArgumentException format:@"body data is invalid json format."];
+        }
+    }
+    
+    return [[NCMBRequest alloc] initWithURL:url
+                                     method:methodStr
+                                     header:headerDic
+                                   bodyData:bodyData];
 }
 
 - (NSData *)executeScript:(NSString *)name
@@ -137,8 +148,8 @@ NSString *const NCMBScriptServicePath = @"script";
                     responseError = jsonError;
                 } else {
                     responseError = [NSError errorWithDomain:@"NCMBErrorDomain"
-                                                code:httpRes.statusCode
-                                            userInfo:@{NSLocalizedDescriptionKey:[errorRes objectForKey:@"error"]}];
+                                                        code:httpRes.statusCode
+                                                    userInfo:@{NSLocalizedDescriptionKey:[errorRes objectForKey:@"error"]}];
                     
                 }
             }
