@@ -69,7 +69,7 @@
 
 
 /**
- オブジェクトのキーを取得する。createdAt、updatedAt、objectIdは含まれない。
+ オブジェクトのキーを取得する。
  @return オブジェクトのキーが格納された配列
  */
 - (NSArray *)allKeys;

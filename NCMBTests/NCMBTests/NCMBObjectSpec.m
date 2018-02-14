@@ -19,10 +19,13 @@
 #import <NCMB/NCMB.h>
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
+#import "NCMBObject.h"
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
 @interface NCMBObject (Private)
 - (void)saveCommandToFile:(NSDictionary*)localDic error:(NSError**)error;
++ (id)convertClass:(NSMutableDictionary*)result
+     ncmbClassName:(NSString*)ncmbClassName;
 @end
 
 #define COMMAND_CACHE_FOLDER_PATH [NSString stringWithFormat:@"%@/Private Documents/NCMB/Command Cache/", DATA_MAIN_PATH]
@@ -39,9 +42,39 @@ describe(@"NCMBObject", ^{
         [NCMB setApplicationKey:applicationKey
                       clientKey:clientKey];
     });
-
+    
     beforeEach(^{
-
+        
+    });
+    
+    it(@"Should be allkeys method contained objectId, createDate and updateDate", ^{
+        
+        NSDictionary *jsonObj = @{
+                                  @"createDate" : @{
+                                          @"__type" : @"Date",
+                                          @"iso" : @"2016-12-02T00:59:30.381Z"
+                                          },
+                                  @"acl" : @{
+                                          @"*" : @{
+                                                  @"write" : @true,
+                                                  @"read" : @true
+                                                  }
+                                          },
+                                  @"objectId" : @"gbexonT5DAshDGMj",
+                                  @"key" : @"value",
+                                  @"updateDate" : @{
+                                          @"__type" : @"Date",
+                                          @"iso" : @"2016-12-02T00:59:30.381Z"
+                                          }
+                                  };
+        
+        NCMBObject *object = [NCMBObject convertClass:[NSMutableDictionary dictionaryWithDictionary:jsonObj] ncmbClassName:@"test"];
+        
+        NSArray *allKeys = [object allKeys];
+        
+        expect([allKeys containsObject:@"objectId"]).to.beTruthy();
+        expect([allKeys containsObject:@"createDate"]).to.beTruthy();
+        expect([allKeys containsObject:@"updateDate"]).to.beTruthy();
     });
 
     it(@"should save command to file with the file path of date string of specification format", ^{
@@ -365,7 +398,7 @@ afterEach(^{
 });
 
 afterAll(^{
-
+  
 });
 
 SpecEnd
