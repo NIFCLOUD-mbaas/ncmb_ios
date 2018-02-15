@@ -1,5 +1,5 @@
 /*
- Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@
 
 @interface NCMBInstallation (Private)
 - (void)afterFetch:(NSMutableDictionary*)response isRefresh:(BOOL)isRefresh;
+-(void)afterSave:(NSDictionary*)response operations:(NSMutableDictionary *)operations;
+-(NSMutableDictionary *)beforeConnection;
 @end
 
 #define DATA_CURRENTINSTALLATION_PATH [NSString stringWithFormat:@"%@/Private Documents/NCMB/currentInstallation", DATA_MAIN_PATH]
@@ -52,7 +54,7 @@ describe(@"NCMBInstallation", ^{
                                                        },
                                                @"applicationName" : @"aaaa",
                                                @"objectId" : @"EVMu2ne7bjzZhOW2",
-                                               @"sdkVersion" : @"2.4.2"
+                                               @"sdkVersion" : @"2.4.3"
                                                };
 
     NSDictionary *responseInstallation = @{@"channels" : @[
@@ -167,7 +169,33 @@ describe(@"NCMBInstallation", ^{
         expect([localFileDic objectForKey:@"deviceToken"])
         .toNot.equal([responseInstallation objectForKey:@"deviceToken"]);
     });
-
+    
+    it(@"should be able to create local currentInstallation file when afterSave", ^{
+        
+        // remove currentInstallationFile
+        [[NSFileManager defaultManager] removeItemAtPath:DATA_CURRENTINSTALLATION_PATH error:nil];
+        
+        BOOL isCurrentInstallationFileExist = [[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTINSTALLATION_PATH isDirectory:nil];
+        expect(isCurrentInstallationFileExist).to.beFalsy();
+        
+        NSDictionary *responseDic = @{
+                                      @"updateDate" : @"2017-06-08T03:54:28.115Z"
+                                      };
+        
+        NSString *tokenId = @"d88757a988361805a2fb1f32837339f6390c7ed0b93d61a4d199b6e679d4ae61";
+        
+        NCMBInstallation *installation = [NCMBInstallation currentInstallation];
+        [installation setObject:tokenId forKey:@"deviceToken"];
+        
+        NSMutableDictionary *operation = [installation beforeConnection];
+        
+        [installation afterSave:responseDic operations:operation];
+        
+        isCurrentInstallationFileExist = [[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTINSTALLATION_PATH isDirectory:nil];
+        expect(isCurrentInstallationFileExist).to.beTruthy();
+        
+    });
+    
     afterEach(^{
 
     });

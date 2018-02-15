@@ -1,5 +1,5 @@
 /*
- Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -15,6 +15,12 @@
  */
 
 #import "NCMB.h"
+#if __has_include(<UserNotifications/UserNotifications.h>)
+#import <UserNotifications/UserNotifications.h>
+#endif
+#if __has_include(<UIKit/UIKit.h>)
+#import <UIKit/UIKit.h>
+#endif
 
 @implementation NCMB
 
@@ -90,10 +96,59 @@ static BOOL responseValidationFlag = false;
     NSFileManager* fileManager = [NSFileManager defaultManager];
     BOOL isExist = [fileManager fileExistsAtPath:saveFileDirPath isDirectory:&isYES];
     if( isExist == false ) {
-        [fileManager changeCurrentDirectoryPath:dirName];
-        [fileManager createDirectoryAtPath:str withIntermediateDirectories:YES attributes:nil error:nil];
+        [fileManager createDirectoryAtPath:saveFileDirPath withIntermediateDirectories:YES attributes:nil error:nil];
     }
 }
 
+#if __has_include(<UIKit/UIKit.h>)
+/**
+ プッシュ通知アラート
+ */
++(void)showConfirmPushNotification {
+    // iOSのバージョンで処理を分ける
+    if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){10, 0, 0}]){
+        #if __has_include(<UserNotifications/UserNotifications.h>)
+        //iOS10以上での、DeviceToken要求方法
+        #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+        [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert |
+                                                 UNAuthorizationOptionBadge |
+                                                 UNAuthorizationOptionSound)
+                              completionHandler:^(BOOL granted, NSError * _Nullable error) {
+                                  if (error) {
+                                      return;
+                                  }
+                                  if (granted) {
+                                      //通知を許可にした場合DeviceTokenを要求
+                                      [[UIApplication sharedApplication] registerForRemoteNotifications];
+                                  }
+                              }];
+        #endif
+    } else if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){8, 0, 0}]){
+        //iOS10未満での、DeviceToken要求方法
+        //通知のタイプを設定したsettingを用意
+        #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        UIUserNotificationType type = UIUserNotificationTypeAlert |
+        UIUserNotificationTypeBadge |
+        UIUserNotificationTypeSound;
+        UIUserNotificationSettings *setting;
+        setting = [UIUserNotificationSettings settingsForTypes:type
+                                                    categories:nil];
+        
+        //通知のタイプを設定
+        [[UIApplication sharedApplication] registerUserNotificationSettings:setting];
+        
+        //DeviceTokenを要求
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+    } else {
+        //iOS8未満での、DeviceToken要求方法
+        #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+         (UIRemoteNotificationTypeAlert |
+          UIRemoteNotificationTypeBadge |
+          UIRemoteNotificationTypeSound)];
+    }
+}
+#endif
 
 @end

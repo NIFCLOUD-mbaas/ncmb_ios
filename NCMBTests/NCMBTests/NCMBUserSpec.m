@@ -1,5 +1,5 @@
 /*
- Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -19,6 +19,13 @@
 #import <OCMock/OCMock.h>
 #import <NCMB/NCMB.h>
 #import <OHHTTPStubs/OHHTTPStubs.h>
+
+@interface NCMBUser (Private)
+-(void)afterSave:(NSDictionary*)response operations:(NSMutableDictionary *)operations;
+-(NSMutableDictionary *)beforeConnection;
+@end
+
+#define DATA_CURRENTUSER_PATH [NSString stringWithFormat:@"%@/Private Documents/NCMB/currentUser", DATA_MAIN_PATH]
 
 SpecBegin(NCMBUser)
 #define DATA_MAIN_PATH [NSHomeDirectory() stringByAppendingPathComponent:@"Library/"]
@@ -922,6 +929,35 @@ describe(@"NCMBUser", ^{
                 }
             }];
         });
+    });
+    
+    it(@"should be able to create local currentUser file when afterSave", ^{
+        
+        // remove currentUserFile
+        [[NSFileManager defaultManager] removeItemAtPath:DATA_CURRENTUSER_PATH error:nil];
+        
+        BOOL isCurrentUserFileExist = [[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTUSER_PATH isDirectory:nil];
+        expect(isCurrentUserFileExist).to.beFalsy();
+        
+        NSDictionary *responseDic = @{
+                                      @"authData" : [NSNull null],
+                                      @"createDate" : @"2017-06-08T02:14:19.058Z",
+                                      @"objectId" : @"VzBhKhtYoDC1Y4X5",
+                                      @"sessionToken" : @"oL663jk7H4D4wTsGfhKF8Ktog",
+                                      @"userName" : @"user1"
+                                      };
+        
+        NCMBUser *user = [NCMBUser user];
+        user.userName = @"user1";
+        user.password = @"pass";
+        
+        NSMutableDictionary *operation = [user beforeConnection];
+        
+        [user afterSave:responseDic operations:operation];
+        
+        isCurrentUserFileExist = [[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTUSER_PATH isDirectory:nil];
+        expect(isCurrentUserFileExist).to.beTruthy();
+        
     });
 
     it(@"after logged in should not change current user when update another user", ^{

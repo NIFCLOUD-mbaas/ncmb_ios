@@ -1,5 +1,5 @@
 /*
- Copyright 2017 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2018 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -485,7 +485,7 @@ static NSMutableData *resultData = nil;
 
 /**
  mobile backendにfileを保存する。非同期通信を行う。
- @param block 通信後に実行されるblock。引数にNSError *errorを持つ。
+ @param userBlock 通信後に実行されるblock。引数にNSError *errorを持つ。
  */
 - (void)saveInBackgroundWithBlock:(NCMBErrorResultBlock)userBlock{
     [self saveInBackgroundWithBlock:userBlock progressBlock:nil];
@@ -512,7 +512,7 @@ static NSMutableData *resultData = nil;
 
 /**
  fileをmobile backendとローカル上から削除する。非同期通信を行う。
- @param error block 通信後に実行されるblock。引数にBOOL succeeded, NSError *errorを持つ。
+ @param userBlock 通信後に実行されるblock。引数にBOOL succeeded, NSError *errorを持つ。
  */
 - (void)deleteInBackgroundWithBlock:(NCMBErrorResultBlock)userBlock{
     if (_name){
