@@ -18,6 +18,9 @@
 #if __has_include(<UserNotifications/UserNotifications.h>)
 #import <UserNotifications/UserNotifications.h>
 #endif
+#if __has_include(<UIKit/UIKit.h>)
+#import <UIKit/UIKit.h>
+#endif
 
 @implementation NCMB
 
@@ -97,6 +100,7 @@ static BOOL responseValidationFlag = false;
     }
 }
 
+#if __has_include(<UIKit/UIKit.h>)
 /**
  プッシュ通知アラート
  */
@@ -145,5 +149,6 @@ static BOOL responseValidationFlag = false;
           UIRemoteNotificationTypeSound)];
     }
 }
+#endif
 
 @end
