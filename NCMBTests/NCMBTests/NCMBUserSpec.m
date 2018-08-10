@@ -803,7 +803,7 @@ describe(@"NCMBUser", ^{
         NCMBUser *user = [NCMBUser user];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
 
             NSMutableDictionary *responseDic = [@{
@@ -851,7 +851,7 @@ describe(@"NCMBUser", ^{
         NCMBUser *user = [NCMBUser user];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
 
             NSMutableDictionary *responseDic = [@{
@@ -896,7 +896,7 @@ describe(@"NCMBUser", ^{
         NCMBUser *user = [NCMBUser user];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
 
             NSMutableDictionary *responseDic = [@{
@@ -963,7 +963,7 @@ describe(@"NCMBUser", ^{
     it(@"after logged in should not change current user when update another user", ^{
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
 
             NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
@@ -987,7 +987,7 @@ describe(@"NCMBUser", ^{
                 expect([NCMBUser currentUser]).notTo.beNil();
 
                 [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-                    return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+                    return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
                 } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
 
                     NSMutableDictionary *responseDic = [@{@"updateDate" : @"2017-07-10T02:37:54.917Z"
@@ -1023,7 +1023,7 @@ describe(@"NCMBUser", ^{
     it(@"even not logged in should not become current user when update any user", ^{
         // 1.念のためログアウトする
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
 
             NSData *responseData = [[NSData alloc]init];
@@ -1054,7 +1054,7 @@ describe(@"NCMBUser", ^{
     it(@"should become current user when regist new user", ^{
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
 
             NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
@@ -1093,7 +1093,7 @@ describe(@"NCMBUser", ^{
     it(@"after logged in should change to current user when regist new user", ^{
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
 
             NSMutableDictionary *responseDic = [@{@"objectId" : @"e4YWYnYtcptTIV23",
@@ -1116,7 +1116,7 @@ describe(@"NCMBUser", ^{
                 expect([NCMBUser currentUser]).notTo.beNil();
 
                 [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-                    return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+                    return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
                 } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
 
                     NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
@@ -1156,7 +1156,7 @@ describe(@"NCMBUser", ^{
     it(@"should update data local when update current user", ^{
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
 
             NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
@@ -1182,7 +1182,7 @@ describe(@"NCMBUser", ^{
                 expect(currentUser).notTo.beNil();
 
                 [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-                    return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+                    return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
                 } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
 
                     NSMutableDictionary *responseDic = [@{
@@ -1228,7 +1228,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1257,7 +1257,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1285,7 +1285,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1311,7 +1311,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1341,7 +1341,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1371,7 +1371,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1400,7 +1400,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1428,7 +1428,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1447,7 +1447,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1471,7 +1471,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1497,7 +1497,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1517,7 +1517,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1538,7 +1538,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1555,7 +1555,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1573,7 +1573,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1593,7 +1593,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1614,7 +1614,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
@@ -1631,7 +1631,7 @@ describe(@"NCMBUser", ^{
         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mb.api.cloud.nifty.com"];
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];

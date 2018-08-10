@@ -1,9 +1,9 @@
 Pod::Spec.new do |s|
   s.name         = "NCMB"
   s.version      = "2.4.3"
-  s.summary      = "NCMB is SDK for NIF Cloud mobile backend."
+  s.summary      = "NCMB is SDK for NIFCLOUD mobile backend."
   s.description  = <<-DESC
-                   NCMB is SDK for NIF Cloud mobile backend.
+                   NCMB is SDK for NIFCLOUD mobile backend.
                    NIF Cloud mobile backend function
                    * Data store
                    * Push Notification
@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
                    * SNS integration
                    * File store
                    DESC
-  s.homepage     = "http://mb.cloud.nifty.com"
+  s.homepage     = "https://mbaas.nifcloud.com"
   s.license      = "Apache License, Version 2.0"
   s.author       = "FUJITSU CLOUD TECHNOLOGIES LIMITED"
   s.platform     = :ios, "5.1"

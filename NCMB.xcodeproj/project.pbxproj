@@ -601,7 +601,7 @@
 				MODULEMAP_FILE = "$(SRCROOT)/NCMB.modulemap";
 				MODULEMAP_PRIVATE_FILE = "";
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.nifty.cloud.mb.NCMB;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nifcloud.mbaas.NCMB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -619,7 +619,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "$(SRCROOT)/NCMB.modulemap";
 				MODULEMAP_PRIVATE_FILE = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.nifty.cloud.mb.NCMB;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nifcloud.mbaas.NCMB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
