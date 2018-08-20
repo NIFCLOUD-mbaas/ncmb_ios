@@ -40,7 +40,7 @@ static BOOL responseValidationFlag = false;
     applicationKey = appKey;
     clientKey = cliKey;
     NCMBReachability *reachability = [NCMBReachability sharedInstance];
-    //[reachability reachabilityWithHostName:@"mb.api.cloud.nifty.com"];
+    //[reachability reachabilityWithHostName:@"mbaas.api.nifcloud.com"];
     [reachability startNotifier];
     
 }

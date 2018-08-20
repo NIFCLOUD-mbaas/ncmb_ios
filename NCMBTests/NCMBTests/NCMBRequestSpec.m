@@ -39,7 +39,7 @@ describe(@"NCMBRequest", ^{
 
     it(@"should set required HTTP request Headers", ^{
 
-        NSString *urlStr = @"https://mb.api.cloud.nifty.com/2013-09-01/classes/TestClass?where=%7B%22testKey%22%3A%22testValue%22%7D";
+        NSString *urlStr = @"https://mbaas.api.nifcloud.com/2013-09-01/classes/TestClass?where=%7B%22testKey%22%3A%22testValue%22%7D";
         NSURL *url = [NSURL URLWithString:urlStr];
 
         NSString *expectTimeStamp = @"2013-12-02T02:44:35.452Z";
@@ -57,7 +57,7 @@ describe(@"NCMBRequest", ^{
         NSDictionary *headers = [request allHTTPHeaderFields];
         expect([headers objectForKey:@"X-NCMB-Application-Key"]).to.equal(applicationKey);
 
-        NSString *expectSignature = @"/mQAJJfMHx2XN9mPZ9bDWR9VIeftZ97ntzDIRw0MQ4M=";
+        NSString *expectSignature = @"AltGkQgXurEV7u0qMd+87ud7BKuueldoCjaMgVc9Bes=";
         expect([headers objectForKey:@"X-NCMB-Signature"]).to.equal(expectSignature);
 
         expect([headers objectForKey:@"X-NCMB-Timestamp"]).to.equal(expectTimeStamp);
@@ -71,7 +71,7 @@ describe(@"NCMBRequest", ^{
 
     it(@"test PUT request body data empty", ^{
 
-        NSString *urlStr = @"https://mb.api.cloud.nifty.com/2013-09-01/classes/TestClass/mockObjectId";
+        NSString *urlStr = @"https://mbaas.api.nifcloud.com/2013-09-01/classes/TestClass/mockObjectId";
         NSURL *url = [NSURL URLWithString:urlStr];
         NCMBRequest *request = [[NCMBRequest alloc] initWithURL:url
                                                          method:@"PUT"

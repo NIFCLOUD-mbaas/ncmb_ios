@@ -143,7 +143,7 @@ static NCMBRichPushView *rv;
 }
 
 + (void) handleRichPush:(NSDictionary *)userInfo {
-    NSString *urlStr = [userInfo objectForKey:@"com.nifty.RichUrl"];
+    NSString *urlStr = [userInfo objectForKey:@"com.nifcloud.mbaas.RichUrl"];
     
     if ([urlStr isKindOfClass:[NSString class]]) {
         if (rv == nil){
