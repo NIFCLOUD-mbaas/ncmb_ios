@@ -28,7 +28,7 @@
 }
 
 + (void)trackAppOpenedWithRemoteNotificationPayload:(NSDictionary *)userInfo{
-    NSString * pushId = [userInfo objectForKey:@"com.nifty.PushId"];
+    NSString * pushId = [userInfo objectForKey:@"com.nifcloud.mbaas.PushId"];
     NCMBInstallation *installation = [NCMBInstallation currentInstallation];
     if (pushId != nil && installation.deviceToken != nil){
         //コネクションを作成

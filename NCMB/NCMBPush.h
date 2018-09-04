@@ -118,7 +118,7 @@
 
 
 /**
- ユーザの情報を設定。開発者が付与したい情報を設定することができる。ここで設定した値はプッシュ通知のペイロードから「com.nifty.Data」というキーで取得できる
+ ユーザの情報を設定。開発者が付与したい情報を設定することができる。ここで設定した値はプッシュ通知のペイロードから「com.nifcloud.mbaas.Data」というキーで取得できる
  @param userSettingValue ユーザの情報
  */
 - (void)setUserSettingValue:(NSDictionary *)userSettingValue;

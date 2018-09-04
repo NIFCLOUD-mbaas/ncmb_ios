@@ -24,7 +24,7 @@
 
 #pragma mark - url
 #define URL_FILE @"files"
-#define URL_PATH @"https://mb.api.cloud.nifty.com/2013-09-01/"
+#define URL_PATH @"https://mbaas.api.nifcloud.com/2013-09-01/"
 
 @interface NCMBFile(){
     NCMBURLSession *session;

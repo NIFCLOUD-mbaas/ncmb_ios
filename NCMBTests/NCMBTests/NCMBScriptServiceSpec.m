@@ -38,7 +38,7 @@ describe(@"NCMBScriptService", ^{
 
     it (@"should set default endpoint", ^{
         NCMBScriptService *service = [[NCMBScriptService alloc]init];
-        expect(service.endpoint).to.equal(@"https://script.mb.api.cloud.nifty.com");
+        expect(service.endpoint).to.equal(@"https://script.mbaas.api.nifcloud.com");
     });
 
     it (@"should return specified endpoint and request url",^{

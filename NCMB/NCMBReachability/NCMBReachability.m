@@ -23,7 +23,7 @@
 #import <ifaddrs.h>
 #import <net/if.h>
 
-static NSString *const kHostName = @"mb.api.cloud.nifty.com";
+static NSString *const kHostName = @"mbaas.api.nifcloud.com";
 
 /**
  通信状況が変化した際に呼び出されるコールバックメソッド
