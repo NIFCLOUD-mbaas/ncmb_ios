@@ -36,9 +36,17 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
                     header:(NSDictionary *)headers
                   bodyData:(NSData *)bodyData
 {
-    self = [NCMBRequest requestWithURL:url
-                           cachePolicy:NSURLRequestReloadIgnoringCacheData
-                       timeoutInterval:10.0];
+    //Check if user upload file and download file, the system will set timeout is 120 seconds.
+    if ((headers != nil && [headers count] > 0) && (([[headers valueForKey:@"Content-Type"] isEqualToString:@"multipart/form-data; boundary=_NCMBProjectBoundary"]) || [[headers valueForKey:@"DownloadFile"] isEqualToString:@"DownloadFile"])) {
+        self = [NCMBRequest requestWithURL:url
+                               cachePolicy:NSURLRequestReloadIgnoringCacheData
+                           timeoutInterval:120.0];
+    } else {
+        self = [NCMBRequest requestWithURL:url
+                               cachePolicy:NSURLRequestReloadIgnoringCacheData
+                           timeoutInterval:10.0];
+    }
+    
     
     // カスタムヘッダー設定
     if (headers != nil && [headers count] > 0) {

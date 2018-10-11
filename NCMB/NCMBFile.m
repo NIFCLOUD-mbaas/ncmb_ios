@@ -222,9 +222,12 @@ static NSMutableData *resultData = nil;
 - (NSData *)getData:(NSError **)error{
     semaphore = dispatch_semaphore_create(0);
     NSError __block *sessionError = nil;
+    NSMutableDictionary *header = [NSMutableDictionary dictionary];
+    //Set key DownloadFile for header to set timeout
+    [header setValue:[NSString stringWithFormat:@"DownloadFile"]  forKey:@"DownloadFile"];
     NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:[NSString stringWithFormat:@"%@/%@",URL_FILE,self.name]
                                                            method:@"GET"
-                                                           header:nil
+                                                           header:header
                                                              body:nil];
     
     session = [[NCMBURLSession alloc] initWithRequestSync:request];
@@ -280,9 +283,12 @@ static NSMutableData *resultData = nil;
 - (void)getDataInBackgroundWithBlock:(NCMBDataResultBlock)resultBlock
                        progressBlock:(NCMBProgressBlock)progressBlock{
     
+    NSMutableDictionary *header = [NSMutableDictionary dictionary];
+    //Set key DownloadFile for header to set timeout
+    [header setValue:[NSString stringWithFormat:@"DownloadFile"]  forKey:@"DownloadFile"];
     NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:[NSString stringWithFormat:@"%@/%@",URL_FILE,self.name]
                                                            method:@"GET"
-                                                           header:nil
+                                                           header:header
                                                              body:nil];
     
     session = [[NCMBURLSession alloc] initWithProgress:request progress:progressBlock];
