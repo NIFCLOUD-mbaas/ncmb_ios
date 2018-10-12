@@ -223,7 +223,6 @@ static NSMutableData *resultData = nil;
 - (NSData *)getData:(NSError **)error{
     semaphore = dispatch_semaphore_create(0);
     NSError __block *sessionError = nil;
-    NSMutableDictionary *header = [NSMutableDictionary dictionary];
     NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:[NSString stringWithFormat:@"%@/%@",URL_FILE,self.name]
                                                            method:@"GET"
                                                            header:nil

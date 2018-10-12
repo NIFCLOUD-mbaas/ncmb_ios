@@ -36,11 +36,9 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
                     header:(NSDictionary *)headers
                   bodyData:(NSData *)bodyData
 {
-
     self = [NCMBRequest requestWithURL:url
                            cachePolicy:NSURLRequestReloadIgnoringCacheData
                        timeoutInterval:10.0];
-    
     
     // カスタムヘッダー設定
     if (headers != nil && [headers count] > 0) {
