@@ -25,6 +25,7 @@
 #pragma mark - url
 #define URL_FILE @"files"
 #define URL_PATH @"https://mbaas.api.nifcloud.com/2013-09-01/"
+#define FILE_STORE_TIME_OUT 120.0
 
 @interface NCMBFile(){
     NCMBURLSession *session;
@@ -223,13 +224,11 @@ static NSMutableData *resultData = nil;
     semaphore = dispatch_semaphore_create(0);
     NSError __block *sessionError = nil;
     NSMutableDictionary *header = [NSMutableDictionary dictionary];
-    //Set key DownloadFile for header to set timeout
-    [header setValue:[NSString stringWithFormat:@"DownloadFile"]  forKey:@"DownloadFile"];
     NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:[NSString stringWithFormat:@"%@/%@",URL_FILE,self.name]
                                                            method:@"GET"
-                                                           header:header
+                                                           header:nil
                                                              body:nil];
-    
+    [request setTimeoutInterval:FILE_STORE_TIME_OUT];
     session = [[NCMBURLSession alloc] initWithRequestSync:request];
     [session fileDownloadAsyncConnectionWithBlock:^(NSData *responseData, NSError *requestError){
         if (requestError){
@@ -283,14 +282,11 @@ static NSMutableData *resultData = nil;
 - (void)getDataInBackgroundWithBlock:(NCMBDataResultBlock)resultBlock
                        progressBlock:(NCMBProgressBlock)progressBlock{
     
-    NSMutableDictionary *header = [NSMutableDictionary dictionary];
-    //Set key DownloadFile for header to set timeout
-    [header setValue:[NSString stringWithFormat:@"DownloadFile"]  forKey:@"DownloadFile"];
     NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:[NSString stringWithFormat:@"%@/%@",URL_FILE,self.name]
                                                            method:@"GET"
-                                                           header:header
+                                                           header:nil
                                                              body:nil];
-    
+    [request setTimeoutInterval:FILE_STORE_TIME_OUT];
     session = [[NCMBURLSession alloc] initWithProgress:request progress:progressBlock];
     [session fileDownloadAsyncConnectionWithBlock:^(NSData *responseData, NSError *requestError){
         if (!requestError){
@@ -593,6 +589,7 @@ static NSMutableData *resultData = nil;
                                                      method:method
                                                      header:header
                                                    bodyData:body];
+    [request setTimeoutInterval:FILE_STORE_TIME_OUT];
     return request;
 }
 @end
