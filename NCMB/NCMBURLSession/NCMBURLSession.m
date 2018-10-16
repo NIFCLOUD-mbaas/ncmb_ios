@@ -34,14 +34,20 @@
 
 // 初期化を行う
 - (id)initWithRequestSync:(NCMBRequest*)request {
-    self.session = [NSURLSession sessionWithConfiguration:self.config delegate:self delegateQueue:nil];
+    NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    sessionConfig.timeoutIntervalForRequest = request.timeoutInterval;
+    sessionConfig.timeoutIntervalForResource = request.timeoutInterval;
+    self.session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:nil];
     return [self initWithRequest:request cachePolicy:kNilOptions];
 }
 
 // 初期化を行う
 - (id)initWithRequestAsync:(NCMBRequest*)request {
+    NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    sessionConfig.timeoutIntervalForRequest = request.timeoutInterval;
+    sessionConfig.timeoutIntervalForResource = request.timeoutInterval;
     // コールバックをメインスレッドで実行させるために[NSOperationQueue mainQueue]を設定する
-    self.session = [NSURLSession sessionWithConfiguration:self.config delegate:self delegateQueue:[NSOperationQueue mainQueue]];
+    self.session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:[NSOperationQueue mainQueue]];
     return [self initWithRequest:request cachePolicy:kNilOptions];
 }
 
