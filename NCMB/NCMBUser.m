@@ -948,7 +948,7 @@ static BOOL isEnableAutomaticUser = NO;
     if ([response objectForKey:@"sessionToken"]) {
         self.sessionToken = [response objectForKey:@"sessionToken"];
     }
-    [super afterFetch:response isRefresh:isRefresh];
+    [super afterFetch:response isRefresh:YES];
 }
 
 /**

@@ -65,6 +65,11 @@ describe(@"NCMBRequest", ^{
         expect([headers objectForKey:@"X-NCMB-Apps-Session-Token"]).to.equal(expectSessionToken);
 
         expect([headers objectForKey:@"Content-Type"]).to.equal(@"application/json");
+        
+        expect([headers objectForKey:@"X-NCMB-SDK-Version"]).to.equal([NSString stringWithFormat:@"ios-%@", SDK_VERSION]);
+        
+        NSString *osVersion = [[UIDevice currentDevice] systemVersion];
+        expect([headers objectForKey:@"X-NCMB-OS-Version"]).to.equal([NSString stringWithFormat:@"ios-%@", osVersion]);
 
 
     });

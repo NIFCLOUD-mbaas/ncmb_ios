@@ -28,6 +28,8 @@ static NSString *const signatureField    = @"X-NCMB-Signature";
 static NSString *const sessionTokenField = @"X-NCMB-Apps-Session-Token";
 static NSString *const signatureMethod   = @"SignatureMethod=HmacSHA256";
 static NSString *const signatureVersion   = @"SignatureVersion=2";
+static NSString *const kSDKVersionFieldName = @"X-NCMB-SDK-Version";
+static NSString *const kOSVersionFieldName = @"X-NCMB-OS-Version";
 
 @implementation NCMBRequest
 
@@ -66,6 +68,11 @@ static NSString *const signatureVersion   = @"SignatureVersion=2";
     if ([method isEqualToString:@"POST"] || [method isEqualToString:@"PUT"]) {
         self.HTTPBody = bodyData;
     }
+    // Set SDK and OS version
+    NSString *osVersion = [[UIDevice currentDevice] systemVersion];
+    [self setValue:[NSString stringWithFormat:@"ios-%@", osVersion] forHTTPHeaderField:kOSVersionFieldName];
+    [self setValue:[NSString stringWithFormat:@"ios-%@", SDK_VERSION] forHTTPHeaderField:kSDKVersionFieldName];
+    
     return self;
 }
 

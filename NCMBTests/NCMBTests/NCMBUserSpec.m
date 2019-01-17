@@ -19,6 +19,7 @@
 #import <OCMock/OCMock.h>
 #import <NCMB/NCMB.h>
 #import <OHHTTPStubs/OHHTTPStubs.h>
+#import <OHHTTPStubs/NSURLRequest+HTTPBodyTesting.h>
 
 @interface NCMBUser (Private)
 -(void)afterSave:(NSDictionary*)response operations:(NSMutableDictionary *)operations;
@@ -1215,6 +1216,87 @@ describe(@"NCMBUser", ^{
 
                     done();
                 }];
+            }];
+        });
+    });
+    
+    it(@"should reset operationSetQueue after fetch", ^{
+
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+            NSMutableDictionary *responseDic = [@{@"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                  @"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                  @"userName" : @"admin"
+                                                  } mutableCopy];
+
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+
+        waitUntil(^(DoneCallback done) {
+            // 1.ログインする
+            [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+                expect(error).beNil();
+                NCMBUser *currentUser = NCMBUser.currentUser;
+                expect(currentUser).notTo.beNil();
+
+                NSDictionary *responseDic = @{ @"objectId" : @"e4YWYnYtcptTIV23",
+                                               @"userName" : @"admin",
+                                               @"mailAddress" : @"your.mailaddress@example.com",
+                                               @"createDate" : @"2014-06-03T11:28:30.348Z",
+                                               @"updateDate" : @"2014-06-03T11:28:30.348Z",
+                                               @"acl" : @{@"*":@{@"read":@true,@"write":@true}}} ;
+
+                NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+
+                [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                    return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                    return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                }];
+
+                currentUser = [NCMBUser currentUser];
+                // 2. fetchInBackgroundWithBlock
+                [currentUser fetchInBackgroundWithBlock:^(NSError *error) {
+                    expect(error).beNil();
+                    expect(currentUser.objectId).to.equal(@"e4YWYnYtcptTIV23");
+                    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                        return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                    } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                        NSData* body = request.OHHTTPStubs_HTTPBody;
+                        NSString* bodyString = [[NSString alloc] initWithData:body encoding:NSUTF8StringEncoding];
+                        
+                        if (!([request.HTTPMethod isEqualToString:@"PUT"] && [bodyString isEqualToString:@"{\"userName\":\"updateUserName\"}"])) {
+                            NSDictionary *responseDicError = @{ @"code" : @"E403001",
+                                                           @"error" : @"Wrong body params."} ;
+                            NSData *responseDataError = [NSJSONSerialization dataWithJSONObject:responseDicError options:NSJSONWritingPrettyPrinted error:nil];
+                            return [OHHTTPStubsResponse responseWithData:responseDataError statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                        }
+
+                        NSMutableDictionary *responseDic = [@{
+                                                              @"updateDate" : @"2017-07-10T02:37:54.917Z",
+                                                              } mutableCopy];
+                        NSError *convertErr = nil;
+                        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                               options:0
+                                                                                 error:&convertErr];
+                        return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                    }];
+                    currentUser.userName = @"updateUserName";
+                    // 3.カレントユーザーが変更する
+                    [currentUser saveInBackgroundWithBlock:^(NSError *error) {
+                        expect(error).beNil();
+                        done();
+                    }];
+                }];
+
             }];
         });
     });
