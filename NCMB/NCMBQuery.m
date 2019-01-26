@@ -370,6 +370,8 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         
         // コールバック実行
         [self executeUserCallback:block array:objects error:error];
+
+        self.session = nil;
     }];
 }
 
@@ -473,6 +475,8 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
             }
             block(obj,error);
         }
+
+        self.session = nil;
     }];
 }
 
@@ -533,6 +537,8 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         }else{
             block(0, error);
         }
+
+        self.session = nil;
     }];
 }
 
@@ -602,6 +608,8 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
                 block([NCMBObject objectWithClassName:_ncmbClassName data:results[0]], error);
             }
         }
+
+        self.session = nil;
     }];
 }
 
