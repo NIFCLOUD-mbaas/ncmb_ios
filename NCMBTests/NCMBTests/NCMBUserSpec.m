@@ -832,7 +832,7 @@ describe(@"NCMBUser", ^{
                 expect(error).beNil();
                 if(!error) {
                     NCMBUser *currentUser = [NCMBUser currentUser];
-                    expect(currentUser.sessionToken).beTruthy();
+                    expect([currentUser objectForKey:@"authData"]).beTruthy();
                     done();
                 }
             }];
@@ -880,7 +880,7 @@ describe(@"NCMBUser", ^{
                 expect(error).beNil();
                 if(!error) {
                     NCMBUser *currentUser = [NCMBUser currentUser];
-                    expect(currentUser.sessionToken).beTruthy();
+                    expect([currentUser objectForKey:@"authData"]).beTruthy();
                     done();
                 }
             }];
@@ -925,7 +925,7 @@ describe(@"NCMBUser", ^{
                 expect(error).beNil();
                 if(!error) {
                     NCMBUser *currentUser = [NCMBUser currentUser];
-                    expect(currentUser.sessionToken).beTruthy();
+                    expect([currentUser objectForKey:@"authData"]).beTruthy();
                     done();
                 }
             }];
@@ -1004,7 +1004,7 @@ describe(@"NCMBUser", ^{
 
                 // 2.別のユーザーを変更する
                 NCMBUser *updateUser = [[NCMBUser alloc] init];
-                updateUser.objectId = @"e4YWYnYtcptTIV23";
+                updateUser.objectId = @"anotherObjectId";
                 updateUser.userName = @"user001";
 
                 [updateUser saveInBackgroundWithBlock:^(NSError *error) {
@@ -1051,15 +1051,75 @@ describe(@"NCMBUser", ^{
             }];
         });
     });
+    
+    it(@"after logged in should change current user when update logged user", ^{
+        
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            
+            NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                  @"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                  @"userName" : @"admin"
+                                                  } mutableCopy];
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+            
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+        
+        waitUntil(^(DoneCallback done) {
+            // 1.ログインする
+            [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+                
+                expect(error).beNil();
+                expect([NCMBUser currentUser]).notTo.beNil();
+                
+                [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                    return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                    
+                    NSMutableDictionary *responseDic = [@{@"updateDate" : @"2017-07-10T02:37:54.917Z"
+                                                          } mutableCopy];
+                    
+                    NSError *convertErr = nil;
+                    NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                           options:0
+                                                                             error:&convertErr];
+                    
+                    return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                }];
+                
+                // 2.別のユーザーを変更する
+                NCMBUser *updateUser = [[NCMBUser alloc] init];
+                updateUser.objectId = @"e4YWYnYtcptTIV23";
+                updateUser.userName = @"user001";
+                
+                [updateUser saveInBackgroundWithBlock:^(NSError *error) {
+                    NCMBUser *currentUser = [NCMBUser currentUser];
+                    
+                    // 3.カレントユーザーは変更したユーザーにならない
+                    expect(error).beNil();
+                    expect(currentUser).notTo.beNil();
+                    expect(currentUser).to.equal(updateUser);
+                    
+                    done();
+                }];
+            }];
+        });
+    });
 
-    it(@"should become current user when regist new user", ^{
+    it(@"should not become current user when regist new user", ^{
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
             return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
 
             NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
-                                                  @"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"objectId" : @"newObjectId",
                                                   @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
                                                   @"userName" : @"user1"
                                                   } mutableCopy];
@@ -1083,8 +1143,7 @@ describe(@"NCMBUser", ^{
                 NCMBUser *currentUser = [NCMBUser currentUser];
                 // 2.登録したユーザーがカレントユーザーになります
                 expect(error).beNil();
-                expect(currentUser).notTo.beNil();
-                expect(currentUser).equal(user);
+                expect(currentUser).notTo.equal(user);
 
                 done();
             }];
@@ -1323,10 +1382,10 @@ describe(@"NCMBUser", ^{
             [user signUpInBackgroundWithBlock:^(NSError *error) {
                 expect(error).beNil();
                 NCMBUser *currentUser = NCMBUser.currentUser;
-                expect(currentUser.objectId).to.equal(@"epaKcaYZqsREdSMY");
-                expect(currentUser.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
-                expect(currentUser.userName).to.equal(@"NCMBUser");
-                expect([currentUser objectForKey:@"key"]).to.equal(@"value");
+                expect(currentUser.objectId).notTo.equal(@"epaKcaYZqsREdSMY");
+                expect(currentUser.sessionToken).notTo.equal(@"iXDIelJRY3ULBdms281VTmc5O");
+                expect(currentUser.userName).notTo.equal(@"NCMBUser");
+                expect([currentUser objectForKey:@"key"]).notTo.equal(@"value");
                 done();
             }];
         });
@@ -1380,10 +1439,10 @@ describe(@"NCMBUser", ^{
         [user signUp:&error];
         expect(error).beNil();
         NCMBUser *currentUser = NCMBUser.currentUser;
-        expect(currentUser.objectId).to.equal(@"epaKcaYZqsREdSMY");
-        expect(currentUser.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
-        expect(currentUser.userName).to.equal(@"NCMBUser");
-        expect([currentUser objectForKey:@"key"]).to.equal(@"value");
+        expect(currentUser.objectId).notTo.equal(@"epaKcaYZqsREdSMY");
+        expect(currentUser.sessionToken).notTo.equal(@"iXDIelJRY3ULBdms281VTmc5O");
+        expect(currentUser.userName).notTo.equal(@"NCMBUser");
+        expect([currentUser objectForKey:@"key"]).notTo.equal(@"value");
     });
 
     it(@"signUp error test", ^{

@@ -958,11 +958,7 @@ static BOOL isEnableAutomaticUser = NO;
  */
 -(void)afterSave:(NSDictionary*)response operations:(NSMutableDictionary *)operations{
     [super afterSave:response operations:operations];
-    BOOL isHasTokenKey = NO;
-    if ([response objectForKey:@"sessionToken"]){
-        [self setSessionToken:[response objectForKey:@"sessionToken"]];
-        isHasTokenKey = YES;
-    }
+    
     //会員新規登録の有無
     //if ([response objectForKey:@"createDate"]&&![response objectForKey:@"updateDate"]){
     if ([response objectForKey:@"createDate"] && [response objectForKey:@"updateDate"]){
@@ -991,9 +987,11 @@ static BOOL isEnableAutomaticUser = NO;
             }
             [estimatedData setObject:converted forKey:@"authData"];
         }
+        [NCMBUser saveToFileCurrentUser:self];
     }
     
-    if([self isEqual:[NCMBUser currentUser]] || isHasTokenKey){
+    if ([self.objectId isEqualToString:[NCMBUser currentUser].objectId]) {
+        self.sessionToken = [NCMBUser currentUser].sessionToken;
         [NCMBUser saveToFileCurrentUser:self];
     }
 }
