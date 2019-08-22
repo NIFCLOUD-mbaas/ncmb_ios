@@ -195,6 +195,29 @@ describe(@"NCMBInstallation", ^{
         expect(isCurrentInstallationFileExist).to.beTruthy();
         
     });
+         
+    it(@"should be able to parse exactly device token from data", ^{
+    
+    NSString *token = @"<fed1c871 a520c452 f13ff96c 7ec4056c 83fc551a 64ef6d22 fd1ddde4 8ee734eb>";
+        NSMutableData *data= [NSMutableData new];
+        unsigned char whole_byte;
+        char byte_chars[3] = {'\0','\0','\0'};
+        int i = 0;
+        while (i < token.length - 1) {
+            char c = [token characterAtIndex:i++];
+            if (c < '0' || (c > '9' && c < 'a') || c > 'f')
+                continue;
+            byte_chars[0] = c;
+            byte_chars[1] = [token characterAtIndex:i++];
+            whole_byte = strtol(byte_chars, NULL, 16);
+            [data appendBytes:&whole_byte length:1];
+        }
+    
+        NCMBInstallation *installation = [NCMBInstallation currentInstallation];
+        [installation setDeviceTokenFromData:data];
+
+        expect(installation.deviceToken).to.equal(@"fed1c871a520c452f13ff96c7ec4056c83fc551a64ef6d22fd1ddde48ee734eb");
+    });
     
     afterEach(^{
 
