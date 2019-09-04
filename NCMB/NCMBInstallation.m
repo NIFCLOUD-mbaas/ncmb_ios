@@ -31,11 +31,12 @@
 
 - (void)setDeviceTokenFromData:(NSData *)deviceTokenData{
     if ([deviceTokenData isKindOfClass:[NSData class]] && [deviceTokenData length] != 0){
-        NSMutableString *tokenId = [[NSMutableString alloc] initWithString:[NSString stringWithFormat:@"%@",deviceTokenData]];
-        [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@" " withString:@""]]; //余計な文字を消す
-        [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@"<" withString:@""]];
-        [tokenId setString:[tokenId stringByReplacingOccurrencesOfString:@">" withString:@""]];
-        [self setObject:tokenId forKey:@"deviceToken"];
+        const unsigned char *dataBuffer = deviceTokenData.bytes;
+        NSMutableString *token  = [NSMutableString stringWithCapacity:(deviceTokenData.length * 2)];
+        for (int i = 0; i < deviceTokenData.length; ++i) {
+            [token appendFormat:@"%02x", dataBuffer[i]];
+        }
+        [self setObject:token forKey:@"deviceToken"];
     } else {
         [self setObject:nil forKey:@"deviceToken"];
     }
