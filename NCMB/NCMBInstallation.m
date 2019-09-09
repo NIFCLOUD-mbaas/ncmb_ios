@@ -39,6 +39,9 @@
         [self setObject:token forKey:@"deviceToken"];
     } else {
         [self setObject:nil forKey:@"deviceToken"];
+        #if DEBUG
+            NSLog(@"不正なデバイストークのため、端末登録を行いません");
+        #endif
     }
 }
 
