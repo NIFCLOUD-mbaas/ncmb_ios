@@ -54,7 +54,7 @@ describe(@"NCMBInstallation", ^{
                                                        },
                                                @"applicationName" : @"aaaa",
                                                @"objectId" : @"EVMu2ne7bjzZhOW2",
-                                               @"sdkVersion" : @"3.0.1"
+                                               @"sdkVersion" : @"3.0.2"
                                                };
 
     NSDictionary *responseInstallation = @{@"channels" : @[
@@ -169,35 +169,35 @@ describe(@"NCMBInstallation", ^{
         expect([localFileDic objectForKey:@"deviceToken"])
         .toNot.equal([responseInstallation objectForKey:@"deviceToken"]);
     });
-    
+
     it(@"should be able to create local currentInstallation file when afterSave", ^{
-        
+
         // remove currentInstallationFile
         [[NSFileManager defaultManager] removeItemAtPath:DATA_CURRENTINSTALLATION_PATH error:nil];
-        
+
         BOOL isCurrentInstallationFileExist = [[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTINSTALLATION_PATH isDirectory:nil];
         expect(isCurrentInstallationFileExist).to.beFalsy();
-        
+
         NSDictionary *responseDic = @{
                                       @"updateDate" : @"2017-06-08T03:54:28.115Z"
                                       };
-        
+
         NSString *tokenId = @"d88757a988361805a2fb1f32837339f6390c7ed0b93d61a4d199b6e679d4ae61";
-        
+
         NCMBInstallation *installation = [NCMBInstallation currentInstallation];
         [installation setObject:tokenId forKey:@"deviceToken"];
-        
+
         NSMutableDictionary *operation = [installation beforeConnection];
-        
+
         [installation afterSave:responseDic operations:operation];
-        
+
         isCurrentInstallationFileExist = [[NSFileManager defaultManager] fileExistsAtPath:DATA_CURRENTINSTALLATION_PATH isDirectory:nil];
         expect(isCurrentInstallationFileExist).to.beTruthy();
-        
+
     });
-         
+
     it(@"should be able to parse exactly device token from data", ^{
-    
+
         char bytes[32] = {
             0xfe, 0xd1, 0xc8, 0x71,
             0xa5, 0x20, 0xc4, 0x52,
@@ -214,7 +214,7 @@ describe(@"NCMBInstallation", ^{
 
         expect(installation.deviceToken).to.equal(@"fed1c871a520c452f13ff96c7ec4056c83fc551a64ef6d22fd1ddde48ee734eb");
     });
-    
+
     afterEach(^{
 
     });
