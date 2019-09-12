@@ -23,8 +23,8 @@
 
 ## 動作環境
 
-- iOS 9.x ～ iOS 11.x
-- Xcode7.x ～ Xcode9.x
+- iOS 10.x ～ iOS 13.x
+- Xcode 9.x ～ Xcode 11.x
 - armv7, armv7s, arm64アーキテクチャ
 - iOS/Xcodeのバージョンに依って対応が必要となる可能性があります。詳細はニフクラ mobile backendの[ドキュメント](https://mbaas.nifcloud.com/doc/current/)をご覧ください。
 
@@ -35,7 +35,7 @@
 ※なお、mobile backend にて大規模な改修が行われた際は、1年半以内のSDKであっても対応出来ない場合がございます。<br>
 その際は[informationブログ](http://info.biz.nifty.com/mb/)にてお知らせいたします。予めご了承ください。
 
-- v2.3.5 ～ (※2018年8月時点)
+- v3.0.0 ～ (※2019年9月時点)
 
 ## ライセンス
 
