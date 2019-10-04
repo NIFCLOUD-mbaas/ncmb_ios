@@ -16,8 +16,9 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <Webkit/Webkit.h>
 
-@interface NCMBRichPushView : UIWebView
+@interface NCMBRichPushView : UIViewController
 
 - (void) appearWebView:(UIInterfaceOrientation)interfaceOrientation url:(NSString*)richUrl;
 - (void) sizingWebView:(UIInterfaceOrientation)interfaceOrientation;
