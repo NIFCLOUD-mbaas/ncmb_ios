@@ -97,6 +97,25 @@ static NSString *const kOSVersionFieldName = @"X-NCMB-OS-Version";
     return [self initWithURL:url method:method header:headers bodyData:bodyData];
 }
 
+-(instancetype)initWithURLStringForUser:(NSString *)urlString
+                          method:(NSString *)method
+                          header:(NSDictionary *)headers
+                            body:(NSDictionary *)body
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@",kEndPoint,kAPIVersion,urlString]];
+    NSData *bodyData = nil;
+    if (body != nil) {
+        NSError *error = nil;
+        bodyData = [NSJSONSerialization dataWithJSONObject:body
+                                                   options:kNilOptions
+                                                     error:&error];
+        if (error) {
+            [NSException raise:NSInvalidArgumentException format:@"body data is invalid json format."];
+        }
+    }
+    return [self initWithURL:url method:method header:headers bodyData:bodyData];
+}
+
 +(NSString *)returnTimeStamp{
     return [[NCMBDateFormat getIso8601DateFormat] stringFromDate:[NSDate date]];
 }

@@ -664,14 +664,15 @@ static BOOL isEnableAutomaticUser = NO;
     //pathの作成
     NSString *path = @"";
     for (int i = 0; i< [sortedQueryArray count]; i++){
+        NSString * query = [sortedQueryArray[i] stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@"#[]@!&()*+,;\"<>\\%^`{|} \b\t\n\a\r"] invertedSet]];
         if (i == 0){
-            path = [path stringByAppendingString:[NSString stringWithFormat:@"%@", sortedQueryArray[i]]];
+            path = [path stringByAppendingString:[NSString stringWithFormat:@"%@", query]];
         } else {
-            path = [path stringByAppendingString:[NSString stringWithFormat:@"&%@", sortedQueryArray[i]]];
+            path = [path stringByAppendingString:[NSString stringWithFormat:@"&%@", query]];
         }
     }
     NSString *url = [NSString stringWithFormat:@"login?%@", path];
-    NCMBRequest *request = [[NCMBRequest alloc] initWithURLString:url
+    NCMBRequest *request = [[NCMBRequest alloc] initWithURLStringForUser:url
                                                            method:@"GET"
                                                            header:nil
                                                              body:nil];
