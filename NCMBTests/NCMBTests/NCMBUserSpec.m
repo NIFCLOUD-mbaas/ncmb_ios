@@ -960,96 +960,288 @@ describe(@"NCMBUser", ^{
         expect(isCurrentUserFileExist).to.beTruthy();
         
     });
+         
+    it(@"after logged in should not change current user when fetch another user", ^{
 
-    it(@"after logged in should not change current user when update another user", ^{
+          [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+              return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+          } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
 
-        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
-        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+              NSMutableDictionary *responseDic = [@{@"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                    @"objectId" : @"e4YWYnYtcptTIV23",
+                                                    @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                    @"userName" : @"admin"
+                                                    } mutableCopy];
 
-            NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
-                                                  @"objectId" : @"e4YWYnYtcptTIV23",
-                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
-                                                  @"userName" : @"admin"
-                                                  } mutableCopy];
-            NSError *convertErr = nil;
-            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
-                                                                   options:0
-                                                                     error:&convertErr];
+              NSError *convertErr = nil;
+              NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                     options:0
+                                                                       error:&convertErr];
+              return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+          }];
 
-            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
-        }];
+          waitUntil(^(DoneCallback done) {
+              // 1.ログインする
+              [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
 
-        waitUntil(^(DoneCallback done) {
-            // 1.ログインする
-            [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+                  expect(error).beNil();
+                  NCMBUser *currentUser = NCMBUser.currentUser;
+                  expect(currentUser).notTo.beNil();
 
-                expect(error).beNil();
-                expect([NCMBUser currentUser]).notTo.beNil();
+                  NSDictionary *responseDic = @{ @"objectId" : @"e4YWYnYtcptTIV35",
+                                                 @"userName" : @"testuser",
+                                                 @"mailAddress" : @"your.mailaddress@example.com",
+                                                 @"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                 @"updateDate" : @"2014-06-03T11:28:30.348Z",
+                                                 @"acl" : @{@"*":@{@"read":@true,@"write":@true}}} ;
 
-                [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-                    return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
-                } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                  NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
 
-                    NSMutableDictionary *responseDic = [@{@"updateDate" : @"2017-07-10T02:37:54.917Z"
-                                                          } mutableCopy];
+                  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                      return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                  } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                      return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                  }];
 
-                    NSError *convertErr = nil;
-                    NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
-                                                                           options:0
-                                                                             error:&convertErr];
+                  NCMBUser *anotherUser = [[NCMBUser alloc]init];
+                  anotherUser.objectId = @"e4YWYnYtcptTIV35";
+                  // 2. fetchInBackgroundWithBlock
+                  [anotherUser fetchInBackgroundWithBlock:^(NSError *error) {
+                      expect(error).beNil();
+                      expect(anotherUser.objectId).to.equal(@"e4YWYnYtcptTIV35");
+                      expect(anotherUser.userName).to.equal(@"testuser");
+                      
+                      NCMBUser *currentUser = [NCMBUser currentUser];
+                      expect(currentUser.userName).to.equal(@"admin");
+                      done();
+                  }];
 
-                    return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
-                }];
-
-                // 2.別のユーザーを変更する
-                NCMBUser *updateUser = [[NCMBUser alloc] init];
-                updateUser.objectId = @"anotherObjectId";
-                updateUser.userName = @"user001";
-
-                [updateUser saveInBackgroundWithBlock:^(NSError *error) {
-                    NCMBUser *currentUser = [NCMBUser currentUser];
-
-                    // 3.カレントユーザーは変更したユーザーにならない
-                    expect(error).beNil();
-                    expect(currentUser).notTo.beNil();
-                    expect(currentUser).notTo.equal(updateUser);
-
-                    done();
-                }];
-            }];
-        });
+              }];
+          });
     });
 
-    it(@"even not logged in should not become current user when update any user", ^{
-        // 1.念のためログアウトする
-        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
-        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+    it(@"after logged in should not change to current user when regist new user", ^{
 
-            NSData *responseData = [[NSData alloc]init];
+          [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+              return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+          } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
 
-            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
-        }];
+              NSMutableDictionary *responseDic = [@{@"objectId" : @"e4YWYnYtcptTIV23",
+                                                    @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                    @"userName" : @"admin"
+                                                    } mutableCopy];
+              NSError *convertErr = nil;
+              NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                     options:0
+                                                                       error:&convertErr];
 
-        [NCMBUser logOut];
+              return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+          }];
 
-        // 2.新規ユーザー登録
-        NCMBUser *updateUser = [[NCMBUser alloc] init];
-        updateUser.objectId = @"e4YWYnYtcptTIV23";
-        updateUser.userName = @"user001";
+          waitUntil(^(DoneCallback done) {
+              // 1.ログインする
+              [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
 
-        waitUntil(^(DoneCallback done) {
-            [updateUser saveInBackgroundWithBlock:^(NSError *error) {
-                NCMBUser *currentUser = [NCMBUser currentUser];
+                  expect(error).beNil();
+                  expect([NCMBUser currentUser]).notTo.beNil();
 
-                // 3.ログインしていなくても変更したユーザーにならない
-                expect(error).beNil();
-                expect(currentUser).beNil();
+                  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                      return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                  } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
 
-                done();
-            }];
-        });
+                      NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                            @"objectId" : @"e4YWYnYtcptTIV35",
+                                                            @"sessionToken" : @"y3CY0ggL8hZghFQ70aiutHtJL",
+                                                            @"userName" : @"user1"
+                                                            } mutableCopy];
+
+                      NSError *convertErr = nil;
+                      NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                             options:0
+                                                                               error:&convertErr];
+
+                      return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                  }];
+
+                  // 2.新規ユーザー登録
+                  NCMBUser *regisUser = [NCMBUser user];
+
+                  regisUser.userName = @"user1";
+                  regisUser.password = @"password1";
+
+                  [regisUser signUpInBackgroundWithBlock:^(NSError *error) {
+
+                      NCMBUser *currentUser = [NCMBUser currentUser];
+                      // 3.登録したユーザーがカレントユーザーになります
+                      expect(error).beNil();
+                      expect(currentUser).notTo.equal(regisUser);
+
+                      done();
+                  }];
+
+              }];
+          });
+    });
+         
+    it(@"after logged in should not change current user when update another user", ^{
+
+         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+             return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+             NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                   @"objectId" : @"e4YWYnYtcptTIV23",
+                                                   @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                   @"userName" : @"admin"
+                                                   } mutableCopy];
+             NSError *convertErr = nil;
+             NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                    options:0
+                                                                      error:&convertErr];
+
+             return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+         }];
+
+         waitUntil(^(DoneCallback done) {
+             // 1.ログインする
+             [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+                 expect(error).beNil();
+                 expect([NCMBUser currentUser]).notTo.beNil();
+
+                 [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                     return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                 } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+                     NSMutableDictionary *responseDic = [@{@"updateDate" : @"2017-07-10T02:37:54.917Z"
+                                                           } mutableCopy];
+
+                     NSError *convertErr = nil;
+                     NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                            options:0
+                                                                              error:&convertErr];
+
+                     return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                 }];
+
+                 // 2.別のユーザーを変更する
+                 NCMBUser *updateUser = [[NCMBUser alloc] init];
+                 updateUser.objectId = @"anotherObjectId";
+                 updateUser.userName = @"user001";
+
+                 [updateUser saveInBackgroundWithBlock:^(NSError *error) {
+                     NCMBUser *currentUser = [NCMBUser currentUser];
+
+                     // 3.カレントユーザーは変更したユーザーにならない
+                     expect(error).beNil();
+                     expect(currentUser).notTo.beNil();
+                     expect(currentUser).notTo.equal(updateUser);
+
+                     done();
+                 }];
+             }];
+         });
+    });
+         
+    it(@"after logged in should not change currentUser when delete another user", ^{
+
+           [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+               return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+           } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+               NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                     @"objectId" : @"e4YWYnYtcptTIV23",
+                                                     @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                     @"userName" : @"admin"
+                                                     } mutableCopy];
+               NSError *convertErr = nil;
+               NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                      options:0
+                                                                        error:&convertErr];
+
+               return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+           }];
+
+           waitUntil(^(DoneCallback done) {
+               [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+                   expect(error).beNil();
+                   expect([NCMBUser currentUser]).notTo.beNil();
+                   
+                   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                       return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                   } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                       NSDictionary *responseDic = @{} ;
+                       NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+                       return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                   }];
+
+                   NCMBUser *deleteUser = [[NCMBUser alloc] init];
+                   deleteUser.objectId = @"anotherObjectId";
+
+                   [deleteUser deleteInBackgroundWithBlock:^(NSError *error) {
+                       NCMBUser *currentUser = [NCMBUser currentUser];
+                       expect(error).beNil();
+                       expect(currentUser).notTo.beNil();
+
+                       done();
+                   }];
+               }];
+           });
+    });
+         
+    it(@"after logged in should fetch currentUser success", ^{
+
+          [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+              return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+          } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+              NSMutableDictionary *responseDic = [@{@"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                    @"objectId" : @"e4YWYnYtcptTIV23",
+                                                    @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                    @"userName" : @"admin"
+                                                    } mutableCopy];
+
+              NSError *convertErr = nil;
+              NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                     options:0
+                                                                       error:&convertErr];
+              return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+          }];
+
+          waitUntil(^(DoneCallback done) {
+              // 1.ログインする
+              [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+                  expect(error).beNil();
+                  NCMBUser *currentUser = NCMBUser.currentUser;
+                  expect(currentUser).notTo.beNil();
+
+                  NSDictionary *responseDic = @{ @"objectId" : @"e4YWYnYtcptTIV23",
+                                                 @"userName" : @"admin",
+                                                 @"mailAddress" : @"your.mailaddress@example.com",
+                                                 @"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                 @"updateDate" : @"2014-06-03T11:28:30.348Z",
+                                                 @"acl" : @{@"*":@{@"read":@true,@"write":@true}}} ;
+
+                  NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+
+                  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                      return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                  } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                      return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                  }];
+
+                  currentUser = [NCMBUser currentUser];
+                  // 2. fetchInBackgroundWithBlock
+                  [currentUser fetchInBackgroundWithBlock:^(NSError *error) {
+                      expect(error).beNil();
+                      expect(currentUser.objectId).to.equal(@"e4YWYnYtcptTIV23");
+                      done();
+                  }];
+
+              }];
+          });
     });
     
     it(@"after logged in should change current user when update logged user", ^{
@@ -1111,7 +1303,622 @@ describe(@"NCMBUser", ^{
             }];
         });
     });
+         
+    it(@"after logged in should using currentUser regist new user success", ^{
 
+       [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+           return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+       } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+           NSMutableDictionary *responseDic = [@{@"objectId" : @"e4YWYnYtcptTIV23",
+                                                 @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                 @"userName" : @"admin"
+                                                 } mutableCopy];
+           NSError *convertErr = nil;
+           NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                  options:0
+                                                                    error:&convertErr];
+
+           return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+       }];
+
+       waitUntil(^(DoneCallback done) {
+           // 1.ログインする
+           [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+               expect(error).beNil();
+               expect([NCMBUser currentUser]).notTo.beNil();
+
+               [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                   return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+               } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+                   NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                         @"objectId" : @"e4YWYnYtcptTIV35",
+                                                         @"sessionToken" : @"y3CY0ggL8hZghFQ70aiutHtJL",
+                                                         @"userName" : @"user1"
+                                                         } mutableCopy];
+
+                   NSError *convertErr = nil;
+                   NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                          options:0
+                                                                            error:&convertErr];
+
+                   return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+               }];
+
+               // 2.新規ユーザー登録
+               NCMBUser *regisUser = [NCMBUser currentUser];
+               regisUser.objectId = nil;
+               regisUser.userName = @"user1";
+               regisUser.password = @"password1";
+
+               [regisUser signUpInBackgroundWithBlock:^(NSError *error) {
+
+                   NCMBUser *currentUser = [NCMBUser currentUser];
+                   // 3.登録したユーザーがカレントユーザーになります
+                   expect(error).beNil();
+                   expect(currentUser).to.equal(regisUser);
+
+                   done();
+               }];
+
+           }];
+       });
+    });
+         
+    it(@"after login should delete currentUser when delete logged in user", ^{
+
+           [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+               return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+           } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+               NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                     @"objectId" : @"e4YWYnYtcptTIV23",
+                                                     @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                     @"userName" : @"admin"
+                                                     } mutableCopy];
+               NSError *convertErr = nil;
+               NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                      options:0
+                                                                        error:&convertErr];
+
+               return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+           }];
+
+           waitUntil(^(DoneCallback done) {
+               [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+                   expect(error).beNil();
+                   expect([NCMBUser currentUser]).notTo.beNil();
+                   
+                   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                       return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                   } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                       NSDictionary *responseDic = @{} ;
+                       NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+                       return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                   }];
+
+                   NCMBUser *currentUser = [NCMBUser currentUser];
+                   NCMBUser *deleteUser = [[NCMBUser alloc] init];
+                   deleteUser.objectId = currentUser.objectId;
+
+                   [deleteUser deleteInBackgroundWithBlock:^(NSError *error) {
+                       NCMBUser *currentUser = [NCMBUser currentUser];
+                       expect(error).beNil();
+                       expect(currentUser).beNil();
+
+                       done();
+                   }];
+               }];
+           });
+    });
+         
+    it(@"after login then logout then login should fetch currentUser success", ^{
+
+       [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+           return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+       } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+           NSMutableDictionary *responseDic = [@{@"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                 @"objectId" : @"e4YWYnYtcptTIV23",
+                                                 @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                 @"userName" : @"admin"
+                                                 } mutableCopy];
+
+           NSError *convertErr = nil;
+           NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                  options:0
+                                                                    error:&convertErr];
+           return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+       }];
+
+       waitUntil(^(DoneCallback done) {
+           // 1.ログインする
+           [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+               expect(error).beNil();
+               NCMBUser *currentUser = NCMBUser.currentUser;
+               expect(currentUser).notTo.beNil();
+               
+               [NCMBUser logOut];
+               
+               [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+                   NSDictionary *responseDic = @{ @"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"userName" : @"admin",
+                                                  @"mailAddress" : @"your.mailaddress@example.com",
+                                                  @"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                  @"updateDate" : @"2014-06-03T11:28:30.348Z",
+                                                  @"acl" : @{@"*":@{@"read":@true,@"write":@true}}} ;
+
+                   NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+
+                   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                       return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                   } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                       return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                   }];
+
+                   NCMBUser *currentUser = [NCMBUser currentUser];
+                   // 2. fetchInBackgroundWithBlock
+                   [currentUser fetchInBackgroundWithBlock:^(NSError *error) {
+                       expect(error).beNil();
+                       expect(currentUser.objectId).to.equal(@"e4YWYnYtcptTIV23");
+                       done();
+                   }];
+               }];
+
+           }];
+       });
+    });
+         
+    it(@"after login then logout then login should change current user when update logged user", ^{
+         
+         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+             return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+             
+             NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                   @"objectId" : @"e4YWYnYtcptTIV23",
+                                                   @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                   @"userName" : @"admin"
+                                                   } mutableCopy];
+             NSError *convertErr = nil;
+             NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                    options:0
+                                                                      error:&convertErr];
+             
+             return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+         }];
+         
+         waitUntil(^(DoneCallback done) {
+             // 1.ログインする
+             [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+                 
+                 expect(error).beNil();
+                 expect([NCMBUser currentUser]).notTo.beNil();
+                 
+                 [NCMBUser logOut];
+                 
+                 [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+                     
+                     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                         return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                     } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                         
+                         NSMutableDictionary *responseDic = [@{@"updateDate" : @"2017-07-10T02:37:54.917Z"
+                                                               } mutableCopy];
+                         
+                         NSError *convertErr = nil;
+                         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                                options:0
+                                                                                  error:&convertErr];
+                         
+                         return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                     }];
+                     
+                     // 2.別のユーザーを変更する
+                     NCMBUser *updateUser = [[NCMBUser alloc] init];
+                     updateUser.objectId = @"e4YWYnYtcptTIV23";
+                     updateUser.userName = @"user001";
+                     
+                     [updateUser saveInBackgroundWithBlock:^(NSError *error) {
+                         NCMBUser *currentUser = [NCMBUser currentUser];
+                         
+                         // 3.カレントユーザーは変更したユーザーにならない
+                         expect(error).beNil();
+                         expect(currentUser).notTo.beNil();
+                         expect(currentUser).to.equal(updateUser);
+                         
+                         done();
+                     }];
+                }];
+             }];
+         });
+    });
+         
+    it(@"after login then logout then login should using currentUser regist new user success", ^{
+
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+            NSMutableDictionary *responseDic = [@{@"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                  @"userName" : @"admin"
+                                                  } mutableCopy];
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+
+        waitUntil(^(DoneCallback done) {
+            // 1.ログインする
+            [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+                expect(error).beNil();
+                expect([NCMBUser currentUser]).notTo.beNil();
+
+                [NCMBUser logOut];
+                
+                [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+                    expect(error).beNil();
+                    expect([NCMBUser currentUser]).notTo.beNil();
+                    
+                    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                        return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                    } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+                        NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                              @"objectId" : @"e4YWYnYtcptTIV35",
+                                                              @"sessionToken" : @"y3CY0ggL8hZghFQ70aiutHtJL",
+                                                              @"userName" : @"user1"
+                                                              } mutableCopy];
+
+                        NSError *convertErr = nil;
+                        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                               options:0
+                                                                                 error:&convertErr];
+
+                        return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                    }];
+
+                    // 2.新規ユーザー登録
+                    NCMBUser *regisUser = [NCMBUser currentUser];
+                    regisUser.objectId = nil;
+                    regisUser.userName = @"user1";
+                    regisUser.password = @"password1";
+
+                    [regisUser signUpInBackgroundWithBlock:^(NSError *error) {
+
+                        NCMBUser *currentUser = [NCMBUser currentUser];
+                        // 3.登録したユーザーがカレントユーザーになります
+                        expect(error).beNil();
+                        expect(currentUser).to.equal(regisUser);
+
+                        done();
+                    }];
+                }];
+            }];
+        });
+    });
+     
+    it(@"after login then logout then login should delete currentUser when delete logged in user", ^{
+
+            [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+            } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+                NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                      @"objectId" : @"e4YWYnYtcptTIV23",
+                                                      @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                      @"userName" : @"admin"
+                                                      } mutableCopy];
+                NSError *convertErr = nil;
+                NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                       options:0
+                                                                         error:&convertErr];
+
+                return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+            }];
+
+            waitUntil(^(DoneCallback done) {
+                [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+                    expect(error).beNil();
+                    expect([NCMBUser currentUser]).notTo.beNil();
+                    
+                    [NCMBUser logOut];
+                    
+                    [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+                        expect(error).beNil();
+                        expect([NCMBUser currentUser]).notTo.beNil();
+                    
+                        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                            NSDictionary *responseDic = @{} ;
+                            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+                            return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                        }];
+                        
+                        
+
+                        NCMBUser *currentUser = [NCMBUser currentUser];
+                        NCMBUser *deleteUser = [[NCMBUser alloc] init];
+                        deleteUser.objectId = currentUser.objectId;
+
+                        [deleteUser deleteInBackgroundWithBlock:^(NSError *error) {
+                            NCMBUser *currentUser = [NCMBUser currentUser];
+                            expect(error).beNil();
+                            expect(currentUser).beNil();
+
+                            done();
+                        }];
+                    }];
+                }];
+            });
+    });
+         
+     it(@"after login then logout then login should fetch another user success", ^{
+
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+            NSMutableDictionary *responseDic = [@{@"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                  @"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                  @"userName" : @"admin"
+                                                  } mutableCopy];
+
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+
+        waitUntil(^(DoneCallback done) {
+            // 1.ログインする
+            [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+                expect(error).beNil();
+                NCMBUser *currentUser = NCMBUser.currentUser;
+                expect(currentUser).notTo.beNil();
+                
+                [NCMBUser logOut];
+                
+                [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+                    NSDictionary *responseDic = @{ @"objectId" : @"e4YWYnYtcptTIV35",
+                                                   @"userName" : @"testuser",
+                                                   @"mailAddress" : @"your.mailaddress@example.com",
+                                                   @"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                   @"updateDate" : @"2014-06-03T11:28:30.348Z",
+                                                   @"acl" : @{@"*":@{@"read":@true,@"write":@true}}} ;
+
+                    NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+
+                    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                        return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                    } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                        return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                    }];
+
+                    NCMBUser *anotherUser = [[NCMBUser alloc]init];
+                    anotherUser.objectId = @"e4YWYnYtcptTIV35";
+                    // 2. fetchInBackgroundWithBlock
+                    [anotherUser fetchInBackgroundWithBlock:^(NSError *error) {
+                        expect(error).beNil();
+                        expect(anotherUser.objectId).to.equal(@"e4YWYnYtcptTIV35");
+                        
+                        NCMBUser *currentUser = NCMBUser.currentUser;
+                        expect(currentUser.objectId).to.equal(@"e4YWYnYtcptTIV23");
+                        done();
+                    }];
+                }];
+
+            }];
+        });
+     });
+          
+     it(@"after login then logout then login should not change current user when update another user", ^{
+          
+          [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+              return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+          } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+              
+              NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                    @"objectId" : @"e4YWYnYtcptTIV23",
+                                                    @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                    @"userName" : @"admin"
+                                                    } mutableCopy];
+              NSError *convertErr = nil;
+              NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                     options:0
+                                                                       error:&convertErr];
+              
+              return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+          }];
+          
+          waitUntil(^(DoneCallback done) {
+              // 1.ログインする
+              [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+                  
+                  expect(error).beNil();
+                  expect([NCMBUser currentUser]).notTo.beNil();
+                  
+                  [NCMBUser logOut];
+                  
+                  [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+                      
+                      [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                          return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                      } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                          
+                          NSMutableDictionary *responseDic = [@{@"updateDate" : @"2017-07-10T02:37:54.917Z"
+                                                                } mutableCopy];
+                          
+                          NSError *convertErr = nil;
+                          NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                                 options:0
+                                                                                   error:&convertErr];
+                          
+                          return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                      }];
+                      
+                      // 2.別のユーザーを変更する
+                      NCMBUser *updateUser = [[NCMBUser alloc] init];
+                      updateUser.objectId = @"e4YWYnYtcptTIV35";
+                      updateUser.userName = @"user001";
+                      
+                      [updateUser saveInBackgroundWithBlock:^(NSError *error) {
+                          NCMBUser *currentUser = [NCMBUser currentUser];
+                          
+                          // 3.カレントユーザーは変更したユーザーにならない
+                          expect(error).beNil();
+                          expect(currentUser).notTo.beNil();
+                          expect(currentUser.objectId).to.equal(@"e4YWYnYtcptTIV23");
+                          
+                          done();
+                      }];
+                 }];
+              }];
+          });
+     });
+          
+     it(@"after login then logout then login should regist new user success", ^{
+
+         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+             return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+             NSMutableDictionary *responseDic = [@{@"objectId" : @"e4YWYnYtcptTIV23",
+                                                   @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                   @"userName" : @"admin"
+                                                   } mutableCopy];
+             NSError *convertErr = nil;
+             NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                    options:0
+                                                                      error:&convertErr];
+
+             return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+         }];
+
+         waitUntil(^(DoneCallback done) {
+             // 1.ログインする
+             [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+                 expect(error).beNil();
+                 expect([NCMBUser currentUser]).notTo.beNil();
+
+                 [NCMBUser logOut];
+                 
+                 [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+                     expect(error).beNil();
+                     expect([NCMBUser currentUser]).notTo.beNil();
+                     
+                     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                         return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                     } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+                         NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                               @"objectId" : @"e4YWYnYtcptTIV35",
+                                                               @"sessionToken" : @"y3CY0ggL8hZghFQ70aiutHtJL",
+                                                               @"userName" : @"user1"
+                                                               } mutableCopy];
+
+                         NSError *convertErr = nil;
+                         NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                                options:0
+                                                                                  error:&convertErr];
+
+                         return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                     }];
+
+                     // 2.新規ユーザー登録
+                     NCMBUser *regisUser = [[NCMBUser alloc]init];
+                     regisUser.userName = @"user1";
+                     regisUser.password = @"password1";
+
+                     [regisUser signUpInBackgroundWithBlock:^(NSError *error) {
+
+                         NCMBUser *currentUser = [NCMBUser currentUser];
+                         // 3.登録したユーザーがカレントユーザーになります
+                         expect(error).beNil();
+                         expect(currentUser).notTo.beNil();
+                         expect(currentUser.objectId).to.equal(@"e4YWYnYtcptTIV23");
+
+                         done();
+                     }];
+                 }];
+             }];
+         });
+     });
+      
+     it(@"after login then logout then login should not change currentUser when delete another user", ^{
+
+             [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                 return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+             } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+                 NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
+                                                       @"objectId" : @"e4YWYnYtcptTIV23",
+                                                       @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                       @"userName" : @"admin"
+                                                       } mutableCopy];
+                 NSError *convertErr = nil;
+                 NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                        options:0
+                                                                          error:&convertErr];
+
+                 return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+             }];
+
+             waitUntil(^(DoneCallback done) {
+                 [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+                     expect(error).beNil();
+                     expect([NCMBUser currentUser]).notTo.beNil();
+                     
+                     [NCMBUser logOut];
+                     
+                     [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+                         expect(error).beNil();
+                         expect([NCMBUser currentUser]).notTo.beNil();
+                     
+                         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                             return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                             NSDictionary *responseDic = @{} ;
+                             NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+                             return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                         }];
+                         
+                         
+                         NCMBUser *deleteUser = [[NCMBUser alloc] init];
+                         deleteUser.objectId = @"anotherObjectId";
+
+                         [deleteUser deleteInBackgroundWithBlock:^(NSError *error) {
+                             expect(error).beNil();
+                             
+                             NCMBUser *currentUser = [NCMBUser currentUser];
+                             expect(currentUser).notTo.beNil();
+                             expect(currentUser.objectId).to.equal(@"e4YWYnYtcptTIV23");
+                             
+                             done();
+                         }];
+                     }];
+                 }];
+             });
+     });
+         
     it(@"should not become current user when regist new user", ^{
 
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
@@ -1149,68 +1956,36 @@ describe(@"NCMBUser", ^{
             }];
         });
     });
+         
+    it(@"even not logged in should not become current user when update any user", ^{
+           // 1.念のためログアウトする
+           [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+               return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+           } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
 
-    it(@"after logged in should change to current user when regist new user", ^{
+               NSData *responseData = [[NSData alloc]init];
 
-        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
-        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+               return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+           }];
 
-            NSMutableDictionary *responseDic = [@{@"objectId" : @"e4YWYnYtcptTIV23",
-                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
-                                                  @"userName" : @"admin"
-                                                  } mutableCopy];
-            NSError *convertErr = nil;
-            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
-                                                                   options:0
-                                                                     error:&convertErr];
+           [NCMBUser logOut];
 
-            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
-        }];
+           // 2.新規ユーザー登録
+           NCMBUser *updateUser = [[NCMBUser alloc] init];
+           updateUser.objectId = @"e4YWYnYtcptTIV23";
+           updateUser.userName = @"user001";
 
-        waitUntil(^(DoneCallback done) {
-            // 1.ログインする
-            [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+           waitUntil(^(DoneCallback done) {
+               [updateUser saveInBackgroundWithBlock:^(NSError *error) {
+                   NCMBUser *currentUser = [NCMBUser currentUser];
 
-                expect(error).beNil();
-                expect([NCMBUser currentUser]).notTo.beNil();
+                   // 3.ログインしていなくても変更したユーザーにならない
+                   expect(error).beNil();
+                   expect(currentUser).beNil();
 
-                [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-                    return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
-                } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
-
-                    NSMutableDictionary *responseDic = [@{@"createDate" : @"2017-01-31T04:13:03.065Z",
-                                                          @"objectId" : @"e4YWYnYtcptTIV23",
-                                                          @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
-                                                          @"userName" : @"user1"
-                                                          } mutableCopy];
-
-                    NSError *convertErr = nil;
-                    NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
-                                                                           options:0
-                                                                             error:&convertErr];
-
-                    return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
-                }];
-
-                // 2.新規ユーザー登録
-                NCMBUser *regisUser = [NCMBUser user];
-
-                regisUser.userName = @"user1";
-                regisUser.password = @"password1";
-
-                [regisUser signUpInBackgroundWithBlock:^(NSError *error) {
-
-                    NCMBUser *currentUser = [NCMBUser currentUser];
-                    // 3.登録したユーザーがカレントユーザーになります
-                    expect(error).beNil();
-                    expect(currentUser).equal(regisUser);
-
-                    done();
-                }];
-
-            }];
-        });
+                   done();
+               }];
+           });
     });
 
     it(@"should update data local when update current user", ^{
@@ -1527,6 +2302,214 @@ describe(@"NCMBUser", ^{
             }];
         });
     });
+         
+    it(@"after login fetch user with session token error E401001", ^{
+
+       [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+           return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+       } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+           NSMutableDictionary *responseDic = [@{@"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                 @"objectId" : @"e4YWYnYtcptTIV23",
+                                                 @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                 @"userName" : @"admin"
+                                                 } mutableCopy];
+
+           NSError *convertErr = nil;
+           NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                  options:0
+                                                                    error:&convertErr];
+           return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+       }];
+
+       waitUntil(^(DoneCallback done) {
+           // 1.ログインする
+           [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+               expect(error).beNil();
+               NCMBUser *currentUser = NCMBUser.currentUser;
+               expect(currentUser).notTo.beNil();
+
+               NSDictionary *responseDic = @{ @"code" : @"E401001",
+                                              @"error" : @"Authentication error by header incorrect."} ;
+
+               NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+
+               [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                   return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+               } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                   return [OHHTTPStubsResponse responseWithData:responseData statusCode:401 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+               }];
+
+               NCMBUser *fetchuser = [[NCMBUser alloc]init];
+               fetchuser.objectId = @"e4YWYnYtcptTIV23";
+               // 2. fetchInBackgroundWithBlock
+               [fetchuser fetchInBackgroundWithBlock:^(NSError *error) {
+                   expect(error).beTruthy();
+                   expect(error.code).to.equal(@401001);
+                   expect([error localizedDescription]).to.equal(@"Authentication error by header incorrect.");
+                   done();
+               }];
+
+           }];
+       });
+     });
+         
+    it(@"after login fetch using currentUser with session token error E401001", ^{
+
+           [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+               return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+           } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+               NSMutableDictionary *responseDic = [@{@"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                     @"objectId" : @"e4YWYnYtcptTIV23",
+                                                     @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                     @"userName" : @"admin"
+                                                     } mutableCopy];
+
+               NSError *convertErr = nil;
+               NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                      options:0
+                                                                        error:&convertErr];
+               return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+           }];
+
+           waitUntil(^(DoneCallback done) {
+               // 1.ログインする
+               [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+                   expect(error).beNil();
+                   NCMBUser *currentUser = NCMBUser.currentUser;
+                   expect(currentUser).notTo.beNil();
+
+                   NSDictionary *responseDic = @{ @"code" : @"E401001",
+                                                  @"error" : @"Authentication error by header incorrect."} ;
+
+                   NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+
+                   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                       return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                   } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                       return [OHHTTPStubsResponse responseWithData:responseData statusCode:401 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                   }];
+
+                   NCMBUser *fetchuser = [NCMBUser currentUser];
+                   fetchuser.objectId = @"e4YWYnYtcptTIV23";
+                   // 2. fetchInBackgroundWithBlock
+                   [fetchuser fetchInBackgroundWithBlock:^(NSError *error) {
+                       expect(error).beTruthy();
+                       expect(error.code).to.equal(@401001);
+                       expect([error localizedDescription]).to.equal(@"Authentication error by header incorrect.");
+                       done();
+                   }];
+
+               }];
+           });
+    });
+         
+    it(@"after login fetch user with No data available error E404001", ^{
+
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+            NSMutableDictionary *responseDic = [@{@"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                  @"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                  @"userName" : @"admin"
+                                                  } mutableCopy];
+
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+
+        waitUntil(^(DoneCallback done) {
+            // 1.ログインする
+            [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+                expect(error).beNil();
+                NCMBUser *currentUser = NCMBUser.currentUser;
+                expect(currentUser).notTo.beNil();
+
+                NSDictionary *responseDic = @{ @"code" : @"E404001",
+                                               @"error" : @"No data available."} ;
+
+                NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+
+                [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                    return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                    return [OHHTTPStubsResponse responseWithData:responseData statusCode:404 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                }];
+
+                NCMBUser *fetchuser = [[NCMBUser alloc]init];
+                fetchuser.objectId = @"invalidObjectId";
+                // 2. fetchInBackgroundWithBlock
+                [fetchuser fetchInBackgroundWithBlock:^(NSError *error) {
+                    expect(error).beTruthy();
+                    expect(error.code).to.equal(@404001);
+                    expect([error localizedDescription]).to.equal(@"No data available.");
+                    done();
+                }];
+
+            }];
+        });
+    });
+         
+    it(@"after login fetch using currentUser with No data available error E404001", ^{
+
+         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+             return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+             NSMutableDictionary *responseDic = [@{@"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                   @"objectId" : @"e4YWYnYtcptTIV23",
+                                                   @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL",
+                                                   @"userName" : @"admin"
+                                                   } mutableCopy];
+
+             NSError *convertErr = nil;
+             NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                    options:0
+                                                                      error:&convertErr];
+             return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+         }];
+
+         waitUntil(^(DoneCallback done) {
+             // 1.ログインする
+             [NCMBUser logInWithUsernameInBackground:@"admin" password:@"123456" block:^(NCMBUser *user, NSError *error) {
+
+                 expect(error).beNil();
+                 NCMBUser *currentUser = NCMBUser.currentUser;
+                 expect(currentUser).notTo.beNil();
+
+                 NSDictionary *responseDic = @{ @"code" : @"E404001",
+                                                @"error" : @"No data available."} ;
+
+                 NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+
+                 [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                     return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                 } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                     return [OHHTTPStubsResponse responseWithData:responseData statusCode:404 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                 }];
+
+                 NCMBUser *fetchuser = [NCMBUser currentUser];
+                 fetchuser.objectId = @"invalidObjectId";
+                 // 2. fetchInBackgroundWithBlock
+                 [fetchuser fetchInBackgroundWithBlock:^(NSError *error) {
+                     expect(error).beTruthy();
+                     expect(error.code).to.equal(@404001);
+                     expect([error localizedDescription]).to.equal(@"No data available.");
+                     done();
+                 }];
+
+             }];
+         });
+    });
 
     it(@"logInWithUsername system test", ^{
         NSDictionary *responseDic = @{ @"objectId" : @"09Mp23m4bEOInUqT",
@@ -1622,11 +2605,7 @@ describe(@"NCMBUser", ^{
                 expect(error).beTruthy();
                 expect(error.code).to.equal(@400000);
                 expect([error localizedDescription]).to.equal(@"Bad Request.");
-
-                NCMBUser *user = NCMBUser.currentUser;
-                expect(user.objectId).beNil();
-                expect(user.sessionToken).beNil();
-                expect(user.userName).beNil();
+                
                 done();
             }];
         });

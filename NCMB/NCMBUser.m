@@ -799,9 +799,7 @@ static BOOL isEnableAutomaticUser = NO;
     NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestAsync:request];
     [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
         if (!requestError){
-            if (!requestError) {
-                [self logOutEvent];
-            }
+            [self logOutEvent];
         }
         if(block){
             block(requestError);
@@ -930,12 +928,14 @@ static BOOL isEnableAutomaticUser = NO;
  ローカルオブジェクトをリセットし、ログアウトする
  */
 - (void)afterDelete{
-    [super afterDelete];
-    self.userName = nil;
-    self.password = nil;
-    self.sessionToken = nil;
-    self.mailAddress = nil;
-    [NCMBUser logOutEvent];
+    if ([NCMBUser currentUser]!= nil && [NCMBUser.currentUser.objectId isEqualToString:self.objectId]) {
+        self.userName = nil;
+        self.password = nil;
+        self.sessionToken = nil;
+        self.mailAddress = nil;
+        [super afterDelete];
+        [NCMBUser logOutEvent];
+    }
 }
 
 - (void)afterFetch:(NSMutableDictionary *)response isRefresh:(BOOL)isRefresh{
