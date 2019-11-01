@@ -28,6 +28,11 @@
                     header:(NSDictionary *)headers
                       body:(NSDictionary *)body;
 
+-(instancetype)initWithURLStringForUser:(NSString *)urlString
+                    method:(NSString *)method
+                    header:(NSDictionary *)headers
+                      body:(NSDictionary *)body;
+
 -(instancetype)initWithURL:(NSURL *)url
                     method:(NSString *)method
                     header:(NSDictionary *)headers

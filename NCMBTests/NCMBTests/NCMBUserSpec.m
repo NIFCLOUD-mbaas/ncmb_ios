@@ -1445,6 +1445,43 @@ describe(@"NCMBUser", ^{
             }];
         });
     });
+         
+    it(@"logInWithUsernameInBackground passwd_special_char", ^{
+        NSDictionary *responseDic = @{ @"objectId" : @"09Mp23m4bEOInUqT",
+                                       @"mailAddress" : [NSNull null],
+                                       @"mailAddressConfirm" : [NSNull null],
+                                       @"sessionToken" : @"iXDIelJRY3ULBdms281VTmc5O",
+                                       @"updateDate" : @"2013-08-30T05:32:03.868Z",
+                                       @"userName" : @"NCMBUser",
+                                       @"key":@"value",
+                                       @"createDate" : @"2013-08-28T07:46:09.801Z"} ;
+
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            NSString *query = @"password=test%21%22%23$%25%26'%28%29%2A%2B%2C-./:%3B%3C=%3E?%40%5B%5C%5D%5E_%60%7B%7C%7D~test&userName=NCMBUser";
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"] && [[request.URL query] isEqualToString:query];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+
+        waitUntil(^(DoneCallback done) {
+            [NCMBUser logInWithUsernameInBackground:@"NCMBUser" password:@"test!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~test" block:^(NCMBUser *user, NSError *error) {
+                expect(error).beNil();
+                expect(user.objectId).to.equal(@"09Mp23m4bEOInUqT");
+                expect(user.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
+                expect(user.userName).to.equal(@"NCMBUser");
+                expect([user objectForKey:@"key"]).to.equal(@"value");
+
+                NCMBUser *currentUser = NCMBUser.currentUser;
+                expect(currentUser.objectId).to.equal(@"09Mp23m4bEOInUqT");
+                expect(currentUser.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
+                expect(currentUser.userName).to.equal(@"NCMBUser");
+                expect([currentUser objectForKey:@"key"]).to.equal(@"value");
+                done();
+            }];
+        });
+    });
 
     it(@"logInWithUsernameInBackground error test", ^{
         NSDictionary *responseDic = @{ @"code" : @"E400000",
