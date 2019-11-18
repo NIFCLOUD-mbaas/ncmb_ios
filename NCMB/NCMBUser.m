@@ -929,13 +929,13 @@ static BOOL isEnableAutomaticUser = NO;
  */
 - (void)afterDelete{
     if ([NCMBUser currentUser]!= nil && [NCMBUser.currentUser.objectId isEqualToString:self.objectId]) {
-        self.userName = nil;
-        self.password = nil;
-        self.sessionToken = nil;
-        self.mailAddress = nil;
-        [super afterDelete];
         [NCMBUser logOutEvent];
     }
+    self.userName = nil;
+    self.password = nil;
+    self.sessionToken = nil;
+    self.mailAddress = nil;
+    [super afterDelete];
 }
 
 - (void)afterFetch:(NSMutableDictionary *)response isRefresh:(BOOL)isRefresh{
