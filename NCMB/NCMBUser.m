@@ -800,9 +800,7 @@ static BOOL isEnableAutomaticUser = NO;
     NCMBURLSession *session = [[NCMBURLSession alloc] initWithRequestAsync:request];
     [session dataAsyncConnectionWithBlock:^(NSDictionary *responseData, NSError *requestError){
         if (!requestError){
-            if (!requestError) {
-                [self logOutEvent];
-            }
+            [self logOutEvent];
         }
         if(block){
             block(requestError);
@@ -931,12 +929,14 @@ static BOOL isEnableAutomaticUser = NO;
  ローカルオブジェクトをリセットし、ログアウトする
  */
 - (void)afterDelete{
-    [super afterDelete];
+    if ([NCMBUser currentUser]!= nil && [NCMBUser.currentUser.objectId isEqualToString:self.objectId]) {
+        [NCMBUser logOutEvent];
+    }
     self.userName = nil;
     self.password = nil;
     self.sessionToken = nil;
     self.mailAddress = nil;
-    [NCMBUser logOutEvent];
+    [super afterDelete];
 }
 
 - (void)afterFetch:(NSMutableDictionary *)response isRefresh:(BOOL)isRefresh{
@@ -959,11 +959,7 @@ static BOOL isEnableAutomaticUser = NO;
  */
 -(void)afterSave:(NSDictionary*)response operations:(NSMutableDictionary *)operations{
     [super afterSave:response operations:operations];
-    BOOL isHasTokenKey = NO;
-    if ([response objectForKey:@"sessionToken"]){
-        [self setSessionToken:[response objectForKey:@"sessionToken"]];
-        isHasTokenKey = YES;
-    }
+    
     //会員新規登録の有無
     //if ([response objectForKey:@"createDate"]&&![response objectForKey:@"updateDate"]){
     if ([response objectForKey:@"createDate"] && [response objectForKey:@"updateDate"]){
@@ -992,9 +988,11 @@ static BOOL isEnableAutomaticUser = NO;
             }
             [estimatedData setObject:converted forKey:@"authData"];
         }
+        [NCMBUser saveToFileCurrentUser:self];
     }
     
-    if([self isEqual:[NCMBUser currentUser]] || isHasTokenKey){
+    if ([self.objectId isEqualToString:[NCMBUser currentUser].objectId]) {
+        self.sessionToken = [NCMBUser currentUser].sessionToken;
         [NCMBUser saveToFileCurrentUser:self];
     }
 }
