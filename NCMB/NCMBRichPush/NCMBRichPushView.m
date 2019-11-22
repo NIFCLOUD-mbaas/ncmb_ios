@@ -27,11 +27,11 @@
 #define CLOSE_BUTTON_BOTTOM_MARGIN 5.0
 #define CLOSE_BUTTON_LEFT_MARGIN 20.0
 
-@interface NCMBRichPushView() <UIWebViewDelegate, UIActionSheetDelegate>
+@interface NCMBRichPushView() <WKNavigationDelegate>
 
 @property (nonatomic) UIView *cv; //clear view
 @property (nonatomic) UIView *uv; //ui view
-@property (nonatomic) UIWebView *wv; // web view
+@property (nonatomic) WKWebView *wv; // web view
 @property (nonatomic) UIButton* closeButton;
 
 @end
@@ -59,8 +59,7 @@ enum{
     
     
     self.uv = [[UIView alloc]init];
-    
-    self.wv = [[UIWebView alloc]init];
+    self.wv = [[WKWebView alloc]init];
     
     //make instance of closeImageView
     NCMBCloseImageView *closeImage = [[NCMBCloseImageView alloc]initWithFrame:CGRectMake(0, 5, CLOSE_BUTTON_WIDTH, CLOSE_IMAGE_FRAME_SIZE)];
@@ -121,10 +120,7 @@ enum{
     self.uv.layer.cornerRadius = 5;
     self.uv.clipsToBounds = YES;
     
-    //set webpage size to webview size
-    self.wv.scalesPageToFit = YES;
-    
-    self.wv.delegate = self;
+    self.wv.navigationDelegate = self;
     
     //add subview to main view
     [window.rootViewController.view addSubview:self.cv];
@@ -135,10 +131,13 @@ enum{
         self.uv.alpha = 1.0f;
     }];
     
+    NSURL *url = [NSURL URLWithString:richUrl];
+    NSURLRequest *req = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:5];
+    [self.wv loadRequest:req];
 }
 
--(void)loadRequest:(NSURLRequest *)request{
-    [self.wv loadRequest:request];
+- (WKNavigation *)loadRequest:(NSURLRequest *)request{
+    return [self.wv loadRequest:request];
 }
 
 - (void)resizeWebViewWithNotification:(NSNotification *)notification {
@@ -237,29 +236,25 @@ enum{
     [activity stopAnimating];
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView{
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{
     [self endWebViewLoading];
 }
 
 # pragma webview delegate
 
-- (BOOL) webView:(UIWebView*) webView
-shouldStartLoadWithRequest:(NSURLRequest*) request
-  navigationType:(UIWebViewNavigationType) navigationType
-{
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler{
     [self startWebViewLoading];
-    
-    return YES;
+    decisionHandler(WKNavigationActionPolicyAllow);
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error{
     if ([error code] != NSURLErrorCancelled){
         UIView* bg = [self.wv viewWithTag:ActivityIndicatorBackgroundTag];
         [bg removeFromSuperview];
 
         NSString *html = @"<html><body><h1>ページを開けません。</h1></body></html>";
         NSData *bodyData = [html dataUsingEncoding:NSUTF8StringEncoding];
-        [self.wv loadData:bodyData MIMEType:@"text/html" textEncodingName:@"utf-8" baseURL:[[NSURL alloc]init]];
+        [self.wv loadData:bodyData MIMEType:@"text/html" characterEncodingName:@"utf-8" baseURL:[[NSURL alloc]init]];
     }
 }
 
