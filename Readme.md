@@ -1,6 +1,6 @@
 # ニフクラ mobile backend iOS SDKについて
 
-[![Build Status](https://travis-ci.org/NIFCloud-mbaas/ncmb_ios.svg?branch=master)](https://travis-ci.org/NIFCloud-mbaas/ncmb_ios)
+[![Build Status](https://travis-ci.org/NIFCLOUD-mbaas/ncmb_ios.svg?branch=master)](https://travis-ci.org/NIFCLOUD-mbaas/ncmb_ios)
 
 ## 概要
 
@@ -45,4 +45,4 @@
 
 - [ニフクラ mobile backend](https://mbaas.nifcloud.com/)
 - [ドキュメント](https://mbaas.nifcloud.com/doc/current/)
-- [ユーザーコミュニティ](https://github.com/NIFCloud-mbaas/UserCommunity)
+- [ユーザーコミュニティ](https://github.com/NIFCLOUD-mbaas/UserCommunity)
