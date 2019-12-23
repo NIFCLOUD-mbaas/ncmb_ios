@@ -2820,7 +2820,6 @@ describe(@"NCMBUser", ^{
             NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
                                                                    options:0
                                                                      error:&convertErr];
-            NSLog(@"Data: %@", responseData);
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
     
