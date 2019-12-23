@@ -2799,6 +2799,41 @@ describe(@"NCMBUser", ^{
         expect(error.code).to.equal(@400000);
         expect([error localizedDescription]).to.equal(@"Bad Request.");
     });
+         
+    it(@"Login with Anynomus", ^{
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+            NSMutableDictionary *anonymousAuth = [NSMutableDictionary dictionary];
+            
+            NSDictionary *anonymousInfo = @{@"id" : @"4FF8631B-AAF2-4FF5-A61F-4C56ED6AF4AF"};
+            [anonymousAuth setObject:anonymousInfo forKey:@"anonymous"];
+            
+            NSMutableDictionary *responseDic = [@{@"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                  @"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL"
+                                                  } mutableCopy];
+            [responseDic setObject:anonymousAuth forKey:@"authData"];
+
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+            NSLog(@"Data: %@", responseData);
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+    
+        waitUntil(^(DoneCallback done) {
+            [NCMBAnonymousUtils logInWithBlock:^(NCMBUser *user, NSError *error) {
+                NCMBUser *currentUser = [NCMBUser currentUser];
+                expect(currentUser.objectId).to.equal(@"e4YWYnYtcptTIV23");
+                expect(currentUser.sessionToken).to.equal(@"yDCY0ggL8hZghFQ70aiutHtJL");
+                done();
+            }];
+        });
+
+     });
 
     afterEach(^{
 
