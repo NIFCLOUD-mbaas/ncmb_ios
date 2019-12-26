@@ -2833,6 +2833,136 @@ describe(@"NCMBUser", ^{
         });
 
      });
+         
+     it(@"Login with Facebok", ^{
+         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+             return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+             NSMutableDictionary *facebookAuth = [NSMutableDictionary dictionary];
+             
+             NSDictionary *facebookInfo = @{@"id" : @"facebookId",
+                                             @"access_token" : @"facebookToken",
+                                             @"expiration_date":@{@"__type" : @"Date",@"iso" : @"2016-09-06T05:41:33.466Z"}
+                                             };
+             [facebookAuth setObject:facebookInfo forKey:@"facebook"];
+             
+             NSMutableDictionary *responseDic = [@{@"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                   @"objectId" : @"e4YWYnYtcptTIV23",
+                                                   @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL"
+                                                   } mutableCopy];
+             [responseDic setObject:facebookAuth forKey:@"authData"];
+
+             NSError *convertErr = nil;
+             NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                    options:0
+                                                                      error:&convertErr];
+             return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+         }];
+     
+         waitUntil(^(DoneCallback done) {
+             NSDictionary *facebookInfo = @{@"id" : @"facebookId",
+                                             @"access_token" : @"facebookToken",
+                                             @"expiration_date":@{@"__type" : @"Date",@"iso" : @"2016-09-06T05:41:33.466Z"}
+                                             };
+             NCMBUser *user = [NCMBUser user];
+             [user signUpWithFacebookToken:facebookInfo withBlock:^(NSError *error) {
+                 NCMBUser *currentUser = [NCMBUser currentUser];
+                 expect(currentUser.objectId).to.equal(@"e4YWYnYtcptTIV23");
+                 expect(currentUser.sessionToken).to.equal(@"yDCY0ggL8hZghFQ70aiutHtJL");
+                 done();
+             }];
+         });
+
+      });
+         
+     it(@"Login with Twitter", ^{
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+            NSMutableDictionary *twitterAuth = [NSMutableDictionary dictionary];
+            
+            NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                           @"id" : @"twitterId",
+                                           @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                           @"oauth_token" : @"twitterOauthToken",
+                                           @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                           @"screen_name" : @"NCMBSupport"
+                                           };
+            [twitterAuth setObject:twitterInfo forKey:@"twitter"];
+            
+            NSMutableDictionary *responseDic = [@{@"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                  @"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL"
+                                                  } mutableCopy];
+            [responseDic setObject:twitterAuth forKey:@"authData"];
+
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+
+        waitUntil(^(DoneCallback done) {
+            NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                           @"id" : @"twitterId",
+                                           @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                           @"oauth_token" : @"twitterOauthToken",
+                                           @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                           @"screen_name" : @"NCMBSupport"
+                                           };
+            NCMBUser *user = [NCMBUser user];
+            [user signUpWithTwitterToken:twitterInfo withBlock:^(NSError *error) {
+                NCMBUser *currentUser = [NCMBUser currentUser];
+                expect(currentUser.objectId).to.equal(@"e4YWYnYtcptTIV23");
+                expect(currentUser.sessionToken).to.equal(@"yDCY0ggL8hZghFQ70aiutHtJL");
+                done();
+            }];
+        });
+
+     });
+         
+     it(@"Login with Google", ^{
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+            NSMutableDictionary *googleAuth = [NSMutableDictionary dictionary];
+            
+            NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                            @"access_token" : @"googleAccessToken"
+                                            };
+            [googleAuth setObject:googleInfo forKey:@"google"];
+            
+            NSMutableDictionary *responseDic = [@{@"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                  @"objectId" : @"e4YWYnYtcptTIV23",
+                                                  @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL"
+                                                  } mutableCopy];
+            [responseDic setObject:googleAuth forKey:@"authData"];
+
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+
+        waitUntil(^(DoneCallback done) {
+            NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                        @"access_token" : @"googleAccessToken"
+                                        };
+            NCMBUser *user = [NCMBUser user];
+            [user signUpWithGoogleToken:googleInfo withBlock:^(NSError *error) {
+                NCMBUser *currentUser = [NCMBUser currentUser];
+                expect(currentUser.objectId).to.equal(@"e4YWYnYtcptTIV23");
+                expect(currentUser.sessionToken).to.equal(@"yDCY0ggL8hZghFQ70aiutHtJL");
+                done();
+            }];
+        });
+
+     });
 
     afterEach(^{
 
