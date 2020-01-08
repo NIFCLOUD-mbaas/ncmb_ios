@@ -988,6 +988,10 @@ static BOOL isEnableAutomaticUser = NO;
             }
             [estimatedData setObject:converted forKey:@"authData"];
         }
+        if ([response objectForKey:@"sessionToken"]){
+            [self setSessionToken:[response objectForKey:@"sessionToken"]];
+        }
+
         [NCMBUser saveToFileCurrentUser:self];
     }
     
