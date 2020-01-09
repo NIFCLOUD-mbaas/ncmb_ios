@@ -142,6 +142,13 @@
  */
 - (void)signUpWithFacebookToken:(NSDictionary *)facebookInfo withBlock:(NCMBErrorResultBlock)block;
 
+/**
+ appleのauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う
+ @param appleInfo apple認証に必要なauthData
+ @param block サインアップ後に実行されるblock
+ */
+- (void)signUpWithAppleToken:(NSDictionary *)appleInfo withBlock:(NCMBErrorResultBlock)block;
+
 #pragma mark requestAuthenticationMail
 /** @name requestAuthenticationMail */
 
@@ -344,6 +351,14 @@
  @param block 既存のauthDataのfacebook情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
  */
 - (void)linkWithFacebookToken:(NSDictionary *)facebookInfo
+                    withBlock:(NCMBErrorResultBlock)block;
+
+/**
+ ログイン中のユーザー情報に、appleの認証情報を紐付ける
+ @param appleInfo appleの認証情報
+ @param block 既存のauthDataのapple情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
+ */
+- (void)linkWithAppleToken:(NSDictionary *)appleInfo
                     withBlock:(NCMBErrorResultBlock)block;
 
 /**
