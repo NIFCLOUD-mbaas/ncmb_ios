@@ -253,12 +253,19 @@ static BOOL isEnableAutomaticUser = NO;
 - (void)signUpWithToken:(NSDictionary *)snsInfo withType:(NSString *)type withBlock:(NCMBErrorResultBlock)block{
     //既存のauthDataのtype情報のみ更新する
     NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
+    NSMutableDictionary *localAuthData = [NSMutableDictionary dictionary];
     if([[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
         userAuthData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
+        localAuthData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
     }
     [userAuthData setObject:snsInfo forKey:type];
     [self setObject:userAuthData forKey:@"authData"];
     [self signUpInBackgroundWithBlock:^(NSError *error) {
+        if (error) {
+            [self setObject:localAuthData forKey:@"authData"];
+        }
+        // ログインユーザーをファイルに保存する
+        [NCMBUser saveToFileCurrentUser:self];
         [self executeUserCallback:block error:error];
     }];
 }
