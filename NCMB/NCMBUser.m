@@ -262,7 +262,6 @@ static BOOL isEnableAutomaticUser = NO;
         if (error) {
             [userAuthData removeObjectForKey:type];
             [self setObject:userAuthData forKey:@"authData"];
-            [NCMBUser saveToFileCurrentUser:self];
         }
         [self executeUserCallback:block error:error];
     }];
