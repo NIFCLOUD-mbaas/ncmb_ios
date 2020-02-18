@@ -259,6 +259,10 @@ static BOOL isEnableAutomaticUser = NO;
     [userAuthData setObject:snsInfo forKey:type];
     [self setObject:userAuthData forKey:@"authData"];
     [self signUpInBackgroundWithBlock:^(NSError *error) {
+        if (error) {
+            [userAuthData removeObjectForKey:type];
+            [self setObject:userAuthData forKey:@"authData"];
+        }
         [self executeUserCallback:block error:error];
     }];
 }

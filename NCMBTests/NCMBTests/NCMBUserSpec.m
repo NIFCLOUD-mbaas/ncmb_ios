@@ -2964,6 +2964,47 @@ describe(@"NCMBUser", ^{
 
      });
 
+    it(@"should case of network error are not signUp with google token and return existing token", ^{
+
+        NSDictionary *googleInfo = @{@"id" : @"googleId",
+                                     @"access_token" : @"googleAccessToken"
+                                     };
+
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+
+        NSMutableDictionary *twitterAuth = [NSMutableDictionary dictionary];
+        [twitterAuth setObject:twitterInfo forKey:@"twitter"];
+        [mock setObject:twitterAuth forKey:@"authData"];
+
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                             code:-1
+                                         userInfo:nil];
+            block(e);
+        };
+
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+
+        [mock signUpWithGoogleToken:googleInfo withBlock:^(NSError *error) {
+            expect(error).to.beTruthy();
+            if(error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"google"]).to.beNil();
+                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+            }
+        }];
+    });
+         
     afterEach(^{
 
     });
