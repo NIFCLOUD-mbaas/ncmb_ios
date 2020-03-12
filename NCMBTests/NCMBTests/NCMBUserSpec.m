@@ -3176,7 +3176,7 @@ describe(@"NCMBUser", ^{
                 [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
                     return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
                 } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
-                    return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                    return [OHHTTPStubsResponse responseWithData:responseData statusCode:401 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
                 }];
                 
                 NSDictionary *appleInfo = @{@"id" : @"appleId",
