@@ -363,14 +363,14 @@
 
 /**
  会員情報に、引数で指定したtypeの認証情報が含まれているか確認する
- @param type 認証情報のtype（googleもしくはtwitter、facebook、anonymous）
+ @param type 認証情報のtype（googleもしくはtwitter、facebook、apple、anonymous）
  @return 引数で指定したtypeの会員情報が含まれている場合はYESを返す
  */
 - (BOOL)isLinkedWith:(NSString *)type;
 
 /**
  会員情報から、引数で指定したtypeの認証情報を削除する
- @param type 認証情報のtype（googleもしくはtwitter、facebook、anonymous）
+ @param type 認証情報のtype（googleもしくはtwitter、facebook、apple、anonymous）
  @param block エラー情報を返却するblock エラーがあればエラーのポインタが、なければnilが渡される。
  */
 - (void)unlink:(NSString *)type
