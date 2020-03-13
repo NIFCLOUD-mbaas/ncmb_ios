@@ -3076,7 +3076,7 @@ describe(@"NCMBUser", ^{
         });
     });
          
-    it(@"should signUp with apple token failed after login with username and password 'Apple authentication is not allowed'", ^{
+    it(@"signUp with apple token failed after login with username and password 'Apple authentication is not allowed'", ^{
         NSDictionary *responseDic = @{ @"objectId" : @"09Mp23m4bEOInUqT",
                                        @"mailAddress" : [NSNull null],
                                        @"mailAddressConfirm" : [NSNull null],
@@ -3103,17 +3103,17 @@ describe(@"NCMBUser", ^{
                 expect(currentUser.isMailAddressConfirm).to.equal(false);
                 expect(currentUser.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
                 expect(currentUser.userName).to.equal(@"NCMBUser");
-
-                NSDictionary *responseDic = @{ @"code" : @"E403005",
-                                               @"error" : @"apple must not be entered."} ;
-                NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
-
-                [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-                    return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
-                } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
-                    return [OHHTTPStubsResponse responseWithData:responseData statusCode:403 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
-                }];
-
+                
+                void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+                    __unsafe_unretained void (^block) (NSError *error);
+                    [invocation getArgument:&block atIndex:2];
+                    NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                                     code:403005
+                                                 userInfo:@{NSLocalizedDescriptionKey:@"apple must not be entered."}];
+                    block(e);
+                };
+                id mock = OCMPartialMock(user);
+                OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
                 NSDictionary *appleInfo = @{@"id" : @"appleId",
                                             @"access_token" : @"appleAccessToken"
                                             };
@@ -3137,7 +3137,7 @@ describe(@"NCMBUser", ^{
         });
     });
          
-    it(@"should signUp with apple token failed after login with username and password 'Apple authentication is permitted'", ^{
+    it(@"signUp with apple token failed after login with username and password 'Apple authentication is permitted'", ^{
         NSDictionary *responseDic = @{ @"objectId" : @"09Mp23m4bEOInUqT",
                                        @"mailAddress" : [NSNull null],
                                        @"mailAddressConfirm" : [NSNull null],
@@ -3164,17 +3164,17 @@ describe(@"NCMBUser", ^{
                 expect(currentUser.isMailAddressConfirm).to.equal(false);
                 expect(currentUser.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
                 expect(currentUser.userName).to.equal(@"NCMBUser");
-
-                NSDictionary *responseDic = @{ @"code" : @"E401003",
-                                               @"error" : @"OAuth apple authentication error."} ;
-                NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
-
-                [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-                    return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
-                } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
-                    return [OHHTTPStubsResponse responseWithData:responseData statusCode:401 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
-                }];
-
+                
+                void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+                    __unsafe_unretained void (^block) (NSError *error);
+                    [invocation getArgument:&block atIndex:2];
+                    NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                                     code:401003
+                                                 userInfo:@{NSLocalizedDescriptionKey:@"OAuth apple authentication error."}];
+                    block(e);
+                };
+                id mock = OCMPartialMock(user);
+                OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
                 NSDictionary *appleInfo = @{@"id" : @"appleId",
                                             @"access_token" : @"appleAccessToken"
                                             };
@@ -3197,7 +3197,6 @@ describe(@"NCMBUser", ^{
             }];
         });
     });
-
          
     it(@"should link with apple token", ^{
 
