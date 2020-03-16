@@ -3008,194 +3008,113 @@ describe(@"NCMBUser", ^{
 
     });
          
-    it(@"should signUp with apple token after login with username and password", ^{
-        NSDictionary *responseDic = @{ @"objectId" : @"09Mp23m4bEOInUqT",
-                                       @"mailAddress" : [NSNull null],
-                                       @"mailAddressConfirm" : [NSNull null],
-                                       @"sessionToken" : @"iXDIelJRY3ULBdms281VTmc5O",
-                                       @"updateDate" : @"2013-08-30T05:32:03.868Z",
-                                       @"userName" : @"NCMBUser",
-                                       @"key":@"value",
-                                       @"createDate" : @"2013-08-28T07:46:09.801Z"} ;
-
-        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
-
+    it(@"should signUp with apple token response 200", ^{
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
             return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
         } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            NSMutableDictionary *appleAuth = [NSMutableDictionary dictionary];
+            NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                            @"access_token" : @"appleAccessToken"
+                                            };
+            [appleAuth setObject:appleInfo forKey:@"apple"];
+            
+            NSMutableDictionary *responseDic = [@{@"objectId" : @"09Mp23m4bEOInUqT",
+                                                  @"mailAddress" : [NSNull null],
+                                                  @"mailAddressConfirm" : [NSNull null],
+                                                  @"sessionToken" : @"iXDIelJRY3ULBdms281VTmc5O",
+                                                  @"updateDate" : @"2013-08-30T05:32:03.868Z",
+                                                  @"userName" : @"NCMBUser",
+                                                  @"createDate" : @"2013-08-28T07:46:09.801Z"} mutableCopy];
+            [responseDic setObject:appleAuth forKey:@"authData"];
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
             return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
         }];
-
+    
         waitUntil(^(DoneCallback done) {
-            [NCMBUser logInWithUsernameInBackground:@"NCMBUser" password:@"password" block:^(NCMBUser *user, NSError *error) {
+            NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                        @"access_token" : @"appleAccessToken"
+                                        };
+            NCMBUser *user = [NCMBUser user];
+            [user signUpWithAppleToken:appleInfo withBlock:^(NSError *error) {
                 expect(error).beNil();
-
-                // Check currentuser
-                NCMBUser *currentUser = NCMBUser.currentUser;
-                expect(currentUser.objectId).to.equal(@"09Mp23m4bEOInUqT");
-                expect(currentUser.mailAddress).to.equal([NSNull null]);
-                expect(currentUser.isMailAddressConfirm).to.equal(false);
-                expect(currentUser.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
-                expect(currentUser.userName).to.equal(@"NCMBUser");
-                
-                NSMutableDictionary *appleAuth = [NSMutableDictionary dictionary];
-                NSDictionary *appleInfo = @{@"id" : @"appleId",
-                                                @"access_token" : @"appleAccessToken"
-                                                };
-                [appleAuth setObject:appleInfo forKey:@"apple"];
-                NSMutableDictionary *responseDic = [@{@"objectId" : @"09Mp23m4bEOInUqT",
-                                                      @"mailAddress" : [NSNull null],
-                                                      @"mailAddressConfirm" : [NSNull null],
-                                                      @"sessionToken" : @"iXDIelJRY3ULBdms281VTmc5O",
-                                                      @"updateDate" : @"2013-08-30T05:32:03.868Z",
-                                                      @"userName" : @"NCMBUser",
-                                                      @"createDate" : @"2013-08-28T07:46:09.801Z"} mutableCopy];
-                [responseDic setObject:appleAuth forKey:@"authData"];
-                NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
-                [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-                    return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
-                } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
-                    return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
-                }];
-                
-                // signUpWithAppleToken
-                [currentUser signUpWithAppleToken:appleInfo
-                                      withBlock:^(NSError *error) {
-                    expect(error).beNil();
+                if(!error) {
                     // Check currentuser after signUpWithAppleToken
-                    NCMBUser *currentUser2 = NCMBUser.currentUser;
-                    expect(currentUser2.objectId).to.equal(@"09Mp23m4bEOInUqT");
-                    expect(currentUser2.mailAddress).to.equal([NSNull null]);
-                    expect(currentUser2.isMailAddressConfirm).to.equal(false);
-                    expect(currentUser2.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
-                    expect(currentUser2.userName).to.equal(@"NCMBUser");
-                    expect([[currentUser2 objectForKey:@"authData"]objectForKey:@"apple"]).to.equal(appleInfo);
-                }];
-                done();
+                    NCMBUser *currentUser = NCMBUser.currentUser;
+                    expect(currentUser.objectId).to.equal(@"09Mp23m4bEOInUqT");
+                    expect(currentUser.mailAddress).beNil();
+                    expect(currentUser.isMailAddressConfirm).to.equal(false);
+                    expect(currentUser.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
+                    expect(currentUser.userName).to.equal(@"NCMBUser");
+                    expect([[currentUser objectForKey:@"authData"]objectForKey:@"apple"]).to.equal(appleInfo);
+                    done();
+                }
             }];
         });
     });
          
     it(@"signUp with apple token failed after login with username and password 'Apple authentication is not allowed'", ^{
-        NSDictionary *responseDic = @{ @"objectId" : @"09Mp23m4bEOInUqT",
-                                       @"mailAddress" : [NSNull null],
-                                       @"mailAddressConfirm" : [NSNull null],
-                                       @"sessionToken" : @"iXDIelJRY3ULBdms281VTmc5O",
-                                       @"updateDate" : @"2013-08-30T05:32:03.868Z",
-                                       @"userName" : @"NCMBUser",
-                                       @"createDate" : @"2013-08-28T07:46:09.801Z"} ;
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+        NSMutableDictionary *appleAuth = [NSMutableDictionary dictionary];
+        NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                    @"access_token" : @"appleAccessToken"
+                                    };
+        [appleAuth setObject:appleInfo forKey:@"apple"];
+        [mock setObject:appleAuth forKey:@"authData"];
+    
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                             code:403005
+                                         userInfo:@{NSLocalizedDescriptionKey:@"apple must not be entered."}];
+            block(e);
+        };
 
-        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
-
-        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
-        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
-            return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        // signUpWithAppleToken
+        [mock signUpWithAppleToken:appleInfo
+                              withBlock:^(NSError *error) {
+            expect(error).beTruthy();
+            if (error) {
+                expect(error.code).to.equal(@403005);
+                expect([error localizedDescription]).to.equal(@"apple must not be entered.");
+            }
         }];
-
-        waitUntil(^(DoneCallback done) {
-            [NCMBUser logInWithUsernameInBackground:@"NCMBUser" password:@"password" block:^(NCMBUser *user, NSError *error) {
-                expect(error).beNil();
-                // Check currentuser
-                NCMBUser *currentUser = NCMBUser.currentUser;
-                expect(currentUser.objectId).to.equal(@"09Mp23m4bEOInUqT");
-                expect(currentUser.mailAddress).to.equal([NSNull null]);
-                expect(currentUser.isMailAddressConfirm).to.equal(false);
-                expect(currentUser.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
-                expect(currentUser.userName).to.equal(@"NCMBUser");
-                
-                void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
-                    __unsafe_unretained void (^block) (NSError *error);
-                    [invocation getArgument:&block atIndex:2];
-                    NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
-                                                     code:403005
-                                                 userInfo:@{NSLocalizedDescriptionKey:@"apple must not be entered."}];
-                    block(e);
-                };
-                id mock = OCMPartialMock(user);
-                OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
-                NSDictionary *appleInfo = @{@"id" : @"appleId",
-                                            @"access_token" : @"appleAccessToken"
-                                            };
-                // signUpWithAppleToken
-                [currentUser signUpWithAppleToken:appleInfo
-                                      withBlock:^(NSError *error) {
-                    expect(error).beTruthy();
-                    expect(error.code).to.equal(@403005);
-                    expect([error localizedDescription]).to.equal(@"apple must not be entered.");
-                    // Check currentuser after signUpWithAppleToken failed
-                    NCMBUser *currentUser2 = NCMBUser.currentUser;
-                    expect(currentUser2.objectId).to.equal(@"09Mp23m4bEOInUqT");
-                    expect(currentUser2.mailAddress).to.equal([NSNull null]);
-                    expect(currentUser2.isMailAddressConfirm).to.equal(false);
-                    expect(currentUser2.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
-                    expect(currentUser2.userName).to.equal(@"NCMBUser");
-                    expect([[currentUser2 objectForKey:@"authData"]objectForKey:@"apple"]).beNil();
-                }];
-                done();
-            }];
-        });
     });
          
     it(@"signUp with apple token failed after login with username and password 'Apple authentication is permitted'", ^{
-        NSDictionary *responseDic = @{ @"objectId" : @"09Mp23m4bEOInUqT",
-                                       @"mailAddress" : [NSNull null],
-                                       @"mailAddressConfirm" : [NSNull null],
-                                       @"sessionToken" : @"iXDIelJRY3ULBdms281VTmc5O",
-                                       @"updateDate" : @"2013-08-30T05:32:03.868Z",
-                                       @"userName" : @"NCMBUser",
-                                       @"createDate" : @"2013-08-28T07:46:09.801Z"} ;
+        NCMBUser *user = [NCMBUser user];
+            id mock = OCMPartialMock(user);
+            NSMutableDictionary *appleAuth = [NSMutableDictionary dictionary];
+            NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                        @"access_token" : @"appleAccessToken"
+                                        };
+            [appleAuth setObject:appleInfo forKey:@"apple"];
+            [mock setObject:appleAuth forKey:@"authData"];
+        
+            void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+                __unsafe_unretained void (^block) (NSError *error);
+                [invocation getArgument:&block atIndex:2];
+                NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                                 code:401003
+                                             userInfo:@{NSLocalizedDescriptionKey:@"OAuth apple authentication error."}];
+                block(e);
+            };
 
-        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
-
-        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
-        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
-            return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
-        }];
-
-        waitUntil(^(DoneCallback done) {
-            [NCMBUser logInWithUsernameInBackground:@"NCMBUser" password:@"password" block:^(NCMBUser *user, NSError *error) {
-                expect(error).beNil();
-                // Check currentuser
-                NCMBUser *currentUser = NCMBUser.currentUser;
-                expect(currentUser.objectId).to.equal(@"09Mp23m4bEOInUqT");
-                expect(currentUser.mailAddress).to.equal([NSNull null]);
-                expect(currentUser.isMailAddressConfirm).to.equal(false);
-                expect(currentUser.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
-                expect(currentUser.userName).to.equal(@"NCMBUser");
-                
-                void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
-                    __unsafe_unretained void (^block) (NSError *error);
-                    [invocation getArgument:&block atIndex:2];
-                    NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
-                                                     code:401003
-                                                 userInfo:@{NSLocalizedDescriptionKey:@"OAuth apple authentication error."}];
-                    block(e);
-                };
-                id mock = OCMPartialMock(user);
-                OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
-                NSDictionary *appleInfo = @{@"id" : @"appleId",
-                                            @"access_token" : @"appleAccessToken"
-                                            };
-                // signUpWithAppleToken
-                [currentUser signUpWithAppleToken:appleInfo
-                                      withBlock:^(NSError *error) {
-                    expect(error).beTruthy();
+            OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+            // signUpWithAppleToken
+            [mock signUpWithAppleToken:appleInfo
+                                  withBlock:^(NSError *error) {
+                expect(error).beTruthy();
+                if (error) {
                     expect(error.code).to.equal(@401003);
                     expect([error localizedDescription]).to.equal(@"OAuth apple authentication error.");
-                    // Check currentuser after signUpWithAppleToken failed
-                    NCMBUser *currentUser2 = NCMBUser.currentUser;
-                    expect(currentUser2.objectId).to.equal(@"09Mp23m4bEOInUqT");
-                    expect(currentUser2.mailAddress).to.equal([NSNull null]);
-                    expect(currentUser2.isMailAddressConfirm).to.equal(false);
-                    expect(currentUser2.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
-                    expect(currentUser2.userName).to.equal(@"NCMBUser");
-                    expect([[currentUser2 objectForKey:@"authData"]objectForKey:@"apple"]).beNil();
-                }];
-                done();
+                }
             }];
-        });
     });
          
     it(@"should link with apple token", ^{
