@@ -3055,7 +3055,7 @@ describe(@"NCMBUser", ^{
         });
     });
          
-    it(@"signUp with apple token failed after login with username and password 'Apple authentication is not allowed'", ^{
+    it(@"signUp with apple token failed when 'Apple authentication is not allowed'", ^{
         NCMBUser *user = [NCMBUser user];
         id mock = OCMPartialMock(user);
         NSMutableDictionary *appleAuth = [NSMutableDictionary dictionary];
@@ -3086,7 +3086,7 @@ describe(@"NCMBUser", ^{
         }];
     });
          
-    it(@"signUp with apple token failed after login with username and password 'Apple authentication is permitted'", ^{
+    it(@"signUp with apple token failed when 'Apple authentication is permitted'", ^{
         NCMBUser *user = [NCMBUser user];
             id mock = OCMPartialMock(user);
             NSMutableDictionary *appleAuth = [NSMutableDictionary dictionary];
