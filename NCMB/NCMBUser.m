@@ -264,6 +264,15 @@ static BOOL isEnableAutomaticUser = NO;
             [userAuthData removeObjectForKey:type];
             [self setObject:userAuthData forKey:@"authData"];
         }
+        // remove bundle_identifier
+        if([[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
+            NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
+            userAuthData = [NSMutableDictionary dictionaryWithDictionary:[self objectForKey:@"authData"]];
+            NSMutableDictionary *appleData = [userAuthData objectForKey:@"apple"];
+            [appleData removeObjectForKey:@"bundle_identifier"];
+            [userAuthData setValue:appleData forKey:@"apple"];
+            [self setObject:userAuthData forKey:@"authData"];
+        }
         [self executeUserCallback:block error:error];
     }];
 }
@@ -301,7 +310,10 @@ static BOOL isEnableAutomaticUser = NO;
  @param block サインアップ後に実行されるblock
  */
 - (void)signUpWithAppleToken:(NSDictionary *)appleInfo withBlock:(NCMBErrorResultBlock)block{
-    [self signUpWithToken:appleInfo withType:AUTH_TYPE_APPLE withBlock:block];
+    NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+    NSDictionary *appleInfoParam = [appleInfo mutableCopy];
+    [appleInfoParam setValue:bundleIdentifier forKey:@"bundle_identifier"];
+    [self signUpWithToken:appleInfoParam withType:AUTH_TYPE_APPLE withBlock:block];
 }
 
 #pragma mark - signUpAnonymous
@@ -1038,6 +1050,12 @@ static BOOL isEnableAutomaticUser = NO;
             // ローカルデータから既にあるauthDataを取得して認証情報をマージ
             [localAuthData setObject:snsInfo forKey:type];
         }
+        // remove bundle_identifier
+        if([[localAuthData objectForKey:@"apple"] isKindOfClass:[NSDictionary class]]){
+            NSMutableDictionary *appleData = [localAuthData objectForKey:@"apple"];
+            [appleData removeObjectForKey:@"bundle_identifier"];
+            [localAuthData setValue:appleData forKey:@"apple"];
+        }
         [estimatedData setObject:localAuthData forKey:@"authData"];
         // ログインユーザーをファイルに保存する
         [NCMBUser saveToFileCurrentUser:self];
@@ -1078,7 +1096,10 @@ static BOOL isEnableAutomaticUser = NO;
  @param block 既存のauthDataのapple情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
  */
 - (void)linkWithAppleToken:(NSDictionary *)appleInfo withBlock:(NCMBErrorResultBlock)block{
-    [self linkWithToken:appleInfo withType:AUTH_TYPE_APPLE withBlock:block];
+    NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+    NSDictionary *appleInfoParam = [appleInfo mutableCopy];
+    [appleInfoParam setValue:bundleIdentifier forKey:@"bundle_identifier"];
+    [self linkWithToken:appleInfoParam withType:AUTH_TYPE_APPLE withBlock:block];
 }
 
 /**
