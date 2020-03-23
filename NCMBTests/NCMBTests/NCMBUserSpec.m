@@ -3137,7 +3137,10 @@ describe(@"NCMBUser", ^{
         [mock linkWithAppleToken:appleInfo withBlock:^(NSError *error) {
             expect(error).beNil();
             if(!error) {
-                expect([[mock objectForKey:@"authData"]objectForKey:@"apple"]).to.equal(appleInfo);
+                NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+                NSDictionary *expected = [appleInfo mutableCopy];
+                [expected setValue:bundleIdentifier forKey:@"client_id"];
+                expect([[mock objectForKey:@"authData"]objectForKey:@"apple"]).to.equal(expected);
             }
         }];
 
@@ -3203,7 +3206,10 @@ describe(@"NCMBUser", ^{
                     expect(currentUser2.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
                     expect(currentUser2.userName).to.equal(@"NCMBUser");
                     expect([currentUser2 objectForKey:@"key"]).to.equal(@"value");
-                    expect([[currentUser2 objectForKey:@"authData"]objectForKey:@"apple"]).to.equal(appleInfo);
+                    NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+                    NSDictionary *expected = [appleInfo mutableCopy];
+                    [expected setValue:bundleIdentifier forKey:@"client_id"];
+                    expect([[currentUser2 objectForKey:@"authData"]objectForKey:@"apple"]).to.equal(expected);
                 }];
                 done();
             }];
@@ -3242,7 +3248,10 @@ describe(@"NCMBUser", ^{
         [mock linkWithAppleToken:appleInfo withBlock:^(NSError *error) {
             expect(error).beNil();
             if(!error) {
-                expect([[mock objectForKey:@"authData"]objectForKey:@"apple"]).to.equal(appleInfo);
+                NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+                NSDictionary *expected = [appleInfo mutableCopy];
+                [expected setValue:bundleIdentifier forKey:@"client_id"];
+                expect([[mock objectForKey:@"authData"]objectForKey:@"apple"]).to.equal(expected);
                 expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
             }
         }];

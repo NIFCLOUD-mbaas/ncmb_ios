@@ -301,7 +301,10 @@ static BOOL isEnableAutomaticUser = NO;
  @param block サインアップ後に実行されるblock
  */
 - (void)signUpWithAppleToken:(NSDictionary *)appleInfo withBlock:(NCMBErrorResultBlock)block{
-    [self signUpWithToken:appleInfo withType:AUTH_TYPE_APPLE withBlock:block];
+    NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+    NSDictionary *appleInfoParam = [appleInfo mutableCopy];
+    [appleInfoParam setValue:bundleIdentifier forKey:@"client_id"];
+    [self signUpWithToken:appleInfoParam withType:AUTH_TYPE_APPLE withBlock:block];
 }
 
 #pragma mark - signUpAnonymous
@@ -1078,7 +1081,10 @@ static BOOL isEnableAutomaticUser = NO;
  @param block 既存のauthDataのapple情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
  */
 - (void)linkWithAppleToken:(NSDictionary *)appleInfo withBlock:(NCMBErrorResultBlock)block{
-    [self linkWithToken:appleInfo withType:AUTH_TYPE_APPLE withBlock:block];
+    NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+    NSDictionary *appleInfoParam = [appleInfo mutableCopy];
+    [appleInfoParam setValue:bundleIdentifier forKey:@"client_id"];
+    [self linkWithToken:appleInfoParam withType:AUTH_TYPE_APPLE withBlock:block];
 }
 
 /**
