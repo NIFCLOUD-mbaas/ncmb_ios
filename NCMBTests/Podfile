@@ -3,7 +3,7 @@ target :NCMBTests do
   pod 'Specta'
   pod 'Expecta'
   pod 'OCMock'
-  pod 'OHHTTPStubs'
+  pod 'OHHTTPStubs', '~> 8.0'   
   # pod 'OCHamcrest',  '~> 3.0'   # hamcrest matchers
   # pod 'OCMockito',   '~> 1.0'   # OCMock
   # pod 'LRMocky',     '~> 0.9'   # LRMocky
