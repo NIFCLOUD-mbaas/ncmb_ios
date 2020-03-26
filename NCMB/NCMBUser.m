@@ -41,6 +41,7 @@
 #define AUTH_TYPE_TWITTER               @"twitter"
 #define AUTH_TYPE_FACEBOOK              @"facebook"
 #define AUTH_TYPE_ANONYMOUS             @"Anonymous"
+#define AUTH_TYPE_APPLE                 @"apple"
 
 static NCMBUser *currentUser = nil;
 static BOOL isEnableAutomaticUser = NO;
@@ -292,6 +293,18 @@ static BOOL isEnableAutomaticUser = NO;
  */
 - (void)signUpWithFacebookToken:(NSDictionary *)facebookInfo withBlock:(NCMBErrorResultBlock)block{
     [self signUpWithToken:facebookInfo withType:AUTH_TYPE_FACEBOOK withBlock:block];
+}
+
+/**
+ appleのauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う
+ @param appleInfo apple認証に必要なauthData
+ @param block サインアップ後に実行されるblock
+ */
+- (void)signUpWithAppleToken:(NSDictionary *)appleInfo withBlock:(NCMBErrorResultBlock)block{
+    NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+    NSDictionary *appleInfoParam = [appleInfo mutableCopy];
+    [appleInfoParam setValue:bundleIdentifier forKey:@"client_id"];
+    [self signUpWithToken:appleInfoParam withType:AUTH_TYPE_APPLE withBlock:block];
 }
 
 #pragma mark - signUpAnonymous
@@ -1063,8 +1076,20 @@ static BOOL isEnableAutomaticUser = NO;
 }
 
 /**
+ ログイン中のユーザー情報に、appleの認証情報を紐付ける
+ @param appleInfo appleの認証情報
+ @param block 既存のauthDataのapple情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。
+ */
+- (void)linkWithAppleToken:(NSDictionary *)appleInfo withBlock:(NCMBErrorResultBlock)block{
+    NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+    NSDictionary *appleInfoParam = [appleInfo mutableCopy];
+    [appleInfoParam setValue:bundleIdentifier forKey:@"client_id"];
+    [self linkWithToken:appleInfoParam withType:AUTH_TYPE_APPLE withBlock:block];
+}
+
+/**
  会員情報に、引数で指定したtypeの認証情報が含まれているか確認する
- @param type 認証情報のtype（googleもしくはtwitter、facebook、anonymous）
+ @param type 認証情報のtype（googleもしくはtwitter、facebook、apple、anonymous）
  @return 引数で指定したtypeの会員情報が含まれている場合はYESを返す
  */
 - (BOOL)isLinkedWith:(NSString *)type{
@@ -1073,7 +1098,8 @@ static BOOL isEnableAutomaticUser = NO;
     if ([type isEqualToString:AUTH_TYPE_GOOGLE]
         || [type isEqualToString:AUTH_TYPE_TWITTER]
         || [type isEqualToString:AUTH_TYPE_FACEBOOK]
-        || [type isEqualToString:AUTH_TYPE_ANONYMOUS])
+        || [type isEqualToString:AUTH_TYPE_ANONYMOUS]
+        || [type isEqualToString:AUTH_TYPE_APPLE])
     {
         if ([self objectForKey:@"authData"] && [[self objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]) {
             if ([[self objectForKey:@"authData"] objectForKey:type]) {
@@ -1086,7 +1112,7 @@ static BOOL isEnableAutomaticUser = NO;
 
 /**
  会員情報から、引数で指定したtypeの認証情報を削除する
- @param type 認証情報のtype（googleもしくはtwitter、facebook、anonymous）
+ @param type 認証情報のtype（googleもしくはtwitter、facebook、apple、anonymous）
  @param block エラー情報を返却するblock エラーがあればエラーのポインタが、なければnilが渡される。
  */
 - (void)unlink:(NSString *)type withBlock:(NCMBErrorResultBlock)block{

@@ -2963,6 +2963,521 @@ describe(@"NCMBUser", ^{
         });
 
      });
+         
+    it(@"should signUp with apple token", ^{
+       [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+           return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+       } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+
+           NSMutableDictionary *appleAuth = [NSMutableDictionary dictionary];
+           
+           NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                           @"access_token" : @"appleAccessToken"
+                                           };
+           [appleAuth setObject:appleInfo forKey:@"apple"];
+           
+           NSMutableDictionary *responseDic = [@{@"createDate" : @"2014-06-03T11:28:30.348Z",
+                                                 @"objectId" : @"e4YWYnYtcptTIV23",
+                                                 @"sessionToken" : @"yDCY0ggL8hZghFQ70aiutHtJL"
+                                                 } mutableCopy];
+           [responseDic setObject:appleAuth forKey:@"authData"];
+
+           NSError *convertErr = nil;
+           NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                  options:0
+                                                                    error:&convertErr];
+           return [OHHTTPStubsResponse responseWithData:responseData statusCode:201 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+       }];
+
+       waitUntil(^(DoneCallback done) {
+           NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                       @"access_token" : @"appleAccessToken"
+                                       };
+           NCMBUser *user = [NCMBUser user];
+           [user signUpWithAppleToken:appleInfo withBlock:^(NSError *error) {
+               expect(error).beNil();
+               if(!error) {
+                   NCMBUser *currentUser = [NCMBUser currentUser];
+                   expect([currentUser objectForKey:@"authData"]).beTruthy();
+                   expect(currentUser.objectId).to.equal(@"e4YWYnYtcptTIV23");
+                   expect(currentUser.sessionToken).to.equal(@"yDCY0ggL8hZghFQ70aiutHtJL");
+                   done();
+               }
+           }];
+       });
+
+    });
+         
+    it(@"should signUp with apple token response 200", ^{
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            NSMutableDictionary *appleAuth = [NSMutableDictionary dictionary];
+            NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                            @"access_token" : @"appleAccessToken"
+                                            };
+            [appleAuth setObject:appleInfo forKey:@"apple"];
+            
+            NSMutableDictionary *responseDic = [@{@"objectId" : @"09Mp23m4bEOInUqT",
+                                                  @"mailAddress" : [NSNull null],
+                                                  @"mailAddressConfirm" : [NSNull null],
+                                                  @"sessionToken" : @"iXDIelJRY3ULBdms281VTmc5O",
+                                                  @"updateDate" : @"2013-08-30T05:32:03.868Z",
+                                                  @"userName" : @"NCMBUser",
+                                                  @"createDate" : @"2013-08-28T07:46:09.801Z"} mutableCopy];
+            [responseDic setObject:appleAuth forKey:@"authData"];
+            NSError *convertErr = nil;
+            NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic
+                                                                   options:0
+                                                                     error:&convertErr];
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+    
+        waitUntil(^(DoneCallback done) {
+            NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                        @"access_token" : @"appleAccessToken"
+                                        };
+            NCMBUser *user = [NCMBUser user];
+            [user signUpWithAppleToken:appleInfo withBlock:^(NSError *error) {
+                expect(error).beNil();
+                if(!error) {
+                    // Check currentuser after signUpWithAppleToken
+                    NCMBUser *currentUser = NCMBUser.currentUser;
+                    expect(currentUser.objectId).to.equal(@"09Mp23m4bEOInUqT");
+                    expect(currentUser.mailAddress).beNil();
+                    expect(currentUser.isMailAddressConfirm).to.equal(false);
+                    expect(currentUser.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
+                    expect(currentUser.userName).to.equal(@"NCMBUser");
+                    expect([[currentUser objectForKey:@"authData"]objectForKey:@"apple"]).to.equal(appleInfo);
+                    done();
+                }
+            }];
+        });
+    });
+         
+    it(@"signUp with apple token failed when 'Apple authentication is not allowed'", ^{
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+        NSMutableDictionary *appleAuth = [NSMutableDictionary dictionary];
+        NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                    @"access_token" : @"appleAccessToken"
+                                    };
+        [appleAuth setObject:appleInfo forKey:@"apple"];
+        [mock setObject:appleAuth forKey:@"authData"];
+    
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                             code:403005
+                                         userInfo:@{NSLocalizedDescriptionKey:@"apple must not be entered."}];
+            block(e);
+        };
+
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+        // signUpWithAppleToken
+        [mock signUpWithAppleToken:appleInfo
+                              withBlock:^(NSError *error) {
+            expect(error).beTruthy();
+            if (error) {
+                expect(error.code).to.equal(@403005);
+                expect([error localizedDescription]).to.equal(@"apple must not be entered.");
+            }
+        }];
+    });
+         
+    it(@"signUp with apple token failed when 'Apple authentication is permitted'", ^{
+        NCMBUser *user = [NCMBUser user];
+            id mock = OCMPartialMock(user);
+            NSMutableDictionary *appleAuth = [NSMutableDictionary dictionary];
+            NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                        @"access_token" : @"appleAccessToken"
+                                        };
+            [appleAuth setObject:appleInfo forKey:@"apple"];
+            [mock setObject:appleAuth forKey:@"authData"];
+        
+            void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+                __unsafe_unretained void (^block) (NSError *error);
+                [invocation getArgument:&block atIndex:2];
+                NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                                 code:401003
+                                             userInfo:@{NSLocalizedDescriptionKey:@"OAuth apple authentication error."}];
+                block(e);
+            };
+
+            OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+            // signUpWithAppleToken
+            [mock signUpWithAppleToken:appleInfo
+                                  withBlock:^(NSError *error) {
+                expect(error).beTruthy();
+                if (error) {
+                    expect(error.code).to.equal(@401003);
+                    expect([error localizedDescription]).to.equal(@"OAuth apple authentication error.");
+                }
+            }];
+    });
+         
+    it(@"should link with apple token", ^{
+
+        NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                     @"access_token" : @"appleAccessToken"
+                                     };
+
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            block(nil);
+        };
+
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+
+        [mock linkWithAppleToken:appleInfo withBlock:^(NSError *error) {
+            expect(error).beNil();
+            if(!error) {
+                NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+                NSDictionary *expected = [appleInfo mutableCopy];
+                [expected setValue:bundleIdentifier forKey:@"client_id"];
+                expect([[mock objectForKey:@"authData"]objectForKey:@"apple"]).to.equal(expected);
+            }
+        }];
+
+    });
+         
+    it(@"should link with apple token after login with username and password", ^{
+        NSDictionary *responseDic = @{ @"objectId" : @"09Mp23m4bEOInUqT",
+                                       @"sessionToken" : @"iXDIelJRY3ULBdms281VTmc5O",
+                                       @"updateDate" : @"2013-08-30T05:32:03.868Z",
+                                       @"userName" : @"NCMBUser",
+                                       @"key":@"value",
+                                       @"createDate" : @"2013-08-28T07:46:09.801Z"} ;
+
+        NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+
+        [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+        } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+            return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+        }];
+
+        waitUntil(^(DoneCallback done) {
+            [NCMBUser logInWithUsernameInBackground:@"NCMBUser" password:@"password" block:^(NCMBUser *user, NSError *error) {
+                expect(error).beNil();
+
+                // Check currentuser
+                NCMBUser *currentUser = NCMBUser.currentUser;
+                expect(currentUser.objectId).to.equal(@"09Mp23m4bEOInUqT");
+                expect(currentUser.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
+                expect(currentUser.userName).to.equal(@"NCMBUser");
+                expect([currentUser objectForKey:@"key"]).to.equal(@"value");
+
+                
+                [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+                    return [request.URL.host isEqualToString:@"mbaas.api.nifcloud.com"];
+                } withStubResponse:^OHHTTPStubsResponse*(NSURLRequest *request) {
+                    NSMutableDictionary *appleAuth = [NSMutableDictionary dictionary];
+                    NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                                    @"access_token" : @"appleAccessToken"
+                                                    };
+                    [appleAuth setObject:appleInfo forKey:@"apple"];
+                    NSMutableDictionary *responseDic = [@{@"objectId" : @"09Mp23m4bEOInUqT",
+                                                        @"sessionToken" : @"iXDIelJRY3ULBdms281VTmc5O",
+                                                        @"updateDate" : @"2013-08-30T05:32:03.868Z",
+                                                        @"userName" : @"NCMBUser",
+                                                        @"key":@"value",
+                                                        @"createDate" : @"2013-08-28T07:46:09.801Z"} mutableCopy];
+                    [responseDic setObject:appleAuth forKey:@"authData"];
+                    NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDic options:NSJSONWritingPrettyPrinted error:nil];
+                    return [OHHTTPStubsResponse responseWithData:responseData statusCode:200 headers:@{@"Content-Type":@"application/json;charset=UTF-8"}];
+                }];
+
+                // linkWithAppleToken
+                NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                            @"access_token" : @"appleAccessToken"
+                                            };
+                [currentUser linkWithAppleToken:appleInfo
+                                      withBlock:^(NSError *error) {
+                    expect(error).beNil();
+                    // Check currentuser after linkWithAppleToken
+                    NCMBUser *currentUser2 = NCMBUser.currentUser;
+                    expect(currentUser2.objectId).to.equal(@"09Mp23m4bEOInUqT");
+                    expect(currentUser2.sessionToken).to.equal(@"iXDIelJRY3ULBdms281VTmc5O");
+                    expect(currentUser2.userName).to.equal(@"NCMBUser");
+                    expect([currentUser2 objectForKey:@"key"]).to.equal(@"value");
+                    NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+                    NSDictionary *expected = [appleInfo mutableCopy];
+                    [expected setValue:bundleIdentifier forKey:@"client_id"];
+                    expect([[currentUser2 objectForKey:@"authData"]objectForKey:@"apple"]).to.equal(expected);
+                }];
+                done();
+            }];
+        });
+    });
+         
+    it(@"should link with apple token if already other token", ^{
+
+        NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                     @"access_token" : @"appleAccessToken"
+                                     };
+
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+
+        NSMutableDictionary *twitterAuth = [NSMutableDictionary dictionary];
+        [twitterAuth setObject:twitterInfo forKey:@"twitter"];
+        [mock setObject:twitterAuth forKey:@"authData"];
+
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            block(nil);
+        };
+
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+
+        [mock linkWithAppleToken:appleInfo withBlock:^(NSError *error) {
+            expect(error).beNil();
+            if(!error) {
+                NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+                NSDictionary *expected = [appleInfo mutableCopy];
+                [expected setValue:bundleIdentifier forKey:@"client_id"];
+                expect([[mock objectForKey:@"authData"]objectForKey:@"apple"]).to.equal(expected);
+                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+            }
+        }];
+    });
+         
+    it(@"should case of network error are not link with apple token and return existing token", ^{
+
+        NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                     @"access_token" : @"appleAccessToken"
+                                     };
+
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+
+        NSMutableDictionary *twitterAuth = [NSMutableDictionary dictionary];
+        [twitterAuth setObject:twitterInfo forKey:@"twitter"];
+        [mock setObject:twitterAuth forKey:@"authData"];
+
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                             code:-1
+                                         userInfo:nil];
+            block(e);
+        };
+
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+
+        [mock linkWithAppleToken:appleInfo withBlock:^(NSError *error) {
+            expect(error).to.beTruthy();
+            if(error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"apple"]).to.beNil();
+                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+            }
+        }];
+    });
+         
+    it(@"should is linked apple token with user", ^{
+
+        NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                     @"access_token" : @"appleAccessToken"
+                                     };
+
+        NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
+        [userAuthData setObject:appleInfo forKey:@"apple"];
+
+        NCMBUser *user = [NCMBUser user];
+        [user setObject:userAuthData forKey:@"authData"];
+
+        expect([user isLinkedWith:@"apple"]).to.beTruthy();
+
+    });
+         
+    it(@"should is not linked apple token with user", ^{
+
+        NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                     @"access_token" : @"appleAccessToken"
+                                     };
+
+        NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
+        [userAuthData setObject:appleInfo forKey:@"apple"];
+
+        NCMBUser *user = [NCMBUser user];
+        [user setObject:userAuthData forKey:@"authData"];
+
+        expect([user isLinkedWith:@"twitter"]).to.beFalsy();
+
+    });
+         
+    it(@"should unlink apple token with user 'other token type error' ", ^{
+
+        NSMutableDictionary *appleInfo = [NSMutableDictionary dictionary];
+        [appleInfo setValue:@"appleId" forKey:@"id"];
+        [appleInfo setValue:@"appleAccessToken" forKey:@"access_token"];
+        NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
+        [userAuthData setObject:appleInfo forKey:@"apple"];
+
+        NCMBUser *user = [NCMBUser user];
+        [user setObject:userAuthData forKey:@"authData"];
+
+        id mock = OCMPartialMock(user);
+
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            if(block){
+                block(nil);
+            }
+        };
+
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+
+        [mock unlink:@"twitter" withBlock:^(NSError *error) {
+
+            NSError *tokenError = [NSError errorWithDomain:ERRORDOMAIN
+                                                      code:404003
+                                                  userInfo:@{NSLocalizedDescriptionKey:@"other token type"}];
+
+            expect(error).to.equal(tokenError);
+        }];
+    });
+         
+    it(@"should unlink apple token with user 'token not found error' ", ^{
+
+        NCMBUser *user = [NCMBUser user];
+        id mock = OCMPartialMock(user);
+
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            if(block){
+                block(nil);
+            }
+        };
+
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+
+        [mock unlink:@"apple" withBlock:^(NSError *error) {
+
+            NSError *tokenError = [NSError errorWithDomain:ERRORDOMAIN
+                                                      code:404003
+                                                  userInfo:@{NSLocalizedDescriptionKey:@"token not found"}];
+
+            expect(error).to.equal(tokenError);
+        }];
+    });
+         
+    it(@"should unlink apple token with user", ^{
+
+        NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                     @"access_token" : @"appleAccessToken"
+                                     };
+
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+
+        NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
+        [userAuthData setObject:appleInfo forKey:@"apple"];
+        [userAuthData setObject:twitterInfo forKey:@"twitter"];
+
+        NCMBUser *user = [NCMBUser user];
+        [user setObject:userAuthData forKey:@"authData"];
+
+        id mock = OCMPartialMock(user);
+
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            if(block){
+                block(nil);
+            }
+        };
+
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+
+        expect([[mock objectForKey:@"authData"]objectForKey:@"apple"]).to.equal(appleInfo);
+        expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+
+        [mock unlink:@"apple" withBlock:^(NSError *error) {
+            expect(error).beNil();
+            if(!error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"apple"]).to.beNil();
+                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+            }
+        }];
+    });
+         
+    it(@"should case of network error are not unlink with apple token and return existing token", ^{
+
+        NSDictionary *appleInfo = @{@"id" : @"appleId",
+                                     @"access_token" : @"appleAccessToken"
+                                     };
+
+        NSDictionary *twitterInfo = @{@"consumer_secret" : @"twitterSecret",
+                                      @"id" : @"twitterId",
+                                      @"oauth_consumer_key" : @"twitterConsumuerKey",
+                                      @"oauth_token" : @"twitterOauthToken",
+                                      @"oauth_token_secret" : @"twitterOauthTokenSecret",
+                                      @"screen_name" : @"NCMBSupport"
+                                      };
+
+        NSMutableDictionary *userAuthData = [NSMutableDictionary dictionary];
+        [userAuthData setObject:appleInfo forKey:@"apple"];
+        [userAuthData setObject:twitterInfo forKey:@"twitter"];
+
+        NCMBUser *user = [NCMBUser user];
+        [user setObject:userAuthData forKey:@"authData"];
+
+        id mock = OCMPartialMock(user);
+
+        void (^invocation)(NSInvocation *) = ^(NSInvocation *invocation) {
+            __unsafe_unretained void (^block) (NSError *error);
+            [invocation getArgument:&block atIndex:2];
+            NSError *e = [NSError errorWithDomain:@"NCMBErrorDomain"
+                                             code:-1
+                                         userInfo:nil];
+            block(e);
+        };
+
+        OCMStub([mock saveInBackgroundWithBlock:OCMOCK_ANY]).andDo(invocation);
+
+        expect([[mock objectForKey:@"authData"]objectForKey:@"apple"]).to.equal(appleInfo);
+        expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+
+        [mock unlink:@"apple" withBlock:^(NSError *error) {
+            expect(error).to.beTruthy();
+            if(error) {
+                expect([[mock objectForKey:@"authData"]objectForKey:@"apple"]).to.equal(appleInfo);
+                expect([[mock objectForKey:@"authData"]objectForKey:@"twitter"]).to.equal(twitterInfo);
+            }
+        }];
+    });
 
     it(@"should case of network error are not signUp with google token and return existing token", ^{
 
