@@ -70,7 +70,6 @@ static NCMBRichPushView *rv;
     NSString *message = nil;
     NSString *cancelButtonTitle = @"Close";
     NSString *actionButtonTitle = nil;
-    UIAlertView *alert = nil;
     UIAlertController *alertController = nil;
     if ([[dicAps objectForKey:@"alert"] isKindOfClass:[NSNull class]]) {
     }else if ([[dicAps objectForKey:@"alert"] isKindOfClass:[NSString class]]) {
@@ -87,7 +86,6 @@ static NCMBRichPushView *rv;
         if ([dicParams objectForKey:@"action-loc-key"]) {
             actionButtonTitle = NSLocalizedString([dicParams objectForKey:@"action-loc-key"], @"action-loc-key");
         }
-        alert = [[UIAlertView alloc] initWithTitle:nil message:message delegate:nil cancelButtonTitle:cancelButtonTitle otherButtonTitles:actionButtonTitle,nil];
     }
     
     if ([dicAps objectForKey:@"sound"]) {
@@ -120,26 +118,17 @@ static NCMBRichPushView *rv;
         }
     }
     
-    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0){
-        UIViewController *baseView = [UIApplication sharedApplication].keyWindow.rootViewController;
-        while (baseView.presentedViewController != nil && !baseView.presentedViewController.isBeingDismissed) {
-            baseView = baseView.presentedViewController;
-        }
-        alertController = [UIAlertController alertControllerWithTitle:nil
-                                                              message:message
-                                                       preferredStyle:UIAlertControllerStyleAlert];
-        [alertController addAction:[UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            [baseView dismissViewControllerAnimated:YES completion:nil];
-        }]];
-        [baseView presentViewController:alertController animated:YES completion:nil];
-    } else {
-        alert = [[UIAlertView alloc] initWithTitle:nil
-                                           message:message
-                                          delegate:nil
-                                 cancelButtonTitle:cancelButtonTitle
-                                 otherButtonTitles:actionButtonTitle, nil];
-        [alert show];
+    UIViewController *baseView = [UIApplication sharedApplication].keyWindow.rootViewController;
+    while (baseView.presentedViewController != nil && !baseView.presentedViewController.isBeingDismissed) {
+        baseView = baseView.presentedViewController;
     }
+    alertController = [UIAlertController alertControllerWithTitle:nil
+                                                          message:message
+                                                   preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [baseView dismissViewControllerAnimated:YES completion:nil];
+    }]];
+    [baseView presentViewController:alertController animated:YES completion:nil];
 }
 
 + (void) handleRichPush:(NSDictionary *)userInfo {
