@@ -17,7 +17,7 @@ DerivedData
 *.xcuserstate
 
 # CocoaPod
-NCMBTests/Pods/*
+Pods/*
 Podfile.lock
 
 # others
