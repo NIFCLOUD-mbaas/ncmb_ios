@@ -7,6 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		481033B6256FAD5300156846 /* NCMBUserSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 481033AB256FAD5200156846 /* NCMBUserSpec.m */; };
+		481033B7256FAD5300156846 /* NCMBScriptServiceSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 481033AC256FAD5200156846 /* NCMBScriptServiceSpec.m */; };
+		481033B8256FAD5300156846 /* NCMBSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 481033AD256FAD5300156846 /* NCMBSpec.m */; };
+		481033B9256FAD5300156846 /* NCMBRequestSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 481033AE256FAD5300156846 /* NCMBRequestSpec.m */; };
+		481033BA256FAD5300156846 /* NCMBQuerySpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 481033AF256FAD5300156846 /* NCMBQuerySpec.m */; };
+		481033BB256FAD5300156846 /* NCMBObjectSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 481033B0256FAD5300156846 /* NCMBObjectSpec.m */; };
+		481033BC256FAD5300156846 /* NCMBAnonymousSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 481033B1256FAD5300156846 /* NCMBAnonymousSpec.m */; };
+		481033BD256FAD5300156846 /* NCMBRoleSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 481033B2256FAD5300156846 /* NCMBRoleSpec.m */; };
+		481033BE256FAD5300156846 /* NCMBScriptSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 481033B3256FAD5300156846 /* NCMBScriptSpec.m */; };
+		481033BF256FAD5300156846 /* NCMBFileSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 481033B4256FAD5300156846 /* NCMBFileSpec.m */; };
+		481033C0256FAD5300156846 /* NCMBInstallationSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 481033B5256FAD5300156846 /* NCMBInstallationSpec.m */; };
+		481342A6CCF288F7E1FC4099 /* libPods-NCMBTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75DB916C5CA30CE52FE3326C /* libPods-NCMBTests.a */; };
+		483A79AC256FA5050034887C /* NCMB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AB2CDFB1CE3153F00F27481 /* NCMB.framework */; };
 		5D9927101EA5FB21008F4319 /* NCMB_umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D99270F1EA5FB21008F4319 /* NCMB_umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CDFF1CE3153F00F27481 /* NCMB.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AB2CDFE1CE3153F00F27481 /* NCMB.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AB2CE7D1CE315F800F27481 /* NCMB.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2CE091CE315F800F27481 /* NCMB.m */; };
@@ -79,8 +92,38 @@
 		9DB041461EFCDD6E00BDEFFC /* NCMBRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DB041441EFCDD6E00BDEFFC /* NCMBRequest.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		483A79AD256FA5050034887C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8AB2CDF21CE3153F00F27481 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8AB2CDFA1CE3153F00F27481;
+			remoteInfo = NCMB;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		1BE65CB5814CCAEC3BE1B636 /* Pods-NCMB-NCMBTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NCMB-NCMBTests.release.xcconfig"; path = "Target Support Files/Pods-NCMB-NCMBTests/Pods-NCMB-NCMBTests.release.xcconfig"; sourceTree = "<group>"; };
+		383305E299988F494B97E0BD /* Pods_NCMB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NCMB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		48103379256FAA6600156846 /* NCMB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NCMB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4810337C256FAA6D00156846 /* Pods_NCMB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_NCMB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		481033AB256FAD5200156846 /* NCMBUserSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBUserSpec.m; sourceTree = "<group>"; };
+		481033AC256FAD5200156846 /* NCMBScriptServiceSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBScriptServiceSpec.m; sourceTree = "<group>"; };
+		481033AD256FAD5300156846 /* NCMBSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBSpec.m; sourceTree = "<group>"; };
+		481033AE256FAD5300156846 /* NCMBRequestSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBRequestSpec.m; sourceTree = "<group>"; };
+		481033AF256FAD5300156846 /* NCMBQuerySpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBQuerySpec.m; sourceTree = "<group>"; };
+		481033B0256FAD5300156846 /* NCMBObjectSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBObjectSpec.m; sourceTree = "<group>"; };
+		481033B1256FAD5300156846 /* NCMBAnonymousSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBAnonymousSpec.m; sourceTree = "<group>"; };
+		481033B2256FAD5300156846 /* NCMBRoleSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBRoleSpec.m; sourceTree = "<group>"; };
+		481033B3256FAD5300156846 /* NCMBScriptSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBScriptSpec.m; sourceTree = "<group>"; };
+		481033B4256FAD5300156846 /* NCMBFileSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBFileSpec.m; sourceTree = "<group>"; };
+		481033B5256FAD5300156846 /* NCMBInstallationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBInstallationSpec.m; sourceTree = "<group>"; };
+		483A79A7256FA5050034887C /* NCMBTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NCMBTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		483A79AB256FA5050034887C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5D99270F1EA5FB21008F4319 /* NCMB_umbrella.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NCMB_umbrella.h; path = NCMB/NCMB_umbrella.h; sourceTree = "<group>"; };
+		62C187836972EA36D1240A3C /* Pods-NCMBTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NCMBTests.debug.xcconfig"; path = "Target Support Files/Pods-NCMBTests/Pods-NCMBTests.debug.xcconfig"; sourceTree = "<group>"; };
+		64A1F929FCE2EDCACD67DE45 /* Pods-NCMB-NCMBTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NCMB-NCMBTests.debug.xcconfig"; path = "Target Support Files/Pods-NCMB-NCMBTests/Pods-NCMB-NCMBTests.debug.xcconfig"; sourceTree = "<group>"; };
+		75DB916C5CA30CE52FE3326C /* libPods-NCMBTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NCMBTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AB2CDFB1CE3153F00F27481 /* NCMB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NCMB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AB2CDFE1CE3153F00F27481 /* NCMB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NCMB.h; sourceTree = "<group>"; };
 		8AB2CE091CE315F800F27481 /* NCMB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMB.m; sourceTree = "<group>"; };
@@ -155,9 +198,19 @@
 		9D4B643B1ED42873008B015B /* NCMBDateFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBDateFormat.m; sourceTree = "<group>"; };
 		9DB041431EFCDD6E00BDEFFC /* NCMBRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCMBRequest.h; sourceTree = "<group>"; };
 		9DB041441EFCDD6E00BDEFFC /* NCMBRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCMBRequest.m; sourceTree = "<group>"; };
+		C0B6B07C27D60A33CC1F915C /* Pods-NCMBTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NCMBTests.release.xcconfig"; path = "Target Support Files/Pods-NCMBTests/Pods-NCMBTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		483A79A4256FA5050034887C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				483A79AC256FA5050034887C /* NCMB.framework in Frameworks */,
+				481342A6CCF288F7E1FC4099 /* libPods-NCMBTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8AB2CDF71CE3153F00F27481 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -168,13 +221,46 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		32DD3D37948AA0A694BBFB34 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4810337C256FAA6D00156846 /* Pods_NCMB.framework */,
+				48103379256FAA6600156846 /* NCMB.framework */,
+				383305E299988F494B97E0BD /* Pods_NCMB.framework */,
+				75DB916C5CA30CE52FE3326C /* libPods-NCMBTests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		483A79A8256FA5050034887C /* NCMBTests */ = {
+			isa = PBXGroup;
+			children = (
+				481033B1256FAD5300156846 /* NCMBAnonymousSpec.m */,
+				481033B4256FAD5300156846 /* NCMBFileSpec.m */,
+				481033B5256FAD5300156846 /* NCMBInstallationSpec.m */,
+				481033B0256FAD5300156846 /* NCMBObjectSpec.m */,
+				481033AF256FAD5300156846 /* NCMBQuerySpec.m */,
+				481033AE256FAD5300156846 /* NCMBRequestSpec.m */,
+				481033B2256FAD5300156846 /* NCMBRoleSpec.m */,
+				481033AC256FAD5200156846 /* NCMBScriptServiceSpec.m */,
+				481033B3256FAD5300156846 /* NCMBScriptSpec.m */,
+				481033AD256FAD5300156846 /* NCMBSpec.m */,
+				481033AB256FAD5200156846 /* NCMBUserSpec.m */,
+				483A79AB256FA5050034887C /* Info.plist */,
+			);
+			path = NCMBTests;
+			sourceTree = "<group>";
+		};
 		8AB2CDF11CE3153F00F27481 = {
 			isa = PBXGroup;
 			children = (
 				5D99270F1EA5FB21008F4319 /* NCMB_umbrella.h */,
 				9D305C6C1CEDAC990066BFE7 /* NCMB.modulemap */,
 				8AB2CDFD1CE3153F00F27481 /* NCMB */,
+				483A79A8256FA5050034887C /* NCMBTests */,
 				8AB2CDFC1CE3153F00F27481 /* Products */,
+				99BA8711209CF2E9E019DCF6 /* Pods */,
+				32DD3D37948AA0A694BBFB34 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -182,6 +268,7 @@
 			isa = PBXGroup;
 			children = (
 				8AB2CDFB1CE3153F00F27481 /* NCMB.framework */,
+				483A79A7256FA5050034887C /* NCMBTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -336,6 +423,17 @@
 			name = NCMBURLSession;
 			sourceTree = "<group>";
 		};
+		99BA8711209CF2E9E019DCF6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				64A1F929FCE2EDCACD67DE45 /* Pods-NCMB-NCMBTests.debug.xcconfig */,
+				1BE65CB5814CCAEC3BE1B636 /* Pods-NCMB-NCMBTests.release.xcconfig */,
+				62C187836972EA36D1240A3C /* Pods-NCMBTests.debug.xcconfig */,
+				C0B6B07C27D60A33CC1F915C /* Pods-NCMBTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		9DB041421EFCDD6E00BDEFFC /* NCMBRequest */ = {
 			isa = PBXGroup;
 			children = (
@@ -397,6 +495,25 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		483A79A6256FA5050034887C /* NCMBTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 483A79B1256FA5050034887C /* Build configuration list for PBXNativeTarget "NCMBTests" */;
+			buildPhases = (
+				57D7A930F399F1BEB6B4E1CB /* [CP] Check Pods Manifest.lock */,
+				483A79A3256FA5050034887C /* Sources */,
+				483A79A4256FA5050034887C /* Frameworks */,
+				483A79A5256FA5050034887C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				483A79AE256FA5050034887C /* PBXTargetDependency */,
+			);
+			name = NCMBTests;
+			productName = NCMBTests;
+			productReference = 483A79A7256FA5050034887C /* NCMBTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		8AB2CDFA1CE3153F00F27481 /* NCMB */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8AB2CE031CE3153F00F27481 /* Build configuration list for PBXNativeTarget "NCMB" */;
@@ -424,6 +541,10 @@
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = systena;
 				TargetAttributes = {
+					483A79A6256FA5050034887C = {
+						CreatedOnToolsVersion = 12.1;
+						ProvisioningStyle = Automatic;
+					};
 					8AB2CDFA1CE3153F00F27481 = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
@@ -434,6 +555,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 8AB2CDF11CE3153F00F27481;
@@ -442,11 +564,19 @@
 			projectRoot = "";
 			targets = (
 				8AB2CDFA1CE3153F00F27481 /* NCMB */,
+				483A79A6256FA5050034887C /* NCMBTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		483A79A5256FA5050034887C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8AB2CDF91CE3153F00F27481 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -456,7 +586,50 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		57D7A930F399F1BEB6B4E1CB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-NCMBTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		483A79A3256FA5050034887C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				481033BA256FAD5300156846 /* NCMBQuerySpec.m in Sources */,
+				481033BC256FAD5300156846 /* NCMBAnonymousSpec.m in Sources */,
+				481033BF256FAD5300156846 /* NCMBFileSpec.m in Sources */,
+				481033BB256FAD5300156846 /* NCMBObjectSpec.m in Sources */,
+				481033C0256FAD5300156846 /* NCMBInstallationSpec.m in Sources */,
+				481033B9256FAD5300156846 /* NCMBRequestSpec.m in Sources */,
+				481033B6256FAD5300156846 /* NCMBUserSpec.m in Sources */,
+				481033B8256FAD5300156846 /* NCMBSpec.m in Sources */,
+				481033BD256FAD5300156846 /* NCMBRoleSpec.m in Sources */,
+				481033B7256FAD5300156846 /* NCMBScriptServiceSpec.m in Sources */,
+				481033BE256FAD5300156846 /* NCMBScriptSpec.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8AB2CDF61CE3153F00F27481 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -497,7 +670,80 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		483A79AE256FA5050034887C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8AB2CDFA1CE3153F00F27481 /* NCMB */;
+			targetProxy = 483A79AD256FA5050034887C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		483A79AF256FA5050034887C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 62C187836972EA36D1240A3C /* Pods-NCMBTests.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = NCMBTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = asia.vitalify.NCMBTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		483A79B0256FA5050034887C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C0B6B07C27D60A33CC1F915C /* Pods-NCMBTests.release.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = NCMBTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = asia.vitalify.NCMBTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		8AB2CE011CE3153F00F27481 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -628,6 +874,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		483A79B1256FA5050034887C /* Build configuration list for PBXNativeTarget "NCMBTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				483A79AF256FA5050034887C /* Debug */,
+				483A79B0256FA5050034887C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		8AB2CDF51CE3153F00F27481 /* Build configuration list for PBXProject "NCMB" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

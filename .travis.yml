@@ -1,13 +1,12 @@
 language: objective-c
 osx_image: xcode11.3
-xcode_workspace: NCMBTests/NCMBTests.xcworkspace
+xcode_workspace: NCMB.xcworkspace
 xcode_scheme: NCMBTests
 xcode_sdk: iphonesimulator
 before_install:
   - gem install xcpretty
-  - cd NCMBTests
   - pod install
 before_script:
   - set -o pipefail
 script:
-  - travis_retry xcodebuild -workspace NCMBTests.xcworkspace -scheme NCMBTests -destination 'platform=iOS Simulator,OS=10.3.1,name=iPhone 7' -sdk iphonesimulator test | xcpretty -c
+  - travis_retry xcodebuild -workspace NCMB.xcworkspace -scheme NCMBTests -destination 'platform=iOS Simulator,OS=10.3.1,name=iPhone 7' -sdk iphonesimulator test | xcpretty -c
