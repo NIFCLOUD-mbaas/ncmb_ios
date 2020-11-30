@@ -23,10 +23,9 @@
 
 ## 動作環境
 
-* Mac OS 10.15(Catalina)
-* Xcode ver. 12.0
-* Simulator ver.12.0
-* iPhone11 (iOS14.0)
+- iOS 10.x ～ iOS 14.x
+- Xcode 9.x ～ Xcode 12.x
+- armv7s, arm64, arm64e アーキテクチャ
 - iOS/Xcodeのバージョンに依って対応が必要となる可能性があります。詳細はニフクラ mobile backendの[ドキュメント](https://mbaas.nifcloud.com/doc/current/)をご覧ください。
 
 ## テクニカルサポート窓口対応バージョン
