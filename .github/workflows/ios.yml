@@ -1,0 +1,27 @@
+name: ios
+
+on:
+  push:
+    branches: verification_github_ci
+
+jobs:
+  test:
+
+    runs-on: macOS-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Select Xcode version
+      run: sudo xcode-select -s '/Applications/Xcode_11.3.app/Contents/Developer'
+    - name: Build
+      run: xcodebuild
+           -scheme NCMB
+           -sdk iphonesimulator
+           -configuration Debug
+           build
+    - name: Run tests
+      run: xcodebuild
+           -scheme NCMBTests
+           -sdk iphonesimulator
+           -destination 'platform=iOS Simulator,name=iPhone 11 Pro Max'
+           clean test
