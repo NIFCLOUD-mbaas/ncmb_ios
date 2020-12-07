@@ -13,6 +13,10 @@ jobs:
     - uses: actions/checkout@v2
     - name: Select Xcode version
       run: sudo xcode-select -s '/Applications/Xcode_11.3.app/Contents/Developer'
+    - name: install_pods
+      run: sudo gem install cocoapods
+    - name: setup_pods
+      run: pod setup
     - name: setting_of_pod
       run: pod install
     - name: Build
