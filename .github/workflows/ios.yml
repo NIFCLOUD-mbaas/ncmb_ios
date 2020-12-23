@@ -20,7 +20,7 @@ jobs:
     - name: setting_of_pod
       run: pod install
     - name: change_directory
-      run: cd /Users/runner/Library/Developer/Xcode/DerivedData/NCMB-hclledwishhnfhernqagjmtiuweo/Build/Products/Debug-iphonesimulator
+      run: cd /Users/runner/Library/Developer/Xcode/DerivedData/NCMB-hclledwishhnfhernqagjmtiuweo/Build/Products
     - name: ls
       run: ls -al
     - name: chenge_directory_to_root
