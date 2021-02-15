@@ -21,6 +21,8 @@ jobs:
            -sdk iphonesimulator
            -configuration Debug
            build
+    - name: search Expecta
+      run: find / -name Expecta 2>/dev/null
     - name: Run tests
       run: xcodebuild
            -scheme NCMBTests
