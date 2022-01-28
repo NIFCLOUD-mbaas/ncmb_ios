@@ -1,5 +1,5 @@
 /*
- Copyright 2017-2020 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
+ Copyright 2017-2022 FUJITSU CLOUD TECHNOLOGIES LIMITED All Rights Reserved.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -370,6 +370,8 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         
         // コールバック実行
         [self executeUserCallback:block array:objects error:error];
+
+        self.session = nil;
     }];
 }
 
@@ -473,6 +475,8 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
             }
             block(obj,error);
         }
+
+        self.session = nil;
     }];
 }
 
@@ -533,6 +537,8 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
         }else{
             block(0, error);
         }
+
+        self.session = nil;
     }];
 }
 
@@ -602,6 +608,8 @@ withinGeoBoxFromSouthwest:(NCMBGeoPoint *)southwest
                 block([NCMBObject objectWithClassName:_ncmbClassName data:results[0]], error);
             }
         }
+
+        self.session = nil;
     }];
 }
 
