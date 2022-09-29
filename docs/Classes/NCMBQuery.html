@@ -1,0 +1,3284 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>NCMBQuery Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1333)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">NCMB </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">FUJITSU CLOUD TECHNOLOGIES LIMITED</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/includeKey">includeKey</option>
+		
+		<option value="//api/name/limit">limit</option>
+		
+		<option value="//api/name/ncmbClassName">ncmbClassName</option>
+		
+		<option value="//api/name/skip">skip</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Class Methods">
+		
+		<option value="//api/name/clearAllCachedResults">+ clearAllCachedResults</option>
+		
+		<option value="//api/name/getObjectOfClass:objectId:error:">+ getObjectOfClass:objectId:error:</option>
+		
+		<option value="//api/name/getUserObjectWithId:error:">+ getUserObjectWithId:error:</option>
+		
+		<option value="//api/name/orQueryWithSubqueries:">+ orQueryWithSubqueries:</option>
+		
+		<option value="//api/name/queryWithClassName:">+ queryWithClassName:</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/addAscendingOrder:">- addAscendingOrder:</option>
+		
+		<option value="//api/name/addDescendingOrder:">- addDescendingOrder:</option>
+		
+		<option value="//api/name/cancel">- cancel</option>
+		
+		<option value="//api/name/clearCachedResult">- clearCachedResult</option>
+		
+		<option value="//api/name/countObjects:">- countObjects:</option>
+		
+		<option value="//api/name/countObjectsInBackgroundWithBlock:">- countObjectsInBackgroundWithBlock:</option>
+		
+		<option value="//api/name/countObjectsInBackgroundWithTarget:selector:">- countObjectsInBackgroundWithTarget:selector:</option>
+		
+		<option value="//api/name/findObjects:">- findObjects:</option>
+		
+		<option value="//api/name/findObjectsInBackgroundWithBlock:">- findObjectsInBackgroundWithBlock:</option>
+		
+		<option value="//api/name/findObjectsInBackgroundWithTarget:selector:">- findObjectsInBackgroundWithTarget:selector:</option>
+		
+		<option value="//api/name/getFirstObject:">- getFirstObject:</option>
+		
+		<option value="//api/name/getFirstObjectInBackgroundWithBlock:">- getFirstObjectInBackgroundWithBlock:</option>
+		
+		<option value="//api/name/getFirstObjectInBackgroundWithTarget:selector:">- getFirstObjectInBackgroundWithTarget:selector:</option>
+		
+		<option value="//api/name/getObjectInBackgroundWithId:block:">- getObjectInBackgroundWithId:block:</option>
+		
+		<option value="//api/name/getObjectInBackgroundWithId:target:selector:">- getObjectInBackgroundWithId:target:selector:</option>
+		
+		<option value="//api/name/getObjectWithId:error:">- getObjectWithId:error:</option>
+		
+		<option value="//api/name/hasCachedResult">- hasCachedResult</option>
+		
+		<option value="//api/name/includeKey:">- includeKey:</option>
+		
+		<option value="//api/name/orderByAscending:">- orderByAscending:</option>
+		
+		<option value="//api/name/orderByDescending:">- orderByDescending:</option>
+		
+		<option value="//api/name/orderBySortDescriptor:">- orderBySortDescriptor:</option>
+		
+		<option value="//api/name/orderBySortDescriptors:">- orderBySortDescriptors:</option>
+		
+		<option value="//api/name/relatedTo:objectId:key:">- relatedTo:objectId:key:</option>
+		
+		<option value="//api/name/setCachePolicy:">- setCachePolicy:</option>
+		
+		<option value="//api/name/whereKey:containedIn:">- whereKey:containedIn:</option>
+		
+		<option value="//api/name/whereKey:containedInArrayTo:">- whereKey:containedInArrayTo:</option>
+		
+		<option value="//api/name/whereKey:containsAllObjectsInArrayTo:">- whereKey:containsAllObjectsInArrayTo:</option>
+		
+		<option value="//api/name/whereKey:equalTo:">- whereKey:equalTo:</option>
+		
+		<option value="//api/name/whereKey:greaterThan:">- whereKey:greaterThan:</option>
+		
+		<option value="//api/name/whereKey:greaterThanOrEqualTo:">- whereKey:greaterThanOrEqualTo:</option>
+		
+		<option value="//api/name/whereKey:lessThan:">- whereKey:lessThan:</option>
+		
+		<option value="//api/name/whereKey:lessThanOrEqualTo:">- whereKey:lessThanOrEqualTo:</option>
+		
+		<option value="//api/name/whereKey:matchesKey:inQuery:">- whereKey:matchesKey:inQuery:</option>
+		
+		<option value="//api/name/whereKey:matchesQuery:">- whereKey:matchesQuery:</option>
+		
+		<option value="//api/name/whereKey:nearGeoPoint:">- whereKey:nearGeoPoint:</option>
+		
+		<option value="//api/name/whereKey:nearGeoPoint:withinKilometers:">- whereKey:nearGeoPoint:withinKilometers:</option>
+		
+		<option value="//api/name/whereKey:nearGeoPoint:withinMiles:">- whereKey:nearGeoPoint:withinMiles:</option>
+		
+		<option value="//api/name/whereKey:nearGeoPoint:withinRadians:">- whereKey:nearGeoPoint:withinRadians:</option>
+		
+		<option value="//api/name/whereKey:notContainedIn:">- whereKey:notContainedIn:</option>
+		
+		<option value="//api/name/whereKey:notContainedInArrayTo:">- whereKey:notContainedInArrayTo:</option>
+		
+		<option value="//api/name/whereKey:notEqualTo:">- whereKey:notEqualTo:</option>
+		
+		<option value="//api/name/whereKey:withinGeoBoxFromSouthwest:toNortheast:">- whereKey:withinGeoBoxFromSouthwest:toNortheast:</option>
+		
+		<option value="//api/name/whereKeyDoesNotExist:">- whereKeyDoesNotExist:</option>
+		
+		<option value="//api/name/whereKeyExists:">- whereKeyExists:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">NCMBQuery Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>NCMBQuery.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>NCMBQueryは、mobile backend上のデータを検索するためのクラスです。</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						<h2 class="task-title">Other Methods</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/ncmbClassName" title="ncmbClassName"></a>
+	<h3 class="method-title"><code><a href="#//api/name/ncmbClassName">&nbsp;&nbsp;ncmbClassName</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>検索を行うデータストアのクラス名</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic) NSString *ncmbClassName</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/limit" title="limit"></a>
+	<h3 class="method-title"><code><a href="#//api/name/limit">&nbsp;&nbsp;limit</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>検索結果の件数</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic) int limit</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/skip" title="skip"></a>
+	<h3 class="method-title"><code><a href="#//api/name/skip">&nbsp;&nbsp;skip</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>検索結果のスキップ数</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic) int skip</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/includeKey" title="includeKey"></a>
+	<h3 class="method-title"><code><a href="#//api/name/includeKey">&nbsp;&nbsp;includeKey</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>検索結果に子オブジェクトを含める場合の親データのキー</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic) NSString *includeKey</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Initialize" name="task_Initialize"></a>
+						<h2 class="task-title">Initialize</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/queryWithClassName:" title="queryWithClassName:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/queryWithClassName:">+&nbsp;queryWithClassName:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>クラス名を指定してクエリを作成する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (NCMBQuery *)queryWithClassName:(NSString *)<em>className</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>className</code></th>
+						<td><p>指定するクラス名</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>NCMBQueryのインスタンス</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Configuration" name="task_Configuration"></a>
+						<h2 class="task-title">Configuration</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/includeKey:" title="includeKey:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/includeKey:">&ndash;&nbsp;includeKey:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>子の情報も含めて親情報を取得。クエリに設定された検索条件で取得できるオブジェクトに加えて、各オブジェクトに格納された、キー（引数）のオブジェクトの情報も取得する。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)includeKey:(NSString *)<em>key</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>取得するキー</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKeyExists:" title="whereKeyExists:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKeyExists:">&ndash;&nbsp;whereKeyExists:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「指定したキーの値が存在するオブジェクトを検索する」という検索条件を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKeyExists:(NSString *)<em>key</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKeyDoesNotExist:" title="whereKeyDoesNotExist:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKeyDoesNotExist:">&ndash;&nbsp;whereKeyDoesNotExist:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「指定したキーの値が存在しないオブジェクトを検索する」という検索条件を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKeyDoesNotExist:(NSString *)<em>key</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:equalTo:" title="whereKey:equalTo:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:equalTo:">&ndash;&nbsp;whereKey:equalTo:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「親クエリに指定したキーの値の中から指定したオブジェクト(第二引数)と等しいものを検索する」という検索条件を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> equalTo:(id)<em>object</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>object</code></th>
+						<td><p>検索条件に使用する値(オブジェクト)</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:lessThan:" title="whereKey:lessThan:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:lessThan:">&ndash;&nbsp;whereKey:lessThan:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「親クエリに指定したキーの値の中から指定したオブジェクト(第二引数)の値より小さいものを検索」という検索条件を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> lessThan:(id)<em>object</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>object</code></th>
+						<td><p>検索条件に使用する値(オブジェクト)</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:lessThanOrEqualTo:" title="whereKey:lessThanOrEqualTo:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:lessThanOrEqualTo:">&ndash;&nbsp;whereKey:lessThanOrEqualTo:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「親クエリに指定したキーの値の中から指定したオブジェクト(第二引数)の値以下のものを検索」という検索条件を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> lessThanOrEqualTo:(id)<em>object</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>object</code></th>
+						<td><p>検索条件に使用する値(オブジェクト)</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:greaterThan:" title="whereKey:greaterThan:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:greaterThan:">&ndash;&nbsp;whereKey:greaterThan:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「親クエリに指定したキーの値の中から指定したオブジェクト(第二引数)の値より大きいものを検索」という検索条件を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> greaterThan:(id)<em>object</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>object</code></th>
+						<td><p>検索条件に使用する値(オブジェクト)</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:greaterThanOrEqualTo:" title="whereKey:greaterThanOrEqualTo:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:greaterThanOrEqualTo:">&ndash;&nbsp;whereKey:greaterThanOrEqualTo:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「親クエリに指定したキーの値の中から指定したオブジェクト(第二引数)の値以上のものを検索」という検索条件を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> greaterThanOrEqualTo:(id)<em>object</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>object</code></th>
+						<td><p>検索条件に使用する値(オブジェクト)</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:notEqualTo:" title="whereKey:notEqualTo:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:notEqualTo:">&ndash;&nbsp;whereKey:notEqualTo:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「親クエリに指定したキーの値の中から指定したオブジェクト(第二引数)と等しくないものを検索する」という検索条件を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> notEqualTo:(id)<em>object</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>object</code></th>
+						<td><p>検索条件に使用する値(オブジェクト)</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:containedIn:" title="whereKey:containedIn:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:containedIn:">&ndash;&nbsp;whereKey:containedIn:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「指定したキーの値が指定した配列の値のうちいずれか１つと一致するものを検索」という検索条件を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> containedIn:(NSArray *)<em>array</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>array</code></th>
+						<td><p>検索条件に使用する配列</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:containedInArrayTo:" title="whereKey:containedInArrayTo:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:containedInArrayTo:">&ndash;&nbsp;whereKey:containedInArrayTo:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「指定したキーに設定された配列の値と、指定した配列の値が１つ以上一致するものを検索」という検索条件を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> containedInArrayTo:(NSArray *)<em>array</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー（指定したキーの値が配列）</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>array</code></th>
+						<td><p>検索条件に使用する配列</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:notContainedIn:" title="whereKey:notContainedIn:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:notContainedIn:">&ndash;&nbsp;whereKey:notContainedIn:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「指定したキーの値が指定した配列の値のいずれとも一致しないものを検索」という検索条件を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> notContainedIn:(NSArray *)<em>array</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>array</code></th>
+						<td><p>検索条件に使用する配列</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:notContainedInArrayTo:" title="whereKey:notContainedInArrayTo:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:notContainedInArrayTo:">&ndash;&nbsp;whereKey:notContainedInArrayTo:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「指定したキーに設定された配列の値と、指定した配列の値が１つも一致しないものを検索」という検索条件を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> notContainedInArrayTo:(NSArray *)<em>array</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー（指定したキーの値が配列）</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>array</code></th>
+						<td><p>検索条件に使用する配列</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:containsAllObjectsInArrayTo:" title="whereKey:containsAllObjectsInArrayTo:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:containsAllObjectsInArrayTo:">&ndash;&nbsp;whereKey:containsAllObjectsInArrayTo:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「指定したキーの値に対して、指定した配列の値が全て含まれるものを検索」という検索条件を設定。
+指定した配列の値が全て含まれている場合は、指定したキーの値の中に一致しないものが含まれている場合でも検索される</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> containsAllObjectsInArrayTo:(NSArray *)<em>array</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー（指定したキーの値が配列）</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>array</code></th>
+						<td><p>検索条件に使用する配列</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:nearGeoPoint:" title="whereKey:nearGeoPoint:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:nearGeoPoint:">&ndash;&nbsp;whereKey:nearGeoPoint:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定位置から近い順にオブジェクトを取得。
+取得件数はlimit依存。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> nearGeoPoint:(NCMBGeoPoint *)<em>geoPoint</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>geoPoint</code></th>
+						<td><p>位置情報</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:nearGeoPoint:withinMiles:" title="whereKey:nearGeoPoint:withinMiles:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:nearGeoPoint:withinMiles:">&ndash;&nbsp;whereKey:nearGeoPoint:withinMiles:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定位置から近い順に、指定距離までの範囲に含まれるオブジェクトを取得。
+取得件数はlimit依存。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> nearGeoPoint:(NCMBGeoPoint *)<em>geoPoint</em> withinMiles:(double)<em>maxDistance</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>geoPoint</code></th>
+						<td><p>位置情報</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>maxDistance</code></th>
+						<td><p>検索範囲</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:nearGeoPoint:withinKilometers:" title="whereKey:nearGeoPoint:withinKilometers:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:nearGeoPoint:withinKilometers:">&ndash;&nbsp;whereKey:nearGeoPoint:withinKilometers:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定位置から近い順に、指定距離までの範囲に含まれるオブジェクトを取得。
+取得件数はlimit依存。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> nearGeoPoint:(NCMBGeoPoint *)<em>geoPoint</em> withinKilometers:(double)<em>maxDistance</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>geoPoint</code></th>
+						<td><p>位置情報</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>maxDistance</code></th>
+						<td><p>検索範囲</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:nearGeoPoint:withinRadians:" title="whereKey:nearGeoPoint:withinRadians:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:nearGeoPoint:withinRadians:">&ndash;&nbsp;whereKey:nearGeoPoint:withinRadians:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定位置から近い順に、指定距離までの範囲に含まれるオブジェクトを取得。
+取得件数はlimit依存。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> nearGeoPoint:(NCMBGeoPoint *)<em>geoPoint</em> withinRadians:(double)<em>maxDistance</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>geoPoint</code></th>
+						<td><p>位置情報</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>maxDistance</code></th>
+						<td><p>検索範囲</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:withinGeoBoxFromSouthwest:toNortheast:" title="whereKey:withinGeoBoxFromSouthwest:toNortheast:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:withinGeoBoxFromSouthwest:toNortheast:">&ndash;&nbsp;whereKey:withinGeoBoxFromSouthwest:toNortheast:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定された短形範囲に含まれるオブジェクトを取得。
+短形は、左下（南西）と右上（北東）を指定する。
+ソートは通常検索に準拠。
+取得件数はlimit依存。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> withinGeoBoxFromSouthwest:(NCMBGeoPoint *)<em>southwest</em> toNortheast:(NCMBGeoPoint *)<em>northeast</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>southwest</code></th>
+						<td><p>南西座標</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>northeast</code></th>
+						<td><p>北東座標</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Sub Queries" name="task_Sub Queries"></a>
+						<h2 class="task-title">Sub Queries</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/whereKey:matchesKey:inQuery:" title="whereKey:matchesKey:inQuery:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:matchesKey:inQuery:">&ndash;&nbsp;whereKey:matchesKey:inQuery:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「第一引数は親クエリにおけるキー、第二引数はサブクエリ（第三引数）におけるキーとし、親とサブクエリで得られた値の中で一致するものを検索」という検索条件を設定。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> matchesKey:(NSString *)<em>otherKey</em> inQuery:(NCMBQuery *)<em>query</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>親クエリにおけるキー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>otherKey</code></th>
+						<td><p>サブクエリ（第三引数）におけるキー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>query</code></th>
+						<td><p>サブクエリ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/whereKey:matchesQuery:" title="whereKey:matchesQuery:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/whereKey:matchesQuery:">&ndash;&nbsp;whereKey:matchesQuery:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「サブクエリ（第二引数）で取得できるオブジェクトの内、親クエリに指定したキー（第一引数）の値(オブジェクト)と一致するものを検索」という検索条件を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)whereKey:(NSString *)<em>key</em> matchesQuery:(NCMBQuery *)<em>query</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>検索条件に使用するキー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>query</code></th>
+						<td><p>検索条件に使用するクエリ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/orQueryWithSubqueries:" title="orQueryWithSubqueries:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/orQueryWithSubqueries:">+&nbsp;orQueryWithSubqueries:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>条件にしたい複数のクエリ</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (NCMBQuery *)orQueryWithSubqueries:(NSArray *)<em>queries</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>queries</code></th>
+						<td><p>条件にしたい複数のクエリ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Order" name="task_Order"></a>
+						<h2 class="task-title">Order</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/orderByAscending:" title="orderByAscending:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/orderByAscending:">&ndash;&nbsp;orderByAscending:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「指定したキーで昇順に並べ替える」という検索条件を設定。すでに並べ替え設定が存在している場合は上書きされる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)orderByAscending:(NSString *)<em>key</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>並べ替えに使用するキー</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/addAscendingOrder:" title="addAscendingOrder:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/addAscendingOrder:">&ndash;&nbsp;addAscendingOrder:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「指定したキーで昇順に並べ替える」という設定を検索条件に追加。すでに並べ替え設定が存在している場合は、既存のものより優先度が低い。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)addAscendingOrder:(NSString *)<em>key</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>並べ替えに使用するキー</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/orderByDescending:" title="orderByDescending:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/orderByDescending:">&ndash;&nbsp;orderByDescending:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「指定したキーで降順に並べ替える」という検索条件を設定。すでに並べ替え設定が存在している場合は上書きされる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)orderByDescending:(NSString *)<em>key</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>並べ替えに使用するキー</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/addDescendingOrder:" title="addDescendingOrder:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/addDescendingOrder:">&ndash;&nbsp;addDescendingOrder:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「指定したキーで降順に並べ替える」という設定を検索条件に追加。すでに並べ替え設定が存在している場合は、既存のものより優先度が低い。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)addDescendingOrder:(NSString *)<em>key</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>並べ替えに使用するキー</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/orderBySortDescriptor:" title="orderBySortDescriptor:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/orderBySortDescriptor:">&ndash;&nbsp;orderBySortDescriptor:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「指定したNSSortDescriptor通りに並べ替える」という検索条件を設定。すでに並べ替え設定が存在している場合は上書きされる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)orderBySortDescriptor:(NSSortDescriptor *)<em>sortDescriptor</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>sortDescriptor</code></th>
+						<td><p>並び替えに使用するNSSortDescriptorのインスタンス</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/orderBySortDescriptors:" title="orderBySortDescriptors:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/orderBySortDescriptors:">&ndash;&nbsp;orderBySortDescriptors:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>「指定した複数のNSSortDescriptor通りに並べ替える」という検索条件を設定。すでに並べ替え設定が存在している場合は上書きされる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)orderBySortDescriptors:(NSArray *)<em>sortDescriptors</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>sortDescriptors</code></th>
+						<td><p>並び替えに使用するNSSortDescriptorのインスタンスが格納された配列</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Getting Objects by ID" name="task_Getting Objects by ID"></a>
+						<h2 class="task-title">Getting Objects by ID</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/getObjectOfClass:objectId:error:" title="getObjectOfClass:objectId:error:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getObjectOfClass:objectId:error:">+&nbsp;getObjectOfClass:objectId:error:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したクラスとobjectIDを持つオブジェクトを取得。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (NCMBObject *)getObjectOfClass:(NSString *)<em>objectClass</em> objectId:(NSString *)<em>objectId</em> error:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>objectClass</code></th>
+						<td><p>取得するオブジェクトのクラス名</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>objectId</code></th>
+						<td><p>取得するオブジェクトのobjectID</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>指定された<a href="../Classes/NCMBObject.html">NCMBObject</a></p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/getObjectWithId:error:" title="getObjectWithId:error:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getObjectWithId:error:">&ndash;&nbsp;getObjectWithId:error:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したobjectIDを持つオブジェクトを取得。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NCMBObject *)getObjectWithId:(NSString *)<em>objectId</em> error:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>objectId</code></th>
+						<td><p>取得するオブジェクトのobjectID</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>指定されたオブジェクト</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/getObjectInBackgroundWithId:block:" title="getObjectInBackgroundWithId:block:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getObjectInBackgroundWithId:block:">&ndash;&nbsp;getObjectInBackgroundWithId:block:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したobjectIDを持つオブジェクトを非同期で取得。取得し終わったら与えられたblockを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)getObjectInBackgroundWithId:(NSString *)<em>objectId</em> block:(NCMBObjectResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>objectId</code></th>
+						<td><p>取得するオブジェクトのobjectID</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>通信後に実行されるblock。blockは次の引数のシグネチャを持つ必要がある (<a href="../Classes/NCMBObject.html">NCMBObject</a> <em>object, NSError </em>error)
+objectには取得したオブジェクトが渡される。errorにはエラーがなければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/getObjectInBackgroundWithId:target:selector:" title="getObjectInBackgroundWithId:target:selector:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getObjectInBackgroundWithId:target:selector:">&ndash;&nbsp;getObjectInBackgroundWithId:target:selector:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したobjectIDを持つオブジェクトを非同期で取得。取得し終わったら指定されたコールバックを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)getObjectInBackgroundWithId:(NSString *)<em>objectId</em> target:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>objectId</code></th>
+						<td><p>取得するオブジェクトのobjectID</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>target</code></th>
+						<td><p>呼び出すセレクタのターゲット</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>selector</code></th>
+						<td><p>呼び出すセレクタ。次のシグネチャを持つ必要がある。 (void)callbackWithResult(<a href="../Classes/NCMBObject.html">NCMBObject</a>)result error:(NSError )error
+resultには取得したオブジェクトが渡され、当てはまるものがなければnilが渡される。errorにはエラーがなければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Getting User" name="task_Getting User"></a>
+						<h2 class="task-title">Getting User</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/getUserObjectWithId:error:" title="getUserObjectWithId:error:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getUserObjectWithId:error:">+&nbsp;getUserObjectWithId:error:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したobjectIDのユーザを取得。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (NCMBUser *)getUserObjectWithId:(NSString *)<em>objectId</em> error:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>objectId</code></th>
+						<td><p>取得するユーザのobjectID</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>指定された<a href="../Classes/NCMBUser.html">NCMBUser</a></p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Find Objects" name="task_Find Objects"></a>
+						<h2 class="task-title">Find Objects</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/findObjects:" title="findObjects:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/findObjects:">&ndash;&nbsp;findObjects:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>設定されている検索条件に当てはまるオブジェクトを取得。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSArray *)findObjects:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>検索結果の配列</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/findObjectsInBackgroundWithBlock:" title="findObjectsInBackgroundWithBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/findObjectsInBackgroundWithBlock:">&ndash;&nbsp;findObjectsInBackgroundWithBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>設定されている検索条件に当てはまるオブジェクトを非同期で取得。取得し終わったら与えられたblockを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)findObjectsInBackgroundWithBlock:(NCMBArrayResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>信後に実行されるblock。blockは次の引数のシグネチャを持つ必要がある（NSArray <em>objects, NSError </em>error）
+objectsには取得したオブジェクトが渡される。errorにはエラーがなければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/findObjectsInBackgroundWithTarget:selector:" title="findObjectsInBackgroundWithTarget:selector:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/findObjectsInBackgroundWithTarget:selector:">&ndash;&nbsp;findObjectsInBackgroundWithTarget:selector:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>設定されている検索条件に当てはまるオブジェクトを非同期で取得。取得し終わったら指定されたコールバックを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)findObjectsInBackgroundWithTarget:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>target</code></th>
+						<td><p>呼び出すセレクタのターゲット</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>selector</code></th>
+						<td><p>呼び出すセレクタ。次のシグネチャを持つ必要がある。(void)callbackWithResult:(NSArray )result error:(NSError )error.
+resultには取得したオブジェクトが渡され、当てはまるものがなければnilが渡される。errorにはエラーがなければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Get first object" name="task_Get first object"></a>
+						<h2 class="task-title">Get first object</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/getFirstObject:" title="getFirstObject:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getFirstObject:">&ndash;&nbsp;getFirstObject:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>設定されている検索条件に当てはまるオブジェクトを一件取得。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (id)getFirstObject:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>検索条件に該当するオブジェクト</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/getFirstObjectInBackgroundWithBlock:" title="getFirstObjectInBackgroundWithBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getFirstObjectInBackgroundWithBlock:">&ndash;&nbsp;getFirstObjectInBackgroundWithBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>設定されている検索条件に当てはまるオブジェクト一件を非同期で取得。取得し終わったら与えられたblockを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)getFirstObjectInBackgroundWithBlock:(NCMBAnyObjectResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>通信後に実行されるblock。blockは次の引数のシグネチャを持つ必要がある（id object, NSError *error）
+objectには取得したオブジェクトが渡される。errorにはエラーがなければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/getFirstObjectInBackgroundWithTarget:selector:" title="getFirstObjectInBackgroundWithTarget:selector:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getFirstObjectInBackgroundWithTarget:selector:">&ndash;&nbsp;getFirstObjectInBackgroundWithTarget:selector:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>設定されている検索条件に当てはまるオブジェクト一件を非同期で取得。取得し終わったら指定されたコールバックを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)getFirstObjectInBackgroundWithTarget:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>target</code></th>
+						<td><p>呼び出すセレクタのターゲット</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>selector</code></th>
+						<td><p>呼び出すセレクタ。次のシグネチャを持つ必要がある。 (void)callbackWithResult:(<a href="../Classes/NCMBObject.html">NCMBObject</a>)result error:(NSError )error
+resultには取得したオブジェクトが渡され、当てはまるものがなければnilが渡される。errorにはエラーがなければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Count Objects" name="task_Count Objects"></a>
+						<h2 class="task-title">Count Objects</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/countObjects:" title="countObjects:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/countObjects:">&ndash;&nbsp;countObjects:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>設定されている検索条件に当てはまるオブジェクトの件数を取得。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSInteger)countObjects:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>検索条件に該当するオブジェクトの件数</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/countObjectsInBackgroundWithBlock:" title="countObjectsInBackgroundWithBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/countObjectsInBackgroundWithBlock:">&ndash;&nbsp;countObjectsInBackgroundWithBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>設定されている検索条件に当てはまるオブジェクトの件数を非同期で取得。取得し終わったら与えられたblockを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)countObjectsInBackgroundWithBlock:(NCMBIntegerResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>通信後に実行されるblock。blockは次の引数のシグネチャを持つ必要がある (int number, NSError *error)
+countには取得した件数が渡される。errorにはエラーがなければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/countObjectsInBackgroundWithTarget:selector:" title="countObjectsInBackgroundWithTarget:selector:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/countObjectsInBackgroundWithTarget:selector:">&ndash;&nbsp;countObjectsInBackgroundWithTarget:selector:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>設定されている検索条件に当てはまるオブジェクトの件数を非同期で取得。取得し終わったら指定されたコールバックを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)countObjectsInBackgroundWithTarget:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>target</code></th>
+						<td><p>呼び出すセレクタのターゲット</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>selector</code></th>
+						<td><p>呼び出すセレクタ。次のシグネチャを持つ必要がある。(void)callbackWithResult:(NSNumber )result error:(NSError )error
+resultには取得した件数が渡される。errorにはエラーがなければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Cancel" name="task_Cancel"></a>
+						<h2 class="task-title">Cancel</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/cancel" title="cancel"></a>
+	<h3 class="method-title"><code><a href="#//api/name/cancel">&ndash;&nbsp;cancel</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>非同期通信をキャンセルする。通信キャンセル後、コールバックは呼ばれない。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)cancel</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Cache Setting" name="task_Cache Setting"></a>
+						<h2 class="task-title">Cache Setting</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/setCachePolicy:" title="setCachePolicy:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setCachePolicy:">&ndash;&nbsp;setCachePolicy:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>データ検索時のcachePolicyを設定する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setCachePolicy:(NSURLRequestCachePolicy)<em>cachePolicy</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>cachePolicy</code></th>
+						<td><p>クエリに設定するNSURLRequestCachePolicy</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/hasCachedResult" title="hasCachedResult"></a>
+	<h3 class="method-title"><code><a href="#//api/name/hasCachedResult">&ndash;&nbsp;hasCachedResult</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>設定されている検索条件に当てはまるキャッシュの有無を取得</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)hasCachedResult</code></div>
+
+		    
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>キャッシュが存在する場合はYESを返す</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/clearCachedResult" title="clearCachedResult"></a>
+	<h3 class="method-title"><code><a href="#//api/name/clearCachedResult">&ndash;&nbsp;clearCachedResult</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>設定されている検索条件に当てはまるキャッシュをクリア</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)clearCachedResult</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/clearAllCachedResults" title="clearAllCachedResults"></a>
+	<h3 class="method-title"><code><a href="#//api/name/clearAllCachedResults">+&nbsp;clearAllCachedResults</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>全てのキャッシュをクリア</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)clearAllCachedResults</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/relatedTo:objectId:key:" title="relatedTo:objectId:key:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/relatedTo:objectId:key:">&ndash;&nbsp;relatedTo:objectId:key:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定されたオブジェクトのリレーション先オブジェクトを検索する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)relatedTo:(NSString *)<em>targetClassName</em> objectId:(NSString *)<em>objectId</em> key:(NSString *)<em>key</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>targetClassName</code></th>
+						<td><p>リレーション元のクラス名</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>objectId</code></th>
+						<td><p>リレーション元のオブジェクトID</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>リレーション元オブジェクトでリレーションが設定されているフィールド名</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBQuery.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2020 FUJITSU CLOUD TECHNOLOGIES LIMITED. All rights reserved. Updated: 2020-03-24</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>

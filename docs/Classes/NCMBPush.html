@@ -1,0 +1,2466 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>NCMBPush Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1333)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">NCMB </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">FUJITSU CLOUD TECHNOLOGIES LIMITED</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+
+	
+	<optgroup label="Class Methods">
+		
+		<option value="//api/name/handlePush:">+ handlePush:</option>
+		
+		<option value="//api/name/handleRichPush:">+ handleRichPush:</option>
+		
+		<option value="//api/name/push">+ push</option>
+		
+		<option value="//api/name/query">+ query</option>
+		
+		<option value="//api/name/sendPushDataToChannel:withData:error:">+ sendPushDataToChannel:withData:error:</option>
+		
+		<option value="//api/name/sendPushDataToChannelInBackground:withData:block:">+ sendPushDataToChannelInBackground:withData:block:</option>
+		
+		<option value="//api/name/sendPushDataToChannelInBackground:withData:target:selector:">+ sendPushDataToChannelInBackground:withData:target:selector:</option>
+		
+		<option value="//api/name/sendPushDataToQuery:withData:error:">+ sendPushDataToQuery:withData:error:</option>
+		
+		<option value="//api/name/sendPushDataToQueryInBackground:withData:block:">+ sendPushDataToQueryInBackground:withData:block:</option>
+		
+		<option value="//api/name/sendPushMessageToChannel:withMessage:error:">+ sendPushMessageToChannel:withMessage:error:</option>
+		
+		<option value="//api/name/sendPushMessageToChannelInBackground:withMessage:block:">+ sendPushMessageToChannelInBackground:withMessage:block:</option>
+		
+		<option value="//api/name/sendPushMessageToChannelInBackground:withMessage:target:selector:">+ sendPushMessageToChannelInBackground:withMessage:target:selector:</option>
+		
+		<option value="//api/name/sendPushMessageToQuery:withMessage:error:">+ sendPushMessageToQuery:withMessage:error:</option>
+		
+		<option value="//api/name/sendPushMessageToQueryInBackground:withMessage:block:">+ sendPushMessageToQueryInBackground:withMessage:block:</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/clearExpiration">- clearExpiration</option>
+		
+		<option value="//api/name/expireAfterTimeInterval:">- expireAfterTimeInterval:</option>
+		
+		<option value="//api/name/expireAtDate:">- expireAtDate:</option>
+		
+		<option value="//api/name/sendPush:">- sendPush:</option>
+		
+		<option value="//api/name/sendPushInBackgroundWithBlock:">- sendPushInBackgroundWithBlock:</option>
+		
+		<option value="//api/name/sendPushInBackgroundWithTarget:selector:">- sendPushInBackgroundWithTarget:selector:</option>
+		
+		<option value="//api/name/setAction:">- setAction:</option>
+		
+		<option value="//api/name/setBadgeIncrementFlag:">- setBadgeIncrementFlag:</option>
+		
+		<option value="//api/name/setBadgeNumber:">- setBadgeNumber:</option>
+		
+		<option value="//api/name/setCategory:">- setCategory:</option>
+		
+		<option value="//api/name/setChannel:">- setChannel:</option>
+		
+		<option value="//api/name/setChannels:">- setChannels:</option>
+		
+		<option value="//api/name/setContentAvailable:">- setContentAvailable:</option>
+		
+		<option value="//api/name/setData:">- setData:</option>
+		
+		<option value="//api/name/setDeliveryTime:">- setDeliveryTime:</option>
+		
+		<option value="//api/name/setDialog:">- setDialog:</option>
+		
+		<option value="//api/name/setImmediateDeliveryFlag:">- setImmediateDeliveryFlag:</option>
+		
+		<option value="//api/name/setMessage:">- setMessage:</option>
+		
+		<option value="//api/name/setPushToAndroid:">- setPushToAndroid:</option>
+		
+		<option value="//api/name/setPushToIOS:">- setPushToIOS:</option>
+		
+		<option value="//api/name/setQuery:">- setQuery:</option>
+		
+		<option value="//api/name/setRichUrl:">- setRichUrl:</option>
+		
+		<option value="//api/name/setSearchCondition:">- setSearchCondition:</option>
+		
+		<option value="//api/name/setSound:">- setSound:</option>
+		
+		<option value="//api/name/setTitle:">- setTitle:</option>
+		
+		<option value="//api/name/setUserSettingValue:">- setUserSettingValue:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">NCMBPush Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td><a href="../Classes/NCMBObject.html">NCMBObject</a> : NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>NCMBPush.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>NCMBPushは、プッシュ通知の登録・更新・取得・削除を行うクラスです。</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						<a title="Create" name="task_Create"></a>
+						<h2 class="task-title">Create</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/push" title="push"></a>
+	<h3 class="method-title"><code><a href="#//api/name/push">+&nbsp;push</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>NCMBPushのインスタンスを生成</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (NCMBPush *)push</code></div>
+
+		    
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>NCMBPushのインスタンス</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Configuration" name="task_Configuration"></a>
+						<h2 class="task-title">Configuration</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/setTitle:" title="setTitle:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setTitle:">&ndash;&nbsp;setTitle:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>プッシュ通知のタイトルを設定(Androidのみ)</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setTitle:(NSString *)<em>title</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>title</code></th>
+						<td><p>プッシュ通知のタイトル</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setChannel:" title="setChannel:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setChannel:">&ndash;&nbsp;setChannel:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>プッシュ通知を送信するチャネルを設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setChannel:(NSString *)<em>channel</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>channel</code></th>
+						<td><p>プッシュ通知を送信するチャネル</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setChannels:" title="setChannels:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setChannels:">&ndash;&nbsp;setChannels:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>プッシュ通知を送信する複数のチャネルを設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setChannels:(NSArray *)<em>channels</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>channels</code></th>
+						<td><p>プッシュ通知を送信する複数のチャネルを格納した配列</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setQuery:" title="setQuery:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setQuery:">&ndash;&nbsp;setQuery:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>(非推奨:新たに利用する場合はsetSearchConditionを使いましょう)
+プッシュ通知の配信先となる配信端末を絞り込むためのクエリを設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setQuery:(NCMBQuery *)<em>query</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>query</code></th>
+						<td><p>プッシュ先を絞り込むためのクエリ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setSearchCondition:" title="setSearchCondition:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setSearchCondition:">&ndash;&nbsp;setSearchCondition:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>プッシュ通知の配信先となる配信端末を絞り込むためのクエリを設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setSearchCondition:(NCMBQuery *)<em>query</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>query</code></th>
+						<td><p>プッシュ先を絞り込むためのクエリ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setMessage:" title="setMessage:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setMessage:">&ndash;&nbsp;setMessage:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>プッシュ通知のメッセージ内容を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setMessage:(NSString *)<em>message</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>message</code></th>
+						<td><p>プッシュ通知のメッセージ内容</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setDialog:" title="setDialog:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setDialog:">&ndash;&nbsp;setDialog:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Android端末でダイアログプッシュ通知を行う設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setDialog:(BOOL)<em>dialog</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>dialog</code></th>
+						<td><p>ダイアログプッシュ通知を行う場合はtrueを設定。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setRichUrl:" title="setRichUrl:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setRichUrl:">&ndash;&nbsp;setRichUrl:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>リッチプッシュ通知用のURLを設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setRichUrl:(NSString *)<em>url</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>url</code></th>
+						<td><p>リッチプッシュ通知で表示するWebページのURL</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setPushToAndroid:" title="setPushToAndroid:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setPushToAndroid:">&ndash;&nbsp;setPushToAndroid:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Androidへの配信設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setPushToAndroid:(BOOL)<em>pushToAndroid</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>pushToAndroid</code></th>
+						<td><p>配信設定。配信する場合はtrueを設定。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setPushToIOS:" title="setPushToIOS:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setPushToIOS:">&ndash;&nbsp;setPushToIOS:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>iOSへの配信設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setPushToIOS:(BOOL)<em>pushToIOS</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>pushToIOS</code></th>
+						<td><p>配信設定。配信する場合はtrueを設定。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/expireAtDate:" title="expireAtDate:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/expireAtDate:">&ndash;&nbsp;expireAtDate:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>プッシュ通知の有効期限を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)expireAtDate:(NSDate *)<em>date</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>date</code></th>
+						<td><p>プッシュ通知の有効期限</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/expireAfterTimeInterval:" title="expireAfterTimeInterval:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/expireAfterTimeInterval:">&ndash;&nbsp;expireAfterTimeInterval:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>プッシュ通知配信日時から設定したインターバル後を有効期限に設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)expireAfterTimeInterval:(NSString *)<em>timeInterval</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>timeInterval</code></th>
+						<td><p>設定できる値は、時間単位で指定する場合は「n hour」(n=1～24）、日単位で指定する場合は「n day」（n=1～28）。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/clearExpiration" title="clearExpiration"></a>
+	<h3 class="method-title"><code><a href="#//api/name/clearExpiration">&ndash;&nbsp;clearExpiration</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>プッシュ通知の有効期限の削除</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)clearExpiration</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setUserSettingValue:" title="setUserSettingValue:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setUserSettingValue:">&ndash;&nbsp;setUserSettingValue:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>ユーザの情報を設定。開発者が付与したい情報を設定することができる。ここで設定した値はプッシュ通知のペイロードから「com.nifcloud.mbaas.Data」というキーで取得できる</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setUserSettingValue:(NSDictionary *)<em>userSettingValue</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>userSettingValue</code></th>
+						<td><p>ユーザの情報</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setDeliveryTime:" title="setDeliveryTime:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setDeliveryTime:">&ndash;&nbsp;setDeliveryTime:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>プッシュ通知の配信日時を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setDeliveryTime:(NSDate *)<em>date</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>date</code></th>
+						<td><p>プッシュ通知の配信日時</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setImmediateDeliveryFlag:" title="setImmediateDeliveryFlag:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setImmediateDeliveryFlag:">&ndash;&nbsp;setImmediateDeliveryFlag:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>即時配信フラグを設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setImmediateDeliveryFlag:(BOOL)<em>immediateDeliveryFlag</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>immediateDeliveryFlag</code></th>
+						<td><p>即時配信フラグ。即時配信にする場合はYESを設定。デフォルトはYES。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setBadgeNumber:" title="setBadgeNumber:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setBadgeNumber:">&ndash;&nbsp;setBadgeNumber:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>バッジ数を設定(iOSのみ)</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setBadgeNumber:(int)<em>badgeNumber</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>badgeNumber</code></th>
+						<td><p>バッジ数</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setBadgeIncrementFlag:" title="setBadgeIncrementFlag:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setBadgeIncrementFlag:">&ndash;&nbsp;setBadgeIncrementFlag:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>バッジ数のインクリメント設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setBadgeIncrementFlag:(BOOL)<em>badgeIncrementFlag</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>badgeIncrementFlag</code></th>
+						<td><p>バッジ数をインクリメントする場合はYESを設定する</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setSound:" title="setSound:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setSound:">&ndash;&nbsp;setSound:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>通知音を設定(iOSのみ)</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setSound:(NSString *)<em>soundFileName</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>soundFileName</code></th>
+						<td><p>音声ファイル名</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setContentAvailable:" title="setContentAvailable:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setContentAvailable:">&ndash;&nbsp;setContentAvailable:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>content-availableを設定(iOSのみ)</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setContentAvailable:(BOOL)<em>contentAvailable</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>contentAvailable</code></th>
+						<td><p>content-availableの設定値（真偽値）</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setCategory:" title="setCategory:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setCategory:">&ndash;&nbsp;setCategory:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>categoryを設定(iOSのみ)</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setCategory:(NSString *)<em>category</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>category</code></th>
+						<td><p>categoryの名前</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setAction:" title="setAction:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setAction:">&ndash;&nbsp;setAction:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>actionを設定(Androidのみ)</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setAction:(NSString *)<em>actionName</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>actionName</code></th>
+						<td><p>アクション名</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setData:" title="setData:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setData:">&ndash;&nbsp;setData:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>プッシュ通知の設定が格納されたNSDictionaryをセットする</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setData:(NSDictionary *)<em>dic</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>dic</code></th>
+						<td><p>プッシュ通知の設定</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Send" name="task_Send"></a>
+						<h2 class="task-title">Send</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/sendPushMessageToChannel:withMessage:error:" title="sendPushMessageToChannel:withMessage:error:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sendPushMessageToChannel:withMessage:error:">+&nbsp;sendPushMessageToChannel:withMessage:error:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したチャネルにメッセージのみのプッシュ通知を送信。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)sendPushMessageToChannel:(NSString *)<em>channel</em> withMessage:(NSString *)<em>message</em> error:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>channel</code></th>
+						<td><p>プッシュ先のチャネル</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>message</code></th>
+						<td><p>メッセージ内容</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sendPushMessageToChannelInBackground:withMessage:block:" title="sendPushMessageToChannelInBackground:withMessage:block:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sendPushMessageToChannelInBackground:withMessage:block:">+&nbsp;sendPushMessageToChannelInBackground:withMessage:block:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したチャネルに非同期でメッセージのみのプッシュ通知を送信。登録し終わったら与えられたblockを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)sendPushMessageToChannelInBackground:(NSString *)<em>channel</em> withMessage:(NSString *)<em>message</em> block:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>channel</code></th>
+						<td><p>プッシュ先のチャネル</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>message</code></th>
+						<td><p>メッセージ内容</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある(NSError *error)
+errorにはエラーがなければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sendPushMessageToChannelInBackground:withMessage:target:selector:" title="sendPushMessageToChannelInBackground:withMessage:target:selector:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sendPushMessageToChannelInBackground:withMessage:target:selector:">+&nbsp;sendPushMessageToChannelInBackground:withMessage:target:selector:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したチャネルに非同期でメッセージのみのプッシュ通知を送信。取得し終わったら指定されたcallbackを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)sendPushMessageToChannelInBackground:(NSString *)<em>channel</em> withMessage:(NSString *)<em>message</em> target:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>channel</code></th>
+						<td><p>プッシュ先のチャネル</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>message</code></th>
+						<td><p>メッセージ内容</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>target</code></th>
+						<td><p>呼び出すセレクタのターゲット</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>selector</code></th>
+						<td><p>呼び出すセレクタ。次のシグネチャを持つ必要がある。(void)callbackWithResult:(NSNumber )result error:(NSError )error
+resultには送信完了の有無をNSNumber型で渡される。errorにはエラーがなければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sendPushMessageToQuery:withMessage:error:" title="sendPushMessageToQuery:withMessage:error:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sendPushMessageToQuery:withMessage:error:">+&nbsp;sendPushMessageToQuery:withMessage:error:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したクエリを満たした配信端末にメッセージのみのプッシュ通知を送信。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)sendPushMessageToQuery:(NCMBQuery *)<em>query</em> withMessage:(NSString *)<em>message</em> error:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>query</code></th>
+						<td><p>指定するクエリ</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>message</code></th>
+						<td><p>メッセージ内容</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sendPushMessageToQueryInBackground:withMessage:block:" title="sendPushMessageToQueryInBackground:withMessage:block:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sendPushMessageToQueryInBackground:withMessage:block:">+&nbsp;sendPushMessageToQueryInBackground:withMessage:block:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したクエリを満たした配信端末に非同期でメッセージのみのプッシュ通知を送信。登録し終わったら与えられたblockを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)sendPushMessageToQueryInBackground:(NCMBQuery *)<em>query</em> withMessage:(NSString *)<em>message</em> block:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>query</code></th>
+						<td><p>指定するクエリ</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>message</code></th>
+						<td><p>メッセージ内容</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある(NSError *error)
+errorにはエラーがなければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sendPushDataToChannel:withData:error:" title="sendPushDataToChannel:withData:error:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sendPushDataToChannel:withData:error:">+&nbsp;sendPushDataToChannel:withData:error:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したチャネルにプッシュ通知を送信。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)sendPushDataToChannel:(NSString *)<em>channel</em> withData:(NSDictionary *)<em>data</em> error:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>channel</code></th>
+						<td><p>プッシュ先のチャネル</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>data</code></th>
+						<td><p>プッシュ通知内容</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sendPushDataToChannelInBackground:withData:block:" title="sendPushDataToChannelInBackground:withData:block:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sendPushDataToChannelInBackground:withData:block:">+&nbsp;sendPushDataToChannelInBackground:withData:block:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したチャネルに非同期でプッシュ通知を送信。登録し終わったら与えられたblockを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)sendPushDataToChannelInBackground:(NSString *)<em>channel</em> withData:(NSDictionary *)<em>data</em> block:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>channel</code></th>
+						<td><p>プッシュ先のチャネル</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>data</code></th>
+						<td><p>プッシュ通知内容</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある(NSError *error)
+errorにはエラーがなければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sendPushDataToChannelInBackground:withData:target:selector:" title="sendPushDataToChannelInBackground:withData:target:selector:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sendPushDataToChannelInBackground:withData:target:selector:">+&nbsp;sendPushDataToChannelInBackground:withData:target:selector:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したチャネルに非同期でプッシュ通知を送信。登録し終わったら指定されたcallbackを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)sendPushDataToChannelInBackground:(NSString *)<em>channel</em> withData:(NSDictionary *)<em>data</em> target:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>channel</code></th>
+						<td><p>プッシュ先のチャネル</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>data</code></th>
+						<td><p>プッシュ通知内容</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>target</code></th>
+						<td><p>呼び出すセレクタのターゲット</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>selector</code></th>
+						<td><p>呼び出すセレクタ。次のシグネチャを持つ必要がある。(void)callbackWithResult:(NSNumber )result error:(NSError )error
+resultには送信完了の有無をNSNumber型で渡される。errorにはエラーがなければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sendPushDataToQuery:withData:error:" title="sendPushDataToQuery:withData:error:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sendPushDataToQuery:withData:error:">+&nbsp;sendPushDataToQuery:withData:error:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したクエリを満たした配信端末にプッシュ通知を送信。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)sendPushDataToQuery:(NCMBQuery *)<em>query</em> withData:(NSDictionary *)<em>data</em> error:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>query</code></th>
+						<td><p>指定するクエリ</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>data</code></th>
+						<td><p>プッシュ通知内容</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sendPushDataToQueryInBackground:withData:block:" title="sendPushDataToQueryInBackground:withData:block:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sendPushDataToQueryInBackground:withData:block:">+&nbsp;sendPushDataToQueryInBackground:withData:block:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したクエリを満たした配信端末に非同期でプッシュ通知を送信。登録し終わったら与えられたblockを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)sendPushDataToQueryInBackground:(NCMBQuery *)<em>query</em> withData:(NSDictionary *)<em>data</em> block:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>query</code></th>
+						<td><p>指定するクエリ</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>data</code></th>
+						<td><p>プッシュ通知内容</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある(NSError *error)
+errorにはエラーがなければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sendPush:" title="sendPush:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sendPush:">&ndash;&nbsp;sendPush:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>プッシュ通知を送信。必要があればエラーをセットし、取得することができる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)sendPush:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sendPushInBackgroundWithBlock:" title="sendPushInBackgroundWithBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sendPushInBackgroundWithBlock:">&ndash;&nbsp;sendPushInBackgroundWithBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>プッシュ通知を非同期で送信。登録し終わったら与えられたblockを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)sendPushInBackgroundWithBlock:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある(NSError *error)
+errorにはエラーがなければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sendPushInBackgroundWithTarget:selector:" title="sendPushInBackgroundWithTarget:selector:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sendPushInBackgroundWithTarget:selector:">&ndash;&nbsp;sendPushInBackgroundWithTarget:selector:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>プッシュ通知を非同期で送信。取得し終わったら指定されたcallbackを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)sendPushInBackgroundWithTarget:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>target</code></th>
+						<td><p>呼び出すセレクタのターゲット</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>selector</code></th>
+						<td><p>呼び出すセレクタ。引数として(NSError*)errorオブジェクトを取得できる。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Handling" name="task_Handling"></a>
+						<h2 class="task-title">Handling</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/handlePush:" title="handlePush:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/handlePush:">+&nbsp;handlePush:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>アプリ起動中にプッシュ通知内容を取得した場合、通知内容を表示する。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)handlePush:(NSDictionary *)<em>userInfo</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>userInfo</code></th>
+						<td><p>プッシュ通知内容</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/handleRichPush:" title="handleRichPush:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/handleRichPush:">+&nbsp;handleRichPush:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>アプリ起動中にプッシュ通知内容を取得した場合、Webページを表示する。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)handleRichPush:(NSDictionary *)<em>userInfo</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>userInfo</code></th>
+						<td><p>プッシュ通知内容</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Query" name="task_Query"></a>
+						<h2 class="task-title">Query</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/query" title="query"></a>
+	<h3 class="method-title"><code><a href="#//api/name/query">+&nbsp;query</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>クラス名を指定してクエリの生成</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (NCMBQuery *)query</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBPush.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2020 FUJITSU CLOUD TECHNOLOGIES LIMITED. All rights reserved. Updated: 2020-03-24</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>
