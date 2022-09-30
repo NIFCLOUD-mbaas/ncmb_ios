@@ -1,0 +1,2685 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>NCMBUser Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1333)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">NCMB </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">FUJITSU CLOUD TECHNOLOGIES LIMITED</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/isNew">isNew</option>
+		
+		<option value="//api/name/mailAddress">mailAddress</option>
+		
+		<option value="//api/name/password">password</option>
+		
+		<option value="//api/name/sessionToken">sessionToken</option>
+		
+		<option value="//api/name/userName">userName</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Class Methods">
+		
+		<option value="//api/name/automaticCurrentUserWithBlock:">+ automaticCurrentUserWithBlock:</option>
+		
+		<option value="//api/name/automaticCurrentUserWithTarget:selector:">+ automaticCurrentUserWithTarget:selector:</option>
+		
+		<option value="//api/name/currentUser">+ currentUser</option>
+		
+		<option value="//api/name/enableAutomaticUser">+ enableAutomaticUser</option>
+		
+		<option value="//api/name/logInWithMailAddress:password:error:">+ logInWithMailAddress:password:error:</option>
+		
+		<option value="//api/name/logInWithMailAddressInBackground:password:block:">+ logInWithMailAddressInBackground:password:block:</option>
+		
+		<option value="//api/name/logInWithMailAddressInBackground:password:target:selector:">+ logInWithMailAddressInBackground:password:target:selector:</option>
+		
+		<option value="//api/name/logInWithUsername:password:error:">+ logInWithUsername:password:error:</option>
+		
+		<option value="//api/name/logInWithUsernameInBackground:password:block:">+ logInWithUsernameInBackground:password:block:</option>
+		
+		<option value="//api/name/logInWithUsernameInBackground:password:target:selector:">+ logInWithUsernameInBackground:password:target:selector:</option>
+		
+		<option value="//api/name/logOut">+ logOut</option>
+		
+		<option value="//api/name/logOutInBackgroundWithBlock:">+ logOutInBackgroundWithBlock:</option>
+		
+		<option value="//api/name/query">+ query</option>
+		
+		<option value="//api/name/requestAuthenticationMail:error:">+ requestAuthenticationMail:error:</option>
+		
+		<option value="//api/name/requestAuthenticationMailInBackground:block:">+ requestAuthenticationMailInBackground:block:</option>
+		
+		<option value="//api/name/requestAuthenticationMailInBackground:target:selector:">+ requestAuthenticationMailInBackground:target:selector:</option>
+		
+		<option value="//api/name/requestPasswordResetForEmail:error:">+ requestPasswordResetForEmail:error:</option>
+		
+		<option value="//api/name/requestPasswordResetForEmailInBackground:block:">+ requestPasswordResetForEmailInBackground:block:</option>
+		
+		<option value="//api/name/requestPasswordResetForEmailInBackground:target:selector:">+ requestPasswordResetForEmailInBackground:target:selector:</option>
+		
+		<option value="//api/name/user">+ user</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/isAuthenticated">- isAuthenticated</option>
+		
+		<option value="//api/name/isLinkedWith:">- isLinkedWith:</option>
+		
+		<option value="//api/name/isMailAddressConfirm">- isMailAddressConfirm</option>
+		
+		<option value="//api/name/linkWithAppleToken:withBlock:">- linkWithAppleToken:withBlock:</option>
+		
+		<option value="//api/name/linkWithFacebookToken:withBlock:">- linkWithFacebookToken:withBlock:</option>
+		
+		<option value="//api/name/linkWithGoogleToken:withBlock:">- linkWithGoogleToken:withBlock:</option>
+		
+		<option value="//api/name/linkWithTwitterToken:withBlock:">- linkWithTwitterToken:withBlock:</option>
+		
+		<option value="//api/name/signUp:">- signUp:</option>
+		
+		<option value="//api/name/signUpFromAnonymous:password:error:">- signUpFromAnonymous:password:error:</option>
+		
+		<option value="//api/name/signUpFromAnonymousInBackgroundWithBlock:password:block:">- signUpFromAnonymousInBackgroundWithBlock:password:block:</option>
+		
+		<option value="//api/name/signUpFromAnonymousInBackgroundWithTarget:password:target:selector:">- signUpFromAnonymousInBackgroundWithTarget:password:target:selector:</option>
+		
+		<option value="//api/name/signUpInBackgroundWithBlock:">- signUpInBackgroundWithBlock:</option>
+		
+		<option value="//api/name/signUpInBackgroundWithTarget:selector:">- signUpInBackgroundWithTarget:selector:</option>
+		
+		<option value="//api/name/signUpWithAppleToken:withBlock:">- signUpWithAppleToken:withBlock:</option>
+		
+		<option value="//api/name/signUpWithFacebookToken:withBlock:">- signUpWithFacebookToken:withBlock:</option>
+		
+		<option value="//api/name/signUpWithGoogleToken:withBlock:">- signUpWithGoogleToken:withBlock:</option>
+		
+		<option value="//api/name/signUpWithTwitterToken:withBlock:">- signUpWithTwitterToken:withBlock:</option>
+		
+		<option value="//api/name/unlink:withBlock:">- unlink:withBlock:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">NCMBUser Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td><a href="../Classes/NCMBObject.html">NCMBObject</a> : NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>NCMBUser.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>NCMBUserクラスは、ニフクラ mobile backend上に保存されたユーザデータを管理するクラスです。
+ユーザの新規登録やログイン/ログアウト、会員情報の更新・取得・削除を行います。
+また、パスワードリセットやメールアドレス認証のリクエスト送信も行います。</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						<a title="User" name="task_User"></a>
+						<h2 class="task-title">User</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/userName" title="userName"></a>
+	<h3 class="method-title"><code><a href="#//api/name/userName">&nbsp;&nbsp;userName</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>ユーザ名</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, copy) NSString *userName</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/password" title="password"></a>
+	<h3 class="method-title"><code><a href="#//api/name/password">&nbsp;&nbsp;password</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>パスワード</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, copy) NSString *password</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/mailAddress" title="mailAddress"></a>
+	<h3 class="method-title"><code><a href="#//api/name/mailAddress">&nbsp;&nbsp;mailAddress</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>メールアドレス</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, copy) NSString *mailAddress</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/isNew" title="isNew"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isNew">&nbsp;&nbsp;isNew</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>NCMBUserオブジェクトの登録の有無</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (readonly, assign) BOOL isNew</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sessionToken" title="sessionToken"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sessionToken">&nbsp;&nbsp;sessionToken</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>セッショントークン</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, copy) NSString *sessionToken</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/user" title="user"></a>
+	<h3 class="method-title"><code><a href="#//api/name/user">+&nbsp;user</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>NCMBUserのインスタンスを新規生成</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (NCMBUser *)user</code></div>
+
+		    
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>新規生成したNCMBUserのインスタンス</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/query" title="query"></a>
+	<h3 class="method-title"><code><a href="#//api/name/query">+&nbsp;query</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>NCMBQueryのインスタンスを新規作成する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (NCMBQuery *)query</code></div>
+
+		    
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>userクラスがセットされたNCMBQueryインスタンスを返却する</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/currentUser" title="currentUser"></a>
+	<h3 class="method-title"><code><a href="#//api/name/currentUser">+&nbsp;currentUser</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>現在ログインしているユーザ情報を取得する
+もしログインしているユーザーがいない場合にはnilが返ってくる</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (NCMBUser *)currentUser</code></div>
+
+		    
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>現在ログインしているユーザオブジェクト</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/automaticCurrentUserWithBlock:" title="automaticCurrentUserWithBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/automaticCurrentUserWithBlock:">+&nbsp;automaticCurrentUserWithBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>enableAutomaticUserを設定した場合に、anonymous認証による自動会員登録を実行する。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)automaticCurrentUserWithBlock:(NCMBUserResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>anonymous認証による会員登録がリクエストされたあとに実行されるブロック</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>enableAutomaticUserが設定されていない場合や、すでにログイン済みの会員が存在している場合はcurrentUserと同じ処理を行う。</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/automaticCurrentUserWithTarget:selector:" title="automaticCurrentUserWithTarget:selector:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/automaticCurrentUserWithTarget:selector:">+&nbsp;automaticCurrentUserWithTarget:selector:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>enableAutomaticUserを設定した場合に、anonymous認証による自動会員登録を実行する。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)automaticCurrentUserWithTarget:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>target</code></th>
+						<td><p>anonymous認証による会員登録がリクエストされたあとに実行されるセレクタのターゲット</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>selector</code></th>
+						<td><p>anonymous認証による会員登録がリクエストされたあとに実行されるセレクタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>enableAutomaticUserが設定されていない場合や、すでにログイン済みの会員が存在している場合はcurrentUserと同じ処理を行う。</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/isAuthenticated" title="isAuthenticated"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isAuthenticated">&ndash;&nbsp;isAuthenticated</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>ユーザが認証済みかを判定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)isAuthenticated</code></div>
+
+		    
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>BOOL型YES=認証済、NO=未認証</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/enableAutomaticUser" title="enableAutomaticUser"></a>
+	<h3 class="method-title"><code><a href="#//api/name/enableAutomaticUser">+&nbsp;enableAutomaticUser</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>匿名ユーザの自動生成を有効化</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)enableAutomaticUser</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Signup" name="task_Signup"></a>
+						<h2 class="task-title">Signup</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/signUp:" title="signUp:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signUp:">&ndash;&nbsp;signUp:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>ユーザの新規登録。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)signUp:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/signUpInBackgroundWithBlock:" title="signUpInBackgroundWithBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signUpInBackgroundWithBlock:">&ndash;&nbsp;signUpInBackgroundWithBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>ユーザを非同期で新規登録。新規登録し終わったら与えられたblockを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)signUpInBackgroundWithBlock:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある（NSError *error)
+errorにはエラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/signUpInBackgroundWithTarget:selector:" title="signUpInBackgroundWithTarget:selector:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signUpInBackgroundWithTarget:selector:">&ndash;&nbsp;signUpInBackgroundWithTarget:selector:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>ユーザを非同期で新規登録。新規登録し終わったら指定されたコールバックを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)signUpInBackgroundWithTarget:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>target</code></th>
+						<td><p>呼び出すセレクタのターゲット</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>selector</code></th>
+						<td><p>呼び出すセレクタ。次のシグネチャを持つ必要がある。 (void)callbackWithResult:(NSError **)error
+errorにはエラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/signUpWithGoogleToken:withBlock:" title="signUpWithGoogleToken:withBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signUpWithGoogleToken:withBlock:">&ndash;&nbsp;signUpWithGoogleToken:withBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>googleのauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)signUpWithGoogleToken:(NSDictionary *)<em>googleInfo</em> withBlock:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>googleInfo</code></th>
+						<td><p>google認証に必要なauthData</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>サインアップ後に実行されるblock</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/signUpWithTwitterToken:withBlock:" title="signUpWithTwitterToken:withBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signUpWithTwitterToken:withBlock:">&ndash;&nbsp;signUpWithTwitterToken:withBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>twitterのauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)signUpWithTwitterToken:(NSDictionary *)<em>twitterInfo</em> withBlock:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>twitterInfo</code></th>
+						<td><p>twitter認証に必要なauthData</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>サインアップ後に実行されるblock</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/signUpWithFacebookToken:withBlock:" title="signUpWithFacebookToken:withBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signUpWithFacebookToken:withBlock:">&ndash;&nbsp;signUpWithFacebookToken:withBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>facebookのauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)signUpWithFacebookToken:(NSDictionary *)<em>facebookInfo</em> withBlock:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>facebookInfo</code></th>
+						<td><p>facebook認証に必要なauthData</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>サインアップ後に実行されるblock</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/signUpWithAppleToken:withBlock:" title="signUpWithAppleToken:withBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signUpWithAppleToken:withBlock:">&ndash;&nbsp;signUpWithAppleToken:withBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>appleのauthDataをもとにニフクラ mobile backendへの会員登録(ログイン)を行う</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)signUpWithAppleToken:(NSDictionary *)<em>appleInfo</em> withBlock:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>appleInfo</code></th>
+						<td><p>apple認証に必要なauthData</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>サインアップ後に実行されるblock</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="requestAuthenticationMail" name="task_requestAuthenticationMail"></a>
+						<h2 class="task-title">requestAuthenticationMail</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/requestAuthenticationMail:error:" title="requestAuthenticationMail:error:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/requestAuthenticationMail:error:">+&nbsp;requestAuthenticationMail:error:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したメールアドレスに対して、会員登録を行うためのメールを送信するよう要求する。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)requestAuthenticationMail:(NSString *)<em>email</em> error:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>email</code></th>
+						<td><p>指定するメールアドレス</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/requestAuthenticationMailInBackground:target:selector:" title="requestAuthenticationMailInBackground:target:selector:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/requestAuthenticationMailInBackground:target:selector:">+&nbsp;requestAuthenticationMailInBackground:target:selector:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したメールアドレスに対して、会員登録を行うためのメールを送信するよう要求する。終わったら指定されたコールバックを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)requestAuthenticationMailInBackground:(NSString *)<em>email</em> target:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>email</code></th>
+						<td><p>指定するメールアドレス</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>target</code></th>
+						<td><p>呼び出すセレクタのターゲット</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>selector</code></th>
+						<td><p>呼び出すセレクタ。次のシグネチャを持つ必要がある。 (void)callbackWithResult:(NSError **)error
+errorにはエラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/requestAuthenticationMailInBackground:block:" title="requestAuthenticationMailInBackground:block:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/requestAuthenticationMailInBackground:block:">+&nbsp;requestAuthenticationMailInBackground:block:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したメールアドレスに対して、会員登録を行うためのメールを送信するよう要求する。終わったら与えられたblockを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)requestAuthenticationMailInBackground:(NSString *)<em>email</em> block:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>email</code></th>
+						<td><p>指定するメールアドレス</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （NSError *error）
+errorにはエラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="LogIn" name="task_LogIn"></a>
+						<h2 class="task-title">LogIn</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/logInWithUsername:password:error:" title="logInWithUsername:password:error:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/logInWithUsername:password:error:">+&nbsp;logInWithUsername:password:error:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>ユーザ名とパスワードを指定してログイン。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (NCMBUser *)logInWithUsername:(NSString *)<em>username</em> password:(NSString *)<em>password</em> error:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>username</code></th>
+						<td><p>ログイン時に指定するユーザ名</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>password</code></th>
+						<td><p>ログイン時に指定するパスワード</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>ログインしたユーザの情報</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/logInWithUsernameInBackground:password:target:selector:" title="logInWithUsernameInBackground:password:target:selector:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/logInWithUsernameInBackground:password:target:selector:">+&nbsp;logInWithUsernameInBackground:password:target:selector:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>ユーザ名とパスワードを指定して非同期でログイン。ログインし終わったら指定されたコールバックを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)logInWithUsernameInBackground:(NSString *)<em>username</em> password:(NSString *)<em>password</em> target:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>username</code></th>
+						<td><p>ログイン時に指定するユーザ名</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>password</code></th>
+						<td><p>ログイン時に指定するパスワード</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>target</code></th>
+						<td><p>呼び出すセレクタのターゲット</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>selector</code></th>
+						<td><p>呼び出すセレクタ。次のシグネチャを持つ必要がある。(void)callbackWithResult:(NCMBUser *)<a href="#//api/name/user">user</a> error:(NSError **)error
+userにはログインしたユーザの情報が渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/logInWithUsernameInBackground:password:block:" title="logInWithUsernameInBackground:password:block:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/logInWithUsernameInBackground:password:block:">+&nbsp;logInWithUsernameInBackground:password:block:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>ユーザ名とパスワードを指定して非同期でログイン。ログインし終わったら与えられたblockを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)logInWithUsernameInBackground:(NSString *)<em>username</em> password:(NSString *)<em>password</em> block:(NCMBUserResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>username</code></th>
+						<td><p>ログイン時に指定するユーザ名</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>password</code></th>
+						<td><p>ログイン時に指定するパスワード</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある（NCMBUser <em><a href="#//api/name/user">user</a>, NSError </em>error） userにはログインしたユーザの情報が渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/logInWithMailAddress:password:error:" title="logInWithMailAddress:password:error:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/logInWithMailAddress:password:error:">+&nbsp;logInWithMailAddress:password:error:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>メールアドレスとパスワードを指定してログイン。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (NCMBUser *)logInWithMailAddress:(NSString *)<em>email</em> password:(NSString *)<em>password</em> error:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>email</code></th>
+						<td><p>ログイン時に指定するメールアドレス</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>password</code></th>
+						<td><p>ログイン時に指定するパスワード</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>ログインしたユーザの情報</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/logInWithMailAddressInBackground:password:target:selector:" title="logInWithMailAddressInBackground:password:target:selector:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/logInWithMailAddressInBackground:password:target:selector:">+&nbsp;logInWithMailAddressInBackground:password:target:selector:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>メールアドレスとパスワードを指定して非同期でログイン。ログインし終わったら与えられたコールバックを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)logInWithMailAddressInBackground:(NSString *)<em>email</em> password:(NSString *)<em>password</em> target:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>email</code></th>
+						<td><p>ログイン時に指定するメールアドレス</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>password</code></th>
+						<td><p>ログイン時に指定するパスワード</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>target</code></th>
+						<td><p>呼び出すセレクタのターゲット</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>selector</code></th>
+						<td><p>呼び出すセレクタ。次のシグネチャを持つ必要がある。(void)callbackWithResult:(NCMBUser *)<a href="#//api/name/user">user</a> error:(NSError **)error
+userにはログインしたユーザの情報が渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/logInWithMailAddressInBackground:password:block:" title="logInWithMailAddressInBackground:password:block:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/logInWithMailAddressInBackground:password:block:">+&nbsp;logInWithMailAddressInBackground:password:block:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>メールアドレスとパスワードを指定して非同期でログイン。ログインし終わったら与えられたblockを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)logInWithMailAddressInBackground:(NSString *)<em>email</em> password:(NSString *)<em>password</em> block:(NCMBUserResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>email</code></th>
+						<td><p>ログイン時に指定するメールアドレス</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>password</code></th>
+						<td><p>ログイン時に指定するパスワード</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある（NCMBUser <em><a href="#//api/name/user">user</a>, NSError </em>error） userにはログインしたユーザの情報が渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Logout" name="task_Logout"></a>
+						<h2 class="task-title">Logout</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/logOut" title="logOut"></a>
+	<h3 class="method-title"><code><a href="#//api/name/logOut">+&nbsp;logOut</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>ログアウト</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)logOut</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/logOutInBackgroundWithBlock:" title="logOutInBackgroundWithBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/logOutInBackgroundWithBlock:">+&nbsp;logOutInBackgroundWithBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>非同期でログアウトを行う</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)logOutInBackgroundWithBlock:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>ログアウトのリクエストをした後に実行されるblock</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="requestPasswordReset" name="task_requestPasswordReset"></a>
+						<h2 class="task-title">requestPasswordReset</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/requestPasswordResetForEmail:error:" title="requestPasswordResetForEmail:error:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/requestPasswordResetForEmail:error:">+&nbsp;requestPasswordResetForEmail:error:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したメールアドレスを持つユーザのパスワードリセットを要求。ユーザが存在した場合、パスワードをリセットし、再設定のメールを送信する。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)requestPasswordResetForEmail:(NSString *)<em>email</em> error:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>email</code></th>
+						<td><p>指定するメールアドレス</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/requestPasswordResetForEmailInBackground:target:selector:" title="requestPasswordResetForEmailInBackground:target:selector:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/requestPasswordResetForEmailInBackground:target:selector:">+&nbsp;requestPasswordResetForEmailInBackground:target:selector:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したメールアドレスを持つユーザのパスワードリセットを非同期で要求。ユーザが存在した場合、パスワードをリセットし、再設定のメールを送信する。リセットし終わったら指定されたコールバックを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)requestPasswordResetForEmailInBackground:(NSString *)<em>email</em> target:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>email</code></th>
+						<td><p>指定するメールアドレス</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>target</code></th>
+						<td><p>呼び出すセレクタのターゲット</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>selector</code></th>
+						<td><p>呼び出すセレクタ。次のシグネチャを持つ必要がある。 (void)callbackWithResult:(NSNumber *)result error:(NSError **)error
+resultにはリセットの有無をNSNumber型で渡される。errorにはエラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/requestPasswordResetForEmailInBackground:block:" title="requestPasswordResetForEmailInBackground:block:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/requestPasswordResetForEmailInBackground:block:">+&nbsp;requestPasswordResetForEmailInBackground:block:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したメールアドレスを持つユーザのパスワードリセットを非同期で要求。ユーザが存在した場合、パスワードをリセットし、再設定のメールを送信する。リセットし終わったら与えられたblockを呼び出す。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)requestPasswordResetForEmailInBackground:(NSString *)<em>email</em> block:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>email</code></th>
+						<td><p>指定するメールアドレス</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある （NSError *error）errorにはエラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/signUpFromAnonymous:password:error:" title="signUpFromAnonymous:password:error:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signUpFromAnonymous:password:error:">&ndash;&nbsp;signUpFromAnonymous:password:error:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>匿名会員を正規会員として同期で登録する。2回のAPIリクエストが発生する。objectiId,createDate,updateDate,authdata以外の情報を引き継ぐ。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)signUpFromAnonymous:(NSString *)<em>userName</em> password:(NSString *)<em>password</em> error:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>userName</code></th>
+						<td><p>正規会員のユーザー名</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>password</code></th>
+						<td><p>正規会員のパスワード</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>処理中に起きたエラーのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/signUpFromAnonymousInBackgroundWithBlock:password:block:" title="signUpFromAnonymousInBackgroundWithBlock:password:block:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signUpFromAnonymousInBackgroundWithBlock:password:block:">&ndash;&nbsp;signUpFromAnonymousInBackgroundWithBlock:password:block:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>匿名会員を正規会員として非同期で登録する。2回のAPIリクエストが発生する。objectiId,createDate,updateDate,authdata以外の情報を引き継ぐ。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)signUpFromAnonymousInBackgroundWithBlock:(NSString *)<em>userName</em> password:(NSString *)<em>password</em> block:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>userName</code></th>
+						<td><p>正規会員のユーザー名</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>password</code></th>
+						<td><p>正規会員のパスワード</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>通信後実行されるblock。blockは次の引数のシグネチャを持つ必要がある（NSError *error）
+errorにはエラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/signUpFromAnonymousInBackgroundWithTarget:password:target:selector:" title="signUpFromAnonymousInBackgroundWithTarget:password:target:selector:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signUpFromAnonymousInBackgroundWithTarget:password:target:selector:">&ndash;&nbsp;signUpFromAnonymousInBackgroundWithTarget:password:target:selector:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>匿名会員を正規会員として非同期で登録する。2回のAPIリクエストが発生する。objectiId,createDate,updateDate,authdata以外の情報を引き継ぐ。必要があればエラーをセットし、取得することもできる。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)signUpFromAnonymousInBackgroundWithTarget:(NSString *)<em>userName</em> password:(NSString *)<em>password</em> target:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>userName</code></th>
+						<td><p>正規会員のユーザー名</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>password</code></th>
+						<td><p>正規会員のパスワード</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>target</code></th>
+						<td><p>呼び出すセレクタのターゲット</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>selector</code></th>
+						<td><p>呼び出すセレクタ。次のシグネチャを持つ必要がある。 (void)callbackWithResult:(NSError **)error
+errorにはエラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="link" name="task_link"></a>
+						<h2 class="task-title">link</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/linkWithGoogleToken:withBlock:" title="linkWithGoogleToken:withBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/linkWithGoogleToken:withBlock:">&ndash;&nbsp;linkWithGoogleToken:withBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>ログイン中のユーザー情報に、googleの認証情報を紐付ける</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)linkWithGoogleToken:(NSDictionary *)<em>googleInfo</em> withBlock:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>googleInfo</code></th>
+						<td><p>googleの認証情報（idとaccess_token）</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>既存のauthDataのgoogle情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/linkWithTwitterToken:withBlock:" title="linkWithTwitterToken:withBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/linkWithTwitterToken:withBlock:">&ndash;&nbsp;linkWithTwitterToken:withBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>ログイン中のユーザー情報に、twitterの認証情報を紐付ける</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)linkWithTwitterToken:(NSDictionary *)<em>twitterInfo</em> withBlock:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>twitterInfo</code></th>
+						<td><p>twitterの認証情報</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>既存のauthDataのtwitter情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/linkWithFacebookToken:withBlock:" title="linkWithFacebookToken:withBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/linkWithFacebookToken:withBlock:">&ndash;&nbsp;linkWithFacebookToken:withBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>ログイン中のユーザー情報に、facebookの認証情報を紐付ける</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)linkWithFacebookToken:(NSDictionary *)<em>facebookInfo</em> withBlock:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>facebookInfo</code></th>
+						<td><p>facebookの認証情報</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>既存のauthDataのfacebook情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/linkWithAppleToken:withBlock:" title="linkWithAppleToken:withBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/linkWithAppleToken:withBlock:">&ndash;&nbsp;linkWithAppleToken:withBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>ログイン中のユーザー情報に、appleの認証情報を紐付ける</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)linkWithAppleToken:(NSDictionary *)<em>appleInfo</em> withBlock:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>appleInfo</code></th>
+						<td><p>appleの認証情報</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>既存のauthDataのapple情報のみ更新後実行されるblock。エラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/isLinkedWith:" title="isLinkedWith:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isLinkedWith:">&ndash;&nbsp;isLinkedWith:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>会員情報に、引数で指定したtypeの認証情報が含まれているか確認する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)isLinkedWith:(NSString *)<em>type</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>type</code></th>
+						<td><p>認証情報のtype（googleもしくはtwitter、facebook、apple、anonymous）</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>引数で指定したtypeの会員情報が含まれている場合はYESを返す</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/unlink:withBlock:" title="unlink:withBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/unlink:withBlock:">&ndash;&nbsp;unlink:withBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>会員情報から、引数で指定したtypeの認証情報を削除する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)unlink:(NSString *)<em>type</em> withBlock:(NCMBErrorResultBlock)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>type</code></th>
+						<td><p>認証情報のtype（googleもしくはtwitter、facebook、apple、anonymous）</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>エラー情報を返却するblock エラーがあればエラーのポインタが、なければnilが渡される。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="mailAddressConfirm" name="task_mailAddressConfirm"></a>
+						<h2 class="task-title">mailAddressConfirm</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/isMailAddressConfirm" title="isMailAddressConfirm"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isMailAddressConfirm">&ndash;&nbsp;isMailAddressConfirm</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>メールアドレスが確認済みのものかを把握する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)isMailAddressConfirm</code></div>
+
+		    
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>メールアドレスが確認済みの場合はYESを返す</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBUser.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2020 FUJITSU CLOUD TECHNOLOGIES LIMITED. All rights reserved. Updated: 2020-03-24</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>
