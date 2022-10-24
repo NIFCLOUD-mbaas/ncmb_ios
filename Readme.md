@@ -23,7 +23,7 @@
 
 ## 動作環境
 
-- iOS 10.x ～ iOS 15.x
+- iOS 13.x ～ iOS 16.x
 - Xcode 9.x ～ Xcode 13.x
 - armv7s, arm64, arm64e アーキテクチャ
 - iOS/Xcodeのバージョンに依って対応が必要となる可能性があります。詳細はニフクラ mobile backendの[ドキュメント](https://mbaas.nifcloud.com/doc/current/)をご覧ください。
