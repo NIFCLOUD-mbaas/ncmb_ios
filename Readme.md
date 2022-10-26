@@ -25,7 +25,7 @@
 
 - iOS 13.x ～ iOS 16.x
 - Xcode 9.x ～ Xcode 14.x
-- armv7k, arm64, arm64e アーキテクチャ
+- armv7k, arm64, arm64e アーキテクチャ  
 (※2022年10月時点)  
 - iOS/Xcodeのバージョンに依って対応が必要となる可能性があります。詳細はニフクラ mobile backendの[ドキュメント](https://mbaas.nifcloud.com/doc/current/)をご覧ください。
 
