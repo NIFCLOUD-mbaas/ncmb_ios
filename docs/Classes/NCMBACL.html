@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>NCMBACL Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1333)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">NCMB </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">FUJITSU CLOUD TECHNOLOGIES LIMITED</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/dicACL">dicACL</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Class Methods">
+		
+		<option value="//api/name/ACL">+ ACL</option>
+		
+		<option value="//api/name/ACLWithUser:">+ ACLWithUser:</option>
+		
+		<option value="//api/name/setDefaultACL:withAccessForCurrentUser:">+ setDefaultACL:withAccessForCurrentUser:</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/isPublicReadAccess">- isPublicReadAccess</option>
+		
+		<option value="//api/name/isPublicWriteAccess">- isPublicWriteAccess</option>
+		
+		<option value="//api/name/isReadAccessForRole:">- isReadAccessForRole:</option>
+		
+		<option value="//api/name/isReadAccessForRoleWithName:">- isReadAccessForRoleWithName:</option>
+		
+		<option value="//api/name/isReadAccessForUser:">- isReadAccessForUser:</option>
+		
+		<option value="//api/name/isReadAccessForUserId:">- isReadAccessForUserId:</option>
+		
+		<option value="//api/name/isWriteAccessForRole:">- isWriteAccessForRole:</option>
+		
+		<option value="//api/name/isWriteAccessForRoleWithName:">- isWriteAccessForRoleWithName:</option>
+		
+		<option value="//api/name/isWriteAccessForUser:">- isWriteAccessForUser:</option>
+		
+		<option value="//api/name/isWriteAccessForUserId:">- isWriteAccessForUserId:</option>
+		
+		<option value="//api/name/setPublicReadAccess:">- setPublicReadAccess:</option>
+		
+		<option value="//api/name/setPublicWriteAccess:">- setPublicWriteAccess:</option>
+		
+		<option value="//api/name/setReadAccess:forRole:">- setReadAccess:forRole:</option>
+		
+		<option value="//api/name/setReadAccess:forRoleWithName:">- setReadAccess:forRoleWithName:</option>
+		
+		<option value="//api/name/setReadAccess:forUser:">- setReadAccess:forUser:</option>
+		
+		<option value="//api/name/setReadAccess:forUserId:">- setReadAccess:forUserId:</option>
+		
+		<option value="//api/name/setWriteAccess:forRole:">- setWriteAccess:forRole:</option>
+		
+		<option value="//api/name/setWriteAccess:forRoleWithName:">- setWriteAccess:forRoleWithName:</option>
+		
+		<option value="//api/name/setWriteAccess:forUser:">- setWriteAccess:forUser:</option>
+		
+		<option value="//api/name/setWriteAccess:forUserId:">- setWriteAccess:forUserId:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">NCMBACL Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>NCMBACL.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>NCMBACLクラスは、オブジェクトに対する読込書込権限を管理するクラスです。</p>
+
+<p>NCMBObject毎にNCMBACLを持ち、ユーザのグループであるロールや特定の個別ユーザなどにも付与することができます。</p>
+
+<p>例えば、全てのユーザに読込権限を与え、特定のユーザには読込権限に加え書込権限を与えるといったことができます。</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						<h2 class="task-title">Other Methods</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/dicACL" title="dicACL"></a>
+	<h3 class="method-title"><code><a href="#//api/name/dicACL">&nbsp;&nbsp;dicACL</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>ACLの情報を辞書型で保持する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong) NSMutableDictionary *dicACL</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/ACL" title="ACL"></a>
+	<h3 class="method-title"><code><a href="#//api/name/ACL">+&nbsp;ACL</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>NCMBACLのインスタンスを生成。デフォルトでは全ての権限が許可されている。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (NCMBACL *)ACL</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/ACLWithUser:" title="ACLWithUser:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/ACLWithUser:">+&nbsp;ACLWithUser:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したユーザのみ読込書込権限が許可されたNCMBACLのインスタンスを生成。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (NCMBACL *)ACLWithUser:(NCMBUser *)<em>user</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>user</code></th>
+						<td><p>権限を設定するユーザ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setDefaultACL:withAccessForCurrentUser:" title="setDefaultACL:withAccessForCurrentUser:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setDefaultACL:withAccessForCurrentUser:">+&nbsp;setDefaultACL:withAccessForCurrentUser:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>オブジェクト生成時にACLが指定されなかった場合のデフォルトACLをaclで指定したアクセス権限に設定する。
+currentUserAccessがYESの場合は、さらにオブジェクトを生成したユーザーに読込書込権限を設定する。
+NOの場合はaclで指定されたデフォルトACLが設定される。</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)setDefaultACL:(NCMBACL *)<em>acl</em> withAccessForCurrentUser:(BOOL)<em>currentUserAccess</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>acl</code></th>
+						<td><p>デフォルトACLとして設定するNCMBACLインスタンス</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>currentUserAccess</code></th>
+						<td><p>オブジェクトを生成したユーザーへのアクセス権限をデフォルトACLに追加する設定</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Public Access" name="task_Public Access"></a>
+						<h2 class="task-title">Public Access</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/setPublicReadAccess:" title="setPublicReadAccess:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setPublicReadAccess:">&ndash;&nbsp;setPublicReadAccess:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>パブリックな読込権限を設定する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setPublicReadAccess:(BOOL)<em>allowed</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>allowed</code></th>
+						<td><p>読込権限の設定（YES:許可／NO:許可取り消し）</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/isPublicReadAccess" title="isPublicReadAccess"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isPublicReadAccess">&ndash;&nbsp;isPublicReadAccess</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>パブリックな読込権限の有無を取得する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)isPublicReadAccess</code></div>
+
+		    
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>YES:読み込み権限あり NO:読み込み権限なし</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setPublicWriteAccess:" title="setPublicWriteAccess:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setPublicWriteAccess:">&ndash;&nbsp;setPublicWriteAccess:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>パブリックな書込権限を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setPublicWriteAccess:(BOOL)<em>allowed</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>allowed</code></th>
+						<td><p>書込権限の設定（YES:許可／NO:許可取り消し）</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/isPublicWriteAccess" title="isPublicWriteAccess"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isPublicWriteAccess">&ndash;&nbsp;isPublicWriteAccess</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>パブリックな書込権限の有無を取得する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)isPublicWriteAccess</code></div>
+
+		    
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>YES:書き込み権限あり NO:書き込み権限なし</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Role Access" name="task_Role Access"></a>
+						<h2 class="task-title">Role Access</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/isReadAccessForRoleWithName:" title="isReadAccessForRoleWithName:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isReadAccessForRoleWithName:">&ndash;&nbsp;isReadAccessForRoleWithName:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定した名前を持つロールの読込権限の有無を取得する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)isReadAccessForRoleWithName:(NSString *)<em>name</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>name</code></th>
+						<td><p>読込権限の有無を調べるロール名</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>YES:読み込み権限あり NO:読み込み権限なし</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setReadAccess:forRoleWithName:" title="setReadAccess:forRoleWithName:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setReadAccess:forRoleWithName:">&ndash;&nbsp;setReadAccess:forRoleWithName:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定した名前を持つロールの読込権限を設定する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setReadAccess:(BOOL)<em>allowed</em> forRoleWithName:(NSString *)<em>name</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>allowed</code></th>
+						<td><p>読込権限の設定（YES:許可／NO:許可取り消し）</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>name</code></th>
+						<td><p>読込権限を設定するロール名</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/isWriteAccessForRoleWithName:" title="isWriteAccessForRoleWithName:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isWriteAccessForRoleWithName:">&ndash;&nbsp;isWriteAccessForRoleWithName:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定した名前を持つロールの書込権限の有無を取得する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)isWriteAccessForRoleWithName:(NSString *)<em>name</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>name</code></th>
+						<td><p>書込権限の有無を調べるロール名</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>YES:書き込み権限あり NO:書き込み権限なし</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setWriteAccess:forRoleWithName:" title="setWriteAccess:forRoleWithName:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setWriteAccess:forRoleWithName:">&ndash;&nbsp;setWriteAccess:forRoleWithName:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定した名前を持つロールの書込権限を設定する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setWriteAccess:(BOOL)<em>allowed</em> forRoleWithName:(NSString *)<em>name</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>allowed</code></th>
+						<td><p>書込権限の設定（YES:許可／NO:許可取り消し）</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>name</code></th>
+						<td><p>書込権限を設定するロール名</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/isReadAccessForRole:" title="isReadAccessForRole:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isReadAccessForRole:">&ndash;&nbsp;isReadAccessForRole:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したロールの読込権限の有無を取得する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)isReadAccessForRole:(NCMBRole *)<em>role</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>role</code></th>
+						<td><p>読込権限の有無を調べるロール</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>YES:読み込み権限あり NO:読み込み権限なし</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setReadAccess:forRole:" title="setReadAccess:forRole:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setReadAccess:forRole:">&ndash;&nbsp;setReadAccess:forRole:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したロールの読込権限を設定する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setReadAccess:(BOOL)<em>allowed</em> forRole:(NCMBRole *)<em>role</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>allowed</code></th>
+						<td><p>読込権限の設定（YES:許可／NO:許可取り消し）</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>role</code></th>
+						<td><p>読込権限を設定するロール</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/isWriteAccessForRole:" title="isWriteAccessForRole:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isWriteAccessForRole:">&ndash;&nbsp;isWriteAccessForRole:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したロールの書込権限の有無を取得する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)isWriteAccessForRole:(NCMBRole *)<em>role</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>role</code></th>
+						<td><p>書込権限の有無を調べるロール</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>YES:書き込み権限あり NO:書き込み権限なし</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setWriteAccess:forRole:" title="setWriteAccess:forRole:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setWriteAccess:forRole:">&ndash;&nbsp;setWriteAccess:forRole:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したロールの書込権限を設定する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setWriteAccess:(BOOL)<em>allowed</em> forRole:(NCMBRole *)<em>role</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>allowed</code></th>
+						<td><p>書込権限の設定（YES:許可／NO:許可取り消し）</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>role</code></th>
+						<td><p>書込権限を設定するロール</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="User Access" name="task_User Access"></a>
+						<h2 class="task-title">User Access</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/setReadAccess:forUserId:" title="setReadAccess:forUserId:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setReadAccess:forUserId:">&ndash;&nbsp;setReadAccess:forUserId:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したIDに対応するユーザーの読込権限を設定する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setReadAccess:(BOOL)<em>allowed</em> forUserId:(NSString *)<em>userId</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>allowed</code></th>
+						<td><p>読込権限の設定（YES:許可／NO:許可取り消し）</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>userId</code></th>
+						<td><p>読込権限を設定するユーザID</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/isReadAccessForUserId:" title="isReadAccessForUserId:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isReadAccessForUserId:">&ndash;&nbsp;isReadAccessForUserId:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したIDに対応するユーザーの読込権限の有無を取得する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)isReadAccessForUserId:(NSString *)<em>userId</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>userId</code></th>
+						<td><p>読込権限の有無を調べるユーザID</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>YES:読み込み権限あり NO:読み込み権限なし</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setWriteAccess:forUserId:" title="setWriteAccess:forUserId:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setWriteAccess:forUserId:">&ndash;&nbsp;setWriteAccess:forUserId:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したIDに対応するユーザーの書込権限を設定する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setWriteAccess:(BOOL)<em>allowed</em> forUserId:(NSString *)<em>userId</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>allowed</code></th>
+						<td><p>書込権限の設定（YES:許可／NO:許可取り消し）</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>userId</code></th>
+						<td><p>書込権限を設定するユーザID</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/isWriteAccessForUserId:" title="isWriteAccessForUserId:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isWriteAccessForUserId:">&ndash;&nbsp;isWriteAccessForUserId:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したIDに対応するユーザーの書込権限の有無を取得する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)isWriteAccessForUserId:(NSString *)<em>userId</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>userId</code></th>
+						<td><p>書込権限の有無を調べるユーザID</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>YES:書き込み権限あり NO:書き込み権限なし</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setReadAccess:forUser:" title="setReadAccess:forUser:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setReadAccess:forUser:">&ndash;&nbsp;setReadAccess:forUser:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したユーザーの読込権限を設定する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setReadAccess:(BOOL)<em>allowed</em> forUser:(NCMBUser *)<em>user</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>allowed</code></th>
+						<td><p>読込権限の設定（YES:許可／NO:許可取り消し）</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>user</code></th>
+						<td><p>読込権限を設定するユーザ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/isReadAccessForUser:" title="isReadAccessForUser:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isReadAccessForUser:">&ndash;&nbsp;isReadAccessForUser:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したユーザーの読込権限の有無を取得する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)isReadAccessForUser:(NCMBUser *)<em>user</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>user</code></th>
+						<td><p>読込権限の有無を調べるユーザ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>YES:読み込み権限あり NO:読み込み権限なし</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setWriteAccess:forUser:" title="setWriteAccess:forUser:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setWriteAccess:forUser:">&ndash;&nbsp;setWriteAccess:forUser:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したユーザーの書込権限を設定</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setWriteAccess:(BOOL)<em>allowed</em> forUser:(NCMBUser *)<em>user</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>allowed</code></th>
+						<td><p>書込権限の設定（YES:許可／NO:許可取り消し）</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>user</code></th>
+						<td><p>書込権限を設定するユーザ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/isWriteAccessForUser:" title="isWriteAccessForUser:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isWriteAccessForUser:">&ndash;&nbsp;isWriteAccessForUser:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>指定したユーザーの書込権限の有無を取得</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)isWriteAccessForUser:(NCMBUser *)<em>user</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>user</code></th>
+						<td><p>書込権限の有無を調べるユーザ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>YES:書き込み権限あり NO:書き込み権限なし</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBACL.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2020 FUJITSU CLOUD TECHNOLOGIES LIMITED. All rights reserved. Updated: 2020-03-24</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>

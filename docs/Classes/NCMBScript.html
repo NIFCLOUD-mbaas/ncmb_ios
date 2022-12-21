@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>NCMBScript Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1333)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">NCMB </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">FUJITSU CLOUD TECHNOLOGIES LIMITED</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/method">method</option>
+		
+		<option value="//api/name/scriptName">scriptName</option>
+		
+		<option value="//api/name/service">service</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Class Methods">
+		
+		<option value="//api/name/scriptWithName:method:">+ scriptWithName:method:</option>
+		
+		<option value="//api/name/scriptWithName:method:endpoint:">+ scriptWithName:method:endpoint:</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/execute:headers:queries:error:">- execute:headers:queries:error:</option>
+		
+		<option value="//api/name/execute:headers:queries:withBlock:">- execute:headers:queries:withBlock:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">NCMBScript Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>NCMBScript.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>NCMBScriptクラスは、ニフクラ mobile backendに登録されているスクリプトを実行するためのクラスです。</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/service" title="service"></a>
+	<h3 class="method-title"><code><a href="#//api/name/service">&nbsp;&nbsp;service</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>service スクリプト実行APIをリクエストするためのService</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property NCMBScriptService *service</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBScript.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/scriptName" title="scriptName"></a>
+	<h3 class="method-title"><code><a href="#//api/name/scriptName">&nbsp;&nbsp;scriptName</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>scriptName スクリプトのファイル名</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property NSString *scriptName</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBScript.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/method" title="method"></a>
+	<h3 class="method-title"><code><a href="#//api/name/method">&nbsp;&nbsp;method</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>method スクリプトをリクエストする場合のメソッド</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property NCMBScriptRequestMethod method</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBScript.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/scriptWithName:method:" title="scriptWithName:method:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/scriptWithName:method:">+&nbsp;scriptWithName:method:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>スクリプト名とリクエストメソッドを指定してNCMBScriptのインスタンスを作成</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (instancetype)scriptWithName:(NSString *)<em>name</em> method:(NCMBScriptRequestMethod)<em>method</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>name</code></th>
+						<td><p>スクリプトのファイル名</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>method</code></th>
+						<td><p>スクリプトをリクエストする場合のメソッド</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>NCMBScriptのインスタンス</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBScript.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/scriptWithName:method:endpoint:" title="scriptWithName:method:endpoint:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/scriptWithName:method:endpoint:">+&nbsp;scriptWithName:method:endpoint:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>スクリプト名とリクエストメソッド、APIのエンドポイントを指定してNCMBScriptのインスタンスを作成</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (instancetype)scriptWithName:(NSString *)<em>name</em> method:(NCMBScriptRequestMethod)<em>method</em> endpoint:(NSString *)<em>endpoint</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>name</code></th>
+						<td><p>スクリプトのファイル名</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>method</code></th>
+						<td><p>スクリプトをリクエストする場合のメソッド</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>endpoint</code></th>
+						<td><p>ローカルで動作させているスクリプトをリクエストする場合などに指定するAPIサーバーのエンドポイント</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>NCMBScriptのインスタンス</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBScript.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/execute:headers:queries:error:" title="execute:headers:queries:error:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/execute:headers:queries:error:">&ndash;&nbsp;execute:headers:queries:error:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>リクエストパラメータを指定してスクリプトを同期通信で実行し、結果を取得する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSData *)execute:(NSDictionary *)<em>data</em> headers:(NSDictionary *)<em>headers</em> queries:(NSDictionary *)<em>queries</em> error:(NSError **)<em>error</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>data</code></th>
+						<td><p>リクエスト時のbodyデータ（リクエストメソッドが NCMBExecuteWithPostMethod / NCMBExecuteWithPutMethod の場合のみ送信される）</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>headers</code></th>
+						<td><p>リクエスト時のヘッダー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>queries</code></th>
+						<td><p>リクエスト時のクエリパラメータ(クエリストリングに変換されます)</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>error</code></th>
+						<td><p>エラーオブジェクトのポインタ</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>スクリプトを実行した結果をNSDataで返す</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBScript.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/execute:headers:queries:withBlock:" title="execute:headers:queries:withBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/execute:headers:queries:withBlock:">&ndash;&nbsp;execute:headers:queries:withBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>リクエストパラメータを指定してスクリプトを非同期通信で実行し、結果を取得する</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)execute:(NSDictionary *)<em>data</em> headers:(NSDictionary *)<em>headers</em> queries:(NSDictionary *)<em>queries</em> withBlock:(NCMBScriptExecuteCallback)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>data</code></th>
+						<td><p>リクエスト時のbodyデータ（リクエストメソッドが NCMBExecuteWithPostMethod / NCMBExecuteWithPutMethod の場合のみ送信される）</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>headers</code></th>
+						<td><p>リクエスト時のヘッダー</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>queries</code></th>
+						<td><p>リクエスト時のクエリパラメータ(クエリストリングに変換されます)</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>スクリプト実行APIをリクエストしたあとに実行されるコールバック。コールバック引数のdataにはスクリプト実行後の結果が入ります。errorにはスクリプト実行後のエラーが入ります。</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">NCMBScript.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2020 FUJITSU CLOUD TECHNOLOGIES LIMITED. All rights reserved. Updated: 2020-03-24</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1333)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>
