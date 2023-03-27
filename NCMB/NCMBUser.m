@@ -662,37 +662,23 @@ static BOOL isEnableAutomaticUser = NO;
 +(NCMBRequest*)createConnectionForLogin:(NSString*)username
                             mailAddress:(NSString*)mailAddress
                                password:(NSString*)password{
-    //ログインパラメーター文字列の作成
-    NSMutableArray *queryArray = [NSMutableArray array];
-    NSArray *sortedQueryArray = nil;
-    if (![username isKindOfClass:[NSNull class]] &&
-        ![mailAddress isKindOfClass:[NSNull class]] &&
-        ![password isKindOfClass:[NSNull class]]){
-        
-        [queryArray addObject:[NSString stringWithFormat:@"password=%@", password]];
-        if ([username length] != 0 && [mailAddress length] == 0){
-            [queryArray addObject:[NSString stringWithFormat:@"userName=%@", username]];
-        } else if ([username length] == 0 && [mailAddress length] != 0){
-            [queryArray addObject:[NSString stringWithFormat:@"mailAddress=%@", mailAddress]];
-        }
-        sortedQueryArray = [NSArray arrayWithArray:[queryArray sortedArrayUsingSelector:@selector(compare:)]];
-    }
     
-    //pathの作成
-    NSString *path = @"";
-    for (int i = 0; i< [sortedQueryArray count]; i++){
-        NSString * query = [sortedQueryArray[i] stringByAddingPercentEncodingWithAllowedCharacters:[[NSCharacterSet characterSetWithCharactersInString:@"#[]@!&()*+,;\"<>\\%^`{|} \b\t\n\a\r"] invertedSet]];
-        if (i == 0){
-            path = [path stringByAppendingString:[NSString stringWithFormat:@"%@", query]];
-        } else {
-            path = [path stringByAppendingString:[NSString stringWithFormat:@"&%@", query]];
-        }
+    NSDictionary *jsonDic = nil;
+    if (username != nil){
+        jsonDic = @{@"userName": username,
+                    @"password":password
+                    };
+    } else if (mailAddress != nil){
+        jsonDic = @{@"mailAddress": mailAddress,
+                    @"password":password
+                    };
     }
-    NSString *url = [NSString stringWithFormat:@"login?%@", path];
+
+    NSString *url = [NSString stringWithFormat:@"login"];
     NCMBRequest *request = [[NCMBRequest alloc] initWithURLStringForUser:url
-                                                           method:@"GET"
+                                                           method:@"POST"
                                                            header:nil
-                                                             body:nil];
+                                                             body:jsonDic];
     return request;
 }
 
