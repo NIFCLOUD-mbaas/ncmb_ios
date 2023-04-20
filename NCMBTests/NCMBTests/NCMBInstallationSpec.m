@@ -54,7 +54,7 @@ describe(@"NCMBInstallation", ^{
                                                        },
                                                @"applicationName" : @"aaaa",
                                                @"objectId" : @"EVMu2ne7bjzZhOW2",
-                                               @"sdkVersion" : @"3.1.2"
+                                               @"sdkVersion" : @"3.2.0"
                                                };
 
     NSDictionary *responseInstallation = @{@"channels" : @[
