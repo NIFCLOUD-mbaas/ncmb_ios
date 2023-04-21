@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "NCMB"
-  s.version      = "3.1.2"
+  s.version      = "3.2.0"
   s.summary      = "NCMB is SDK for NIFCLOUD mobile backend."
   s.description  = <<-DESC
                    NCMB is SDK for NIFCLOUD mobile backend.
