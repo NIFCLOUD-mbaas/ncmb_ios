@@ -23,7 +23,7 @@
 
 ## 動作環境
 
-- iOS 13.x ～ iOS 16.x
+- iOS 13.x ～ iOS 17.x
 - Xcode 9.x ～ Xcode 14.x
 - armv7k, arm64, arm64e アーキテクチャ  
 (※2023年4月時点)  
@@ -36,7 +36,7 @@
 ※なお、mobile backend にて大規模な改修が行われた際は、1年半以内のSDKであっても対応出来ない場合がございます。<br>
 その際は[informationブログ](https://mbaas.nifcloud.com/info/)にてお知らせいたします。予めご了承ください。
 
-- v3.1.1 ～ (※2023年4月時点)
+- v3.1.2 ～ (※2023年9月時点)
 
 ## ライセンス
 
