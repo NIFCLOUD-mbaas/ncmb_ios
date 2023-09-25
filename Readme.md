@@ -25,7 +25,7 @@
 
 - iOS 13.x ～ iOS 17.x
 - Xcode 9.x ～ Xcode 15.x 
-(※2023年4月時点)  
+(※2023年9月時点)  
 - iOS/Xcodeのバージョンに依って対応が必要となる可能性があります。詳細はニフクラ mobile backendの[ドキュメント](https://mbaas.nifcloud.com/doc/current/)をご覧ください。
 
 ## テクニカルサポート窓口対応バージョン
