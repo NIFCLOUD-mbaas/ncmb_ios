@@ -1,7 +1,5 @@
 # ニフクラ mobile backend iOS SDKについて
 
-[![Build Status](https://travis-ci.org/NIFCLOUD-mbaas/ncmb_ios.svg?branch=master)](https://travis-ci.org/NIFCLOUD-mbaas/ncmb_ios)
-
 ## 概要
 
 ニフクラ mobile backend iOS SDKは、
@@ -24,7 +22,7 @@
 ## 動作環境
 
 - iOS 13.x ～ iOS 17.x
-- Xcode 9.x ～ Xcode 15.x 
+- Xcode 11.x ～ Xcode 15.x 
 (※2023年10月時点)  
 - iOS/Xcodeのバージョンに依って対応が必要となる可能性があります。詳細はニフクラ mobile backendの[ドキュメント](https://mbaas.nifcloud.com/doc/current/)をご覧ください。
 
